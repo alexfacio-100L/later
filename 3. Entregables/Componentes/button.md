@@ -80,7 +80,7 @@ Componente referenciado. El botón solo decide **qué glifo y a qué tamaño**; 
 
 | Property | Type | Values | Default | Notes |
 |---|---|---|---|---|
-| `glyph` | enum | (cualquier icono de la librería) | `—` | Lo aporta quien consume el componente, vía `iconLeft` / `iconRight`. **El botón no es dueño de ningún glifo por defecto**; el que trae Figma hoy es un marcador de posición. |
+| `glyph` | enum | (cualquier icono de la librería) | `ninguno` | **Opcional, no obligatorio**: el botón funciona sin icono y así aparece por defecto. Lo aporta quien consume el componente vía `iconLeft` / `iconRight`, y solo se dibuja cuando el toggle correspondiente está activo. **El botón no es dueño de ningún glifo**; el que trae Figma hoy es un marcador de posición. |
 | `size` | enum | mini \| micro | `mini` | No lo fija quien consume: **se deriva del `size` del botón** — `mini` en `l`, `micro` en `m` y `s`. |
 
 ### Acción principal
