@@ -70,6 +70,29 @@ Página destino en todos: `↳ Button` (id `80:19`). **Borrar primero el frame e
 
 ---
 
+## Estado de la personalización
+
+**18 ago 2026 — las siete plantillas usan el brand system.** 158 valores ligados a variables, cero colores crudos salvo los conservados a propósito.
+
+| Rol | Variable |
+| --- | --- |
+| `#header` | `background/brandMain` · texto encima en `text/primaryInverseStatic` |
+| `#marker-example` | `background/accent` |
+| `#preview` y placeholders | `background/primary` |
+| Tablas de anotación | `background/secondary` + borde `border/primary` |
+| Filas de encabezado (Motion) | `background/subtle` |
+| Títulos de sección | `text/primary` |
+| **Descripciones y `{marcadores}`** | **`text/tertiary`** |
+| Encabezados de columna y `{number}` | `text/primary` |
+| Vectores | `icon/primary` (stroke) |
+
+**Tipografía:** `Heading/4XL/Semi Bold` (56) · `Heading/XL/Semi Bold` (32) · `Text/L - Nunito Sans/Bold` y `/Regular` (16).
+⚠️ **`fontFamily` en `uspecs.config.json` sigue siendo `Inter`** — es lo que las skills usan al escribir texto nuevo, y coincide con lo que quedó sin estilo a propósito. Si algún día se cambia la tipografía del texto que escriben las skills, hay que actualizarlo ahí.
+
+**Conservado sin tocar en `Motion`:** `#434343`, `#0A5DB3`, `#10723A` y `#6852CB` — **la simbología de las curvas de easing**. No tienen equivalente en el sistema y su color *es* su significado.
+
+---
+
 ## Personalizar las plantillas: qué es seguro
 
 **Seguro:** colores y rellenos. Las skills localizan por `key` de componente, y repintar no la cambia. *Verificado el 18 ago 2026.*
