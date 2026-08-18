@@ -1,0 +1,10 @@
+# Sistema
+.DS_Store
+.~lock.*#
+~$*
+
+# uSpec — caché regenerable, la propia skill exige no versionarlo
+2. Proyecto/uSpec/.uspec-cache/
+
+# Descargas intermedias del plugin uSpec Extract
+*_base.json
