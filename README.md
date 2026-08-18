@@ -55,6 +55,16 @@ Repositorio: `github.com/redongreen/uSpec` · Documentación: `docs.uspec.design
 
 **El idioma es mixto a propósito.** La prosa va en español; **los encabezados, nombres de columna e identificadores van en inglés** porque las skills localizan las secciones por su texto literal (`## Voice / Screen reader`, `### State: …`, la fila `Announcement`). Traducirlos deja de funcionar el render. Los nombres de propiedad y token tampoco se traducen: **deben coincidir con el código.**
 
+**El idioma tiene TRES capas, no dos.** Verificado el 18 ago al re-renderizar:
+
+| Capa | Dónde vive | ¿Se traduce? |
+| --- | --- | --- |
+| Contenido | el `.md` | **Sí** — y de ahí sale la mayor parte de lo visible |
+| Etiquetas de tabla | la plantilla de Figma | Se puede, pero es un fork de material de terceros |
+| Textos del script | **hardcoded en la skill** | **No llega por el `.md`** — hay que traducirlos en el frame **después de cada render** |
+
+Los de la tercera capa son títulos de sección y frases de apoyo que **la skill escribe por su cuenta** (*"Component structure"*, *"Elements that compose the Button…"*). **Parchear las skills no sirve: son de terceros y se actualizan.** Lo barato es pedir la traducción como paso final del encargo de render.
+
 **El modo oscuro no sale solo.** `create-component-md` emite **un único conjunto de tokens** por combinación, sin expandir por modo. Hay que añadir el segundo valor a mano: `token (#Light · #Dark)`. En el Button, **10 de 14 tokens cambiaban entre modos** — sin esa columna la especificación describe menos de un tercio del color real.
 
 ### Bugs conocidos de las plantillas
