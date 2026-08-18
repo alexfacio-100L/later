@@ -1,0 +1,83 @@
+# Encargos de render — plantilla reutilizable
+
+**Para qué sirve.** Cada skill `create-*` necesita las mismas instrucciones para funcionar en este entorno. Reconstruirlas de memoria en cada render cuesta tiempo y se olvidan trampas ya resueltas. Aquí están listas.
+
+**Cómo se usa.** Copiar el bloque común + el bloque de la skill que toque, y lanzarlo como encargo a un agente. **Una skill a la vez: se solapan si corren en paralelo.**
+
+---
+
+## Bloque común — va en todos los encargos
+
+```text
+Follow the skill at "…/2. Proyecto/uSpec/.claude/skills/create-<SKILL>/SKILL.md".
+
+PATHS:
+- uSpec root (uspecs.config.json): "…/Later: Brand System/2. Proyecto/uSpec"
+- componentMdPath: "…/Later: Brand System/3. Entregables/Componentes/<slug>.md"
+- There is NO .uspec-cache (regenerable, not migrated). Work from the .md alone —
+  it ends with a render-meta JSON block carrying every node id.
+- fileKey: UGwIBzERV4vB7mk0mejZ0y · mcpProvider: figma-mcp
+  (pass skillNames: "resource:figma-use" on EVERY use_figma call)
+
+THREE VERIFIED ENVIRONMENT FACTS — do not rediscover them:
+1. `figma.importComponentByKeyAsync` DOES NOT WORK. The seven uSpec templates are
+   LOCAL, UNPUBLISHED components on page "_Local Componentes" in the same file.
+   Find the local COMPONENT whose `key` equals the templateKey in uspecs.config.json
+   (match by key, NOT by name), instance it, detach it, then move the detached frame
+   to the target page in a SEPARATE use_figma call (one setCurrentPageAsync per script).
+2. `counterAxisSizingMode: 'FILL'` is rejected in this sandbox — use `layoutAlign = 'STRETCH'`.
+3. Cloned template cells keep `WIDTH_AND_HEIGHT` and overflow their column — after
+   populating, set `textAutoResize = 'HEIGHT'` + `layoutSizingHorizontal = 'FILL'`
+   on the cell text nodes.
+
+LANGUAGE — two rules:
+(a) Copy the .md content VERBATIM. Its prose is Spanish and its headings, column names
+    and identifiers are English ON PURPOSE — the skills parse them literally.
+    Do not translate in either direction.
+(b) AS A FINAL STEP, translate into Spanish the skill's own hardcoded boilerplate
+    (section titles and helper sentences the script writes itself, which never come
+    from the .md). Leave the template's table column headers in English.
+
+Report back ONE short paragraph: new frame node id, confirmation the old frame was
+deleted, whether the text came out in Spanish, which boilerplate strings you translated,
+and anything you could not complete. Do not paste frame contents.
+```
+
+---
+
+## Los cuatro que faltan del Button
+
+Página destino en todos: `↳ Button` (id `80:19`). **Borrar primero el frame en inglés** y renderizar en su sitio.
+
+| Skill | Plantilla local | Frame a reemplazar | Posición |
+| --- | --- | --- | --- |
+| `create-property` | `Property` · `12214:6624` | `Button Properties` · `12236:11098` | x 5606, y −716 |
+| `create-structure` | `Structure` · `12214:6590` | `Button Structure` · `12242:1646` | x 7800, y −716 |
+| `create-color` | `Color Annotation` · `12214:6768` | `Button Color` · `12249:1648` | x 10000, y −716 |
+| `create-voice` | `Screen reader` · `12214:6551` | `Button Screen reader` · `12258:2172` | x 12200, y −716 |
+
+**Ya re-renderizadas en español:** `Anatomy` → `12279:1655` · `API` → *(en curso)*
+
+### Contexto que conviene pasar a cada una
+
+**`create-property`** — ejes: `Size` (L/M/S), `Surface` (Marketing/Product), `Type` (Primary/Secondary), `State` (5). En la API son `size`, `surface`, `variant` (renombrado desde `Type`) y, para `State`, descompuesto en `isDisabled` / `isLoading`. Más dos booleanos y dos instance-swap.
+
+**`create-structure`** — el `.md` trae *Type deltas* y tres secciones dimensionales: *Button sizes* (30 filas), *Button surface shape* (3) y *Button focus ring* (3). El render-meta lleva los `sectionTargets` y `groupTargets` de las tres.
+
+**`create-color`** — Strategy B: cuatro secciones, una por combinación `Surface`×`Type`, con las columnas ya relabeladas a condiciones de ejecución. ⚠️ **Las celdas ahora traen dos valores: `token (#Light · #Dark)`.** Copiarlos tal cual — es la única forma en que el modo oscuro aparece en la documentación.
+
+**`create-voice`** — 4 estados × 3 plataformas, una sola parada de foco. El `.md` lleva un comentario oculto `<!-- voice-render-meta v=1 … -->` con los nombres de capa de las paradas. ⚠️ **Dentro del Button hay dos nodos llamados `Button`** —la raíz y el TEXT del label—: `findStopNode` busca solo descendientes y marca el texto. Preferir la raíz cuando `root.name === stop.name`.
+
+---
+
+## Personalizar las plantillas: qué es seguro
+
+**Seguro:** colores y rellenos. Las skills localizan por `key` de componente, y repintar no la cambia. *Verificado el 18 ago 2026.*
+
+**Rompe el render:**
+
+- **Renombrar capas.** Las 31 banderas `#` (`#main-api-table`, `#property-name`, `#preview`…) son cómo la skill encuentra dónde escribir.
+- **Tocar los `{marcadores}`** — `{property}`, `{value}`, `{notes}`, `{component-name}`. **Parecen etiquetas y son huecos de sustitución.**
+- **Cambiar la estructura** o la jerarquía de frames.
+
+**Requiere un cambio extra:** la **tipografía**. Si se cambia en la plantilla, hay que actualizar `fontFamily` en `uspecs.config.json` — las skills usan ese valor al escribir texto nuevo, así que si no coinciden, **la plantilla sale con una fuente y el contenido con otra**, sin error que lo avise.
