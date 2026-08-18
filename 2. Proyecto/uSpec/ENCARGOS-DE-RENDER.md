@@ -30,6 +30,17 @@ THREE VERIFIED ENVIRONMENT FACTS — do not rediscover them:
    populating, set `textAutoResize = 'HEIGHT'` + `layoutSizingHorizontal = 'FILL'`
    on the cell text nodes.
 
+BRAND STYLING — the templates are bound to design-system variables and text styles.
+Two rules, both verified on the 18 ago renders:
+- Set ONLY `characters` on text nodes. Do NOT assign fills, strokes, fontName or
+  fontSize — let the template's own bindings stand. If the skill script assigns a
+  colour or font, skip that assignment.
+- If the script hardcodes a colour for annotation graphics (markers, leader lines,
+  dashed outlines), DO NOT use the literal. Read the paint from the closest
+  brand-bound template node and reuse that paint array, so the graphics inherit the
+  variable too. (Proven in Anatomy: its hardcoded pink marker colour was replaced by
+  reading `#marker-example`'s own bound fill.)
+
 LANGUAGE — two rules:
 (a) Copy the .md content VERBATIM. Its prose is Spanish and its headings, column names
     and identifiers are English ON PURPOSE — the skills parse them literally.
@@ -56,7 +67,7 @@ Página destino en todos: `↳ Button` (id `80:19`). **Borrar primero el frame e
 | `create-color` | `Color Annotation` · `12214:6768` | `Button Color` · `12249:1648` | x 10000, y −716 |
 | `create-voice` | `Screen reader` · `12214:6551` | `Button Screen reader` · `12258:2172` | x 12200, y −716 |
 
-**Ya re-renderizadas en español:** `Anatomy` → `12279:1655` · `API` → *(en curso)*
+**Reconstruidas con la plantilla brandeada (18 ago):** `Anatomy` → `12290:10522` · `API` → *(en curso)*
 
 ### Contexto que conviene pasar a cada una
 
