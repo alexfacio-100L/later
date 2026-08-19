@@ -474,12 +474,13 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   >
   > **El método que funciona: fotografiar TODAS las medidas antes del primer swap, cambiar, y restaurar desde esa foto.** Medir sobre la marcha llega tarde.
 
-- [ ] **4.9 · Decidir el volumen del catálogo de iconos.** 🟢 **La mitad se respondió sin experimento el 19 ago.**
+- [x] **4.9 · Decidir el volumen del catálogo de iconos.** ✅ **CERRADA el 19 ago, y sin necesidad de recortar nada.**
   ✅ **Supernova cuenta un component set como UN componente, no como sus variantes.** Verificado sobre los iconos **ya importados**: `Acorn`, `AddressBook`, `Airplane`… aparecen con `variantCount: 12, propertyCount: 2`. **Son 1512 componentes, no 18 100.**
   *La preocupación por el volumen aplicaba aritmética de Figma a un modelo que no funciona así — y el dato estaba disponible sin publicar nada, en lo ya importado.*
   ✅ **Verificado en la documentación:** el **bloque de documentación permite elegir qué variantes mostrar** (feature de marzo 2025); **la importación no tiene filtro por variante** —solo el scope de Componentes de un archivo entero— y **Supernova solo importa lo publicado en Figma**.
-  🟡 **Lo único que queda por comprobar, y se ve en la app:** que el bloque filtre efectivamente a `Format=Outline`. *Con eso `Stroke` puede quedarse en Figma sin ensuciar la documentación.*
-  🟡 **Decisión del Lead: conservar los seis `Weight`** hasta tener un caso real. **`Format=Stroke` se conserva** — es la fuente editable (`Raw`) y **el equipo no usa el plugin**, así que es su única copia.
+  ✅ **Comprobado por el Lead en la app:** la sección **Variants** de la plantilla de documentación **deja elegir qué variantes se muestran**. Se añadieron solo las de `Format=Outline` con sus weights. **El filtro funciona.**
+  🟢 **El principio que lo cierra, del Lead:** ***Figma es el taller y Supernova es la vitrina.*** Que el archivo de diseño conserve herramientas que la documentación no muestra **no es duplicación: la documentación no es un espejo del archivo, es una selección.** *Es la misma razón por la que las plantillas de uSpec llevan punto.*
+  ✅ **Nada se borra.** Los seis `Weight` se conservan hasta tener un caso real, y **`Format=Stroke` también**: es la fuente editable (`Raw`), el equipo no usa el plugin —así que es su única copia— y **ni el volumen ni la documentación son ya argumento para quitarla.**
   *El deber ser del mantenimiento, para retomar con la PD Jr: `../Diagnóstico/mantenimiento-de-iconos.md`*
 
 - [ ] **4.7 · `PhoneSolid` en `size=l` mide 19×20, no 24×24.** ⚪ **Encontrado el 19 ago al unificar la escala de tamaños** — los otros 326 iconos son exactos en las tres tallas. **Es geometría, no nomenclatura:** cambiar el tamaño puede mover el layout donde el icono se use, así que quedó fuera del lote de renombres.
