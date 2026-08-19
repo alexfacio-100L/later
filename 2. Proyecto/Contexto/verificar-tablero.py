@@ -16,6 +16,7 @@ from pathlib import Path
 from collections import Counter
 
 TABLERO = Path(__file__).parent / "tablero-de-ejecucion.md"
+DECISIONES = Path("/Users/alexfacio/100Ladrillos/DECISIONS.md")
 
 
 def main() -> int:
@@ -70,6 +71,21 @@ def main() -> int:
     if not re.search(r"Última actualización", cabecera):
         problemas.append("El encabezado no lleva 'Última actualización'")
 
+    # 6 · Las tareas que vas a trabajar, ¿tienen historia en DECISIONS?
+    #     El 19 ago la tarea 1.17 arrastró una premisa que DECISIONS había
+    #     invalidado cinco días antes. El tablero era coherente consigo mismo,
+    #     así que ninguna comprobación interna podía verlo.
+    historia = {}
+    if DECISIONES.exists() and seguir:
+        dec = DECISIONES.read_text(encoding="utf-8")
+        entradas = re.split(r"(?=^## \d{4}-\d{2}-\d{2})", dec, flags=re.M)
+        for num in sorted(set(re.findall(r"\*\*([0-9]+\.[0-9]+[a-z]?)\*\*", seguir.group(0))) & set_abiertas):
+            citas = [e.split("\n")[0].lstrip("# ").strip()
+                     for e in entradas
+                     if re.search(r"\b" + re.escape(num) + r"\b", e)]
+            if citas:
+                historia[num] = citas[-3:]
+
     print(f"Tablero: {len(set_cerradas)} cerradas · {len(set_abiertas)} abiertas\n")
     if problemas:
         print(f"✗ {len(problemas)} contradicción(es):\n")
@@ -82,6 +98,13 @@ def main() -> int:
     if seguir:
         pendientes = sorted(set(re.findall(r"\*\*([0-9]+\.[0-9]+[a-z]?)\*\*", seguir.group(0))))
         print(f"  Por dónde seguir: {', '.join(pendientes)}")
+    if historia:
+        print("\n  LEE ESTO ANTES DE EMPEZAR — decisiones que ya hablaron de estas tareas:")
+        for num, citas in historia.items():
+            print(f"    {num}:")
+            for c in citas:
+                print(f"       · {c}")
+        print("\n    Una tarea puede seguir abierta y su premisa estar caducada.")
     return 0
 
 
