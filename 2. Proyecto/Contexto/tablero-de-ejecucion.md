@@ -483,6 +483,13 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   ✅ **Nada se borra.** Los seis `Weight` se conservan hasta tener un caso real, y **`Format=Stroke` también**: es la fuente editable (`Raw`), el equipo no usa el plugin —así que es su única copia— y **ni el volumen ni la documentación son ya argumento para quitarla.**
   *El deber ser del mantenimiento, para retomar con la PD Jr: `../Diagnóstico/mantenimiento-de-iconos.md`*
 
+- [ ] **4.10 · Documentar el modo oscuro con frames de Figma, no con PNG.** ⚪ **Nace el 19 ago, y es el cierre práctico de 3.9.**
+  **El problema:** Supernova **resuelve tokens por theme pero no re-renderiza componentes** — el bloque muestra lo que hay en Figma. *Lo único oscurecible es el fondo del contenedor, que dejaría el render en Light sobre fondo oscuro: peor que no hacerlo.*
+  **La salida, propuesta por el Lead:** después de documentar en Light, **duplicar las muestras en Figma y cambiarles el mode con la propiedad de apariencia**, y llevar esa área a Supernova.
+  🟢 **Mejora verificada sobre la idea original:** en vez de pegar un **PNG** —que es estático y miente en silencio en cuanto el componente cambia— usar el **bloque de imagen de Figma pegando la URL del frame**. *"Cuando la fuente de Figma se actualiza en Supernova, tus imágenes se actualizan automáticamente."* **Mismo resultado visual, con vínculo vivo y coste cero por cambio.**
+  💡 **Alcance sugerido: una sola muestra en oscuro por componente, no una por anotación.** `API`, `Structure` y `Screen reader` son tablas, y una tabla no cambia con el mode. *La tabla de `Color` ya trae los dos valores desde el 17 ago.*
+  *Done:* el `Button` con su muestra en oscuro publicada desde un frame de Figma, y el paso incorporado al flujo de documentación.
+
 - [ ] **4.7 · `PhoneSolid` en `size=l` mide 19×20, no 24×24.** ⚪ **Encontrado el 19 ago al unificar la escala de tamaños** — los otros 326 iconos son exactos en las tres tallas. **Es geometría, no nomenclatura:** cambiar el tamaño puede mover el layout donde el icono se use, así que quedó fuera del lote de renombres.
   *Done:* medido a 24×24 y revisadas sus instancias.
 
