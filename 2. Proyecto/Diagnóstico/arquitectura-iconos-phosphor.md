@@ -90,7 +90,17 @@ Phosphor viene a **32×32** y el sistema usa **16 / 20 / 24**. Heroicons traía 
 
 **Recomendación: que el tamaño lo fije el componente que consume el icono, no el icono.** Es lo que ya hace el `Button`, cuya especificación dice *"el tamaño del icono lo decide `size`"*. Con geometría rellena, escalar es seguro.
 
-*Añadir un eje `size` multiplicaría por tres el catálogo y obligaría a mantener tres geometrías por icono para resolver algo que el contenedor ya sabe.* **Lo que sí hace falta son los tokens de tamaño de icono (`16/20/24`), que es la tarea 4.4.**
+*Añadir un eje `size` multiplicaría por tres el catálogo y obligaría a mantener tres geometrías por icono para resolver algo que el contenedor ya sabe.*
+
+### La regla que sustituye a los tres tamaños de Heroicons
+
+**Decidida por el Lead el 19 ago, y escrita en `13-convencion-naming.md` §8c:**
+
+> **El estándar son `16`, `20` y `24` px.** No es un límite: un icono puede usarse a su tamaño nativo de 32, más grande, o a una medida propia, **siempre que esté justificado**.
+
+**Lo que evita no es la excepción: es el tamaño accidental.** Heroicons dibujaba tres tamaños en su familia `Solid`, así que la librería decidía por el diseñador. **Phosphor entrega uno solo, así que la decisión pasa a quien diseña — y por eso hay que escribirla.**
+
+*Los tokens que materializan los tres valores son la tarea 4.4.*
 
 ---
 
