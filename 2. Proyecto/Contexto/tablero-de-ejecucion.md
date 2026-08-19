@@ -22,7 +22,7 @@
 >
 > 🟢 **Hallazgo del 19 ago que toca 1.9, 1.10 y 1.11:** **crear tokens nuevos SÍ propaga a Supernova.** Los dos `negativeHighlight` llegaron completos con su descripción. Con esto el mapa de R-12 queda cerrado: **crear ✅ · modificar ✅ · renombrar ✅ · borrar ❌.** *Las tres tareas de borrado siguen siendo las únicas que exigen el procedimiento manual de tres pasos.*
 >
-> **▶ Por dónde seguir:** foundations queda casi limpio. Lo que resta depende de otros: **1.12** espera el puente técnico para su capa `shadow`, y **0.6** y **1.11** esperan a que se limpien los 26 tokens de sombra del source de estilos. Las que sí se pueden trabajar sin dependencias son **1.9** y **1.10** —los borrados, **re-verificando consumo antes**— y **2.2** ya cerrada deja **2.6** como única decisión suelta. *`4.7` puede haber quedado sin objeto: `PhoneSolid` era un Heroicon.*
+> **▶ Por dónde seguir:** foundations queda casi limpio. Lo que resta depende de otros: **1.12** espera el puente técnico para su capa `shadow`, y **0.6** y **1.11** esperan a que se limpien los 26 tokens de sombra del source de estilos. Las que sí se pueden trabajar sin dependencias son **1.9** y **1.10** —los borrados, **re-verificando consumo antes**, porque *"cero referencias" caduca*— y **4.10** cuando retomes documentación. *`4.7` puede haber quedado sin objeto: `PhoneSolid` era un Heroicon.*
 >
 > ⚠️ **Antes de publicar la librería:** el Brand Book conserva 68 Heroicons y **los sostiene huérfanos**. Se migra a Supernova a mano, y hasta entonces no se pueden borrar del archivo.
 
