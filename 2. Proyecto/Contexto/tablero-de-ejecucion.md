@@ -271,7 +271,9 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   🟢 **De paso cierra la rama de enlaces de 1.8:** ahora cada mode tiene **progresión monótona** —Light oscurece, Dark aclara—, así que el pressed ya no es más claro que el default en Light.
   🔴 **Falta `text/offer`**, y no por contraste sino por una decisión pendiente: **su arreglo va junto al renombre a la familia `accent`**, donde hay que decidir cuál de los dos rojos gana —`icon/subtle` `#F20544` o los `offer` `#F94848`—. *Medido: en Light necesita `red/500` (5.10); en Dark `red/100` ya pasa con 4.69.*
   *Done:* los seis con alias por mode y ≥ su mínimo en ambos. *Séptima aparición de la regla del token emparejado con otro que no cambia.*
-  ⏳ **Pendiente de push del Lead** y verificación por MCP de que Supernova entrega un primitivo distinto por theme.
+  ✅ **VERIFICADO EN SUPERNOVA tras el push del 19 ago.** Con el theme `dark` aplicado, cada token entrega **un primitivo distinto**: `text/link` y `text/info` pasan de `blue/500` a **`blue/300`**, `linkHover` de `blue/700` a **`blue/200`**, `linkPressed` de `blue/900` a **`blue/100`**. **La cadena Figma → push → Supernova funciona de punta a punta.**
+  🔴 **Y la verificación destapó documentación caducada:** la descripción de `text/info` decía literalmente *"No cambia con el tema"* — cierto hasta esta misma tarea, falso después. **Reescritas las cinco descripciones**, incluidas las de `text/linkPressed` y `border/brand`, que estaban vacías. *Corregir un token sin corregir su descripción deja una mentira en la fuente de verdad que Engineering lee.*
+  ⚠️ *`border/brand` no se comprobó individualmente en Supernova por el coste de paginar el catálogo; el mecanismo quedó probado 4 de 4 en los otros.*
 
 ---
 
