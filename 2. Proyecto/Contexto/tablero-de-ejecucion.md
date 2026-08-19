@@ -90,7 +90,8 @@
   ⚠️ *Discrepancia sin reconciliar:* el barrido de 0.7 contó 813/678; este cuenta 807/672. Seis vivos menos, con un push entre medias.
 
 - [ ] **0.6 · Limpiar "No collections".** Es el residuo acumulado de todo lo borrado en Figma que sobrevivió en Supernova. Deuda a eliminar a mano.
-  > 🔴 **Bloqueada por 1.12.** De los 135 desconectados, **135 son Typography, Shadow y Blur** — y los 26 `Shadow` contienen **la única copia de la geometría de las sombras**. Borrarlos ahora la destruye. **Resolver 1.12 antes de tocar nada aquí.**
+  > 🟢 **DESBLOQUEADA el 19 ago.** El argumento del bloqueo —*"los 26 `Shadow` contienen la única copia de la geometría"*— **ya no se sostiene:** la geometría vive en la capa `Shadow`, verificada viva y sincronizada con Figma. **Lo que hay que borrar son los `shadows/` de tipo Color, que no guardan nada único.**
+  > **Se ejecuta junto con 1.11 — es el mismo procedimiento sobre los mismos 57 tokens.**
 
   *Done:* vacío, y con el paso de verificación de 0.3 en marcha para que no vuelva a crecer.
 
@@ -168,14 +169,18 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   ✅ **La rama `positiveSubtle` está resuelta, pero no como decía esta tarea.** No era una escala incoherente: **`Subtle` en `text/`, `icon/` y `border/` no significaba "menos intenso" sino *highlight* — verde de DATO frente a verde de ALERTA.** Renombrados a `*/positiveHighlight` y `text/warningHighlight`, con alias por mode. *Sigue anotado que **`background/positiveSubtle` (`#34A865`) es el único `*Subtle` de fondo con valor saturado** —sus tres hermanos son claros— y que **`background/positiveHighlight` ya existe** (`green/25`, `#D7F5E6`), así que conviene decidir si aquél se aclara o se renombra.*
   ✅ **La rama de enlaces se resolvió el 19 ago dentro de 1.17.** El defecto era que **`text/linkPressed` aclaraba mientras `linkHover` oscurecía**; al dar alias por mode a los tres estados, cada mode quedó con **progresión monótona** —Light oscurece `500→700→900`, Dark aclara `300→200→100`—. *Lo que quedaba de 1.8 es solo `background/positiveSubtle`.*
 
-- [ ] **1.9 · `graphs/visualMapping/hot|warm|cold` son los tres `#FFFFFF` sin alias.**
+- [x] **1.9 · `graphs/visualMapping/hot|warm|cold` son los tres `#FFFFFF` sin alias.** ✅ **Resuelta como diagnóstico el 19 ago — y la causa no era la que decía la tarea.**
+  **No hay nada que aliasar: el estilo ya no existe en Figma.** El archivo tiene **cero paint styles** —verificado con `getLocalPaintStylesAsync`— y es el único design source de tipo Figma. **Los tres son residuo de un estilo de color borrado que Supernova conservó.**
+  *La hipótesis del 13 ago —"placeholders sin construir"— acertó el síntoma y erró la causa.* **El remedio es el borrado manual, no una corrección de color** → pasa al procedimiento único de 0.6/1.11.
 
 - [ ] **1.10 · ~~`overlay/*` son los únicos tokens con valores crudos~~ — ya no es cierto, y el criterio cambió el 17 ago.**
   **Ahora también `shadowTint/6…48` llevan valor crudo, y a propósito:** Figma **no permite aliasar un color con la opacidad modificada**, así que un color con alfa solo puede vivir como valor literal. **Eso convierte el "crudo" de `overlay/*` en una decisión correcta, no en deuda.**
   *Lo que queda de esta tarea:* decidir si los `overlay/*` sin consumo se borran (ver 1.11) — **no "aliasarlos", que es técnicamente imposible.**
 
-- [ ] **1.11 · Borrar sombras y overlays sin consumo.** Se reconstruyen cuando exista el componente que los pida. Decisión 5 del 13 ago.
-  > ⚠️ **Leer 1.12 antes de ejecutar esto.** La geometría de las sombras solo existe en tokens desconectados.
+- [ ] **1.11 · Borrar los 57 tokens residuales de Supernova.** 🟢 **Re-encuadrada el 19 ago: es UN procedimiento, no tres tareas.**
+  ✅ **El bloqueo de 1.12 ya no aplica:** la geometría de las sombras vive en la capa `Shadow`, viva y sincronizada con Figma. **Los `shadows/` de tipo Color no guardan nada único.**
+  **Se borra por grupo entero desde Supernova**, no token a token: `Color → shadows/` (26) · `Color → graphs/` (15) · `Color → illustration/` (16). *Los tres son estilos que ya no existen en el archivo de Figma.*
+  ⚠️ **`illustration/` merece una mirada antes de borrar:** son colores de ilustración de marca que quizá nadie más guarda. **Verificar que existan en otro lado.** Los otros dos no tienen ese riesgo.
 
 ### Integridad del sistema
 
