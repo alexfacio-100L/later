@@ -11,12 +11,12 @@
 
 | Anotación | Qué documenta | Enlace |
 | --- | --- | --- |
-| **Anatomy** | Las partes del componente, numeradas sobre una instancia real | [`12232:1737`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12232-1737) |
-| **API** | Las 10 propiedades, con tipo, valores, defaults y 3 ejemplos de configuración | [`12235:1698`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12235-1698) |
-| **Properties** | Cada valor de cada eje, con previsualización en vivo — 28 instancias | [`12236:11098`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12236-11098) |
-| **Structure** | Medidas, espaciados y su comportamiento por eje — 37 filas y 20 cotas dibujadas | [`12242:1646`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12242-1646) |
-| **Color** | Los tokens por superficie, tipo y estado — 100 celdas | [`12249:1648`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12249-1648) |
-| **Screen reader** | Comportamiento en VoiceOver, TalkBack y ARIA, estado por estado | [`12258:2172`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12258-2172) |
+| **Anatomy** | Las partes del componente, numeradas sobre una instancia real | [`12290:10522`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12290-10522) |
+| **API** | Las 10 propiedades, con tipo, valores, defaults y 3 ejemplos de configuración | [`12292:10564`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12292-10564) |
+| **Properties** | Cada valor de cada eje, con previsualización en vivo — 28 instancias | [`12301:2020`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12301-2020) |
+| **Structure** | Medidas, espaciados y su comportamiento por eje — 37 filas y 20 cotas dibujadas | [`12304:2187`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12304-2187) |
+| **Color** | Los tokens por superficie, tipo y estado — 100 celdas | [`12311:2189`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12311-2189) |
+| **Screen reader** | Comportamiento en VoiceOver, TalkBack y ARIA, estado por estado — 12 tablas, 93 filas | [`12318:2192`](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=12318-2192) |
 
 **El componente documentado:** [`Button`, 60 variantes](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=3566-3197) · su hermano [`Link`, 15 variantes](https://www.figma.com/design/UGwIBzERV4vB7mk0mejZ0y/?node-id=80-19)
 
@@ -30,7 +30,11 @@
 
 ## Estado
 
-⚠️ **Las anotaciones están en inglés; la especificación ya está en español.** Se renderizaron el 17 ago, antes de traducir el `.md`. **Hasta que se re-rendericen, los frames y el documento no dicen exactamente lo mismo** — el `.md` manda.
+✅ **Re-renderizadas el 18 ago 2026, en español y con las plantillas del brand system.** Las seis salieron de la especificación ya traducida, así que frames y `.md` dicen lo mismo. Los frames en inglés del 17 ago fueron borrados: los IDs de arriba son los únicos vigentes.
+
+**Lo que se conserva en inglés a propósito:** los encabezados de columna, los identificadores (`isDisabled`, `size`, `variant`) y los nombres de las propias anotaciones (*Screen reader*, *Notes*). La prosa es española; el vocabulario del sistema no se traduce.
+
+⚠️ **Defecto de la plantilla `Screen reader`, no de este render.** En la plantilla de la librería, el fondo de `#state-table` es blanco y el texto de `#header-row` está ligado a `text/primaryInverse` (#F9F9F9): **la fila del anuncio sale casi invisible.** Está igual en el componente sin tocar, así que se repetirá en toda anotación de voz futura. Se arregla en la plantilla —religando la variable— y re-renderizando; no se corrigió aquí porque implicaría pintar un nodo de texto a mano.
 
 ⚠️ **Ninguna anotación cubre el modo oscuro.** Las previsualizaciones están fijadas en Light por una limitación del pipeline. La especificación **sí** trae los dos valores de cada token (`#Light · #Dark`), así que **para color en oscuro hay que ir al `.md`, no a Figma.**
 

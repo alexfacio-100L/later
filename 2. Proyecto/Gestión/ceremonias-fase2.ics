@@ -1,0 +1,60 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//100 Ladrillos//Later Brand System Fase 2//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VTIMEZONE
+TZID:America/Mexico_City
+BEGIN:STANDARD
+DTSTART:19700101T000000
+TZOFFSETFROM:-0600
+TZOFFSETTO:-0600
+TZNAME:CST
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:later-fase2-planning@100ladrillos.com
+DTSTAMP:20260819T180000Z
+DTSTART;TZID=America/Mexico_City:20260831T120000
+DTEND;TZID=America/Mexico_City:20260831T130000
+RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=MO;UNTIL=20261013T060000Z
+SUMMARY:Later · Sprint Planning (Fase 2)
+LOCATION:Google Meet
+DESCRIPTION:Apertura del sprint de Later\, Brand System — Fase 2.\n\nQué se hace aquí: elegimos del backlog qué entra a este sprint y qué queda fuera\, y cada frente declara sus compromisos. Máximo tres cosas en curso por área: cerramos antes de abrir lo siguiente.\n\nAgenda (60 min):\n1. Estado del sprint anterior — qué cerró y qué se arrastra (10 min)\n2. Selección del alcance del sprint (30 min)\n3. Dependencias entre diseño y desarrollo\, y bloqueos previsibles (15 min)\n4. Confirmación de compromisos (5 min)\n\nCore: David Corona\, Jorge Ruíz\, Alex Facio.\nOpcional: Gerardo Ruíz — es el punto donde se ve el alcance comprometido del sprint.\n\nDeadline del proyecto: viernes 30 de octubre de 2026. El último sprint cierra el 23 de octubre\, dejando la última semana de margen.
+ORGANIZER;CN=Alex Facio:mailto:alex.facio@100ladrillos.com
+ATTENDEE;CN=David Corona;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:david@100ladrillos.com
+ATTENDEE;CN=Jorge Ruiz;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:jorge.ruiz@100ladrillos.com
+ATTENDEE;CN=Gerardo Ruiz;ROLE=OPT-PARTICIPANT;RSVP=TRUE:mailto:gerardo.ruiz@100ladrillos.com
+END:VEVENT
+BEGIN:VEVENT
+UID:later-fase2-review@100ladrillos.com
+DTSTAMP:20260819T180000Z
+DTSTART;TZID=America/Mexico_City:20260828T120000
+DTEND;TZID=America/Mexico_City:20260828T130000
+RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=FR;UNTIL=20261024T060000Z
+SUMMARY:Later · Sprint Review + Retro (Fase 2)
+LOCATION:Google Meet
+DESCRIPTION:Cierre del sprint de Later\, Brand System — Fase 2. Review y retrospectiva en la misma sesión\, a propósito: el ritmo es ligero y no queremos dos juntas.\n\nQué se hace aquí: se muestra lo terminado —no lo avanzado— y se decide qué mejorar del proceso para el sprint siguiente.\n\nAgenda (60 min):\n1. Demo de lo que quedó terminado (25 min)\n2. Qué no cerró y por qué (10 min)\n3. Retro — qué sostener\, qué cambiar (20 min)\n4. Qué se ve en el sprint siguiente (5 min)\n\nEsta sesión es abierta al equipo involucrado: es el punto de visibilidad del proyecto para producto y desarrollo.\n\nDeadline del proyecto: viernes 30 de octubre de 2026. El último sprint cierra el 23 de octubre\, dejando la última semana de margen.
+ORGANIZER;CN=Alex Facio:mailto:alex.facio@100ladrillos.com
+ATTENDEE;CN=David Corona;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:david@100ladrillos.com
+ATTENDEE;CN=Jorge Ruiz;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:jorge.ruiz@100ladrillos.com
+ATTENDEE;CN=Gerardo Ruiz;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:gerardo.ruiz@100ladrillos.com
+ATTENDEE;CN=Antonio Becerra;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:antonio.becerra@100ladrillos.com
+ATTENDEE;CN=Italia Bernal;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:italia.bernal@100ladrillos.com
+ATTENDEE;CN=Gerardo Luna;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:gerardo.luna@100ladrillos.com
+END:VEVENT
+BEGIN:VEVENT
+UID:later-fase2-daily@100ladrillos.com
+DTSTAMP:20260819T180000Z
+DTSTART;TZID=America/Mexico_City:20260820T160000
+DTEND;TZID=America/Mexico_City:20260820T161500
+RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR;UNTIL=20261024T060000Z
+EXDATE;TZID=America/Mexico_City:20260916T160000
+SUMMARY:Later · Daily (15 min)
+LOCATION:Google Meet
+DESCRIPTION:Sincronización diaria de Later\, Brand System — Fase 2. Quince minutos\, de pie.\n\nTres preguntas por persona:\n1. Qué cerré desde ayer\n2. Qué voy a cerrar hoy\n3. Qué me está bloqueando\n\nNo se resuelven problemas aquí: se detectan y se agenda aparte con quien toque.\n\nSolo el core: David Corona\, Jorge Ruíz\, Alex Facio.\n\nNota: el 16 de septiembre no hay daily (día festivo).
+ORGANIZER;CN=Alex Facio:mailto:alex.facio@100ladrillos.com
+ATTENDEE;CN=David Corona;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:david@100ladrillos.com
+ATTENDEE;CN=Jorge Ruiz;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:jorge.ruiz@100ladrillos.com
+END:VEVENT
+END:VCALENDAR
