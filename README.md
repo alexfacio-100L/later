@@ -1,8 +1,18 @@
 # Later · Brand System
 
 Proyecto de **Renovare**: traducir el design system de Figma a código, con Supernova como fuente de verdad.
-El estado y las decisiones del proyecto **no viven aquí** — viven en el repo de Product Design:
-`100Ladrillos/contexto/10-renovare-later.md` (contexto) · `11-renovare-ejecucion.md` (tablero) · `DECISIONS.md`.
+
+**Por dónde entrar:** `2. Proyecto/Contexto/tablero-de-ejecucion.md` — dice qué sigue.
+Su vecino `estado-del-proyecto.md` explica el porqué de cada cosa, y `roadmap-fase2.md` las fechas.
+**Corre `2. Proyecto/Contexto/verificar-tablero.py` antes de proponer trabajo:** el tablero tiene casillas y prosa, y solo las casillas se mantienen solas.
+
+**Lo que se quedó en el repo del área** (`100Ladrillos/`): `DECISIONS.md`, la convención de nombres y el mapa de Supernova. *La frontera: si sobrevive al cierre del proyecto y sirve al siguiente, es del área.*
+
+### Reporte de estado para stakeholders
+
+`0. Planificación de proyecto/reporte-de-estado.html` → publicado en **https://claude.ai/code/artifact/c6be2bbd-112c-41fd-923d-be8a82d54144**
+
+⚠️ **Ese archivo es lo que permite republicar en el mismo enlace.** Si se pierde, la página queda congelada y habría que crear otra con otra URL. Se actualiza al cierre de cada sprint.
 
 ---
 
@@ -12,7 +22,8 @@ Modelo **IPO — Input · Process · Output**. Es la convención del área para 
 
 | Carpeta | Qué va | Regla |
 | --- | --- | --- |
-| **raíz** | Planeación del proyecto: kick-off, benchmarks, cronogramas, este README | Lo que explica **cómo se va a trabajar**, no lo que se produce |
+| **raíz** | Solo el `README.md` y las cuatro carpetas | La portada del proyecto |
+| **`0. Planificación de proyecto`** | Kick-off, cronogramas, calendarios, reportes de estado, material de seguimiento y comunicación | Lo que explica **cómo se va a trabajar** y cómo se comunica el avance |
 | **`1. Recursos`** | Input: material en bruto, insumos de terceros, referencias externas | **No se edita.** Entra como llegó |
 | **`2. Proyecto`** | Process: todo lo editable — investigaciones, auditorías, correcciones, herramientas | Aquí se trabaja. Admite subcarpetas |
 | **`3. Entregables`** | Output: resultados no editables y entregables | PDFs, o **un documento con la URL** cuando el entregable vive en Figma, Notion u otra plataforma |
