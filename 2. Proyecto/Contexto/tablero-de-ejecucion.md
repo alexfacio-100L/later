@@ -443,14 +443,26 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   ⚠️ **Límite declarado sobre la verificación:** en este archivo **no hay una sola instancia** de los tres. No es que el renombre no las tocara — **es que no existen aquí**: las páginas de Organisms (`Navigation`, `Filter`, `Widgets`) están **vacías**, verificado cargándolas. La única página con contenido tiene 530 instancias y ninguna es de estos tres. **Si se usan, es en los archivos de producto, que no son este.**
   *La colisión `Alerta`/`Alerts` que daba nombre a esta tarea no apareció en el inventario de la página: los cinco sets son `Button Menu`, `Chip`, `Button Card`, `Button` y `Link`.*
 
-- [ ] **4.8 · Terminar el swap de Heroicons a Phosphor.** ⚪ **Iniciado el 19 ago: Button, Link y Tags hechos; el resto pendiente.**
-  ✅ **289 instancias migradas** — `Academic Cap`→`ArrowRight` (100), `ChevronDoubleRight`→`CaretDoubleRight` (15), `CheckCircle`→`CheckCircle` (169) y los cinco semánticos de `Comercial`. **Los cuatro slots `INSTANCE_SWAP` del Button y el Link apuntan ya a Phosphor.**
-  🔴 **Pendiente, con inventario ya levantado:** `Alerts` (`CubeSolid`, 30) · `Input Field` (`Plus`, `Minus`, `AdjustamentsVertical`, `Cube` — 48) · `Thumbnails` (`Trophy`, `Wallet`, `Banknotes`, `ArrowUp`, `ChevronDoubleLeft`, `Plus` — 28). **Y falta barrer las páginas de componentes que no se han revisado.**
-  🟡 **`logo-hundred-bricksSolid` NO se toca:** es un activo propio de 100 Ladrillos, no de la librería. Vive en el laboratorio de iconos y se reincorpora después.
+- [ ] **4.8 · Terminar el swap de Heroicons a Phosphor.** ⚪ **591 instancias migradas el 19 ago, en once páginas.**
+
+  | Página | Instancias | Página | Instancias |
+  | --- | --- | --- | --- |
+  | `Tag` | 174 | `Alerts` | 30 |
+  | `Button` | 115 | `Select` | 26 |
+  | `Table` | 83 | `Tabs` | 10 |
+  | `Steps` | 69 | `Cards (WIP)` | 8 |
+  | `Input Field` | 48 | | |
+  | `Thumbnails` | 28 | | |
+
+  **Verificadas sin Heroicons restantes:** las once anteriores más `Accordion`, `Avatar`, `Banners`, `Checkbox`, `Datepicker`, `Dialog Box`, `Empty state`, `File upload`, `Login & SL`, `Notification`, `Playground`, `Progress & Slides`, `Toggle`, `Tooltips`, `Widgets` y `_Local Componentes`.
+  🟡 **Sin revisar todavía:** `Radio Button`, `Divider`, `Skeleton`, `App Icon`, `Biometrics`, `Data Visualization`, las seis de `Foundation` y las de Brand Book.
+  🟡 **`logo-hundred-bricksSolid` sigue en pie a propósito** — 6 instancias en `Cards (WIP)` y 1 en `Tag`. Es un activo propio, vive en el laboratorio de iconos y se reincorpora aparte.
+
+  **El diccionario de equivalencias quedó levantado** —unos 50 iconos, con alias `Chevron`→`Caret`, `X Mark`→`X`, `Ellipsis`→`DotsThree`, `Banknotes`→`Money`, `Adjustaments Vertical`→`Faders`— y el script de swap **reporta lo que no reconoce en vez de saltárselo en silencio**. *Así apareció `Chart BarSolid`, que no estaba en el mapa inicial.*
 
   > ⚠️ **El procedimiento tiene dos trampas, ambas verificadas con un canario:**
   > **1. `swapComponent` NO conserva el tamaño.** La instancia adopta el del componente nuevo, y Phosphor viene a **32×32** — un icono de 20 px salta a 32. *El canario lo detectó antes de tocar 486 instancias.*
-  > **2. El cambio se propaga en cascada.** Al cambiar una instancia dentro de un component set, las instancias que la heredan se actualizan solas **y pierden su tamaño antes de que el bucle llegue a ellas.**
+  > **2. El cambio se propaga en cascada.** Al cambiar una instancia dentro de un component set, las que la heredan se actualizan solas **y pierden su tamaño antes de que el bucle llegue a ellas.**
   >
   > **El método que funciona: fotografiar TODAS las medidas antes del primer swap, cambiar, y restaurar desde esa foto.** Medir sobre la marcha llega tarde.
 
