@@ -13,13 +13,18 @@
 >
 > **Cerrado el 19 ago — el día de la nomenclatura:** **2.2** (Poppins es comercial, Nunito Sans es plataforma: no eran duplicados) · **3.9** (el modo oscuro no se documenta en Figma, Supernova ya lo resuelve) · **4.5** + **4.6** (el Button y el Link en `camelCase`, 75 variantes y 225 capas) · **4.1** (`Button Menu`, `Chip` y `Button Card`, con sus espacios y su `On-focus`) · **una sola escala de tamaños** en todo el sistema (30 tokens y 981 variantes de icono).
 > **Y toda la gestión del proyecto:** roadmap al 30 de octubre, las tres ceremonias en Calendar, y el reporte de estado publicado para stakeholders.
-> **Abierto el 19 ago:** **4.7** (`PhoneSolid` mide 19×20 en su talla `l`).
+> **Y la tarde del 19 ago, el cambio de librería de iconos:** **1.15** · **1.17** completa (los seis tokens de contraste, verificados en Supernova) · **4.8** (el swap de Heroicons a Phosphor, 591 instancias en once páginas).
+> **Abierto el 19 ago:** **4.7** (`PhoneSolid`, que puede haber quedado sin objeto al cambiar de librería) · **4.9** (el volumen del catálogo de iconos).
 >
 > 🔴 **Corrección grande del 19 ago:** el tablero afirmaba que *"el pipeline de tokens ya corre en `Later2.0`"*. **Es falso.** `later-tokens` tiene cuatro commits de setup y **ninguno de Supernova**; lo que corre es Style Dictionary en local sobre un export manual de abril. **El puente a código no ha arrancado**, y esa es la mitad que falta del entregable 1.
 
+> 🟢 **Heroicons pasa a Phosphor.** La causa era de **cobertura, no de estilo**: faltaban iconos y se pedían bajo demanda. **Y resolvió solo el defecto estructural de 4.2** — antes había 327 sets con eje `size` y 309 componentes sueltos sin él; los 1512 de Phosphor tienen firma idéntica. *El deber ser del mantenimiento, para retomar con la PD Jr, está en `../Diagnóstico/mantenimiento-de-iconos.md`.*
+>
 > 🟢 **Hallazgo del 19 ago que toca 1.9, 1.10 y 1.11:** **crear tokens nuevos SÍ propaga a Supernova.** Los dos `negativeHighlight` llegaron completos con su descripción. Con esto el mapa de R-12 queda cerrado: **crear ✅ · modificar ✅ · renombrar ✅ · borrar ❌.** *Las tres tareas de borrado siguen siendo las únicas que exigen el procedimiento manual de tres pasos.*
 >
-> **▶ Por dónde seguir:** la barata es **4.7** (`PhoneSolid` a 24×24, cinco minutos). *La cara es **4.2**: el defecto estructural de los iconos, con el eje ya unificado pero Solid y Outline en anatomías distintas.* **Pendiente de push:** los alias de 1.17 y las descripciones nuevas.
+> **▶ Por dónde seguir:** **4.9** es la siguiente y es barata — **publicar UN icono con sus doce variantes en Supernova y medir**, antes de decidir nada sobre el volumen del catálogo. *`Format=Stroke` está en suspenso esperando ese dato.* Las de foundations que quedan son **1.8** (`background/positiveSubtle`), **1.12** (la capa `shadow` del pipeline) y **2.1** (los defectos de escala tipográfica).
+>
+> ⚠️ **Antes de publicar la librería:** el Brand Book conserva 68 Heroicons y **los sostiene huérfanos**. Se migra a Supernova a mano, y hasta entonces no se pueden borrar del archivo.
 
 > Estado del contexto y el porqué de cada cosa: `estado-del-proyecto.md` · Decisiones y su razón: `DECISIONS.md` (repo de Product Design)
 > **Fechas, sprints y entregables comprometidos: `roadmap-fase2.md`** — el proyecto cierra el **30 de octubre de 2026**. Este tablero dice *qué* falta; el roadmap dice *cuándo*.

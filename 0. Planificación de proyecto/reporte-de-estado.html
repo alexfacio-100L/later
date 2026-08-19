@@ -255,9 +255,9 @@ footer{
 <!-- ============ RESUMEN ============ -->
 <div class="panel" role="tabpanel" id="p-resumen" aria-labelledby="t-resumen">
   <div class="metrics">
-    <div class="metric"><span class="n">33</span><span class="l">tareas cerradas de 53</span></div>
+    <div class="metric"><span class="n">36</span><span class="l">tareas cerradas de 56</span></div>
     <div class="metric"><span class="n">645</span><span class="l">variables del sistema saneadas</span></div>
-    <div class="metric"><span class="n">17</span><span class="l">defectos de accesibilidad corregidos</span></div>
+    <div class="metric"><span class="n">23</span><span class="l">defectos de accesibilidad corregidos</span></div>
     <div class="metric"><span class="n">6→1</span><span class="l">vocabularios de tamaño</span></div>
   </div>
 
@@ -435,6 +435,13 @@ footer{
       <h3>El Button pasó de 175 a 60 variantes</h3>
       <p>La auditoría encontró dos tamaños creados para kioscos táctiles que no existen —72 variantes por un caso que nunca ocurrió—, un estado que duplicaba un mecanismo ya presente, y un tipo que <strong>no era un botón sino un enlace</strong>: en código debía ser <code>&lt;a&gt;</code> y salía <code>&lt;button&gt;</code>, un defecto que llega a producción sin que ninguna revisión visual lo detecte.</p>
       <div class="ev"><b>Resultado:</b> Button 60 variantes · nace <b>Link</b> con 15 · API de 16 propiedades a 9, idéntica en ambos. Quien aprende uno sabe usar el otro.</div>
+    </div>
+
+    <div class="win key">
+      <span class="date">19 de agosto</span>
+      <h3>La librería de iconos cambia, y arregla un defecto de años</h3>
+      <p>Los iconos venían de <strong>Heroicons</strong>, elegida en la Fase 1. Desde 2024 el problema era de <strong>cobertura, no de estilo</strong>: faltaban iconos para contextos concretos y se pedían uno a uno, fuera del alcance de cada proyecto. Se cambió a <strong>Phosphor</strong>, con 1512 iconos y seis pesos.</p>
+      <div class="ev"><b>Y resolvió solo un defecto estructural que llevaba años:</b> las dos familias de Heroicons tenían anatomías distintas, así que <b>cambiar un icono por otro cambiaba la forma del componente</b>. Los 1512 nuevos son idénticos entre sí. <b>591 instancias migradas</b> en once páginas.</div>
     </div>
 
     <div class="win key">
