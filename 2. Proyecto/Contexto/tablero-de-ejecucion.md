@@ -157,7 +157,7 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   ⚠️ **La lección, que aplica a 1.9, 1.10 y 1.11:** *"cero referencias"* es un dato **con fecha de caducidad**. Las tres tareas de borrado se diagnosticaron el 12–13 ago y desde entonces se han corregido tokens que consumen primitivos. **Re-verificar el consumo justo antes de borrar, nunca fiarse del diagnóstico guardado.**
 - [ ] **1.8 · Arreglar escalas semánticas incoherentes.** ⚠️ **Actualizada el 17 ago: la mitad cambió de naturaleza.**
   ✅ **La rama `positiveSubtle` está resuelta, pero no como decía esta tarea.** No era una escala incoherente: **`Subtle` en `text/`, `icon/` y `border/` no significaba "menos intenso" sino *highlight* — verde de DATO frente a verde de ALERTA.** Renombrados a `*/positiveHighlight` y `text/warningHighlight`, con alias por mode. *Sigue anotado que **`background/positiveSubtle` (`#34A865`) es el único `*Subtle` de fondo con valor saturado** —sus tres hermanos son claros— y que **`background/positiveHighlight` ya existe** (`green/25`, `#D7F5E6`), así que conviene decidir si aquél se aclara o se renombra.*
-  🔴 **Sigue abierta la rama de enlaces:** **`text/linkPressed` aclara mientras `linkHover` oscurece.** Un estado presionado más claro que el de reposo invierte la convención del sistema.
+  ✅ **La rama de enlaces se resolvió el 19 ago dentro de 1.17.** El defecto era que **`text/linkPressed` aclaraba mientras `linkHover` oscurecía**; al dar alias por mode a los tres estados, cada mode quedó con **progresión monótona** —Light oscurece `500→700→900`, Dark aclara `300→200→100`—. *Lo que quedaba de 1.8 es solo `background/positiveSubtle`.*
 
 - [ ] **1.9 · `graphs/visualMapping/hot|warm|cold` son los tres `#FFFFFF` sin alias.**
 
@@ -257,7 +257,21 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   | `border/brand` `#041B3D` | 15.9 | **1.23** | 3 | **Dark** |
 
   **Los tres estados de `link` fallan en sitios distintos**, así que ninguna revisión hecha en un solo mode los habría encontrado todos. `border/brand` es el peor en magnitud: azul marino casi negro sobre negro.
-  *Done:* los seis con alias por mode y ≥ su mínimo en ambos. **`text/offer` se resuelve en el mismo movimiento que su renombre a `accent`.** *Séptima aparición de la regla del token emparejado con otro que no cambia.*
+  ✅ **CINCO DE SEIS APLICADOS el 19 ago.** `text/link`, `text/linkHover`, `text/linkPressed`, `text/info` y `border/brand` tienen alias por mode y **pasan su mínimo en ambos**, medidos contra el peor fondo de cada uno (`background/primary` en Light, `background/secondary` en Dark):
+
+  | Token | Light | Dark |
+  | --- | --- | --- |
+  | `text/link` | `blue/500` **4.80** | `blue/300` **4.69** |
+  | `text/linkHover` | `blue/700` **6.65** | `blue/200` **5.90** |
+  | `text/linkPressed` | `blue/900` **8.70** | `blue/100` **7.54** |
+  | `text/info` | `blue/500` **4.80** | `blue/300` **4.69** |
+  | `border/brand` | marca **15.90** | `neutralDarkBlue/300` **5.40** |
+
+  🟢 **La escala azul sí daba**, a diferencia de la roja en 1.20: hay exactamente **tres peldaños legibles a cada lado** —`500/700/900` en Light y `300/200/100` en Dark—, ni uno de sobra. *`blue/300` pasa Dark con 4.69 sobre un mínimo de 4.5: es el margen más justo del sistema y conviene no tocarlo sin volver a medir.*
+  🟢 **De paso cierra la rama de enlaces de 1.8:** ahora cada mode tiene **progresión monótona** —Light oscurece, Dark aclara—, así que el pressed ya no es más claro que el default en Light.
+  🔴 **Falta `text/offer`**, y no por contraste sino por una decisión pendiente: **su arreglo va junto al renombre a la familia `accent`**, donde hay que decidir cuál de los dos rojos gana —`icon/subtle` `#F20544` o los `offer` `#F94848`—. *Medido: en Light necesita `red/500` (5.10); en Dark `red/100` ya pasa con 4.69.*
+  *Done:* los seis con alias por mode y ≥ su mínimo en ambos. *Séptima aparición de la regla del token emparejado con otro que no cambia.*
+  ⏳ **Pendiente de push del Lead** y verificación por MCP de que Supernova entrega un primitivo distinto por theme.
 
 ---
 
