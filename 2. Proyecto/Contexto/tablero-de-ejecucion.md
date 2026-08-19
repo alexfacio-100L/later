@@ -22,7 +22,7 @@
 >
 > 🟢 **Hallazgo del 19 ago que toca 1.9, 1.10 y 1.11:** **crear tokens nuevos SÍ propaga a Supernova.** Los dos `negativeHighlight` llegaron completos con su descripción. Con esto el mapa de R-12 queda cerrado: **crear ✅ · modificar ✅ · renombrar ✅ · borrar ❌.** *Las tres tareas de borrado siguen siendo las únicas que exigen el procedimiento manual de tres pasos.*
 >
-> **▶ Por dónde seguir:** **4.9** es la siguiente y es barata — **publicar UN icono con sus doce variantes en Supernova y medir**, antes de decidir nada sobre el volumen del catálogo. *`Format=Stroke` está en suspenso esperando ese dato.* Las de foundations que quedan son **1.8** (`background/positiveSubtle`), **1.12** (la capa `shadow` del pipeline) y **2.1** (los defectos de escala tipográfica).
+> **▶ Por dónde seguir:** el frente de iconos quedó cerrado, así que vuelve foundations. **1.12** es la que más desatasca —añadir la capa `shadow` al pipeline y borrar los 26 color styles falsos— porque **libera 0.6 y condiciona 1.11**. Las baratas son **1.8** (`background/positiveSubtle`, el único `*Subtle` de fondo con valor saturado) y **2.1** (los tres defectos de escala tipográfica que se ven). *`4.7` puede haber quedado sin objeto: `PhoneSolid` era un Heroicon.*
 >
 > ⚠️ **Antes de publicar la librería:** el Brand Book conserva 68 Heroicons y **los sostiene huérfanos**. Se migra a Supernova a mano, y hasta entonces no se pueden borrar del archivo.
 
