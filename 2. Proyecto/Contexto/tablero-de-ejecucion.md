@@ -469,6 +469,13 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   >
   > **El método que funciona: fotografiar TODAS las medidas antes del primer swap, cambiar, y restaurar desde esa foto.** Medir sobre la marcha llega tarde.
 
+- [ ] **4.9 · Decidir el volumen del catálogo de iconos, con un experimento antes de borrar.** 🟡 **Nace el 19 ago.** Los 1512 sets traen **12 variantes cada uno** —`Format` × `Weight`— y son **~18 100 componentes**.
+  ✅ **Verificado en la documentación de Supernova:** el **bloque de documentación SÍ permite elegir qué variantes mostrar** (feature de marzo 2025), pero **la importación no tiene filtro por variante** — solo se puede habilitar o deshabilitar el scope de Componentes de un archivo entero. Y **Supernova solo importa lo publicado en Figma**.
+  **Consecuencia:** se pueden conservar `Stroke` y `Outline` en Figma y documentar solo `Outline`, pero **Supernova los importa los doce igual**.
+  ⚠️ **Sin comprobar: si el plan aguanta ~18 000 componentes.** *Antes de publicar los 1512 conviene **publicar UNO con sus doce variantes y medir** — un icono responde lo que 1512 no dejarían deshacer.*
+  🟡 **Decisión del Lead: conservar los seis `Weight`** hasta tener un caso real. **`Format=Stroke` queda en suspenso** a la espera del experimento — no es urgente borrarlo, y borrar variantes es irreversible sin rehacer la importación.
+  *El deber ser del mantenimiento, para retomar con la PD Jr: `2. Proyecto/Diagnóstico/mantenimiento-de-iconos.md`*
+
 - [ ] **4.7 · `PhoneSolid` en `size=l` mide 19×20, no 24×24.** ⚪ **Encontrado el 19 ago al unificar la escala de tamaños** — los otros 326 iconos son exactos en las tres tallas. **Es geometría, no nomenclatura:** cambiar el tamaño puede mover el layout donde el icono se use, así que quedó fuera del lote de renombres.
   *Done:* medido a 24×24 y revisadas sus instancias.
 
