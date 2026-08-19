@@ -443,7 +443,7 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   ⚠️ **Límite declarado sobre la verificación:** en este archivo **no hay una sola instancia** de los tres. No es que el renombre no las tocara — **es que no existen aquí**: las páginas de Organisms (`Navigation`, `Filter`, `Widgets`) están **vacías**, verificado cargándolas. La única página con contenido tiene 530 instancias y ninguna es de estos tres. **Si se usan, es en los archivos de producto, que no son este.**
   *La colisión `Alerta`/`Alerts` que daba nombre a esta tarea no apareció en el inventario de la página: los cinco sets son `Button Menu`, `Chip`, `Button Card`, `Button` y `Link`.*
 
-- [ ] **4.8 · Terminar el swap de Heroicons a Phosphor.** ⚪ **591 instancias migradas el 19 ago, en once páginas.**
+- [x] **4.8 · Terminar el swap de Heroicons a Phosphor.** ✅ **CERRADA el 19 ago: 591 instancias migradas en once páginas, y el resto del archivo verificado.**
 
   | Página | Instancias | Página | Instancias |
   | --- | --- | --- | --- |
@@ -455,8 +455,11 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   | `Thumbnails` | 28 | | |
 
   **Verificadas sin Heroicons restantes:** las once anteriores más `Accordion`, `Avatar`, `Banners`, `Checkbox`, `Datepicker`, `Dialog Box`, `Empty state`, `File upload`, `Login & SL`, `Notification`, `Playground`, `Progress & Slides`, `Toggle`, `Tooltips`, `Widgets` y `_Local Componentes`.
-  🟡 **Sin revisar todavía:** `Radio Button`, `Divider`, `Skeleton`, `App Icon`, `Biometrics`, `Data Visualization`, las seis de `Foundation` y las de Brand Book.
-  🟡 **`logo-hundred-bricksSolid` sigue en pie a propósito** — 6 instancias en `Cards (WIP)` y 1 en `Tag`. Es un activo propio, vive en el laboratorio de iconos y se reincorpora aparte.
+  ✅ **Barrido completo.** Se revisaron también `Radio Button`, `Divider`, `Skeleton`, `App Icon`, `Biometrics`, `Data Visualization`, `Color`, `Ilustraciones` y `Logos`: **ninguna sostiene un solo Heroicon.**
+  🟢 **Y el criterio de completitud lo afinó el Lead:** no es *"nombre que acaba en Solid"* sino **"componente huérfano"** — más fiable, porque un icono renombrado se escaparía del filtro por nombre y un activo propio se marcaría por error. *Re-verificadas con ese criterio, `Button` y `Tag` salen limpias de Heroicons.*
+  ⏭️ **El Brand Book queda FUERA DE ALCANCE por decisión del Lead.** Conserva **68 iconos** — es el muestrario de la librería anterior— pero **todo su contenido se migra a Supernova manualmente**, así que no tiene sentido migrarlo aquí.
+  ⚠️ **Consecuencia: los Heroicons huérfanos no se pueden borrar del archivo todavía**, porque el muestrario del Brand Book los sostiene. *Deja de ser un bloqueo en cuanto esa migración ocurra.*
+  🟡 **Dos activos propios siguen huérfanos a propósito:** `logo-hundred-bricksSolid` (7) e `Industrias illustration` (10). **No son de la librería de terceros** — viven en el laboratorio de iconos y se reincorporan aparte.
 
   **El diccionario de equivalencias quedó levantado** —unos 50 iconos, con alias `Chevron`→`Caret`, `X Mark`→`X`, `Ellipsis`→`DotsThree`, `Banknotes`→`Money`, `Adjustaments Vertical`→`Faders`— y el script de swap **reporta lo que no reconoce en vez de saltárselo en silencio**. *Así apareció `Chart BarSolid`, que no estaba en el mapa inicial.*
 
