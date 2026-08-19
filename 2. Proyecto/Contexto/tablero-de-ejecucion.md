@@ -132,7 +132,7 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
 > Cada renombre en Figma **deja un huérfano en "No collections"**, y hay ya 135 que se borran uno por uno. Hacerlos juntos genera el residuo **una vez** y se limpia **una vez**, en lugar de cuatro rondas de basura. Además **1.2 se disuelve solo** dentro de 1.13.
 > ⚠️ Estos nombres los **lee Engineering**: avisar antes, no sorprender.
 
-- [x] **1.13 · Renombrar `size` → `fontSize`.** ✅ **Ya estaba hecho por el Lead** — `primitiveType` tiene `fontSize/*`. *Nota: no era una colección, era un grupo dentro de `primitiveType`.* Sus tokens (`size/t-l`, `size/h-2xl`…) **son tamaños de fuente**, y Supernova ya los reconoce como `FontSize`. El nombre en Figma iría detrás de lo que el sistema ya dedujo.
+- [x] **1.13 · Renombrar `size` → `fontSize`.** ✅ **Cerrada el 14 ago — ya estaba hecho por el Lead** — `primitiveType` tiene `fontSize/*`. *Nota: no era una colección, era un grupo dentro de `primitiveType`.* Sus tokens (`size/t-l`, `size/h-2xl`…) **son tamaños de fuente**, y Supernova ya los reconoce como `FontSize`. El nombre en Figma iría detrás de lo que el sistema ya dedujo.
   *Y libera el prefijo `size/`* para los tamaños de elemento de la fase de componentes (ver bloque 4), evitando que dos conceptos distintos compartan nombre.
   *Incluye 1.2:* al renombrar, `h5xl` → `h-5xl` se corrige en el mismo movimiento.
 
@@ -195,7 +195,7 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   *Por qué importa el orden:* la respuesta decide si la solución es **reconectar el import de estilos** o **reconstruir las sombras como variables**. Son trabajos distintos.
   *Done:* respondida la pregunta del origen, y decidido cuál de los dos caminos se toma. **Bloquea 0.6 y condiciona 1.11.**
 
-- [x] **1.14 · Los colores de estado no cambian con el mode, y por eso casi ninguno pasa AA en los dos.** 🔴 **Nace de una duda del Lead el 17 ago** y la auditoría la confirmó más grande de lo planteado.
+- [x] **1.20 · Los colores de estado no cambian con el mode, y por eso casi ninguno pasa AA en los dos.** 🔴 **Nace de una duda del Lead el 17 ago** y la auditoría la confirmó más grande de lo planteado.
   **El dato:** **28 de 30 tokens de estado tienen el mismo hex en Light y Dark.** Un semántico que no cambia con el mode no es semántico — es un primitivo con nombre bonito. Cada color se eligió mirando un solo fondo. **Solo 4 de 17 tokens de texto/icono/borde pasan AA en los dos modes.**
   **Fallan en dark** (tonos oscuros): `text/negativePressed` **1.65**, `text/negativeHover` **2.52**, `icon/negative` y `border/negative` **2.97**, `text/positive` **3.16**, `text/warning` **3.05**. *No es el rojo: el verde y el naranja fallan igual.*
   **Fallan en light** (tonos claros): `text/warningSubtle` **2.31**, `text/positiveSubtle` **2.82**, `text/offer` **3.23**, `icon/warning` y `border/warning` **2.31**.
@@ -215,7 +215,7 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   🔴 **BLOQUEO 2 — los `Subtle` no funcionan en ninguna combinación.** `text/warningSubtle` sobre su propio fondo da **1.53**; `text/positiveSubtle` sobre el suyo da **1.00** —*es el mismo color exacto*—; y `text/warning` sobre `background/warningSubtle` da **3.28**. **Las descripciones además se contradicen** sobre cuál va encima de cuál. *Hay que decidir qué significa el sufijo `Subtle`: **(a)** el par del fondo —entonces la salida es el patrón `on*`— o **(b)** jerarquía de baja intensidad. Son trabajos distintos.*
   *Ruta original:* corregir primero los dos que fallan siempre; luego dar a cada escala de estado **dos anclas** (tono claro y tono oscuro) y que los semánticos **aliasen distinto por mode** — la misma regla de los dos rojos de marca; y mover `#ff7b71` a la escala `red`.
   ✅ **Verificado en Supernova el 17 ago, en los dos themes:** cada token entrega un primitivo distinto según el theme y **los renombres conservaron su ID**. El patrón funciona de punta a punta.
-  *Done:* los 17 pasan AA en los dos modes, y la regla queda escrita en la convención. ✅ **17 de 17, cerrada el 17 ago.** El Lead decidió extender la escala roja: **`red/50` = `#FCA4A4`** y **`red/75` = `#FF7B71`**, que entran por debajo de 100. `secondaryColors/orangeAccent` **se mudó, no se duplicó**. De paso se corrigió que `text/negativeHover` valía lo mismo que `text/negative` en Light — **el hover no se notaba**.
+  *Done:* los 17 pasan AA en los dos modes, y la regla queda escrita en la convención. ✅ **17 de 17, cerrada el 17 ago.** *(Numerada 1.14 hasta el 19 ago, cuando se detectó que colisionaba con la tarea de documentar `semanticColors`.)* El Lead decidió extender la escala roja: **`red/50` = `#FCA4A4`** y **`red/75` = `#FF7B71`**, que entran por debajo de 100. `secondaryColors/orangeAccent` **se mudó, no se duplicó**. De paso se corrigió que `text/negativeHover` valía lo mismo que `text/negative` en Light — **el hover no se notaba**.
   **Auditoría completa con todos los ratios y sus límites:** `Later2.0/Later: Brand System/2. Proyecto/Diagnóstico/auditoria-contraste-estado.md`
   ⚠️ **Medido contra `background/primary` y `secondary` solamente.** `background/inverseStatic` vale `#202020` en los dos modes y no está medido.
 
@@ -417,6 +417,9 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   🟢 **`Chip` queda alineado con `Button` y `Link`:** `showIconLeft` + `iconLeft` es el mismo par que ya usan los otros dos.
   ⚠️ **Límite declarado sobre la verificación:** en este archivo **no hay una sola instancia** de los tres. No es que el renombre no las tocara — **es que no existen aquí**: las páginas de Organisms (`Navigation`, `Filter`, `Widgets`) están **vacías**, verificado cargándolas. La única página con contenido tiene 530 instancias y ninguna es de estos tres. **Si se usan, es en los archivos de producto, que no son este.**
   *La colisión `Alerta`/`Alerts` que daba nombre a esta tarea no apareció en el inventario de la página: los cinco sets son `Button Menu`, `Chip`, `Button Card`, `Button` y `Link`.*
+
+- [ ] **4.7 · `PhoneSolid` en `size=l` mide 19×20, no 24×24.** ⚪ **Encontrado el 19 ago al unificar la escala de tamaños** — los otros 326 iconos son exactos en las tres tallas. **Es geometría, no nomenclatura:** cambiar el tamaño puede mover el layout donde el icono se use, así que quedó fuera del lote de renombres.
+  *Done:* medido a 24×24 y revisadas sus instancias.
 
 - [ ] **4.2 · Consolidar iconos:** fusionar Solid y Outline en un set con propiedad. Son 309 Outline y 327 Solid, el 78% de los componentes root.
   ✅ **Parcialmente avanzada el 19 ago: el eje quedó unificado.** Los 327 sets tienen hoy **firma idéntica — `size=l|m|s`** — con `s`=16px, `m`=20px y `l`=24px, en lugar de `Size=micro|mini|small`. *Lo que sigue abierto es el defecto estructural de abajo, que es lo caro.*
