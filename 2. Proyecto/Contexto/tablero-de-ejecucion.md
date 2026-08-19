@@ -17,6 +17,8 @@
 >
 > 🔴 **Corrección grande del 19 ago:** el tablero afirmaba que *"el pipeline de tokens ya corre en `Later2.0`"*. **Es falso.** `later-tokens` tiene cuatro commits de setup y **ninguno de Supernova**; lo que corre es Style Dictionary en local sobre un export manual de abril. **El puente a código no ha arrancado**, y esa es la mitad que falta del entregable 1.
 
+> 🟢 **Hallazgo del 19 ago que toca 1.9, 1.10 y 1.11:** **crear tokens nuevos SÍ propaga a Supernova.** Los dos `negativeHighlight` llegaron completos con su descripción. Con esto el mapa de R-12 queda cerrado: **crear ✅ · modificar ✅ · renombrar ✅ · borrar ❌.** *Las tres tareas de borrado siguen siendo las únicas que exigen el procedimiento manual de tres pasos.*
+>
 > **▶ Por dónde seguir:** la barata es **4.7** (`PhoneSolid` a 24×24, cinco minutos). *La cara es **4.2**: el defecto estructural de los iconos, con el eje ya unificado pero Solid y Outline en anatomías distintas.* **Pendiente de push:** los alias de 1.17 y las descripciones nuevas.
 
 > Estado del contexto y el porqué de cada cosa: `estado-del-proyecto.md` · Decisiones y su razón: `DECISIONS.md` (repo de Product Design)
@@ -280,7 +282,7 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   *Done:* los seis con alias por mode y ≥ su mínimo en ambos. *Séptima aparición de la regla del token emparejado con otro que no cambia.*
   ✅ **VERIFICADO EN SUPERNOVA tras el push del 19 ago.** Con el theme `dark` aplicado, cada token entrega **un primitivo distinto**: `text/link` y `text/info` pasan de `blue/500` a **`blue/300`**, `linkHover` de `blue/700` a **`blue/200`**, `linkPressed` de `blue/900` a **`blue/100`**. **La cadena Figma → push → Supernova funciona de punta a punta.**
   🔴 **Y la verificación destapó documentación caducada:** la descripción de `text/info` decía literalmente *"No cambia con el tema"* — cierto hasta esta misma tarea, falso después. **Reescritas las cinco descripciones**, incluidas las de `text/linkPressed` y `border/brand`, que estaban vacías. *Corregir un token sin corregir su descripción deja una mentira en la fuente de verdad que Engineering lee.*
-  ⚠️ *`border/brand` no se comprobó individualmente en Supernova por el coste de paginar el catálogo; el mecanismo quedó probado 4 de 4 en los otros.*
+  ✅ **Los siete verificados en Supernova tras el segundo push**, incluido `border/brand`, que entrega **`#6B96D6` (`neutralDarkBlue/300`)** bajo el theme `dark` frente al azul marino en base. *El límite declarado antes queda cerrado.*
 
 ---
 
