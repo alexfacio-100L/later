@@ -9,7 +9,7 @@ import { resolve, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 import { existsSync } from "node:fs"
 
-const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "../../..")
+const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const ENV = resolve(RAIZ, ".env")
 
 if (!process.env.SUPERNOVA_API_KEY && existsSync(ENV)) {

@@ -1,8 +1,12 @@
 # Later · Brand System
 
-Proyecto de **Renovare**: traducir el design system de Figma a código, con Supernova como fuente de verdad.
+**El sistema de documentación del design system.** Genera la especificación de un componente desde Figma y la publica en Supernova.
 
-**Por dónde entrar:** `2. Proyecto/Contexto/tablero-de-ejecucion.md` — dice qué sigue.
+Parte de **Renovare**: traducir el design system de Figma a código, con Supernova como fuente de verdad.
+
+> **Esta carpeta contiene el SISTEMA.** La gestión del proyecto —tablero, contexto, roadmap, entregables— vive un nivel arriba, en `Later2.0/`, bajo el modelo IPO.
+
+**Por dónde entrar:** `../2. Proyecto/Contexto/tablero-de-ejecucion.md` — dice qué sigue.
 Su vecino `estado-del-proyecto.md` explica el porqué de cada cosa, y `roadmap-fase2.md` las fechas.
 
 > **Corre `npm run tablero` antes de proponer trabajo.** El tablero tiene dos fuentes de verdad —las casillas y la prosa— y solo las casillas se mantienen solas.
@@ -50,25 +54,34 @@ npm run docs:conexion
 
 ---
 
-## Cómo está organizada esta carpeta
+## Cómo está organizado
 
-Modelo **IPO — Input · Process · Output**. Es la convención del área para todos los proyectos, no solo para éste.
+**Esta carpeta es el sistema; la gestión del proyecto vive fuera.**
 
-| Carpeta | Qué va | Regla |
-| --- | --- | --- |
-| **raíz** | El `README.md`, la configuración y las cuatro carpetas | La portada del proyecto |
-| **`0. Planificación de proyecto`** | Kick-off, cronogramas, calendarios, reportes de estado | Lo que explica **cómo se va a trabajar** |
-| **`1. Recursos`** | Input: material en bruto, insumos de terceros | **No se edita.** Entra como llegó |
-| **`2. Proyecto`** | Process: todo lo editable — investigaciones, auditorías, herramientas | Aquí se trabaja |
-| **`3. Entregables`** | Output: resultados no editables | PDFs, o **un documento con la URL** si el entregable vive en otra plataforma |
+```text
+Later2.0/                              ← modelo IPO, la gestión del proyecto
+├── 0. Planificación de proyecto/      kick-off, cronogramas, reporte de estado
+├── 1. Recursos/                       input sin editar
+├── 2. Proyecto/                       Contexto (tablero, estado, roadmap), Diagnóstico…
+├── 3. Entregables/                    output no editable
+└── Later: Brand System/               ← ESTA CARPETA · el sistema, con git
+    ├── Componentes/                   las especificaciones producidas
+    ├── .claude/skills/                las 13 skills de uSpec
+    ├── references/                    plantillas de uSpec
+    ├── experimento-canario/           el conversor y el publicador
+    ├── uspecs.config.json
+    └── verificar-uspec.mjs
+```
 
-**Subcarpetas de `2. Proyecto`:** `Contexto` (tablero, estado, roadmap) · `Diagnóstico` (auditorías) · `Correcciones` · `Snapshots` · `Soporte` · `_Superado` · `uSpec`.
+⚠️ **`references/` tiene que ser hermano de `.claude/`.** Las skills lo referencian como `../../../references/`, así que **la pareja se mueve junta o no se mueve.**
+
+> 🔴 **El repositorio git cubre solo esta carpeta.** Lo que vive en `Later2.0/` —el tablero, el contexto, los diagnósticos— **no está versionado aquí.** *Conviene darle su propio repositorio o respaldarlo aparte.*
 
 ### Reporte de estado para stakeholders
 
-`0. Planificación de proyecto/reporte-de-estado.html` → publicado en **https://claude.ai/code/artifact/c6be2bbd-112c-41fd-923d-be8a82d54144**
+`../0. Planificación de proyecto/reporte-de-estado.html` → publicado en **https://claude.ai/code/artifact/c6be2bbd-112c-41fd-923d-be8a82d54144**
 
-⚠️ **Ese archivo es lo que permite republicar en el mismo enlace.** Si se pierde, la página queda congelada. Se actualiza al cierre de cada sprint.
+⚠️ **Ese archivo es lo que permite republicar en el mismo enlace.** Si se pierde, la página queda congelada.
 
 ---
 
@@ -111,7 +124,7 @@ npm run docs:estado
 >
 > **La prueba que las separa:** `cloud.supernova.io` se sirve por CDN con presencia local; `api.supernova.io` apunta directo a Irlanda. **Si `cloud` responde y `api` no, el problema es de ruta.** *Se confirma probando `s3.eu-west-1.amazonaws.com`: si tampoco responde, es la región entera.* **La solución es una VPN o avisar al ISP — cambiar de red lo resolvió.**
 
-**Detalle:** `2. Proyecto/uSpec/DESTINO-DE-LA-DOCUMENTACION.md`
+**Detalle:** `DESTINO-DE-LA-DOCUMENTACION.md`
 
 ### Los pasos, uno por uno
 
@@ -119,11 +132,11 @@ npm run docs:estado
 
 > 🔴 **Es el único paso que no se puede automatizar**, porque el plugin corre dentro de Figma. **Y el `_base.json` es una fotografía: si el componente cambió, hay que re-extraer.** Regenerar sin re-extraer produce documentación caduca con apariencia de fresca.
 
-**2 · Generar el `.md`** — `create-component-md` con `baseJsonPath`. Usar `--output` para que aterrice en `3. Entregables/Componentes/`.
+**2 · Generar el `.md`** — `create-component-md` con `baseJsonPath`. Usar `--output` para que aterrice en `Componentes/`.
 
 **3 · Publicar** — `npm run docs:validar` primero, `npm run docs:publicar` después.
 
-**4 · Los previews** — las imágenes de Figma se suben aparte. Ver `2. Proyecto/uSpec/experimento-canario/PREVIEWS-DE-FIGMA.md`.
+**4 · Los previews** — las imágenes de Figma se suben aparte. Ver `experimento-canario/PREVIEWS-DE-FIGMA.md`.
 
 ### Qué hace el conversor
 
@@ -156,7 +169,7 @@ npm run uspec:verificar          # contra la última publicada
 
 ⚠️ **Una comparación ingenua marca 12 de 13 skills como modificadas, y es falso.** `init` resuelve tres familias de placeholder al instalar —`{{ref:}}`, `{{skill:}}`, `{{repo:}}`— y el verificador las normaliza. *Sin eso, el informe es ruido.*
 
-**Procedimiento completo:** `2. Proyecto/uSpec/ACTUALIZAR-USPEC.md`
+**Procedimiento completo:** `ACTUALIZAR-USPEC.md`
 
 ---
 
@@ -166,19 +179,17 @@ Herramienta de terceros (MIT) que genera la especificación de un componente des
 Repositorio: `github.com/redongreen/uSpec` · Documentación: `docs.uspec.design`
 
 ```text
-2. Proyecto/uSpec/
+Later: Brand System/
 ├── .claude/skills/          las 13 skills (create-*, extract-*, firstrun)
 ├── references/              plantillas e instrucciones de terceros
 ├── uspecs.config.json       claves de las plantillas de Figma + tipografía
 ├── verificar-uspec.mjs      compara con lo publicado
 ├── experimento-canario/     NUESTRO: conversor, publicador, documentación
+├── Componentes/             las especificaciones producidas
 └── .uspec-cache/            regenerable · no se versiona
-
-3. Entregables/Componentes/
-└── button.md                la especificación · lo que se entrega
 ```
 
-⚠️ **`references/` NO se puede mover a `1. Recursos` aunque sea material de terceros.** Las skills lo referencian como `../../../references/` desde `.claude/skills/`, así que **tiene que ser hermano de `.claude/`**.
+⚠️ **`references/` tiene que ser hermano de `.claude/`.** Las skills lo referencian como `../../../references/`, y esa profundidad es lo que hizo que la reorganización del 20 ago no rompiera nada: **uSpec se movió como bloque.**
 
 ### Las dos familias de skill
 
@@ -216,6 +227,6 @@ Repositorio: `github.com/redongreen/uSpec` · Documentación: `docs.uspec.design
 | `experimento-canario/MAPA-DE-BLOQUES.md` | Los 36 bloques y a qué sección corresponden |
 | `experimento-canario/QUE-PUEDO-DELEGAR.md` | Qué se automatiza y qué no |
 | `experimento-canario/PREVIEWS-DE-FIGMA.md` | Cómo llevar las imágenes de Figma |
-| `uSpec/ACTUALIZAR-USPEC.md` | El procedimiento de actualización |
-| `uSpec/DESTINO-DE-LA-DOCUMENTACION.md` | Los dos caminos y cuándo usar cada uno |
+| `ACTUALIZAR-USPEC.md` | El procedimiento de actualización |
+| `DESTINO-DE-LA-DOCUMENTACION.md` | Los dos caminos y cuándo usar cada uno |
 | `100Ladrillos/contexto/16-supernova-plataforma.md` | Las cuatro superficies de Supernova |

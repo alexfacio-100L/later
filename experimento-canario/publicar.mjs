@@ -14,7 +14,7 @@ exigirDestino("supernova")
 console.log(`destino: ${destino.nombre} (${destino.estado})\n`)
 
 const PAGE = "44285c3c-dbe6-4504-a485-2ab58a6fa8ba"   // Componentes / Button Canario
-const MD   = new URL("../../../3. Entregables/Componentes/button.md", import.meta.url)
+const MD   = new URL("../Componentes/button.md", import.meta.url)
 
 const tokens = existsSync(new URL("./tokens.json", import.meta.url))
   ? JSON.parse(readFileSync(new URL("./tokens.json", import.meta.url), "utf-8")) : {}

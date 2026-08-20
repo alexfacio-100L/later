@@ -24,7 +24,7 @@ const AQUI = dirname(fileURLToPath(import.meta.url))
 
 // La página que el Lead creó para esto — Componentes / Button Canario
 const PAGE_ID = "44285c3c-dbe6-4504-a485-2ab58a6fa8ba"
-const MD = resolve(AQUI, "../../../3. Entregables/Componentes/button.md")
+const MD = resolve(AQUI, "../Componentes/button.md")
 
 const apiKey = process.env.SUPERNOVA_API_KEY
 if (!apiKey) {

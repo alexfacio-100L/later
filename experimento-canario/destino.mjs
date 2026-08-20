@@ -13,7 +13,7 @@ import { readFileSync, existsSync } from "node:fs"
 import { resolve, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 
-const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "../../..")
+const RAIZ = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 
 const DESTINOS = {
   supernova: {

@@ -4,7 +4,7 @@
 ~$*
 
 # uSpec — caché regenerable, la propia skill exige no versionarlo
-2. Proyecto/uSpec/.uspec-cache/
+.uspec-cache/
 
 # Descargas intermedias del plugin uSpec Extract
 *_base.json
@@ -21,8 +21,8 @@ node_modules/
 *.key
 
 # Regenerables del conversor
-2. Proyecto/uSpec/experimento-canario/salida.mdx
-2. Proyecto/uSpec/experimento-canario/tokens.json
+experimento-canario/salida.mdx
+experimento-canario/tokens.json
 
 # Frames exportados de Figma — regenerables con download_assets
-2. Proyecto/uSpec/experimento-canario/frames/
+experimento-canario/frames/
