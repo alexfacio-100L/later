@@ -83,3 +83,33 @@
 | **Formato** | 269 negritas · 2.594 fragmentos de código · listas · citas · separadores |
 
 **Nada se aplanó.** Supernova normalizó 3.503 líneas de entrada a 517 y las convirtió en sus propios componentes editables.
+
+---
+
+## ⚠️ Validar no es lo mismo que verse bien
+
+**El primer intento pasó la validación y se veía mal.** Merece registrarse porque es fácil de repetir.
+
+**El bug:** la regla que envuelve etiquetas HTML citadas en backticks corría **después** de generar las `<SNTable>`, así que envolvía las etiquetas recién creadas:
+
+```
+`<SNTable showBorder>` `<SNTableRow>` `<SNTableCell …>`
+```
+
+**Supernova lo aceptó** —es sintaxis válida: son fragmentos de código— **y lo renderizó como texto.** Las tablas no eran tablas.
+
+> **La lección: `validateMarkdown` responde "¿es sintaxis válida?", NO "¿se ve bien?".** Un documento puede validar al 100% y ser ilegible. **Después de escribir hay que mirar la página, o releerla por MCP y comprobar que las etiquetas propias no quedaron escapadas.**
+
+**Y la regla general de orden:** cuando una transformación envuelve o escapa marcado, **tiene que correr ANTES de las que generan marcado propio.** El orden correcto es:
+
+1. **Eliminar comentarios**
+2. **Envolver etiquetas HTML citadas** en backticks
+3. **Convertir tablas** a `<SNTable>`
+
+*Con una defensa extra: la regla de backticks excluye explícitamente las etiquetas `SN*`, por si el orden vuelve a cambiar.*
+
+### El `columnWidth` fijo también estorbaba
+
+Se calculaba como `760 / columnas`. **Con siete columnas daban 108 px cada una y la tabla parecía una hoja de cálculo.** *Se quitó: sin `columnWidth`, Supernova ajusta al contenido.*
+
+**Resultado tras el arreglo: 127 bloques en vez de 155** — menos bloques porque las tablas dejaron de fragmentarse en párrafos de código.

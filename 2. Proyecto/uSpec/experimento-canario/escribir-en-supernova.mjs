@@ -50,6 +50,20 @@ const ADAPTACIONES = [
     aplicar: t => t.replace(/<!--[\s\S]*?-->/g, "").replace(/^\s*\n(?=\s*\n)/gm, "")
   },
   {
+    // Etiquetas HTML citadas como texto: MDX las lee como componentes JSX y
+    // exige cierre. El error: "Expected a closing tag for `<button>`".
+    // Es además un defecto del .md: en Markdown normal también se rompen.
+    // Se envuelven en backticks, respetando lo que ya está en código.
+    nombre: "etiquetas HTML citadas → código en backticks",
+    aplicar: t => t.split("\n").map(linea => {
+      if (linea.trimStart().startsWith("{/*")) return linea
+      // Partir por backticks: los índices impares ya son código, no se tocan.
+      return linea.split("`").map((trozo, i) =>
+        i % 2 === 1 ? trozo : trozo.replace(/<(\/?(?!SN)[a-zA-Z][a-zA-Z0-9-]*(?:\s[^<>]*?)?)\/?>/g, "`<$1>`")
+      ).join("`")
+    }).join("\n")
+  },
+  {
     // Supernova rechaza las pipe tables de Markdown:
     //   "Pipe tables are not supported. Use <SNTable> with <SNTableRow> and <SNTableCell>."
     // Se convierten al componente nativo. El markdown inline de cada celda se conserva.
@@ -74,14 +88,13 @@ const ADAPTACIONES = [
 
         const filas = bloque.filter(l => !esSeparador(l)).map(celdas)
         const columnas = Math.max(...filas.map(f => f.length))
-        const ancho = Math.round((760 / columnas) * 100) / 100
 
         salida.push(`<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>`)
         for (const fila of filas) {
           salida.push("  <SNTableRow>")
           for (let c = 0; c < columnas; c++) {
             const contenido = (fila[c] ?? "").replace(/<br\s*\/?>/gi, " ")
-            salida.push(`    <SNTableCell alignment="Left" columnWidth={${ancho}}>`)
+            salida.push(`    <SNTableCell alignment="Left">`)
             salida.push(`      ${contenido}`)
             salida.push("    </SNTableCell>")
           }
@@ -92,20 +105,6 @@ const ADAPTACIONES = [
       }
       return salida.join("\n")
     },
-  },
-  {
-    // Etiquetas HTML citadas como texto: MDX las lee como componentes JSX y
-    // exige cierre. El error: "Expected a closing tag for `<button>`".
-    // Es además un defecto del .md: en Markdown normal también se rompen.
-    // Se envuelven en backticks, respetando lo que ya está en código.
-    nombre: "etiquetas HTML citadas → código en backticks",
-    aplicar: t => t.split("\n").map(linea => {
-      if (linea.trimStart().startsWith("{/*")) return linea
-      // Partir por backticks: los índices impares ya son código, no se tocan.
-      return linea.split("`").map((trozo, i) =>
-        i % 2 === 1 ? trozo : trozo.replace(/<(\/?[a-zA-Z][a-zA-Z0-9-]*(?:\s[^<>]*?)?)\/?>/g, "`<$1>`")
-      ).join("`")
-    }).join("\n")
   }
 ]
 
