@@ -107,6 +107,34 @@ El eje `state` de Figma se descompone: solo `disabled` llega a la API.
 | `isDisabled` | `true` | Bloquea el clic y sale del orden de tabulacion |
 | `label` | `Guardar` | El texto se mantiene legible: 4.50:1 en Light, 4.89 en Dark |
 
+## Properties
+
+Cada propiedad de la API, mostrada con sus valores lado a lado. **El contrato está en `## API`; esto es la muestra visual de lo que hace cada una.**
+
+### variant
+
+Jerarquía visual de la acción. `primary` para la acción principal de la vista; `secondary` para las de apoyo.
+
+### surface
+
+Contexto de uso. `product` dentro de la aplicación; `marketing` en piezas promocionales — cambia el radio y el peso del texto.
+
+### size
+
+Escala del control. **Solo cambia el padding:** los tres tamaños comparten el estilo de texto de 14/21. *Es el hueco abierto que recoge `## Known gaps`.*
+
+### isDisabled
+
+Desactiva el control. El texto baja a `text/disabled` y el fondo a `background/disabled`.
+
+### showIconLeft
+
+Revela la ranura de icono anterior al texto. Oculta por defecto; acepta cualquier icono de Phosphor.
+
+### showIconRight
+
+Revela la ranura de icono posterior al texto. Oculta por defecto; se usa sobre todo para avanzar en un flujo.
+
 ## Structure
 
 **Jerarquía de capas:** root → content → [iconLeft, labelBox → label, iconRight]. *Los elementos y su función están en `## Anatomy`; aquí solo se documentan sus medidas.* No hay sub-componentes constitutivos ni slots con contenido preferido: iconLeft e iconRight son instancias referenced (set ArrowRight, Phosphor) y aquí figuran solo por referencia y tamaño; su estructura interna vive en su propia spec. · Espaciado: los paddings están tokenizados al 100% en las 60 variantes, con la progresión corregida el 20 ago 2026 (s: 8/16 · m: 12/16 · l: 16/24, dentro de la escala space 8·12·16·24). Las alturas resultantes son 37, 45 y 53, todas por debajo del mínimo táctil de 44 de WCAG 2.5.8, lo que obliga a resolver el área táctil fuera del componente. · El gap del contenedor raíz es space/zero (0): la separación real entre icono y label la produce el horizontalPadding de labelBox (space/s (8)), constante en los tres tamaños. · HUECO ABIERTO (no es una decisión de diseño): size NO escala la tipografía. Los tres tamaños usan el mismo estilo de texto de 14/21. Tras la corrección del 20 ago, lo único que diferencia l de m es el padding; entre m y s solo cambia el padding vertical. Queda pendiente decidir si la tipografía debe escalar o si el sistema asume un único tamaño de texto. · Anomalías detectadas: (1) cornerRadius es la única familia dimensional sin token —valores crudos 8 y 12— y además depende de dos ejes a la vez (size y surface); (2) labelBox lleva cornerRadius 12 sin pintar relleno ni borde, radio sin efecto visual; (3) el grosor del trazo en focus no es consistente por tamaño: 1.5 en s y m pero 2 en l, y ninguno de los dos valores pertenece a una escala declarada; (4) la instancia de icono embebida trae Weight=Fill mientras el defecto declarado de la librería es Weight=Regular. · Cobertura: cero filas not-measured; los dos FRAME auditables (content y labelBox) tienen todas sus familias no-cero documentadas.

@@ -167,7 +167,7 @@ function tablaSN(filas, iconos = null, jerarquia = false) {
       out.push(`    <SNTableCell alignment="Left" columnWidth={${anchoCelda}}>`)
       if (icono) {
         // El .md dice "Instance"; aqui se convierte en el icono de la plantilla.
-        out.push(`      <SNImage alignment="Left" src="${icono.url}" caption="${icono.etiqueta}" />`)
+        out.push(`      <SNImage alignment="Left" resourceId="${icono.assetId}" caption="${icono.etiqueta}" />`)
       } else {
         // Una celda que empieza por "#" la lee Markdown como encabezado: se escapa.
         const txt = llavesLiterales((fila[c] ?? "").replace(/<br\s*\/?>/gi, " "))
@@ -263,7 +263,11 @@ const imagenDeSeccion = (titulo, frames, informe) => {
   const f = frames[titulo]
   if (!f) return []
   informe.vivas.push(`${titulo} → preview`)
-  return [`<SNImage alignment="Left" src="${f.url}" />`, ""]
+// Las imagenes se referencian por `resourceId`, no por `src`. Supernova solo
+// descarga 20 URLs distintas por escritura y el Button ya necesita 22; ademas,
+// los PNG ya viven como recursos suyos desde `subir-frame.mjs`, asi que pedirle
+// que los vuelva a descargar de una URL temporal es trabajo de mas.
+  return [`<SNImage alignment="Left" resourceId="${f.assetId}" />`, ""]
 }
 
 const tokensProp = ids =>
@@ -381,7 +385,7 @@ export function convertir(md, tokens = {}, frames = {}, iconosTipo = {}) {
         salida.push(`${enc[1]} ${traducirSeccion(titulo)}`, "")
         const frame = frames["Anatomy"]
         if (frame) {
-          salida.push(`<SNImage alignment="Left" src="${frame.url}" />`, "")
+          salida.push(`<SNImage alignment="Left" resourceId="${frame.assetId}" />`, "")
           salida.push(...callout("Info",
             `Exportado de Figma —\`${frame.nombre}\`, nodo \`${frame.nodo}\`— y subido como recurso. **Es una imagen: si el frame cambia en Figma, hay que volver a exportarlo.**`))
           informe.vivas.push(`Anatomy → imagen de ${frame.nombre}`)

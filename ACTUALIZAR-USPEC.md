@@ -277,3 +277,27 @@ Ocho variantes —`primary`/`secondary` × `product`/`marketing` × Light/Dark�
 - ⚠️ **`disabled` en Light → 4,50:1.** Cumple por décimas; cualquier ajuste lo tumba.
 
 *Ambos añadidos a `Known gaps` del `.md`.*
+
+## `create-property` en modo solo-preview (21 ago 2026)
+
+**Aquí el recorte es mínimo:** la skill ya dedica casi todo su trabajo al `#preview` y no rellena tabla de anotaciones. Solo se omite el Step 8 (header). El `#property-name` y la descripción de cada exhibit **sí se rellenan** — rotulan el preview, no son metadatos del frame.
+
+Seis exhibits: `variant`, `surface`, `size`, `isDisabled`, `showIconLeft`, `showIconRight`. **El `.md` gana una sección `## Properties`** con una subsección por propiedad, para que el conversor tenga dónde colocarlos — igual que hizo falta con `## Anatomy`.
+
+**Con pocas columnas, el ancho se calcula sobre TODAS**, no sobre las tres mayores: `size` envolvía sus tres tamaños en dos filas y lo que se quiere ahí es compararlos de un vistazo.
+
+## El límite de 20 imágenes por escritura
+
+🔴 **Supernova descarga como mucho 20 URLs distintas por `writeMarkdownToPage`, y el Button necesita 22.**
+
+**La salida es `resourceId`, no `src`:**
+
+```jsx
+<SNImage alignment="Left" resourceId="93a3b9bd-…" />
+```
+
+*Los PNG ya viven como recursos suyos desde `subir-frame.mjs` —ese `assetId` es justo lo que hay que pasar—, así que pedirle que los vuelva a descargar de una URL temporal era trabajo de más además de un tope.* Verificado contra `validateMarkdown`: `resourceId` vale; `assetId` y `resource` no.
+
+## Corrección: `create-api` también produce previews
+
+**Conté los previews de cada skill buscando la cadena `#preview` y me dio 0 para `create-api`.** El Lead vio que su layout sí los tiene. *Es el segundo caso del mismo error de método en este repo —`create-voice` fue el primero—: buscar una cadena literal no prueba la ausencia de la cosa.*

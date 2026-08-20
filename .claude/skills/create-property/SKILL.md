@@ -3,6 +3,31 @@ name: create-property
 description: Generate a visual property annotation in Figma showing each configurable property axis with component instance previews. Use when the user mentions "property", "properties", "property annotation", "create property", or wants to document a component's configurable properties visually.
 ---
 
+---
+
+## ⚡ MODO SOLO-PREVIEW (adecuación local de 100 Ladrillos)
+
+**El sistema documenta en Supernova, no en Figma.** *Aquí el recorte es mínimo: esta skill ya dedica casi todo su trabajo al `#preview` y no rellena tabla de anotaciones.*
+
+| Bloque | Qué hacer |
+| --- | --- |
+| **Step 8 — Fill Header Fields** | **OMITIR** — `#comp-name-anatomy` y `#brief-component-description` no se consumen |
+| **Step 9 — Build Property Exhibits** | **Se ejecuta entero.** El `#property-name` y la `#property-description` de cada exhibit **sí se rellenan**: rotulan el preview, no son metadatos del frame |
+
+### Ajuste del ancho del preview
+
+Alto pegado al contenido; ancho por **fracción del 50%** (una fila de instancias, como `structure` y `color`). **Proporción máxima 3,5:1** — con más de tres o cuatro instancias, repártelas con `layoutWrap` y **mete el aire en el `padding` lateral, no en ancho libre**, o el wrap no se dispara.
+
+⚠️ **Antes de medir el ancho, retira los placeholders de la plantilla.** *En `create-color` un `Light theme preview placeholder` de 1400×290 se coló en el cálculo y lo disparó a 7,6:1.*
+
+🔴 **Y al rotular, la etiqueta es el TEXT hijo DIRECTO del wrapper.** *`wrapper.findOne(TEXT)` devuelve el primero, que es el label del componente: usarlo repinta el texto interno de las instancias y falsea cualquier medida de contraste.*
+
+`npm run docs:previews` comprueba fracción y proporción antes de publicar.
+
+*Adecuación local: no viene de uSpec. Ver `ACTUALIZAR-USPEC.md` — al actualizar hay que reaplicarla.*
+
+---
+
 # Create Property Annotation
 
 Generate a visual property annotation directly in Figma — one exhibit per variant axis and boolean toggle, each showing the available options as component instances with a summary table.
@@ -578,6 +603,8 @@ Replace `__COMPONENT_NAME__` with `render-meta.component.componentName`. Replace
 Save the returned `frameId`.
 
 ### Step 8: Fill Header Fields
+
+> ⚡ **MODO SOLO-PREVIEW: OMITIR este paso entero.**
 
 Run via `figma_execute` (replace `__FRAME_ID__`, `__COMPONENT_NAME__`, `__BRIEF_DESCRIPTION__`). Replace `__BRIEF_DESCRIPTION__` with the `briefDescription` composed during Step 4e:
 
