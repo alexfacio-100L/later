@@ -209,6 +209,17 @@ const traducirCabecera = c => {
 const callout = (tipo, cuerpo) =>
   [`<SNCallout type="${tipo}">`, ...cuerpo.split("\n").map(l => `  ${l}`), "</SNCallout>", ""]
 
+/**
+ * Si hay un preview registrado para esta sección, lo emite como imagen.
+ * La clave del registro es el título literal del encabezado en el `.md`.
+ */
+const imagenDeSeccion = (titulo, frames, informe) => {
+  const f = frames[titulo]
+  if (!f) return []
+  informe.vivas.push(`${titulo} → preview`)
+  return [`<SNImage alignment="Left" src="${f.url}" />`, ""]
+}
+
 const tokensProp = ids =>
   "[" + ids.map(i => `{ entityId: "${i}", entityType: "Token" }`).join(", ") + "]"
 
@@ -304,6 +315,16 @@ export function convertir(md, tokens = {}, frames = {}) {
             `**Supernova calcula estos contrastes.** Los ${ids.length} tokens salen del sistema; la tabla escrita a mano que había aquí caducaba con cada cambio.`))
           informe.callouts++
         }
+        // Los previews de las subsecciones de color, si están registrados
+        for (let j = i; j < fin; j++) {
+          const sub = lineas[j].match(/^#{3} (.+)$/)
+          if (!sub) continue
+          const img = imagenDeSeccion(sub[1].trim(), frames, informe)
+          if (img.length) {
+            salida.push(`### ${traducirSeccion(sub[1].trim())}`, "")
+            salida.push(...img)
+          }
+        }
         i = fin
         continue
       }
@@ -331,6 +352,7 @@ export function convertir(md, tokens = {}, frames = {}) {
       }
 
       salida.push(`${enc[1]} ${traducirSeccion(titulo)}`)
+      salida.push(...imagenDeSeccion(titulo, frames, informe))
       i++
       continue
     }
