@@ -26,6 +26,10 @@ export const LIMITES = {
   fraccionAnchoMax: 55,  // por encima, la imagen se amplia y el trazo se ve tosco
   ladoMaximo: 4096,      // px — por encima, la imagen pesa sin aportar
   ladoMinimo: 120,       // px — por debajo, se pixela al ampliarla
+  // Una imagen muy apaisada encoge de ALTO al escalarla al ancho de la columna,
+  // asi que el contenido se ve pequeno aunque la fraccion de ancho sea correcta.
+  // El preview de estados salio a 5.3:1 con un 50% de fraccion y se veia mal.
+  proporcionMaxima: 3.5, // lado largo / lado corto
 }
 
 /** Lee ancho y alto de un PNG sin dependencias: bytes 16..24 de la cabecera IHDR. */
@@ -59,6 +63,10 @@ export function verificar(registro, baseUrl) {
         const largo = Math.max(px.w, px.h), corto = Math.min(px.w, px.h)
         if (largo > LIMITES.ladoMaximo) fila.problemas.push(`${largo}px de lado (máximo ${LIMITES.ladoMaximo})`)
         if (corto < LIMITES.ladoMinimo) fila.problemas.push(`${corto}px de lado (mínimo ${LIMITES.ladoMinimo})`)
+        const prop = largo / corto
+        fila.ratio = prop.toFixed(1) + ":1"
+        if (prop > LIMITES.proporcionMaxima)
+          fila.problemas.push(`proporción ${prop.toFixed(1)}:1 (máximo ${LIMITES.proporcionMaxima}:1) — al escalar al ancho de la columna encoge de alto`)
       }
     }
     filas.push(fila)
@@ -82,7 +90,7 @@ if (esEjecutable) {
   for (const f of filas) {
     const marca = f.problemas.length ? "🔴" : "✅"
     const ocup = f.fraccionAncho === null ? "  ?  " : `${String(f.fraccionAncho).padStart(3)}% `
-    console.log(`  ${marca} ${ocup} ${(f.px ?? "").padEnd(11)} ${f.seccion}`)
+    console.log(`  ${marca} ${ocup} ${(f.px ?? "").padEnd(11)} ${(f.ratio ?? "").padEnd(7)} ${f.seccion}`)
     for (const p of f.problemas) console.log(`         ↳ ${p}`)
   }
 

@@ -213,8 +213,11 @@ npm run docs:publicar      # la corre sola y ABORTA si algo no pasa
 | Límite | Valor | Por qué |
 | --- | --- | --- |
 | Fracción de ancho | **25–55%** | Por debajo se pierde; por encima se amplía y el trazo se ve tosco |
+| **Proporción máxima** | **3,5:1** | Una imagen apaisada encoge de ALTO al escalarla al ancho de la columna |
 | Lado máximo | 4096 px | Peso sin ganancia |
 | Lado mínimo | 120 px | Se pixela al ampliarla |
+
+🔴 **La fracción de ancho sola no basta.** *El preview de estados salió a **5,3:1** con la fracción correcta al 50%, y se veía pequeño igual: cinco instancias en fila dan una imagen tan apaisada que, al ajustarla al ancho de la columna, la altura resultante es mínima.* La solución fue repartirlas en dos filas — **y el aire tiene que ir en el `padding` lateral, no en ancho libre, o el `layoutWrap` no se dispara nunca.**
 
 **Los tres puntos medidos sobre el mismo preview del Button:** 14% diminuto · 71% gigante · **33% correcto**. *Pasarse de recorte cuesta lo mismo que quedarse corto.*
 
