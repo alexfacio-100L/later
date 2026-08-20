@@ -3,11 +3,15 @@
  *   node publicar.mjs            → solo valida e informa
  *   node publicar.mjs --escribir → escribe en la página
  */
+import { exigirDestino, destino } from "./destino.mjs"
 import { apiKey } from "./entorno.mjs"
 import sdkPkg from "@supernovaio/sdk"
 import { readFileSync, writeFileSync, existsSync } from "node:fs"
 import { convertir } from "./conversor.mjs"
 const { Supernova } = sdkPkg
+
+exigirDestino("supernova")
+console.log(`destino: ${destino.nombre} (${destino.estado})\n`)
 
 const PAGE = "44285c3c-dbe6-4504-a485-2ab58a6fa8ba"   // Componentes / Button Canario
 const MD   = new URL("../../../3. Entregables/Componentes/button.md", import.meta.url)
