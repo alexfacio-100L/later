@@ -147,3 +147,25 @@ npx uspec-skills@<versión> init
 | — | La plantilla vive **local** en el archivo: `.Anatomy`, nodo `12214:6725`, con los 16 nodos que la skill busca |
 
 *Se usó la local. Si la librería vuelve a publicarse, la key debería volver a funcionar.*
+
+### `create-component-md` + la plantilla — dos salidas obligatorias (20 ago 2026)
+
+**Qué:** una directiva al inicio de `.claude/skills/create-component-md/SKILL.md` y una sección nueva en `references/component-md/component-md-template.md`.
+
+| Salida | Por qué |
+| --- | --- |
+| **Bloque `render-meta`** | Sin él, las cuatro skills de preview hacen fail-fast. Ya se perdió una vez |
+| **Sección `## Anatomy`** | uSpec **nunca** la produce: en su diseño la anatomía solo vivía dibujada en Figma |
+
+**El segundo es el que faltaba de verdad.** *El conversor ya tenía la rama `## Anatomy → figma-frames` escrita y funcional — llevaba semanas sin dispararse porque la sección de entrada no existía. Una rama muerta esperando su entrada.*
+
+🔴 **La numeración de la tabla es un contrato con el preview.** *Los marcadores del frame y las filas de la tabla son la misma lista: contenedor raíz primero, luego los hijos directos en orden. Si se desincronizan, el documento miente y nadie lo nota.*
+
+### Los iconos de la columna Type
+
+`<SNImage>` **sí funciona dentro de `<SNTableCell>`** — verificado contra `validateMarkdown`, que además lo dice al fallar: *"accepts text and `<SNImage>`"*. Dos condiciones:
+
+- El contenido va **en su propia línea**, indentado. Inline no valida
+- Una celda que empieza por `#` la lee Markdown como encabezado — **hay que escaparla**
+
+Los cuatro iconos de tipo se exportaron de la plantilla `.Anatomy` y se subieron **una sola vez** con `node experimento-canario/subir-iconos-tipo.mjs`; quedan en `iconos-tipo.json` y los reusan todos los componentes. **El `.md` dice `Instance` en texto plano; el conversor lo cambia por el icono.** *Así el `.md` sigue siendo legible para un ingeniero y Supernova recibe el icono.*

@@ -13,6 +13,12 @@
 
 {{COMPOSITION_SUBSECTION}}
 
+## Anatomy
+
+{{ANATOMY_INTRO}}
+
+{{ANATOMY_TABLE}}
+
 ## Known gaps
 
 <!-- Aggregated severity-tagged anomalies: missing measurements, identity gaps, extraction warnings. -->

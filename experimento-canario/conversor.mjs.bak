@@ -128,12 +128,7 @@ const llavesLiterales = t =>
   ).join("`")
 
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
-function tablaSN(filas, iconos = null) {
-  // La columna "Type" se localiza ANTES de traducir la cabecera, porque la
-  // sustitucion por icono se decide sobre el nombre original en ingles.
-  const colTipo = iconos && filas.length
-    ? filas[0].findIndex(c => /^type$/i.test((c ?? "").trim()))
-    : -1
+function tablaSN(filas) {
   // La primera fila es la cabecera: se localiza.
   if (filas.length) filas = [filas[0].map(traducirCabecera), ...filas.slice(1)]
   filas = marcarJerarquia(filas)
@@ -143,18 +138,8 @@ function tablaSN(filas, iconos = null) {
   for (const fila of filas) {
     out.push("  <SNTableRow>")
     for (let c = 0; c < columnas; c++) {
-      const esCabecera = fila === filas[0]
-      const clave = (fila[c] ?? "").trim().toLowerCase()
-      const icono = (c === colTipo && !esCabecera) ? iconos[clave] : null
-      out.push(`    <SNTableCell alignment="Left" columnWidth={${icono ? 64 : anchos[c]}}>`)
-      if (icono) {
-        // El .md dice "Instance"; aqui se convierte en el icono de la plantilla.
-        out.push(`      <SNImage alignment="Left" src="${icono.url}" caption="${icono.etiqueta}" />`)
-      } else {
-        // Una celda que empieza por "#" la lee Markdown como encabezado: se escapa.
-        const txt = llavesLiterales((fila[c] ?? "").replace(/<br\s*\/?>/gi, " "))
-        out.push(`      ${txt.replace(/^(#+)(\s|$)/, "\\$1$2")}`)
-      }
+      out.push(`    <SNTableCell alignment="Left" columnWidth={${anchos[c]}}>`)
+      out.push(`      ${llavesLiterales((fila[c] ?? "").replace(/<br\s*\/?>/gi, " "))}`)
       out.push("    </SNTableCell>")
     }
     out.push("  </SNTableRow>")
@@ -260,7 +245,7 @@ const tokensProp = ids =>
  * @param {object} tokens  mapa nombre → id, de `mapa-tokens.mjs`
  * @returns {{mdx: string, informe: object}}
  */
-export function convertir(md, tokens = {}, frames = {}, iconosTipo = {}) {
+export function convertir(md, tokens = {}, frames = {}) {
   const informe = { omitidas: [], vivas: [], tablas: 0, callouts: 0, tokensNoResueltos: new Set() }
 
   let texto = etiquetasCitadas(sinComentarios(md))
@@ -375,9 +360,7 @@ export function convertir(md, tokens = {}, frames = {}, iconosTipo = {}) {
           salida.push(...callout("Warning", "**Pendiente de poblar.** Ningún frame exportado para esta sección."))
         }
         informe.callouts++
-        // El cuerpo NO se descarta: la tabla numerada de abajo es lo que da
-        // sentido a los marcadores del preview. Sin ella los numeros quedan huerfanos.
-        i++
+        i = finDeSeccion(i, enc[1].length)
         continue
       }
 
@@ -403,8 +386,7 @@ export function convertir(md, tokens = {}, frames = {}, iconosTipo = {}) {
       const bloque = []
       while (i < lineas.length && esFila(lineas[i])) bloque.push(lineas[i++])
       if (bloque.some(esSeparador)) {
-        const conIconos = CONFIG.vivas.anatomia.test(seccion.h2 ?? "") ? iconosTipo : null
-        salida.push(...tablaSN(bloque.filter(l => !esSeparador(l)).map(celdasDe), conIconos))
+        salida.push(...tablaSN(bloque.filter(l => !esSeparador(l)).map(celdasDe)))
         informe.tablas++
       } else salida.push(...bloque)
       continue

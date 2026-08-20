@@ -3,6 +3,37 @@ name: create-component-md
 description: Generate a single self-contained markdown specification for a Figma component covering API, structure, color, and screen-reader behavior. Reads a `_base.json` produced by the uSpec Extract plugin, runs four read-only interpretation skills in parallel, reconciles their outputs, and writes one `.md` to disk. Use when the user mentions "component md", "component markdown", "spec md", "source of truth", "create-component-md", or wants a portable Markdown spec that any LLM can build from.
 ---
 
+---
+
+## ⚡ DOS SALIDAS OBLIGATORIAS (adecuación local de 100 Ladrillos)
+
+**El sistema documenta en Supernova, no en Figma.** El `.md` es el único puente, así que **tiene que llevar dos cosas que la versión de fábrica omite**. Sin ellas, cuatro skills quedan inservibles y la anatomía no llega a ninguna parte.
+
+### 1 · El bloque `render-meta` — obligatorio, no opcional
+
+🔴 **La corrida del 20 ago 2026 dejó el placeholder `{{RENDER_META_JSON}}` sin sustituir y omitió el bloque entero.** *Consecuencia: `create-anatomy`, `create-color`, `create-property` y `create-structure` hacen fail-fast en su Step 0 — el `render-meta` es su única fuente de identidad.*
+
+**Antes de escribir el `.md`, verifica que el bloque existe, parsea como JSON y lleva `component.compSetNodeId`.** Su esquema está en `references/component-md/agent-component-md-instruction.md > ## RENDER_META_JSON`. Ojo con un detalle que ya costó un error: en `_base.json.propertyDefinitions.booleans[]` el campo es **`rawKey`**, no `key`.
+
+### 2 · La sección `## Anatomy` — el `.md` de fábrica no la tiene
+
+**uSpec nunca produce anatomía en el `.md`**, porque en su diseño la anatomía solo vivía dibujada en Figma. Al documentar en Supernova ese contenido se queda sin puente, y **los marcadores numerados del `#preview` quedan huérfanos: números que no explican nada.**
+
+Rellena `{{ANATOMY_TABLE}}` con una tabla de cuatro columnas — `#`, `Type`, `Element`, `Notes` — construida desde `_base.json`:
+
+| Columna | De dónde sale |
+| --- | --- |
+| `#` | El orden de recorrido. **Empieza por el contenedor raíz** y sigue con los hijos directos del child container |
+| `Type` | `Frame` · `Instance` · `Text` · `Slot`. **En inglés y con esa capitalización** — el conversor los cambia por los iconos de la plantilla buscando ese texto exacto |
+| `Element` | El nombre vivo de la capa |
+| `Notes` | Qué hace el elemento. Para los ocultos, **qué booleano los revela** |
+
+🔴 **La numeración es un contrato con el preview de Figma.** *`create-anatomy` numera empezando por el contenedor raíz sintético y sigue con los hijos directos del child container, en orden. Esta tabla debe usar exactamente el mismo criterio: los marcadores del frame y las filas de la tabla son la misma lista, y si se desincronizan el documento miente.*
+
+*Adecuación local: no viene de uSpec. Ver `ACTUALIZAR-USPEC.md` — al actualizar hay que reaplicarla.*
+
+---
+
 # Create Component Markdown (Orchestrator)
 
 This skill consumes a `_base.json` produced by the uSpec Extract Figma plugin (`figma-plugin/`), runs four **read-only interpretation** skills (`extract-api`, `extract-structure`, `extract-color`, `extract-voice`), and renders their combined output into one self-contained Markdown file. The `.md` is the artifact; Figma is only the source of extraction.

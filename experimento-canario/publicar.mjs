@@ -22,7 +22,9 @@ const tokens = existsSync(new URL("./tokens.json", import.meta.url))
 const original = readFileSync(MD, "utf-8")
 const frames = existsSync(new URL("./frames-subidos.json", import.meta.url))
   ? JSON.parse(readFileSync(new URL("./frames-subidos.json", import.meta.url), "utf-8")) : {}
-const { mdx, informe } = convertir(original, tokens, frames)
+const iconosTipo = existsSync(new URL("./iconos-tipo.json", import.meta.url))
+  ? JSON.parse(readFileSync(new URL("./iconos-tipo.json", import.meta.url), "utf-8")) : {}
+const { mdx, informe } = convertir(original, tokens, frames, iconosTipo)
 writeFileSync(new URL("./salida.mdx", import.meta.url), mdx)
 
 console.log(`entrada : ${original.split("\n").length} líneas`)

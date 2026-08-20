@@ -29,3 +29,4 @@ experimento-canario/frames/
 
 # Copias del upstream guardadas antes de adecuar una skill
 .claude/skills/*/SKILL.md.orig
+references/component-md/component-md-template.md.orig

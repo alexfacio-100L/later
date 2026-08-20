@@ -1,0 +1,30 @@
+{
+  "instance": {
+    "archivo": "frames/iconos-tipo/instance.png",
+    "nodo": "12214:6756",
+    "etiqueta": "Instance",
+    "assetId": "11def006-544e-417f-a663-524d0045c9dd",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/52d0190f-55ec-411c-b18d-cc80a52fd623.png"
+  },
+  "text": {
+    "archivo": "frames/iconos-tipo/text.png",
+    "nodo": "12214:6758",
+    "etiqueta": "Text",
+    "assetId": "7f18c216-e5f5-4989-b220-1d388495a12b",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/f0e26866-a70b-480d-b349-dd7876f641eb.png"
+  },
+  "slot": {
+    "archivo": "frames/iconos-tipo/slot.png",
+    "nodo": "12214:6760",
+    "etiqueta": "Slot",
+    "assetId": "aef72644-5c6a-4c10-be72-0d1d7a841cb3",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/747351b8-9e0c-4671-a9e1-b043237f837c.png"
+  },
+  "frame": {
+    "archivo": "frames/iconos-tipo/frame.png",
+    "nodo": "12214:6762",
+    "etiqueta": "Frame",
+    "assetId": "da960127-0870-48a1-a30a-05eb8f8c7b9e",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/8aa9b9ee-13dc-4c32-8708-8ea67de11891.png"
+  }
+}

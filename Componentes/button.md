@@ -16,6 +16,19 @@ El Button es el control de acción del sistema: **ejecuta, no navega**. Lo que n
 - **labelBox** — decorative · se pliega en Structure y Color
 - **iconLeft** — referenced · se documenta como componente referenciado, no se re-especifica
 
+## Anatomy
+
+Los elementos que componen el Button, en el orden en que los numera el preview. **La numeración es un contrato: los marcadores del frame y las filas de esta tabla son la misma lista.**
+
+| # | Type | Element | Notes |
+| --- | --- | --- | --- |
+| 1 | Frame | Button | Contenedor raíz. Fondo tokenizado, radio 8 y sombra; fija el padding por `size` y la separación entre elementos. |
+| 2 | Instance | iconLeft | Icono opcional antes del texto. Instancia de `ArrowRight` (Phosphor). Lo revela `showIconLeft`; oculto por defecto. |
+| 3 | Text | labelBox | El texto de la acción. Siempre visible — es el único elemento obligatorio. |
+| 4 | Instance | iconRight | Icono opcional después del texto. Instancia de `ArrowRight` (Phosphor). Lo revela `showIconRight`; oculto por defecto. |
+
+**El preview muestra la variante por defecto** —`size=s, surface=product, variant=primary, state=default`— con ambos iconos revelados, para que los cuatro elementos sean visibles a la vez. En uso real los iconos son opcionales e independientes.
+
 ## Known gaps
 
 ### Unresolved
