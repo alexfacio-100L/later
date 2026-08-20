@@ -25,6 +25,14 @@ const ICONOS = {
   // El Button no tiene ranuras, asi que no hay fila de slot que copiar: se exporto
   // clonando un `#indicator` sobre fondo blanco y dejando visible solo `#slot`.
   slot:     { archivo: "frames/iconos-tipo/slot.png",     nodo: "12362:5569 (clon)", etiqueta: "Slot" },
+  // Indicador de jerarquia de las tablas de Structure. Sale de `Button Structure`
+  // YA DOCUMENTADO (fila `clipsContent`, unica con el estado de esquina aislado),
+  // no del componente maestro: alli los dos estados estan empalmados en el mismo
+  // frame y exportar uno arrastra al otro.
+  // Se usa la esquina para TODA fila hija: el otro estado, `within-group`, es una
+  // linea de 24x188 que solo funciona cuando las filas se continuan visualmente,
+  // y en Supernova cada celda es independiente.
+  jerarquia:{ archivo: "frames/iconos-tipo/jerarquia.png", nodo: "12362:6409", etiqueta: "Sub-propiedad" },
 }
 
 const sdk = new Supernova(apiKey)

@@ -3,28 +3,35 @@
     "archivo": "frames/iconos-tipo/instance.png",
     "nodo": "12362:5586",
     "etiqueta": "Instance",
-    "assetId": "0013f902-a3d0-4eab-8a5f-5a6e8f0fee3a",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/6696c913-7d42-4f14-9a4f-0b7f18f26ab0.png"
+    "assetId": "5e0d19b0-656d-4c23-9291-09bf5628f66f",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/828caadb-63c0-4778-9099-8b9e9c615ced.png"
   },
   "text": {
     "archivo": "frames/iconos-tipo/text.png",
     "nodo": "12362:5604",
     "etiqueta": "Text",
-    "assetId": "312afdde-6c69-4b12-84a1-74c3cf400a83",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/ca806171-0f3a-4046-b730-ae5e2d14f27a.png"
+    "assetId": "a16be980-3409-4da4-b5ba-1788ac240064",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/72d4b7ba-1efa-4002-893f-409d318c63c6.png"
   },
   "frame": {
     "archivo": "frames/iconos-tipo/frame.png",
     "nodo": "12362:5576",
     "etiqueta": "Frame",
-    "assetId": "65fa1210-81e6-4615-a31b-5370222d390e",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/815bcd81-57ec-4765-b479-7d69fac59e35.png"
+    "assetId": "f8fd9043-ebbf-45c1-a57f-12b4554343d6",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/e86ab5cc-6178-4d4c-9362-833a216ce545.png"
   },
   "slot": {
     "archivo": "frames/iconos-tipo/slot.png",
     "nodo": "12362:5569 (clon)",
     "etiqueta": "Slot",
-    "assetId": "cac00312-d9cc-4f9b-9ddd-f9cb16fc3e9a",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/b034824d-b6de-4ab2-b155-7fecc44e2db4.png"
+    "assetId": "872c4ea8-ddaf-41fd-9e31-471d2dabf1b1",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/a3d030cf-f1c9-4390-aacd-699fedad35ac.png"
+  },
+  "jerarquia": {
+    "archivo": "frames/iconos-tipo/jerarquia.png",
+    "nodo": "12362:6409",
+    "etiqueta": "Sub-propiedad",
+    "assetId": "e3b92133-1e6a-4ee2-95a7-edf087e20be1",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/460b16bc-7ea5-4982-8f6e-d9b372a554d1.png"
   }
 }

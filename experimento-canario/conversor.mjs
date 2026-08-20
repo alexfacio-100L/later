@@ -30,6 +30,7 @@ export const CONFIG = {
     api: /^API$/i,
     color: /^Color$/i,
     anatomia: /^Anatomy$/i,
+    estructura: /^Structure$/i,
   },
 }
 
@@ -128,7 +129,22 @@ const llavesLiterales = t =>
   ).join("`")
 
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
-function tablaSN(filas, iconos = null) {
+function tablaSN(filas, iconos = null, jerarquia = false) {
+  // El prefijo `└ ` / `├ ` de la primera columna se saca a una columna propia con
+  // su icono, que es como vive en la plantilla de Figma: `#hierarchy-indicator` es
+  // hermano de `#property-name`, no parte de el. No puede ir en la misma celda:
+  // <SNTableCell> acepta texto e <SNImage>, pero no en la misma linea.
+  if (jerarquia && iconos && iconos.jerarquia) {
+    const marca = /^([└├])\s+/
+    if (filas.slice(1).some(f => marca.test((f[0] ?? "").trim()))) {
+      filas = filas.map((f, i) => {
+        const primera = (f[0] ?? "").trim()
+        const m = primera.match(marca)
+        const resto = m ? primera.replace(marca, "") : primera
+        return [i === 0 ? "" : (m ? "\u0000jerarquia" : ""), resto, ...f.slice(1)]
+      })
+    }
+  }
   // La columna "Type" se localiza ANTES de traducir la cabecera, porque la
   // sustitucion por icono se decide sobre el nombre original en ingles.
   const colTipo = iconos && filas.length
@@ -145,8 +161,10 @@ function tablaSN(filas, iconos = null) {
     for (let c = 0; c < columnas; c++) {
       const esCabecera = fila === filas[0]
       const clave = (fila[c] ?? "").trim().toLowerCase()
-      const icono = (c === colTipo && !esCabecera) ? iconos[clave] : null
-      out.push(`    <SNTableCell alignment="Left" columnWidth={${icono ? 64 : anchos[c]}}>`)
+      let icono = (c === colTipo && !esCabecera) ? iconos[clave] : null
+      if (!icono && fila[c] === "\u0000jerarquia") icono = iconos.jerarquia
+      const anchoCelda = fila[c] === "\u0000jerarquia" || (c === colTipo && icono) ? 64 : (anchos[c] ?? 100)
+      out.push(`    <SNTableCell alignment="Left" columnWidth={${anchoCelda}}>`)
       if (icono) {
         // El .md dice "Instance"; aqui se convierte en el icono de la plantilla.
         out.push(`      <SNImage alignment="Left" src="${icono.url}" caption="${icono.etiqueta}" />`)
@@ -403,8 +421,10 @@ export function convertir(md, tokens = {}, frames = {}, iconosTipo = {}) {
       const bloque = []
       while (i < lineas.length && esFila(lineas[i])) bloque.push(lineas[i++])
       if (bloque.some(esSeparador)) {
-        const conIconos = CONFIG.vivas.anatomia.test(seccion.h2 ?? "") ? iconosTipo : null
-        salida.push(...tablaSN(bloque.filter(l => !esSeparador(l)).map(celdasDe), conIconos))
+        const enAnatomia = CONFIG.vivas.anatomia.test(seccion.h2 ?? "")
+        const enEstructura = CONFIG.vivas.estructura.test(seccion.h2 ?? "")
+        const conIconos = (enAnatomia || enEstructura) ? iconosTipo : null
+        salida.push(...tablaSN(bloque.filter(l => !esSeparador(l)).map(celdasDe), conIconos, enEstructura))
         informe.tablas++
       } else salida.push(...bloque)
       continue
