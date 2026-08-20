@@ -39,7 +39,10 @@ frame.explicitVariableModes
 | --- | --- |
 | Anatomy · Properties · Color | `#preview` |
 | **Structure** | `#Preview` — **con P mayúscula** |
+| **API** | **`Preview`** — **sin almohadilla** |
 | **Screen reader** | `Preview placeholder` |
+
+🔴 **Son cuatro variantes, no tres.** *La de API se descubrió el 21 ago 2026 y hasta entonces esta misma tabla afirmaba que API no tenía previews. Buscar `#preview` no encuentra `Preview`.*
 
 **Y hay previews vacíos.** En `Anatomy` hay dos: uno de 290 px **sin hijos** —la plantilla sin rellenar— y otro de 473 px con el botón y sus anotaciones numeradas. **Solo sirve el segundo.**
 
@@ -51,6 +54,8 @@ frame.explicitVariableModes
 
 *Del juego light:*
 
+⚠️ **La fila de API estuvo mal cinco días.** *Decía 0 porque se contaron buscando la cadena `#preview`, y las de API se llaman `Preview`. **La ausencia solo es evidencia si el método podía encontrar la presencia** — y aquí no podía.*
+
 | Sección | Frame | Previews útiles |
 | --- | --- | --- |
 | **Anatomy** | `12290:10522` | 1 *(de 2; uno vacío)* |
@@ -58,7 +63,7 @@ frame.explicitVariableModes
 | **Structure** | `12304:2187` | 5 *(como `#Preview`)* |
 | **Color** | `12311:2189` | 5 |
 | **Screen reader** | `12318:2192` | 4 *(como `Preview placeholder`; uno vacío)* |
-| **API** | `12292:10564` | **0** — no tiene previews |
+| **API** | `12362:5630` | **4** — *se dieron por cero hasta el 21 ago 2026* |
 
 ---
 
