@@ -1,6 +1,7 @@
+import { apiKey } from "./entorno.mjs"
 import sdkPkg from "@supernovaio/sdk"
 const { Supernova } = sdkPkg
-const sdk = new Supernova(process.env.SUPERNOVA_API_KEY)
+const sdk = new Supernova(apiKey)
 const me = await sdk.me.me()
 const ws = await sdk.workspaces.workspaces(me.id)
 const ds = (await sdk.designSystems.designSystems(ws[0].id)).find(d=>/later/i.test(d.name))

@@ -4,15 +4,26 @@
 
 ## Correr
 
+**Primero, una sola vez:** copia `.env.example` como `.env` en la **raíz del proyecto** y pega ahí tu API key.
+
+```bash
+cp .env.example .env        # desde la raíz de "Later: Brand System"
+```
+
+**La key sale de** [cloud.supernova.io](https://cloud.supernova.io) → foto de perfil → *Profile settings* → *Authentication*. Hereda los permisos de quien la genera: hace falta **Editor u Owner**.
+
+🔒 **`.env` está en `.gitignore`. Nunca se sube al repositorio, y por eso la key va ahí y no dentro de un script.**
+
+**Después, los scripts la leen solos:**
+
 ```bash
 cd "2. Proyecto/uSpec/experimento-canario"
 npm install
-SUPERNOVA_API_KEY="xxx" node escribir-en-supernova.mjs --validar    # NO toca la página
-SUPERNOVA_API_KEY="xxx" node escribir-en-supernova.mjs --escribir   # reemplaza su contenido
+node escribir-en-supernova.mjs --validar    # NO toca la página
+node escribir-en-supernova.mjs --escribir   # reemplaza su contenido
 ```
 
-**La API key** sale de Supernova Cloud → foto de perfil → *profile settings* → *authentication*.
-**No la escribas en ningún archivo:** pásala como variable de entorno, que es por lo que el script la lee de ahí.
+*En un pipeline de CI no hace falta `.env`: si `SUPERNOVA_API_KEY` ya existe como variable de entorno, tiene prioridad.*
 
 ## Qué mirar después
 

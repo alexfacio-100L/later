@@ -11,3 +11,8 @@
 
 node_modules/
 package-lock.json
+
+# Secretos — NUNCA versionar. La API key de Supernova vive aquí.
+.env
+.env.local
+*.key

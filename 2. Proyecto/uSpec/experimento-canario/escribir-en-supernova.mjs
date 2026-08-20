@@ -13,6 +13,7 @@
  */
 
 // El SDK se publica como CommonJS: no expone named exports en ESM.
+import { apiKey } from "./entorno.mjs"
 import sdkPkg from "@supernovaio/sdk"
 const { Supernova } = sdkPkg
 import { readFileSync } from "node:fs"
