@@ -8,11 +8,12 @@
     "url": "https://studio-assets.supernova.io/design-systems/825551/1d7427c8-5009-4907-b432-65aecc1d00c1.png"
   },
   "Button sizes": {
-    "nodo": "12307:2124",
-    "nombre": "Structure · Button sizes (light)",
-    "assetId": "a8664101-7eca-43e1-b5f4-43c2b5b5dc05",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/fce1a3d9-05da-4ac1-b3a6-ec39dda39ab6.png",
-    "nodoPerdido": true
+    "nodo": "12518:13615",
+    "nombre": "Structure · Button sizes",
+    "archivo": "frames/button-structure-sizes.png",
+    "fraccionAncho": 50,
+    "assetId": "547dc8fa-0535-453f-8a54-bdd42c7fa726",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/3dd6d4dd-7ee6-4b56-a6f7-3172d8790be7.png"
   },
   "Size=S, Surface=Product, Type=Primary, State=Default": {
     "nodo": "12314:1984",
@@ -27,5 +28,21 @@
     "assetId": "cdbb78a9-d852-40e8-9437-476b82f6c37c",
     "url": "https://studio-assets.supernova.io/design-systems/825551/db644d74-6408-47a1-aa5a-adf68b9268a3.png",
     "nodoPerdido": true
+  },
+  "Button surface": {
+    "nodo": "12518:13640",
+    "nombre": "Structure · Button surface",
+    "archivo": "frames/button-structure-surface.png",
+    "fraccionAncho": 50,
+    "assetId": "0b7b5967-b5fc-43b0-bea8-2ce63fbf8af7",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/da9f6be7-054f-4c7c-98e4-faf9d1c81f2d.png"
+  },
+  "Button states": {
+    "nodo": "12518:13665",
+    "nombre": "Structure · Button states",
+    "archivo": "frames/button-structure-states.png",
+    "fraccionAncho": 50,
+    "assetId": "568dd19c-d7af-4d0c-8cd2-bf3156051e03",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/9bbb05db-e88d-4497-831b-86a4496edb78.png"
   }
 }

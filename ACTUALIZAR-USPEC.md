@@ -225,3 +225,27 @@ npm run docs:publicar      # la corre sola y ABORTA si algo no pasa
 ### Los previews de Structure, Color y Properties hay que rehacerlos
 
 **Sus nodos de origen ya no existen en el archivo** —`12307:2124`, `12314:1984`, `12302:2000`—, así que no se pueden ni re-medir ni re-exportar. Las imágenes siguen publicadas en Supernova, pero vienen de una corrida anterior y **muestran el componente antes de las correcciones del 19–20 de agosto**.
+
+---
+
+## Tercer defecto del `.md`: la columna `Spec` de Structure salió vacía (21 ago 2026)
+
+**Las 22 filas de las tres tablas de `## Structure` tenían `—` en la primera columna y en `Notes`.** Los valores estaban; el nombre de la propiedad y su explicación, no. *Una tabla de valores sin saber a qué propiedad pertenecen no es una especificación.*
+
+**Reparado desde `.uspec-cache/button/button-structure.json`**, que sí los conservaba íntegros — igual que pasó con el `render-meta`. El cache tiene `spec`, `notes`, `provenance` e `isSubProperty` por fila; la jerarquía se reconstruye con `└` / `├`.
+
+🔴 **Van tres defectos del mismo tipo en `create-component-md`:** `render-meta` omitido, `## Anatomy` inexistente, y ahora `Spec`/`Notes` vaciados al renderizar. *El patrón es siempre el mismo: el cache está bien y el `.md` pierde información al escribirse. Antes de dar por bueno un `.md` recién generado, conviene contrastarlo contra su cache.*
+
+## `create-structure` en modo solo-preview (21 ago 2026)
+
+Mismo patrón que `create-anatomy`. Step 10 omitido, Step 11b crea la sección pero no rellena la `#spec-table`, Step 11a/11c enteros.
+
+⚠️ **Las mediciones nativas no llegan a Supernova.** *`page.addMeasurement` es un overlay de canvas: no aparece en el PNG exportado — confirmado visualmente, no solo por la documentación. La sección de tamaños generó 12 mediciones y ninguna se ve en la imagen.* En Supernova el preview vale como comparación de tamaños, no como plano acotado.
+
+**Los previews se pasaron a HORIZONTAL.** *La plantilla los trae en vertical, que apila las variantes y da una imagen alta y estrecha — mala para Supernova y peor para comparar. En fila, los tres tamaños se leen de un vistazo.*
+
+**Fracción de ancho: 50% para structure**, no el 33% de anatomy. *El contenido aquí es una fila de instancias sin marcadores alrededor, así que necesita menos aire. Ambos valores caen dentro del rango 25–55% que exige la verificación.*
+
+### Las siete plantillas viven locales
+
+**Ninguna `templateKey` de `uspecs.config.json` resuelve.** En `_Local Componentes` están las siete: `.Motion`, `.Screen reader`, `.Structure`, `.Property`, `.API`, `.Anatomy`, `.Color Annotation`. *Hay que clonarlas por id en vez de importarlas por key.*

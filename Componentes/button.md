@@ -115,28 +115,28 @@ Propiedades dimensionales a lo largo del eje size, medidas en surface=product, v
 
 | Spec | L | M | S | Notes |
 |---|---|---|---|---|
-| — | – | – | – | — |
-| — | space/l (16) | space/m (12) | space/s (8) | — |
-| — | space/xl (24) | space/l (16) | space/l (16) | — |
-| — | space/zero (0) | space/zero (0) | space/zero (0) | — |
-| — | 12 | 8 | 8 | — |
-| — | hug | hug | hug | — |
-| — | hug | hug | hug | — |
-| — | – | – | – | — |
-| — | 0 | 0 | 0 | — |
-| — | 0 | 0 | 0 | — |
-| — | – | – | – | — |
-| — | 0 | 0 | 0 | — |
-| — | space/s (8) | space/s (8) | space/s (8) | — |
-| — | 12 | 12 | 12 | — |
-| — | – | – | – | — |
-| — | Text/M - Poppins/Regular | Text/M - Poppins/Regular | Text/M - Poppins/Regular | — |
-| — | – | – | – | — |
-| — | ArrowRight | ArrowRight | ArrowRight | — |
-| — | 20 | 16 | 16 | — |
-| — | – | – | – | — |
-| — | ArrowRight | ArrowRight | ArrowRight | — |
-| — | 20 | 16 | 16 | — |
+| Container | – | – | – | Raíz del componente: auto-layout horizontal, centrado en ambos ejes. |
+| ├ verticalPadding | space/l (16) | space/m (12) | space/s (8) | Progresión corregida el 20 ago 2026: 16/12/8, toda dentro de la escala space. Es el único par que escala con size. |
+| ├ horizontalPadding | space/xl (24) | space/l (16) | space/l (16) | m y s comparten space/l (16); solo l sube a space/xl (24). Antes había 18 y 10 crudos, fuera de escala. |
+| ├ itemSpacing | space/zero (0) | space/zero (0) | space/zero (0) | El gap real entre icono y label no vive aquí: lo produce el horizontalPadding de labelBox (8). |
+| ├ cornerRadius | 12 | 8 | 8 | Valor crudo, sin token: es la única familia dimensional sin tokenizar. También depende de surface (ver Button surface). |
+| ├ widthMode | hug | hug | hug | Ancho gobernado por el contenido; no hay minWidth ni maxWidth definidos. |
+| └ heightMode | hug | hug | hug | Altura derivada del padding vertical más la línea de 21: resulta 53 / 45 / 37. Ninguna llega a 44, el mínimo táctil de WCAG 2.5.8. |
+| Content | – | – | – | Wrapper de layout que agrupa iconLeft, labelBox e iconRight. |
+| ├ padding | 0 | 0 | 0 | Sin inset propio: el respiro lo pone el contenedor raíz. |
+| └ itemSpacing | 0 | 0 | 0 | Sin gap propio; la separación la aporta el padding de labelBox. |
+| Label box | – | – | – | Caja que envuelve al texto y define su separación de los iconos. |
+| ├ verticalPadding | 0 | 0 | 0 | Cero deliberado: la altura de la caja la fija la línea del texto (21). |
+| ├ horizontalPadding | space/s (8) | space/s (8) | space/s (8) | Constante en los tres tamaños. Es el gap efectivo icono↔label, y no escala con size. |
+| └ cornerRadius | 12 | 12 | 12 | Anomalía: labelBox no pinta relleno ni borde, así que este radio no tiene efecto visual. Candidato a limpieza. |
+| Label | – | – | – | Nodo de texto del botón; su contenido lo aporta la propiedad label. |
+| └ textStyle | Text/M - Poppins/Regular | Text/M - Poppins/Regular | Text/M - Poppins/Regular | HUECO ABIERTO: size no escala la tipografía. Los tres tamaños usan el mismo estilo (14/21, letterSpacing 0.2). No es una decisión documentada. |
+| Icon left | – | – | – | Instancia opcional, gobernada por showIconLeft (default false). |
+| ├ iconName | ArrowRight | ArrowRight | ArrowRight | Set de Phosphor. La instancia embebida trae Weight=Fill, no el Weight=Regular declarado como defecto: divergencia a revisar. |
+| └ iconSize | 20 | 16 | 16 | Único elemento además del padding que reacciona a size: 20 en l, 16 en m y s. |
+| Icon right | – | – | – | Instancia opcional, gobernada por showIconRight (default false). |
+| ├ iconName | ArrowRight | ArrowRight | ArrowRight | Mismo set y mismo defecto que iconLeft; el par es simétrico. |
+| └ iconSize | 20 | 16 | 16 | Idéntico a iconLeft en los tres tamaños. |
 
 ### Button surface
 
@@ -144,8 +144,8 @@ Eje property-variant: surface no cambia los hijos ni el espaciado, pero sí el r
 
 | Spec | Marketing | Product | Notes |
 |---|---|---|---|
-| — | 12 | 8 | — |
-| — | Text/M - Poppins/Semi Bold | Text/M - Poppins/Regular | — |
+| cornerRadius | 12 | 8 | Medido en size=s. marketing mantiene 12 en los tres tamaños; product usa 8 en s y m y 12 en l. Ninguno está tokenizado. |
+| textStyle | Text/M - Poppins/Semi Bold | Text/M - Poppins/Regular | surface cambia el peso del texto: Semi Bold para marketing, Regular para product. El tamaño (14) no cambia. |
 
 ### Button states
 
@@ -153,8 +153,8 @@ Eje state: ninguna medida cambia salvo el grosor del trazo en focus. Padding, ra
 
 | Spec | enabled | isDisabled === true | focused (lo dibuja la plataforma) | hovered (lo dibuja la plataforma) | pressed (lo dibuja la plataforma) | Notes |
 |---|---|---|---|---|---|---|
-| — | 1 | 1 | 1.5 | 1 | 1 | — |
-| — | inside | inside | inside | inside | inside | — |
+| borderWidth | 1 | 1 | 1.5 | 1 | 1 | Solo focus altera el grosor. En primary el trazo únicamente se pinta en focus; en secondary se pinta en los cinco estados. |
+| borderAlign | inside | inside | inside | inside | inside | Trazo hacia dentro en todos los estados: engrosar el foco no altera la caja externa. |
 
 ## Color
 

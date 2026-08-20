@@ -3,6 +3,30 @@ name: create-structure
 description: Generate structure specifications documenting component dimensions, spacing, padding, and how values change across density, size, and shape variants. Use when the user mentions "structure", "structure spec", "dimensions", "spacing", "density", "sizing", or wants to document a component's dimensional properties.
 ---
 
+---
+
+## ⚡ MODO SOLO-PREVIEW (adecuación local de 100 Ladrillos)
+
+**El sistema documenta en Supernova, no en Figma.** De cada sección solo se consume el **preview**: la `#spec-table` y el encabezado ya viajan en la sección `## Structure` del `.md` y se convierten en bloques nativos al publicar.
+
+| Bloque | Qué hacer |
+| --- | --- |
+| **Step 10 — Fill Header Fields** | **OMITIR.** Ni `#compName` ni `#general-structure-notes` |
+| **Step 11b — Render the table** | **Crear la sección y la `#spec-table`, pero NO rellenar las filas.** La plantilla se deja intacta y vacía |
+| **Step 11a y 11c — preview y mediciones** | **Se ejecutan enteros.** Es lo único que se consume |
+
+🔴 **La plantilla de la tabla NO se borra.** *Sigue siendo necesaria para el camino de contingencia (`DESTINO_DOCUMENTACION=figma`).*
+
+⚠️ **Las mediciones nativas (`page.addMeasurement`) son un overlay de canvas: NO aparecen en el PNG exportado.** *La propia skill lo declara en sus Notes. El preview que llega a Supernova muestra las instancias por columna, no las cotas — verifícalo al exportar antes de darlo por bueno.*
+
+### Ajuste del ancho del preview
+
+**Aplica el mismo cálculo que `create-anatomy`:** el alto se pega al contenido y el ancho se calcula para que el contenido ocupe **el 33%**, porque Supernova escala la imagen al ancho de la columna. Rango admitido: 25–55%, comprobado por `npm run docs:previews`. Ver `ACTUALIZAR-USPEC.md > «El recorte del artwork»`.
+
+*Adecuación local: no viene de uSpec. Ver `ACTUALIZAR-USPEC.md` — al actualizar hay que reaplicarla.*
+
+---
+
 # Create Structure Spec
 
 Generate a structure specification directly in Figma — tables documenting all dimensional properties of a component, organized into sections by variant axis or sub-component, with dynamic columns for size/density variants.
@@ -247,6 +271,8 @@ Save the returned `frameId` — you need it for all subsequent steps.
 
 ### Step 10: Fill Header Fields
 
+> ⚡ **MODO SOLO-PREVIEW: OMITIR este paso entero.**
+
 Run via `figma_execute` (replace `__FRAME_ID__`, `__COMPONENT_NAME__`, and `__GENERAL_NOTES__`):
 
 ```javascript
@@ -348,6 +374,8 @@ If `annotationPlan[i]` is empty for every column (e.g., a shape-only or typograp
 - `"fullTree"` for `subComponent` and `slotContent` sections (the table documents the inst's internal structure, including the SLOT node for `slotContent`). Recursion stops at nested INSTANCE boundaries — those have their own spec sections.
 
 #### Step 11b: Render the table
+
+> ⚡ **MODO SOLO-PREVIEW:** crea la sección y la `#spec-table`, pero **no rellenes las filas**. La plantilla se deja vacía, no se borra.
 
 Run **one `figma_execute` call** for this section's table. Replace all `__PLACEHOLDER__` values with the section's data from Step 4 (the parsed `.md` sections / columns / rows).
 
