@@ -1,0 +1,171 @@
+<SNCallout type="Info">
+  **Página de experimentación.** Construida por completo desde código con `sdk.import.writeMarkdownToPage`, para probar qué bloques de Supernova se pueden generar sin tocar el editor. Cada sección lleva una nota de qué widget usa y qué gana frente a escribirlo a mano.
+</SNCallout>
+
+# Button
+
+El Button es el control de acción del sistema: **ejecuta, no navega**. Lo que navega es un `Link`.
+
+<SNComponentChecklist component="d4f71d86-4a9b-4535-949d-0b3aadd0818f" selectedPropertyIds={["a0f04855-5c1e-4cd1-87d3-475a12f3c4a9", "99b630a0-b8b6-4908-b508-94204759319e", "d777f8b3-380a-4470-a508-ba7473d8edd0"]} title="Estado del componente" showDescription />
+
+<SNCallout type="Success">
+  ⬆ **`component-checklist`** — lee el componente real de Supernova. Su nombre, descripción y estado salen del sistema, no de este texto.
+</SNCallout>
+
+## Anatomía
+
+<SNBlock packageId="io.supernova.block.figma-frames" variantId="bordered" columns={2}>
+  <SNItem>
+    <SNPropFigmaNode name="figmaNodes" value={[]} showFrameDetails previewContainerSize="Centered" />
+  </SNItem>
+</SNBlock>
+
+<SNCallout type="Warning">
+  ⬆ **`figma-frames`, vacío a propósito.** El bloque existe y acepta nodos, pero los frames del Button aún no están importados como recursos: `documentationFrames` se activó el 19 de agosto y hace falta un re-import para que lleguen.
+
+  Los frames ya existen en Figma —`Button Anatomy`, `Button API`, `Button Structure`, `Button Color`, `Button Screen reader`— **duplicados en dos corridas de uSpec**. Conviene borrar el juego viejo antes de referenciarlos.
+</SNCallout>
+
+## API
+
+<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>
+  <SNTableRow>
+    <SNTableCell alignment="Left">
+      **Propiedad**
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      **Tipo**
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      **Valores**
+    </SNTableCell>
+  </SNTableRow>
+
+  <SNTableRow>
+    <SNTableCell alignment="Left">
+      `label`
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      Text
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      obligatorio
+    </SNTableCell>
+  </SNTableRow>
+
+  <SNTableRow>
+    <SNTableCell alignment="Left">
+      `variant`
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      Variant
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      primary · secondary
+    </SNTableCell>
+  </SNTableRow>
+
+  <SNTableRow>
+    <SNTableCell alignment="Left">
+      `size`
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      Variant
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      l · m · s
+    </SNTableCell>
+  </SNTableRow>
+
+  <SNTableRow>
+    <SNTableCell alignment="Left">
+      `surface`
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      Variant
+    </SNTableCell>
+
+    <SNTableCell alignment="Left">
+      marketing · product
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+<SNCallout type="Info">
+  ⬆ **Esta tabla es estática y por eso caduca.** El `button.md` de hoy todavía dice `Type` en vez de `variant`, porque se generó antes del renombre.
+
+  **El bloque `figma-components-propstable` la genera del componente importado** y no puede desactualizarse. Es el cambio que más ahorra en el conversor.
+</SNCallout>
+
+## Color
+
+<SNBlock packageId="io.supernova.block.color-accessibility-grid" columns={1}>
+  <SNItem>
+    <SNPropToken name="tokens" value={[{ entityId: "1bac692a-a1db-4d29-83b0-2aa1baf91a90", entityType: "Token" }, { entityId: "acaeb789-8a31-4905-bd7b-ecf941fa503e", entityType: "Token" }, { entityId: "90bbc464-5d3d-40cf-b249-91855080b3f2", entityType: "Token" }, { entityId: "f599268b-9b7d-4a71-81c0-87d356b0a135", entityType: "Token" }]} />
+  </SNItem>
+</SNBlock>
+
+<SNCallout type="Success">
+  ⬆ **`color-accessibility-grid` — el widget que más trabajo ahorra.** Supernova **calcula el contraste**; hoy esos ratios se escriben a mano en el `.md` y hay que rehacerlos con cada cambio de token.
+
+  Los cuatro de arriba son la superficie de marca del botón y su texto: `background/brandMain`, `brandHover`, `brandPressed` y `text/primaryInverse`. *Son justamente los que fallaron 2.34:1 en Dark y se corrigieron con alias por mode.*
+</SNCallout>
+
+### Los tokens, en vivo
+
+<SNBlock packageId="io.supernova.block.design-tokens" columns={1}>
+  <SNItem>
+    <SNPropToken name="tokens" value={[{ entityId: "1bac692a-a1db-4d29-83b0-2aa1baf91a90", entityType: "Token" }, { entityId: "acaeb789-8a31-4905-bd7b-ecf941fa503e", entityType: "Token" }, { entityId: "90bbc464-5d3d-40cf-b249-91855080b3f2", entityType: "Token" }, { entityId: "ec69e771-ab7f-4197-a60c-6af85ef4df3e", entityType: "Token" }, { entityId: "c7cc824c-0e63-4516-a8a5-0880f531927a", entityType: "Token" }, { entityId: "3c20b75c-d5c3-40c8-9329-e19d5ff12b08", entityType: "Token" }]} />
+  </SNItem>
+</SNBlock>
+
+<SNCallout type="Info">
+  ⬆ **`design-tokens`** — muestra el valor real de cada token. Si mañana cambia en Figma, cambia aquí.
+</SNCallout>
+
+## Cuándo usarlo
+
+<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="contained" columns={2}>
+  <SNItem />
+
+  <SNItem />
+</SNBlock>
+
+<SNCallout type="Success">
+  ⬆ **`do-dont-guidelines`** con variante `contained`. También acepta `simple`, `prominent` y `side-border`.
+</SNCallout>
+
+## Defectos abiertos
+
+<SNCallout type="Error">
+  **El botón primario se volvía ilegible al pasar el ratón en modo oscuro.** `background/brandHover` valía `neutralDarkBlue/600` en los dos modes, y sobre el botón blanco de Dark dejaba el texto en **2.34:1**.
+
+  **Corregido el 19 de agosto** con alias por mode: en Light el hover aclara, en Dark oscurece. *La dirección la marca el fondo, no el mode.*
+</SNCallout>
+
+<SNCallout type="Warning">
+  **El icono de carga es provisional.** `ArrowPath` se lee como *recargar / reintentar*, no como *esperando*. Pendiente de decidir.
+</SNCallout>
+
+## Enlaces
+
+<SNBlock packageId="io.supernova.block.shortcut-links" columns={2}>
+  <SNItem />
+</SNBlock>
+
+---
+
+<SNCallout type="Info">
+  **Bloques usados en esta página:** `callout` · `component-checklist` · `figma-frames` · `table` · `color-accessibility-grid` · `design-tokens` · `do-dont-guidelines` · `shortcut-links` · `divider`.
+
+  **Los 36 del catálogo validan desde Markdown.** Mapa completo en `MAPA-DE-BLOQUES.md` del repositorio del proyecto.
+</SNCallout>

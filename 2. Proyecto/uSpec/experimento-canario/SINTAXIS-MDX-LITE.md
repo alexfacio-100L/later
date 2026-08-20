@@ -113,3 +113,59 @@
 Se calculaba como `760 / columnas`. **Con siete columnas daban 108 px cada una y la tabla parecía una hoja de cálculo.** *Se quitó: sin `columnWidth`, Supernova ajusta al contenido.*
 
 **Resultado tras el arreglo: 127 bloques en vez de 155** — menos bloques porque las tablas dejaron de fragmentarse en párrafos de código.
+
+---
+
+## Cómo se pasan valores a los bloques vivos
+
+**Descubierto construyendo la página con widgets, a base de rechazos del validador.**
+
+### Los tokens y componentes van como OBJETOS, no como strings
+
+```jsx
+❌ <SNPropToken name="tokens" value={["1bac692a-…"]} />
+   → "Value does not match the Token schema — value.0: Expected object, received string"
+
+❌ <SNPropToken name="tokens" value={[{ entityId: "1bac692a-…" }]} />
+   → "value.0.entityType: Required"
+
+✅ <SNPropToken name="tokens" value={[{ entityId: "1bac692a-…", entityType: "Token" }]} />
+```
+
+*Mismo patrón que `SNPropFigmaNode`, que además lleva `resource`.*
+
+### El `component-checklist` tiene forma corta
+
+```jsx
+<SNComponentChecklist
+  component="d4f71d86-4a9b-4535-949d-0b3aadd0818f"
+  selectedPropertyIds={["a0f04855-…", "99b630a0-…"]}
+  title="Estado del componente" showDescription />
+```
+
+*Aquí sí es string, porque es un componente abreviado, no un `<SNBlock>` genérico.*
+
+### Propiedades que NO existen
+
+| Bloque | No declara |
+| --- | --- |
+| `do-dont-guidelines` | `title` · `text` |
+| `shortcut-links` | `title` |
+| *(cualquiera)* | **`SNPropUrl` no existe como tipo** |
+
+**Los bloques sí existen** — validan con `<SNItem />` vacío. *Lo que falta es saber sus nombres de propiedad reales, y se descubren igual: probando.*
+
+### Límites de columnas
+
+**`design-tokens` en variante tabla admite 1 columna.** Con `columns={3}` responde `TooManyColumns: Variant table allows 1 column(s), page carries 3`.
+
+> **Regla general que sirve para todos: el validador nombra el bloque, la propiedad y el problema exacto.** Construir contra él es más rápido que buscar en la documentación, **y es la única fuente que no envejece.**
+
+### Los IDs que hacen falta, y de dónde salen
+
+| Qué | De dónde |
+| --- | --- |
+| **Componente** | `sn_get_component_list` — el Button es `d4f71d86-4a9b-4535-949d-0b3aadd0818f` |
+| **Propiedades de componente** | `sn_get_component_property_list` — `status`, `isDocumented`, `figmaComponent`… |
+| **Tokens** | `sdk.tokens.getTokens(from)` o `sn_get_token_list` |
+| **Frames de Figma** | `sdk.resources.getFigmaFrames(from)` → usa su `persistentId` como `entityId` |
