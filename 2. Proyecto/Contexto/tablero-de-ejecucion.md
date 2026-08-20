@@ -179,8 +179,8 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
 
 - [ ] **1.11 · Borrar los 57 tokens residuales de Supernova.** 🟢 **Re-encuadrada el 19 ago: es UN procedimiento, no tres tareas.**
   ✅ **El bloqueo de 1.12 ya no aplica:** la geometría de las sombras vive en la capa `Shadow`, viva y sincronizada con Figma. **Los `shadows/` de tipo Color no guardan nada único.**
-  **Se borra por grupo entero desde Supernova**, no token a token: `Color → shadows/` (26) · `Color → graphs/` (15) · `Color → illustration/` (16). *Los tres son estilos que ya no existen en el archivo de Figma.*
-  ⚠️ **`illustration/` merece una mirada antes de borrar:** son colores de ilustración de marca que quizá nadie más guarda. **Verificar que existan en otro lado.** Los otros dos no tienen ese riesgo.
+  🟡 **ALCANCE REDUCIDO por decisión del Lead el 19 ago: solo se borran los 26 de `Color → shadows/`.**
+  **`graphs/` (15) e `illustration/` (16) SE QUEDAN. No hay que modificarlos.** *Son la referencia de color de la que se partirá cuando toque construir las ilustraciones y las gráficas; borrarlos perdería el punto de partida.* **No es prioritario y no bloquea nada.**
 
 ### Integridad del sistema
 
@@ -510,7 +510,7 @@ Todas diagnosticadas, ninguna requiere decidir nada. Manual en Figma.
   💡 **Alcance sugerido: una sola muestra en oscuro por componente, no una por anotación.** `API`, `Structure` y `Screen reader` son tablas, y una tabla no cambia con el mode. *La tabla de `Color` ya trae los dos valores desde el 17 ago.*
   *Done:* el `Button` con su muestra en oscuro publicada desde un frame de Figma, y el paso incorporado al flujo de documentación.
 
-- [ ] **4.7 · `PhoneSolid` en `size=l` mide 19×20, no 24×24.** ⚪ **Encontrado el 19 ago al unificar la escala de tamaños** — los otros 326 iconos son exactos en las tres tallas. **Es geometría, no nomenclatura:** cambiar el tamaño puede mover el layout donde el icono se use, así que quedó fuera del lote de renombres.
+- [x] **4.7 · `PhoneSolid` en `size=l` mide 19×20, no 24×24.** ✅ **Sin objeto el 19 ago: el componente ya no existe.** Era un Heroicon; el swap lo retiró. En su lugar hay trece sets `Phone*` de Phosphor, todos con la escala correcta. ~~Encontrado el 19 ago al unificar la escala de tamaños.~~ ⚪ **Encontrado el 19 ago al unificar la escala de tamaños** — los otros 326 iconos son exactos en las tres tallas. **Es geometría, no nomenclatura:** cambiar el tamaño puede mover el layout donde el icono se use, así que quedó fuera del lote de renombres.
   *Done:* medido a 24×24 y revisadas sus instancias.
 
 - [ ] **4.2 · Consolidar iconos:** fusionar Solid y Outline en un set con propiedad. Son 309 Outline y 327 Solid, el 78% de los componentes root.
