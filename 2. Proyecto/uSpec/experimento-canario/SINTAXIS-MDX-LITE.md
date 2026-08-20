@@ -1,0 +1,85 @@
+# La sintaxis MDX-lite de Supernova, descubierta a golpes
+
+**19 ago 2026.** La especificación vive en `docs/markdown-import.md` del repositorio del SDK, **que no viene en el paquete npm ni es accesible públicamente**. Esto se dedujo ejecutando `validateMarkdown` contra el design system real hasta que pasó.
+
+> **El método sirve para cualquier duda futura:** `validateMarkdown` no escribe nada y su error dice exactamente qué rechaza. **Es gratis preguntarle.**
+
+---
+
+## Lo que RECHAZA, y cómo se arregla
+
+| Rechazo | Error literal | Solución |
+| --- | --- | --- |
+| **Comentarios HTML** `<!-- -->` | ``Unexpected character `!` (U+0021) before name`` | **Eliminarlos** |
+| **Comentarios MDX** `{/* */}` | `Unsupported top-level content: mdxFlowExpression` | **Eliminarlos también** — no admite comentarios de ninguna clase |
+| **Etiquetas HTML citadas** `<button>` | ``Expected a closing tag for `<button>` `` | Envolver en backticks: `` `<button>` `` |
+| **Tablas Markdown** `\| a \| b \|` | `Pipe tables are not supported. Use <SNTable> with <SNTableRow> and <SNTableCell>` | **Convertir a `<SNTable>`** |
+
+⚠️ **Las tablas son el rechazo que más pesa:** el `button.md` tiene **237 líneas de tabla, un 35% del documento**. *Sin conversión, no entra nada.*
+
+---
+
+## Lo que ACEPTA sin tocar
+
+**Markdown estándar:** encabezados `#`–`######`, negritas, cursivas, código inline y en bloque, listas, citas `>`, separadores `---`, enlaces.
+
+**Y sus propios componentes:**
+
+```jsx
+<SNCallout type="Info|Success">…</SNCallout>
+<SNImage alignment="Left" />
+
+<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={250}>contenido</SNTableCell>
+  </SNTableRow>
+</SNTable>
+```
+
+### Bloques vivos — verificados uno a uno
+
+| Bloque | `packageId` | |
+| --- | --- | --- |
+| **Frames de Figma** | `io.supernova.block.figma-frames` | ✅ **La solución para las muestras** |
+| **Tokens** | `io.supernova.block.design-tokens` | ✅ *Con `columns={1}` o sin `columns`* |
+| **Checklist de componente** | `io.supernova.block.component-checklist` | ✅ |
+| **Callout** | *(componente directo)* | ✅ |
+| **Imagen** | *(componente directo)* | ✅ |
+
+```jsx
+<SNBlock packageId="io.supernova.block.figma-frames" variantId="bordered" columns={4}>
+  <SNItem>
+    <SNPropFigmaNode name="figmaNodes" value={[]} showFrameDetails previewContainerSize="Centered" />
+  </SNItem>
+</SNBlock>
+```
+
+> 🎯 **Esto responde la parte visual sin exportar PNG.** `figma-frames` referencia **nodos de Figma en vivo**: si el componente cambia, la muestra se actualiza sola. Un PNG sería deuda desde el primer cambio.
+>
+> 🔴 **Pero hoy no llegarían:** el design source tiene `documentationFrames: false`. **Hay que activarlo.**
+
+### Errores que NO significan "no existe"
+
+*Distinguirlos importa — dos de estos me hicieron creer que un bloque no estaba disponible:*
+
+| Error | Qué significa de verdad |
+| --- | --- |
+| `TooManyColumns` | **El bloque existe**, pero acepta menos columnas de las pedidas |
+| `UnknownBlockDefinition` | El `packageId` está mal escrito, o ese bloque no está instalado |
+| `UnknownPropertyKey` | El bloque existe; el nombre de la propiedad no |
+| `<SNItem> accepts only property components` | Dentro de `<SNItem>` solo van `<SNProp*>` |
+| `A Code property accepts a single fenced code block` | El código va como bloque cercado, no como atributo |
+
+---
+
+## Resultado del canario
+
+**691 líneas de Markdown → 155 bloques en Supernova.** Verificado leyendo la página de vuelta:
+
+| | |
+| --- | --- |
+| **26 `<SNTable>` nativas** | 211 filas · 858 celdas — **tablas reales, no texto** |
+| **Encabezados** | 9 `##` + 21 `###`, jerarquía intacta |
+| **Formato** | 269 negritas · 2.594 fragmentos de código · listas · citas · separadores |
+
+**Nada se aplanó.** Supernova normalizó 3.503 líneas de entrada a 517 y las convirtió en sus propios componentes editables.

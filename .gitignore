@@ -8,3 +8,6 @@
 
 # Descargas intermedias del plugin uSpec Extract
 *_base.json
+
+node_modules/
+package-lock.json

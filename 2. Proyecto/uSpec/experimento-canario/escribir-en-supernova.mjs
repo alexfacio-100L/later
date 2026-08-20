@@ -12,7 +12,9 @@
  * `--validar` NO toca la página. Empieza siempre por ahí.
  */
 
-import { Supernova } from "@supernovaio/sdk"
+// El SDK se publica como CommonJS: no expone named exports en ESM.
+import sdkPkg from "@supernovaio/sdk"
+const { Supernova } = sdkPkg
 import { readFileSync } from "node:fs"
 import { resolve, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -32,7 +34,86 @@ if (!apiKey) {
 
 const modo = process.argv.includes("--escribir") ? "escribir" : "validar"
 
-const markdown = readFileSync(MD, "utf-8")
+let markdown = readFileSync(MD, "utf-8")
+
+/**
+ * Adaptaciones descubiertas ejecutando `validateMarkdown` contra Supernova.
+ * Cada una viene de un rechazo real: la especificación MDX-lite no es pública.
+ */
+const ADAPTACIONES = [
+  {
+    // Supernova NO acepta comentarios de ninguna clase.
+    //   <!-- -->  → "Unexpected character `!` (U+0021) before name"
+    //   {/* */}   → "Unsupported top-level content: mdxFlowExpression"
+    // Se eliminan. La procedencia del documento ya vive en su sección Provenance.
+    nombre: "comentarios eliminados (Supernova no admite ninguno)",
+    aplicar: t => t.replace(/<!--[\s\S]*?-->/g, "").replace(/^\s*\n(?=\s*\n)/gm, "")
+  },
+  {
+    // Supernova rechaza las pipe tables de Markdown:
+    //   "Pipe tables are not supported. Use <SNTable> with <SNTableRow> and <SNTableCell>."
+    // Se convierten al componente nativo. El markdown inline de cada celda se conserva.
+    nombre: "tablas Markdown → <SNTable>",
+    aplicar: t => {
+      const lineas = t.split("\n")
+      const salida = []
+      let i = 0
+      const esFila = l => /^\s*\|.*\|\s*$/.test(l)
+      const esSeparador = l => /^\s*\|[\s:|-]+\|\s*$/.test(l)
+      const celdas = l => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim())
+
+      while (i < lineas.length) {
+        if (!esFila(lineas[i])) { salida.push(lineas[i]); i++; continue }
+
+        // Reunir el bloque contiguo de filas
+        const bloque = []
+        while (i < lineas.length && esFila(lineas[i])) { bloque.push(lineas[i]); i++ }
+
+        // Sin separador no es una tabla: se deja tal cual
+        if (!bloque.some(esSeparador)) { salida.push(...bloque); continue }
+
+        const filas = bloque.filter(l => !esSeparador(l)).map(celdas)
+        const columnas = Math.max(...filas.map(f => f.length))
+        const ancho = Math.round((760 / columnas) * 100) / 100
+
+        salida.push(`<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>`)
+        for (const fila of filas) {
+          salida.push("  <SNTableRow>")
+          for (let c = 0; c < columnas; c++) {
+            const contenido = (fila[c] ?? "").replace(/<br\s*\/?>/gi, " ")
+            salida.push(`    <SNTableCell alignment="Left" columnWidth={${ancho}}>`)
+            salida.push(`      ${contenido}`)
+            salida.push("    </SNTableCell>")
+          }
+          salida.push("  </SNTableRow>")
+        }
+        salida.push("</SNTable>")
+        salida.push("")
+      }
+      return salida.join("\n")
+    },
+  },
+  {
+    // Etiquetas HTML citadas como texto: MDX las lee como componentes JSX y
+    // exige cierre. El error: "Expected a closing tag for `<button>`".
+    // Es además un defecto del .md: en Markdown normal también se rompen.
+    // Se envuelven en backticks, respetando lo que ya está en código.
+    nombre: "etiquetas HTML citadas → código en backticks",
+    aplicar: t => t.split("\n").map(linea => {
+      if (linea.trimStart().startsWith("{/*")) return linea
+      // Partir por backticks: los índices impares ya son código, no se tocan.
+      return linea.split("`").map((trozo, i) =>
+        i % 2 === 1 ? trozo : trozo.replace(/<(\/?[a-zA-Z][a-zA-Z0-9-]*(?:\s[^<>]*?)?)\/?>/g, "`<$1>`")
+      ).join("`")
+    }).join("\n")
+  }
+]
+
+for (const a of ADAPTACIONES) {
+  const antes = markdown
+  markdown = a.aplicar(markdown)
+  if (antes !== markdown) console.log(`  · adaptado: ${a.nombre}`)
+}
 console.log(`Markdown: ${markdown.split("\n").length} líneas · ${(markdown.length / 1024).toFixed(1)} KB`)
 
 const sdk = new Supernova(apiKey)
