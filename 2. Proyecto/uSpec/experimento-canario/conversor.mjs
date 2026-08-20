@@ -94,6 +94,8 @@ function anchosDeColumna(filas, columnas) {
 
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
 function tablaSN(filas) {
+  // La primera fila es la cabecera: se localiza.
+  if (filas.length) filas = [filas[0].map(traducirCabecera), ...filas.slice(1)]
   const columnas = Math.max(...filas.map(f => f.length))
   const anchos = anchosDeColumna(filas, columnas)
   const out = ["<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>"]
@@ -108,6 +110,77 @@ function tablaSN(filas) {
   }
   out.push("</SNTable>", "")
   return out
+}
+
+
+// ─────────────────────────────────────────────────────────────
+// Localización
+// ─────────────────────────────────────────────────────────────
+
+/**
+ * El `.md` de uSpec lleva los encabezados en inglés **a propósito**: las skills
+ * los localizan por su texto literal. Ese contrato se conserva — traducir el
+ * `.md` rompería tanto uSpec como el reconocimiento de secciones de este mismo
+ * conversor.
+ *
+ * **La traducción ocurre aquí, al emitir**, que es la capa de presentación.
+ * El documento técnico queda en inglés; lo que lee el equipo, en español.
+ *
+ * NO se traducen identificadores: nombres de token, propiedades (`isLoading`,
+ * `size`) ni valores (`primary`, `marketing`). Deben coincidir con el código.
+ */
+const SECCIONES_ES = {
+  "Overview": "Resumen",
+  "Composition": "Composición",
+  "Known gaps": "Defectos conocidos",
+  "Unresolved": "Sin resolver",
+  "Follow-ups": "Siguientes pasos",
+  "Icon": "Icono",
+  "Referenced components": "Componentes referenciados",
+  "Structure": "Estructura",
+  "Anatomy": "Anatomía",
+  "Button sizes": "Tamaños",
+  "Button surface shape": "Forma según la superficie",
+  "Button focus ring": "Anillo de foco",
+  "Voice / Screen reader": "Lector de pantalla",
+  "State: enabled": "Estado: activo",
+  "State: focused": "Estado: con foco",
+  "State: isDisabled === true": "Estado: deshabilitado",
+  "State: isLoading === true": "Estado: cargando",
+  "Cross-references": "Referencias cruzadas",
+  "Type deltas — diferencias por tipo": "Diferencias por tipo",
+}
+
+/** Cabeceras de tabla. Solo se traduce la PRIMERA fila. */
+const CABECERAS_ES = {
+  "Property": "Propiedad", "Properties": "Propiedades",
+  "Value": "Valor", "Values": "Valores",
+  "Notes": "Notas", "Note": "Nota",
+  "Element": "Elemento", "Elements": "Elementos",
+  "Type": "Tipo", "Default": "Por defecto",
+  "Description": "Descripción", "Name": "Nombre",
+  "State": "Estado", "States": "Estados",
+  "Token": "Token", "Layer": "Capa", "Size": "Tamaño",
+  "Role": "Rol", "Required": "Obligatorio", "Optional": "Opcional",
+  "Spec": "Especificación", "Specs": "Especificaciones",
+}
+
+/** Cabeceras con parte variable, que un diccionario plano no cubre. */
+const CABECERAS_PATRON = [
+  [/^Prop passed to (.+)$/i, (m) => `Prop que recibe ${m[1]}`],
+  [/^Applied to (.+)$/i,     (m) => `Aplicado a ${m[1]}`],
+]
+
+const traducirSeccion = t => SECCIONES_ES[t.trim()] ?? t
+const traducirCabecera = c => {
+  const limpio = c.replace(/\*\*/g, "").trim()
+  const es = CABECERAS_ES[limpio]
+  if (es) return c.replace(limpio, es)
+  for (const [re, fn] of CABECERAS_PATRON) {
+    const m = limpio.match(re)
+    if (m) return c.replace(limpio, fn(m))
+  }
+  return c
 }
 
 const callout = (tipo, cuerpo) =>
@@ -181,7 +254,7 @@ export function convertir(md, tokens = {}) {
       // ── API → tabla generada del componente ──
       if (CONFIG.vivas.api.test(titulo) && nivel === 2) {
         informe.vivas.push("API → component-checklist")
-        salida.push(linea, "")
+        salida.push(`${enc[1]} ${traducirSeccion(titulo)}`, "")
         salida.push(`<SNComponentChecklist component="${CONFIG.componenteId}" selectedPropertyIds={${JSON.stringify(CONFIG.propiedadesChecklist)}} title="Propiedades del componente" showDescription />`, "")
         salida.push(...callout("Info",
           "Las propiedades salen del componente importado, no de este documento. **Si cambian en Figma, cambian aquí.**"))
@@ -198,7 +271,7 @@ export function convertir(md, tokens = {}) {
         const fin = finDeSeccion(i, nivel)
         const ids = tokensDe(i, fin)
         informe.vivas.push(`Color → color-accessibility-grid (${ids.length} tokens)`)
-        salida.push(linea, "")
+        salida.push(`${enc[1]} ${traducirSeccion(titulo)}`, "")
         if (ids.length) {
           salida.push(`<SNBlock packageId="io.supernova.block.color-accessibility-grid" columns={1}>`,
                       "  <SNItem>",
@@ -215,7 +288,7 @@ export function convertir(md, tokens = {}) {
       // ── Anatomía → frames de Figma ──
       if (CONFIG.vivas.anatomia.test(titulo)) {
         informe.vivas.push("Anatomy → figma-frames")
-        salida.push(linea, "")
+        salida.push(`${enc[1]} ${traducirSeccion(titulo)}`, "")
         salida.push(`<SNBlock packageId="io.supernova.block.figma-frames" variantId="bordered" columns={2}>`,
                     "  <SNItem>",
                     `    <SNPropFigmaNode name="figmaNodes" value={[]} showFrameDetails previewContainerSize="Centered" />`,
@@ -227,7 +300,7 @@ export function convertir(md, tokens = {}) {
         continue
       }
 
-      salida.push(linea)
+      salida.push(`${enc[1]} ${traducirSeccion(titulo)}`)
       i++
       continue
     }

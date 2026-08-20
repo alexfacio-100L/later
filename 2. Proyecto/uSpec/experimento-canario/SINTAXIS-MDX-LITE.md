@@ -197,3 +197,17 @@ anchos = (peso / total) * 760           // ancho útil de la página
 antes (uniforme):    152 + 152 + 152 + 152 + 152
 ahora (proporcional): 123 +  72 +  72 +  72 + 421
 ```
+
+---
+
+## El idioma: el `.md` en inglés, lo publicado en español
+
+**El `.md` de uSpec mezcla idiomas a propósito** — prosa en español, encabezados e identificadores en inglés—, y el propio documento explica por qué:
+
+> *"Las skills `create-*` de uSpec **localizan las secciones por su texto literal** y traducirlos dejaría de funcionar el renderizado de las anotaciones en Figma."*
+
+**Esa razón caduca en el paradigma nuevo** —si no renderizamos en Figma, nada obliga al inglés—, **pero traducir el `.md` sigue siendo mala idea:** este conversor también localiza secciones por texto literal (`^API$`, `^Color$`, `^Anatomy$`). Traducir el origen rompería el reconocimiento.
+
+> **La solución: el `.md` conserva el inglés como contrato técnico, y la traducción ocurre al emitir.** *El documento de trabajo queda estable; lo que lee el equipo, en español.*
+
+**Lo que NO se traduce, nunca:** nombres de token, propiedades (`isLoading`, `size`) y valores (`primary`, `marketing`, `L`/`M`/`S`). **Deben coincidir con el código.**
