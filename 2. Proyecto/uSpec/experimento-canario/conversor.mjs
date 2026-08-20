@@ -198,7 +198,7 @@ const tokensProp = ids =>
  * @param {object} tokens  mapa nombre → id, de `mapa-tokens.mjs`
  * @returns {{mdx: string, informe: object}}
  */
-export function convertir(md, tokens = {}) {
+export function convertir(md, tokens = {}, frames = {}) {
   const informe = { omitidas: [], vivas: [], tablas: 0, callouts: 0, tokensNoResueltos: new Set() }
 
   let texto = etiquetasCitadas(sinComentarios(md))
@@ -289,12 +289,19 @@ export function convertir(md, tokens = {}) {
       if (CONFIG.vivas.anatomia.test(titulo)) {
         informe.vivas.push("Anatomy → figma-frames")
         salida.push(`${enc[1]} ${traducirSeccion(titulo)}`, "")
-        salida.push(`<SNBlock packageId="io.supernova.block.figma-frames" variantId="bordered" columns={2}>`,
-                    "  <SNItem>",
-                    `    <SNPropFigmaNode name="figmaNodes" value={[]} showFrameDetails previewContainerSize="Centered" />`,
-                    "  </SNItem>", "</SNBlock>", "")
-        salida.push(...callout("Warning",
-          "**Pendiente de poblar.** Los frames existen en Figma (`Button Anatomy`) pero aún no están importados como recursos. Requiere un re-import ahora que `documentationFrames` está activo."))
+        const frame = frames["Anatomy"]
+        if (frame) {
+          salida.push(`<SNImage alignment="Left" src="${frame.url}" />`, "")
+          salida.push(...callout("Info",
+            `Exportado de Figma —\`${frame.nombre}\`, nodo \`${frame.nodo}\`— y subido como recurso. **Es una imagen: si el frame cambia en Figma, hay que volver a exportarlo.**`))
+          informe.vivas.push(`Anatomy → imagen de ${frame.nombre}`)
+        } else {
+          salida.push(`<SNBlock packageId="io.supernova.block.figma-frames" variantId="bordered" columns={2}>`,
+                      "  <SNItem>",
+                      `    <SNPropFigmaNode name="figmaNodes" value={[]} showFrameDetails previewContainerSize="Centered" />`,
+                      "  </SNItem>", "</SNBlock>", "")
+          salida.push(...callout("Warning", "**Pendiente de poblar.** Ningún frame exportado para esta sección."))
+        }
         informe.callouts++
         i = finDeSeccion(i, enc[1].length)
         continue
