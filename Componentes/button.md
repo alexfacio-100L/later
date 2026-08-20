@@ -355,3 +355,184 @@ Estado disabled (state=disabled en Figma, isDisabled=true en la API). El compone
 - **Figma:** `UGwIBzERV4vB7mk0mejZ0y` nodo `3566:3197`
 - **Variantes analizadas:** 60
 - **Desacuerdos con el diccionario de API:** 0 en los tres especialistas.
+
+<!-- render-meta:start v=1 -->
+<!-- Machine-readable appendix consumed by downstream `create-*` skills.
+     Carries node IDs so renderers can resolve sections/groups → live Figma layers
+     without re-extracting. Schema: see references/component-md/agent-component-md-instruction.md > ## RENDER_META_JSON.
+     Do NOT hand-edit; regenerated on every `create-component-md` run. -->
+```json
+{
+  "schemaVersion": "1.0",
+  "extractedAt": "2026-08-20T19:08:25.287Z",
+  "sourceHash": "sha256:a3e09452a496eb7c25d13df0d73939d48cae730c8225207efc665acee646b27a",
+  "fileKey": "UGwIBzERV4vB7mk0mejZ0y",
+  "nodeId": "3566:3197",
+  "component": {
+    "componentName": "Button",
+    "compSetNodeId": "3566:3197",
+    "isComponentSet": true
+  },
+  "variantAxes": {
+    "size": [
+      "l",
+      "m",
+      "s"
+    ],
+    "surface": [
+      "marketing",
+      "product"
+    ],
+    "variant": [
+      "primary",
+      "secondary"
+    ],
+    "state": [
+      "default",
+      "disabled",
+      "focus",
+      "hover",
+      "pressed"
+    ]
+  },
+  "variantAxesDefaults": {
+    "size": "s",
+    "surface": "product",
+    "variant": "primary",
+    "state": "default"
+  },
+  "propertyDefs": {
+    "label#3566:7": {
+      "type": "TEXT",
+      "defaultValue": "Button",
+      "variantOptions": null,
+      "description": null
+    },
+    "showIconLeft#12227:0": {
+      "type": "BOOLEAN",
+      "defaultValue": false,
+      "variantOptions": null,
+      "description": null
+    },
+    "showIconRight#12227:61": {
+      "type": "BOOLEAN",
+      "defaultValue": false,
+      "variantOptions": null,
+      "description": null
+    },
+    "iconLeft#12227:122": {
+      "type": "INSTANCE_SWAP",
+      "defaultValue": "12376:86685",
+      "variantOptions": null,
+      "description": null
+    },
+    "iconRight#12227:183": {
+      "type": "INSTANCE_SWAP",
+      "defaultValue": "12376:86685",
+      "variantOptions": null,
+      "description": null
+    },
+    "size": {
+      "type": "VARIANT",
+      "defaultValue": "s",
+      "variantOptions": [
+        "l",
+        "m",
+        "s"
+      ],
+      "description": null
+    },
+    "surface": {
+      "type": "VARIANT",
+      "defaultValue": "product",
+      "variantOptions": [
+        "marketing",
+        "product"
+      ],
+      "description": null
+    },
+    "variant": {
+      "type": "VARIANT",
+      "defaultValue": "primary",
+      "variantOptions": [
+        "primary",
+        "secondary"
+      ],
+      "description": null
+    },
+    "state": {
+      "type": "VARIANT",
+      "defaultValue": "default",
+      "variantOptions": [
+        "default",
+        "disabled",
+        "focus",
+        "hover",
+        "pressed"
+      ],
+      "description": null
+    }
+  },
+  "booleanDefs": [
+    {
+      "key": "showIconLeft#12227:0",
+      "default": false,
+      "associatedLayerName": "iconLeft",
+      "associatedLayerId": "3534:1316"
+    },
+    {
+      "key": "showIconRight#12227:61",
+      "default": false,
+      "associatedLayerName": "iconRight",
+      "associatedLayerId": "3534:1319"
+    }
+  ],
+  "subComponents": [],
+  "slotContents": [],
+  "sectionTargets": {
+    "Button sizes": {
+      "name": "__root__",
+      "nodeId": "3566:3196"
+    },
+    "Button surface": {
+      "name": "__root__",
+      "nodeId": "3566:3196"
+    },
+    "Button states": {
+      "name": "__root__",
+      "nodeId": "3566:3196"
+    }
+  },
+  "groupTargets": {
+    "Button sizes": {
+      "Container": {
+        "name": "__root__",
+        "nodeId": "3566:3196"
+      },
+      "Content": {
+        "name": "content",
+        "nodeId": "3475:862"
+      },
+      "Label box": {
+        "name": "labelBox",
+        "nodeId": "3475:861"
+      },
+      "Label": {
+        "name": "label",
+        "nodeId": "3475:860"
+      },
+      "Icon left": {
+        "name": "iconLeft",
+        "nodeId": "3534:1316"
+      },
+      "Icon right": {
+        "name": "iconRight",
+        "nodeId": "3534:1319"
+      }
+    },
+    "Button surface": {},
+    "Button states": {}
+  }
+}
+```
+<!-- render-meta:end -->

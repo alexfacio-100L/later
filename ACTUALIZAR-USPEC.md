@@ -124,3 +124,26 @@ npx uspec-skills@<versión> init
 **Solo cuatro skills producen `#preview`:** `create-anatomy`, `create-color`, `create-property` y `create-structure`.
 
 *`create-api`, `create-voice` y `create-motion` no generan ninguno.* **Si no se documenta en Figma, esas tres no se invocan nunca** — recortarlas no ahorra nada porque ya no se usan.
+
+---
+
+## Defecto encontrado al medir el recorte (20 ago 2026)
+
+### `create-component-md` no emitió el bloque `render-meta`
+
+**Ningún `.md` generado lo tiene.** El placeholder `{{RENDER_META_JSON}}` de `references/component-md/component-md-template.md` nunca se sustituyó y el bloque entero se omitió al renderizar.
+
+**Consecuencia:** las cuatro skills que producen previews (`create-anatomy`, `create-color`, `create-property`, `create-structure`) **abren con un fail-fast en Step 0** — el `render-meta` es su única fuente de identidad. Sin él no arrancan.
+
+**Reparado a mano en `Componentes/button.md`** reconstruyéndolo desde `.uspec-cache/button/button-_base.json`, que es su fuente canónica. El script vive en el historial de la sesión; los campos salen de `_meta`, `component`, `variantAxes`, `propertyDefinitions.booleans` (ojo: el campo es **`rawKey`**, no `key`) y del structure cache para `sectionTargets` / `groupTargets`.
+
+🔴 **Se volverá a perder en la siguiente corrida del orquestador.** *Hay que arreglarlo en `create-component-md` o repetir la reparación cada vez.*
+
+### Dos cosas más que el archivo de Figma ya no cumple
+
+| Lo que la skill espera | Lo que hay |
+| --- | --- |
+| Importar la plantilla por `templateKeys.anatomyOverview` | La key **no resuelve** — `Component with key … not found` |
+| — | La plantilla vive **local** en el archivo: `.Anatomy`, nodo `12214:6725`, con los 16 nodos que la skill busca |
+
+*Se usó la local. Si la librería vuelve a publicarse, la key debería volver a funcionar.*
