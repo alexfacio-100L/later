@@ -142,5 +142,29 @@
     "fraccionAncho": 50,
     "assetId": "59c91472-7a26-4b06-a1df-bb1fde73fb83",
     "url": "https://studio-assets.supernova.io/design-systems/825551/2eb8e5b2-f830-44e7-bbf5-fb45cbce86f5.png"
+  },
+  "Accion principal": {
+    "nodo": "12540:2619",
+    "nombre": "API · Accion principal",
+    "archivo": "frames/button-api-accion-principal.png",
+    "fraccionAncho": 50,
+    "assetId": "2ada2fd4-3955-400e-ac71-00668239768c",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/8fb5c969-035a-41bc-a974-9a64e80611ca.png"
+  },
+  "Secundario con icono final": {
+    "nodo": "12540:2648",
+    "nombre": "API · Secundario con icono final",
+    "archivo": "frames/button-api-secundario-icono.png",
+    "fraccionAncho": 50,
+    "assetId": "420fcd0c-8cea-4bc3-80f9-d4f3f62b198e",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/accf8530-2b33-47f7-8aa6-6682b5530b7a.png"
+  },
+  "Deshabilitado": {
+    "nodo": "12540:2677",
+    "nombre": "API · Deshabilitado",
+    "archivo": "frames/button-api-deshabilitado.png",
+    "fraccionAncho": 50,
+    "assetId": "b5c99433-7886-4c98-a463-3c6af9ca5993",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/62f9b38b-41d6-483c-bd50-6687d450a816.png"
   }
 }

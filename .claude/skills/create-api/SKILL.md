@@ -3,6 +3,31 @@ name: create-api
 description: Generate API overview specifications documenting component properties, values, defaults, and configuration examples. Use when the user mentions "api", "api spec", "props", "properties", "component api", or wants to document a component's configurable properties.
 ---
 
+---
+
+## ⚡ MODO SOLO-PREVIEW (adecuación local de 100 Ladrillos)
+
+**El sistema documenta en Supernova, no en Figma.** De esta skill solo se consume el `#preview` de cada *configuration example*: la tabla principal, las de sub-componentes y las de props ya viajan en la sección `## API` del `.md`.
+
+| Bloque | Qué hacer |
+| --- | --- |
+| **Step 9 — Fill Header Fields** | **OMITIR** |
+| **Step 10 — Main API Table** | **OMITIR.** La plantilla se deja intacta y vacía |
+| **Step 11 — Sub-component Tables** | **OMITIR** |
+| **Step 12 — Configuration Examples** | **Crear el capítulo, su título y su `#preview`.** *No rellenar `#example-table`* |
+
+🔴 **Las plantillas de tabla NO se borran** — hacen falta para el camino de contingencia (`DESTINO_DOCUMENTACION=figma`).
+
+**Nota sobre esta skill en particular:** *aquí el preview va **anidado dentro de cada ejemplo de configuración**, no como sección hermana de una tabla. Es la única con esa forma, y por eso su inventario de previews se contó mal durante días.*
+
+### Ajuste del ancho del preview
+
+Alto pegado al contenido; ancho por **fracción del 50%**; **proporción máxima 3,5:1**. Con más de tres instancias, `layoutWrap` y el aire en el `padding` lateral. Retira los placeholders de la plantilla **antes** de medir. `npm run docs:previews` lo comprueba.
+
+*Adecuación local: no viene de uSpec. Ver `ACTUALIZAR-USPEC.md` — al actualizar hay que reaplicarla.*
+
+---
+
 # Create API Overview
 
 Generate an API overview directly in Figma — property tables with values, defaults, required status, sub-component tables, and configuration examples.
@@ -217,6 +242,8 @@ Save the returned `frameId` — you need it for all subsequent steps.
 
 ### Step 9: Fill Header Fields
 
+> ⚡ **MODO SOLO-PREVIEW:** **OMITIR este paso entero.**
+
 Run via `figma_execute` (replace `__FRAME_ID__`, `__COMPONENT_NAME__`, and `__GENERAL_NOTES__`):
 
 ```javascript
@@ -256,6 +283,8 @@ return { success: true };
 ```
 
 ### Step 10: Fill Main API Table
+
+> ⚡ **MODO SOLO-PREVIEW:** **OMITIR.** La plantilla de la tabla se deja intacta y vacía.
 
 Run via `figma_execute`. Replace `__FRAME_ID__` and `__PROPERTIES_JSON__` with the main table properties array.
 
@@ -328,6 +357,8 @@ return { success: true };
 ```
 
 ### Step 11: Fill Sub-component Tables
+
+> ⚡ **MODO SOLO-PREVIEW:** **OMITIR este paso entero.**
 
 If there are sub-component tables, run **one `figma_execute` call per sub-component** to avoid timeouts. If there are NO sub-component tables, run a single call to hide the template.
 
@@ -452,6 +483,8 @@ return { success: true };
 ```
 
 ### Step 12: Fill Configuration Examples
+
+> ⚡ **MODO SOLO-PREVIEW:** crea el capítulo, su título y su `#preview`; **no rellenes `#example-table`**.
 
 Run **one `figma_execute` call per configuration example** to avoid timeouts.
 

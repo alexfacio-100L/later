@@ -315,3 +315,34 @@ const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 *Así siguen funcionando los frames ya renderizados con el nombre viejo, y también una plantilla que vuelva con el nombre de fábrica tras una actualización de uSpec.* Deja fuera `#preview-instruction-light` y `Light theme preview placeholder`, que son placeholders internos.
 
 **`.Motion` no tiene contenedor de preview.** *Eso sí era cierto: produce una línea de tiempo, no una muestra visual.*
+
+## `create-api` en modo solo-preview (21 ago 2026) — cierra el juego
+
+Steps 9, 10 y 11 omitidos (header, tabla principal, tablas de sub-componente). Step 12 crea cada capítulo de *configuration example* con su `#preview`, sin rellenar `#example-table`.
+
+**Es la skill con la forma más distinta:** *aquí el preview va **anidado dentro de cada ejemplo de configuración**, no como sección hermana de una tabla. Por eso su inventario se contó mal — no bastaba con mirar el patrón de las demás.*
+
+🔴 **Con una sola instancia por preview, la fracción de ancho no basta.** *La plantilla trae `minHeight: 290`, así que el preview salía **más alto que ancho** —0,8:1— aunque la fracción fuera correcta al 50%.* Hay que soltar el mínimo:
+
+```js
+p.minHeight = null;
+p.counterAxisSizingMode = 'AUTO';
+```
+
+*Con el alto gobernado por el contenido, los tres quedaron entre 2,0 y 2,4:1.*
+
+---
+
+## Estado al cierre del 21 ago 2026
+
+**21 previews en regla, ninguno pendiente.** `npm run docs:publicar` pasa la puerta sin `--forzar`.
+
+| Sección | Previews |
+| --- | --- |
+| Anatomy | 1 |
+| Properties | 6 |
+| Structure | 3 |
+| Color | 8 *(cuatro combinaciones × light/dark en columnas)* |
+| API | 3 |
+
+**Las seis skills de render están adecuadas** y las ocho modificaciones locales aparecen en `npm run uspec:verificar`.
