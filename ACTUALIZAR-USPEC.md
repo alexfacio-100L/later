@@ -198,3 +198,27 @@ Los cuatro iconos de tipo se exportaron de la plantilla `.Anatomy` y se subieron
 ### Corrección: `create-voice` sí dibuja artwork
 
 **Antes anoté que solo cuatro skills producen previews, contando menciones de `#preview`.** Ese método no bastaba: los specs de *Screen reader* que genera `create-voice` **también crean `Artwork wrapper`** —cuatro en el archivo— aunque no usen ese nombre de capa. *Buscar una cadena literal no prueba la ausencia de la cosa.*
+
+### Regla de verificación de previews (21 ago 2026)
+
+**`validateMarkdown` responde por la sintaxis, no por lo que se ve.** *Un preview con el componente al 6% del lienzo valida exactamente igual de bien que uno legible — y así se publicaron.* Por eso hay una puerta propia:
+
+```
+npm run docs:previews      # informa
+npm run docs:publicar      # la corre sola y ABORTA si algo no pasa
+```
+
+| Límite | Valor | Por qué |
+| --- | --- | --- |
+| Ocupación mínima | **25%** | Por debajo, el componente se pierde en Supernova |
+| Lado máximo | 4096 px | Peso sin ganancia |
+| Lado mínimo | 120 px | Se pixela al ampliarla |
+| Proporción máxima | 6:1 | Delata una franja de vacío |
+
+🔴 **Un preview sin medir cuenta como suspenso, no como aprobado.** *La ocupación se mide en Figma al recortar y viaja en `frames-subidos.json`; `subir-frame.mjs` la acepta como quinto argumento y avisa si falta. La ausencia de medida no es evidencia de que esté bien.*
+
+`--forzar` salta la puerta cuando la desproporción es deliberada.
+
+### Los previews de Structure, Color y Properties hay que rehacerlos
+
+**Sus nodos de origen ya no existen en el archivo** —`12307:2124`, `12314:1984`, `12302:2000`—, así que no se pueden ni re-medir ni re-exportar. Las imágenes siguen publicadas en Supernova, pero vienen de una corrida anterior y **muestran el componente antes de las correcciones del 19–20 de agosto**.

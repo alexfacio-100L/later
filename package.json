@@ -15,7 +15,8 @@
     "docs:publicar": "node experimento-canario/publicar.mjs --escribir",
     "docs:conexion": "node experimento-canario/verificar-conexion.mjs",
     "docs:estado": "node experimento-canario/diagnostico-supernova.mjs",
-    "docs:tokens": "node experimento-canario/mapa-tokens.mjs"
+    "docs:tokens": "node experimento-canario/mapa-tokens.mjs",
+    "docs:previews": "node experimento-canario/verificar-previews.mjs"
   },
   "devDependencies": {
     "uspec-skills": "0.3.2"

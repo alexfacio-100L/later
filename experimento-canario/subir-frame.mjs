@@ -14,11 +14,15 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs"
 import { basename } from "node:path"
 const { Supernova } = sdkPkg
 
-const [ruta, seccion, nodo, nombre] = process.argv.slice(2)
+const [ruta, seccion, nodo, nombre, ocupacion] = process.argv.slice(2)
 if (!ruta || !seccion) {
-  console.error('Uso: node subir-frame.mjs <ruta.png> <Sección> [nodoId] [nombre]')
+  console.error('Uso: node subir-frame.mjs <ruta.png> <Sección> [nodoId] [nombre] [ocupación%]')
   process.exit(1)
 }
+// La ocupacion es el % del nodo que ocupa el contenido dibujado, medido en Figma.
+// Sin ese dato el preview no pasa `verificar-previews.mjs`: un preview diminuto
+// valida igual de bien que uno legible, asi que la medida tiene que viajar con el.
+if (!ocupacion) console.warn(`⚠️  sin ocupación: "${seccion}" no pasará la verificación`)
 
 const sdk = new Supernova(apiKey)
 const me = await sdk.me.me()
@@ -34,6 +38,7 @@ console.log(`✓ subido — ${Math.round(buf.length/1024)} KB · ${r.id}`)
 
 const REG = new URL("./frames-subidos.json", import.meta.url)
 const reg = existsSync(REG) ? JSON.parse(readFileSync(REG, "utf-8")) : {}
-reg[seccion] = { nodo: nodo ?? null, nombre: nombre ?? basename(ruta), assetId: r.id, url: r.url }
+reg[seccion] = { nodo: nodo ?? null, nombre: nombre ?? basename(ruta), archivo: ruta,
+                 ocupacion: ocupacion ? Number(ocupacion) : undefined, assetId: r.id, url: r.url }
 writeFileSync(REG, JSON.stringify(reg, null, 2))
 console.log(`✓ registrado en frames-subidos.json bajo "${seccion}"`)

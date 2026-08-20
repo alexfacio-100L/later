@@ -47,6 +47,21 @@ const val = await sdk.import.validateMarkdown(from, mdx)
 if (!val.isValid) { console.log(`\n✗ ${val.error.message.replace(/\s+/g," ").slice(0,300)}`); process.exit(1) }
 console.log(`\n✓ válido — ${val.blockCount} bloques`)
 
+// ── Puerta de calidad de los previews ──
+// Va ANTES de escribir: validateMarkdown responde por la sintaxis, no por lo
+// que se ve. Un preview con el componente diminuto valida igual de bien.
+if (process.argv.includes("--escribir") && !process.argv.includes("--forzar")) {
+  const { verificar } = await import("./verificar-previews.mjs")
+  const malos = verificar(frames, import.meta.url).filter(f => f.problemas.length)
+  if (malos.length) {
+    console.log(`\n🔴 ${malos.length} preview(s) no pasan la verificación:`)
+    for (const f of malos) console.log(`   · ${f.seccion} — ${f.problemas.join("; ")}`)
+    console.log("\n   Corrige y reintenta, o publica con --forzar si es deliberado.")
+    process.exit(1)
+  }
+  console.log("✓ previews verificados")
+}
+
 if (process.argv.includes("--escribir")) {
   const r = await sdk.import.writeMarkdownToPage(from, PAGE, mdx)
   console.log(`✓ escrito — ${r.blockCount} bloques`)

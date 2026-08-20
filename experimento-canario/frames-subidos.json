@@ -3,24 +3,29 @@
     "nodo": "12508:2172",
     "nombre": "Button Anatomy · #preview (recortado)",
     "assetId": "224612a7-afd5-45a3-bcfe-808052b0dee7",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/32039e7f-7288-417b-a3bc-7ae17315491e.png"
+    "url": "https://studio-assets.supernova.io/design-systems/825551/32039e7f-7288-417b-a3bc-7ae17315491e.png",
+    "ocupacion": 49,
+    "archivo": "frames/button-anatomy-preview.png"
   },
   "Button sizes": {
     "nodo": "12307:2124",
     "nombre": "Structure · Button sizes (light)",
     "assetId": "a8664101-7eca-43e1-b5f4-43c2b5b5dc05",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/fce1a3d9-05da-4ac1-b3a6-ec39dda39ab6.png"
+    "url": "https://studio-assets.supernova.io/design-systems/825551/fce1a3d9-05da-4ac1-b3a6-ec39dda39ab6.png",
+    "nodoPerdido": true
   },
   "Size=S, Surface=Product, Type=Primary, State=Default": {
     "nodo": "12314:1984",
     "nombre": "Color · Product Primary (light)",
     "assetId": "79da2e81-de8e-44b9-9bcf-3b7c90ddbb03",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/2f4a2de8-55e5-4839-84b5-add3d971fbcf.png"
+    "url": "https://studio-assets.supernova.io/design-systems/825551/2f4a2de8-55e5-4839-84b5-add3d971fbcf.png",
+    "nodoPerdido": true
   },
   "Type": {
     "nodo": "12302:2000",
     "nombre": "Properties · Type (light)",
     "assetId": "cdbb78a9-d852-40e8-9437-476b82f6c37c",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/db644d74-6408-47a1-aa5a-adf68b9268a3.png"
+    "url": "https://studio-assets.supernova.io/design-systems/825551/db644d74-6408-47a1-aa5a-adf68b9268a3.png",
+    "nodoPerdido": true
   }
 }
