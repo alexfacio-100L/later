@@ -177,3 +177,24 @@ Los cuatro iconos de tipo se exportaron de la plantilla `.Anatomy` y se subieron
 *En la plantilla los cuatro iconos están **superpuestos** dentro de `#indicator`, uno visible por fila. Exportarlos ahí uno a uno arrastra el borde redondeado del contenedor y los descentra: `instance` salía recortado a **160×192** en vez de 192×192.* En el frame documentado cada fila tiene visible solo su icono y salen limpios y cuadrados.
 
 **El `slot` es la excepción:** el Button no tiene ranuras, así que no hay fila que copiar. Se exportó clonando un `#indicator` dentro de una caja con el mismo fondo que las celdas y dejando visible solo `#slot`. 🔴 **La caja tiene que cubrir el indicador entero** —`#slot` no vive en el origen, está a x=12— o el PNG sale con una franja del lienzo al lado.
+
+### El recorte del artwork (21 ago 2026) — aplica a las CUATRO skills de preview
+
+**Los mínimos de la plantilla dejan el componente diminuto al exportar.** Medido en el archivo:
+
+| Spec | Wrapper | Contenido | Ocupación |
+| --- | --- | --- | --- |
+| Button Anatomy | 1400×425 | 135×176 | **4%** |
+| Button Screen reader ×4 | 800×425 | 168×37 | **1–2%** |
+
+*El código lo causa `MIN_W = 1400` / `MIN_H = 290`: fuerzan un lienzo fijo aunque el componente mida 127px.*
+
+**El arreglo está escrito en `create-anatomy` (Step 8) y hay que replicarlo en `create-color`, `create-property` y `create-structure`** cuando se recorten. Recorta el wrapper al bounding box de lo dibujado + 40px y le copia el fondo del padre.
+
+🔴 **Lo que se exporta a Supernova es el `Artwork wrapper`, no el `#preview`.** *El `#preview` tiene ancho fijo por diseño de la plantilla.*
+
+**No hace falta re-correr las skills para arreglar lo ya renderizado:** el recorte es un barrido sobre los `Artwork wrapper` existentes. Los cinco del archivo se recortaron así.
+
+### Corrección: `create-voice` sí dibuja artwork
+
+**Antes anoté que solo cuatro skills producen previews, contando menciones de `#preview`.** Ese método no bastaba: los specs de *Screen reader* que genera `create-voice` **también crean `Artwork wrapper`** —cuatro en el archivo— aunque no usen ese nombre de capa. *Buscar una cadena literal no prueba la ausencia de la cosa.*

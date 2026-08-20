@@ -21,6 +21,41 @@ description: Generate a visual anatomy annotation in Figma showing numbered mark
 
 **Todo lo demás se ejecuta igual**, en particular el Step 8 hasta la línea `--- Fill annotation table ---`: la instancia, los slots, los contornos y los marcadores numerados son justamente lo que da valor al `#preview`.
 
+
+### ⚡ Recorte del artwork al contenido (adecuación local)
+
+**`MIN_W = 1400` y `MIN_H = 290` dejan el componente diminuto al exportar.** *Medido el 21 ago 2026: el Button ocupaba el **6%** del wrapper —200×174 dentro de 1400×425— y en Supernova se veía como una mota. Los specs de Screen reader estaban entre el 1% y el 2%.*
+
+**Al final del Step 8, después de dibujar marcadores y líneas y antes de devolver, recorta el wrapper a lo que realmente se dibujó:**
+
+```javascript
+// --- Recorte al contenido real ---
+// Los minimos de la plantilla son un lienzo fijo; el componente no. Sin esto,
+// la imagen que llega a Supernova es casi todo vacio.
+const MARGEN = 40;
+let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+for (const c of wrapper.children) {
+  minX = Math.min(minX, c.x); minY = Math.min(minY, c.y);
+  maxX = Math.max(maxX, c.x + c.width); maxY = Math.max(maxY, c.y + c.height);
+}
+const recW = Math.ceil(maxX - minX) + 2 * MARGEN;
+const recH = Math.ceil(maxY - minY) + 2 * MARGEN;
+const ddx = minX - MARGEN, ddy = minY - MARGEN;
+wrapper.resize(Math.max(wrapper.width, recW), Math.max(wrapper.height, recH));
+for (const c of wrapper.children) { c.x = Math.round(c.x - ddx); c.y = Math.round(c.y - ddy); }
+wrapper.resize(recW, recH);
+// El fondo del padre evita que la imagen exportada salga transparente.
+if (preview.fills && preview.fills.length) {
+  try { wrapper.fills = JSON.parse(JSON.stringify(preview.fills)); wrapper.cornerRadius = preview.cornerRadius || 0; } catch {}
+}
+```
+
+**Se agranda primero y se ajusta después**, en dos pasos: mover las piezas dentro de un frame que ya se encogió las recorta.
+
+🔴 **Y lo que se exporta a Supernova es el `Artwork wrapper`, no el `#preview`.** *El `#preview` es de ancho fijo por diseño de la plantilla; exportarlo devuelve el problema. El wrapper recortado ya lleva el fondo copiado, así que la imagen sale idéntica pero ajustada.*
+
+**Por qué en la skill y no en la plantilla:** *el ancho correcto depende del componente —un Button mide 127px, una tabla puede medir 800—. Fijar un ancho menor en la plantilla solo cambia el error de dirección. El recorte al contenido se adapta solo.*
+
 *Adecuación local: no viene de uSpec. Ver `ACTUALIZAR-USPEC.md` — al actualizar hay que reaplicarla.*
 
 ---
