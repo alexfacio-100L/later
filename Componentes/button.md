@@ -192,7 +192,9 @@ Los colores se resuelven por el mode de la colección semanticColors (Light y Da
 
 *Estrategia B · 8 combinaciones · estados: `default`, `hover`, `pressed`, `focus`, `disabled`*
 
-### Primary / Product / Light
+### Primary / Product
+
+*Los nombres de token son idénticos en Light y Dark; lo que cambia es el alias primitivo al que apuntan. Por eso una sola tabla sirve para los dos modes.*
 
 | Element | Default | Hover | Pressed | Focus | Disabled |
 |---|---|---|---|---|---|
@@ -203,18 +205,9 @@ Los colores se resuelven por el mode de la colección semanticColors (Light y Da
 | Label | `text/primaryInverse` | `text/primaryInverse` | `text/primaryInverse` | `text/primaryInverse` | `text/disabled` |
 | iconRight | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/disabled` |
 
-### Primary / Product / Dark
+### Primary / Marketing
 
-| Element | Default | Hover | Pressed | Focus | Disabled |
-|---|---|---|---|---|---|
-| Container fill | `background/brandMain` | `background/brandHover` | `background/brandPressed` | `background/brandHover` | `background/disabled` |
-| Container stroke | `none` | `none` | `none` | `border/focus` | `none` |
-| Drop shadow | `Shadows/Single/Small/sm-1` | `none` | `none` | `none` | `Shadows/Single/Small/sm-1` |
-| iconLeft | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/disabled` |
-| Label | `text/primaryInverse` | `text/primaryInverse` | `text/primaryInverse` | `text/primaryInverse` | `text/disabled` |
-| iconRight | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/disabled` |
-
-### Primary / Marketing / Light
+*Los nombres de token son idénticos en Light y Dark; lo que cambia es el alias primitivo al que apuntan. Por eso una sola tabla sirve para los dos modes.*
 
 | Element | Default | Hover | Pressed | Focus | Disabled |
 |---|---|---|---|---|---|
@@ -225,18 +218,9 @@ Los colores se resuelven por el mode de la colección semanticColors (Light y Da
 | Label | `text/primaryInverse` | `text/primaryInverse` | `text/primaryInverse` | `text/primaryInverse` | `text/disabled` |
 | iconRight | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/disabled` |
 
-### Primary / Marketing / Dark
+### Secondary / Product
 
-| Element | Default | Hover | Pressed | Focus | Disabled |
-|---|---|---|---|---|---|
-| Container fill | `background/brandMain` | `background/brandHover` | `background/brandPressed` | `background/brandHover` | `background/disabled` |
-| Container stroke | `none` | `none` | `none` | `border/focus` | `none` |
-| Drop shadow | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` |
-| iconLeft | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/disabled` |
-| Label | `text/primaryInverse` | `text/primaryInverse` | `text/primaryInverse` | `text/primaryInverse` | `text/disabled` |
-| iconRight | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/inverse` | `icon/disabled` |
-
-### Secondary / Product / Light
+*Los nombres de token son idénticos en Light y Dark; lo que cambia es el alias primitivo al que apuntan. Por eso una sola tabla sirve para los dos modes.*
 
 | Element | Default | Hover | Pressed | Focus | Disabled |
 |---|---|---|---|---|---|
@@ -247,29 +231,9 @@ Los colores se resuelven por el mode de la colección semanticColors (Light y Da
 | Label | `text/secondary` | `text/secondary` | `text/primaryInverse` | `text/secondary` | `text/disabled` |
 | iconRight | `text/secondary` | `text/secondary` | `text/secondary` | `text/secondary` | `icon/disabled` |
 
-### Secondary / Product / Dark
+### Secondary / Marketing
 
-| Element | Default | Hover | Pressed | Focus | Disabled |
-|---|---|---|---|---|---|
-| Container fill | `background/secondary` | `background/hover` | `background/selected` | `background/hover` | `background/disabled` |
-| Container stroke | `text/secondary` | `text/secondary` | `text/secondary` | `border/focus` | `border/disabled` |
-| Drop shadow | `Shadows/Single/Small/sm-1` | `none` | `none` | `none` | `Shadows/Single/Small/sm-1` |
-| iconLeft | `text/secondary` | `text/secondary` | `text/secondary` | `text/secondary` | `icon/disabled` |
-| Label | `text/secondary` | `text/secondary` | `text/primaryInverse` | `text/secondary` | `text/disabled` |
-| iconRight | `text/secondary` | `text/secondary` | `text/secondary` | `text/secondary` | `icon/disabled` |
-
-### Secondary / Marketing / Light
-
-| Element | Default | Hover | Pressed | Focus | Disabled |
-|---|---|---|---|---|---|
-| Container fill | `background/secondary` | `background/hover` | `background/selected` | `background/hover` | `background/disabled` |
-| Container stroke | `text/secondary` | `text/secondary` | `text/secondary` | `border/focus` | `border/disabled` |
-| Drop shadow | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` |
-| iconLeft | `text/secondary` | `text/secondary` | `text/secondary` | `text/secondary` | `icon/disabled` |
-| Label | `text/secondary` | `text/secondary` | `text/primaryInverse` | `text/secondary` | `text/disabled` |
-| iconRight | `text/secondary` | `text/secondary` | `text/secondary` | `text/secondary` | `icon/disabled` |
-
-### Secondary / Marketing / Dark
+*Los nombres de token son idénticos en Light y Dark; lo que cambia es el alias primitivo al que apuntan. Por eso una sola tabla sirve para los dos modes.*
 
 | Element | Default | Hover | Pressed | Focus | Disabled |
 |---|---|---|---|---|---|

@@ -365,15 +365,51 @@ export function convertir(md, tokens = {}, frames = {}, iconosTipo = {}) {
             `**Supernova calcula estos contrastes.** Los ${ids.length} tokens salen del sistema; la tabla escrita a mano que había aquí caducaba con cada cambio.`))
           informe.callouts++
         }
-        // Los previews de las subsecciones de color, si están registrados
+        // Cada subseccion emite Light y Dark EN COLUMNAS y CONSERVA su tabla.
+        // El grid de arriba mide el contraste de tokens sueltos; solo la tabla
+        // dice que token va en que elemento y estado. Las dos cosas hacen falta.
         for (let j = i; j < fin; j++) {
           const sub = lineas[j].match(/^#{3} (.+)$/)
           if (!sub) continue
-          const img = imagenDeSeccion(sub[1].trim(), frames, informe)
-          if (img.length) {
-            salida.push(`### ${traducirSeccion(sub[1].trim())}`, "")
-            salida.push(...img)
+          const nombre = sub[1].trim()
+          salida.push(`### ${traducirSeccion(nombre)}`, "")
+
+          const luz = frames[`${nombre} / Light`], osc = frames[`${nombre} / Dark`]
+          if (luz || osc) {
+            const celda = (etiqueta, f) => [
+              `    <SNTableCell alignment="Center" columnWidth={420}>`,
+              f ? `      <SNImage alignment="Left" resourceId="${f.assetId}" caption="${etiqueta}" />`
+                : `      Pendiente de exportar`,
+              `    </SNTableCell>`,
+            ]
+            salida.push(`<SNTable showBorder={false} highlightHeaderRow highlightHeaderColumn={false}>`,
+              `  <SNTableRow>`,
+              `    <SNTableCell alignment="Center" columnWidth={420}>`, `      Light`, `    </SNTableCell>`,
+              `    <SNTableCell alignment="Center" columnWidth={420}>`, `      Dark`, `    </SNTableCell>`,
+              `  </SNTableRow>`, `  <SNTableRow>`,
+              ...celda("Light", luz), ...celda("Dark", osc),
+              `  </SNTableRow>`, `</SNTable>`, "")
+            informe.tablas++
+            informe.vivas.push(`${nombre} → light+dark en columnas`)
           }
+
+          // el cuerpo de la subseccion (nota y tabla de tokens) sigue su curso
+          let k = j + 1
+          while (k < fin && !/^#{2,3} /.test(lineas[k])) {
+            const l = lineas[k]
+            if (esFila(l)) {
+              const bloque = []
+              while (k < fin && esFila(lineas[k])) bloque.push(lineas[k++])
+              if (bloque.some(esSeparador)) {
+                salida.push(...tablaSN(bloque.filter(x => !esSeparador(x)).map(celdasDe)))
+                informe.tablas++
+              } else salida.push(...bloque)
+              continue
+            }
+            salida.push(l)
+            k++
+          }
+          j = k - 1
         }
         i = fin
         continue
