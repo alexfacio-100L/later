@@ -1,0 +1,9 @@
+{
+  "name": "experimento-canario",
+  "private": true,
+  "type": "module",
+  "description": "Prueba de escritura de Markdown en una pagina de documentacion de Supernova",
+  "dependencies": {
+    "@supernovaio/sdk": "2.4.11"
+  }
+}
