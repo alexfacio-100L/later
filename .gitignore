@@ -16,3 +16,7 @@ package-lock.json
 .env
 .env.local
 *.key
+
+# Regenerables del conversor
+2. Proyecto/uSpec/experimento-canario/salida.mdx
+2. Proyecto/uSpec/experimento-canario/tokens.json
