@@ -107,3 +107,34 @@ node subir-frame.mjs frames/anatomy-light-preview.png "Anatomy" "12290:10571" "B
 ## Lo que esto permite a futuro
 
 **Publicar las dos apariencias.** Como el light y el dark son frames distintos y distinguibles, se pueden subir ambos y mostrarlos juntos en la documentación — *que es exactamente lo que faltaba para cerrar la tarea del modo oscuro.*
+
+---
+
+## `#hierarchy-indicator`: la jerarquía entre propiedades
+
+**En el frame `Button API` hay 14 capas `#hierarchy-indicator`**, cada una con una flecha, y **solo dos están visibles**:
+
+```
+✅ visible:  iconLeft · iconRight
+❌ oculto:   variant · surface · size · label · isDisabled · isLoading
+             showIconLeft · showIconRight
+```
+
+**Marca dependencia:** `iconLeft` solo aplica cuando `showIconLeft` es `true`. *Es un recurso de la plantilla de uSpec para dibujar el anidamiento en la tabla.*
+
+### Cómo se lleva a Supernova
+
+**No hace falta leerlo de Figma: el `.md` ya conserva la dependencia**, en prosa dentro de la columna de notas:
+
+```
+| `iconLeft` | … | Solo tiene sentido cuando `showIconLeft` = `true`. …
+```
+
+**El conversor detecta ese patrón y prefija la fila con `↳`** — la misma convención que el archivo de Figma usa para las páginas anidadas. *Una tabla de Supernova no tiene indentación nativa, así que el prefijo es la forma más limpia de expresarlo.*
+
+```
+  `showIconLeft`
+↳ `iconLeft`
+  `showIconRight`
+↳ `iconRight`
+```

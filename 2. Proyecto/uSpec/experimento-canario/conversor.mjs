@@ -92,10 +92,33 @@ function anchosDeColumna(filas, columnas) {
   return anchos.map(a => Math.round(a * 100) / 100)
 }
 
+/**
+ * Marca las filas que dependen de otra propiedad.
+ *
+ * En Figma esto se dibuja con la capa `#hierarchy-indicator` —una flecha que
+ * solo se muestra en las filas anidadas—. En el `.md` la dependencia viaja en
+ * prosa: *"Solo tiene sentido cuando `showIconLeft` = `true`"*.
+ *
+ * Se detecta ese patrón y se prefija la fila con `↳`, la misma convención que
+ * el archivo de Figma usa para las páginas anidadas.
+ */
+function marcarJerarquia(filas) {
+  const DEPENDE = /solo tiene sentido cuando\s+`([^`]+)`/i
+  return filas.map((fila, i) => {
+    if (i === 0) return fila                       // cabecera
+    const dependeDe = fila.slice(1).join(" ").match(DEPENDE)
+    if (!dependeDe) return fila
+    const copia = [...fila]
+    copia[0] = `↳ ${copia[0]}`
+    return copia
+  })
+}
+
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
 function tablaSN(filas) {
   // La primera fila es la cabecera: se localiza.
   if (filas.length) filas = [filas[0].map(traducirCabecera), ...filas.slice(1)]
+  filas = marcarJerarquia(filas)
   const columnas = Math.max(...filas.map(f => f.length))
   const anchos = anchosDeColumna(filas, columnas)
   const out = ["<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>"]
@@ -257,12 +280,12 @@ export function convertir(md, tokens = {}, frames = {}) {
         salida.push(`${enc[1]} ${traducirSeccion(titulo)}`, "")
         salida.push(`<SNComponentChecklist component="${CONFIG.componenteId}" selectedPropertyIds={${JSON.stringify(CONFIG.propiedadesChecklist)}} title="Propiedades del componente" showDescription />`, "")
         salida.push(...callout("Info",
-          "Las propiedades salen del componente importado, no de este documento. **Si cambian en Figma, cambian aquí.**"))
+          "El estado del componente sale del sistema, no de este documento. **La tabla de propiedades de abajo sigue viniendo del `.md`** — cuando `figma-components-propstable` acepte el componente, esa tabla también dejará de caducar."))
         informe.callouts++
-        // Se salta solo la tabla principal; los ejemplos en h3 se conservan
-        let j = i + 1
-        while (j < lineas.length && !/^#{3} /.test(lineas[j])) j++
-        i = j
+        // La tabla de propiedades SE CONSERVA: el checklist muestra metadatos
+        // del componente (estado, documentado), no las propiedades y sus notas.
+        // Sustituirla perdía lo más valioso del documento.
+        i++
         continue
       }
 
