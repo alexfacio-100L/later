@@ -252,3 +252,28 @@ Mismo patrón que `create-anatomy`. Step 10 omitido, Step 11b crea la sección p
 ### Las siete plantillas viven locales
 
 **Ninguna `templateKey` de `uspecs.config.json` resuelve.** En `_Local Componentes` están las siete: `.Motion`, `.Screen reader`, `.Structure`, `.Property`, `.API`, `.Anatomy`, `.Color Annotation`. *Hay que clonarlas por id en vez de importarlas por key.*
+
+## `create-color` en modo solo-preview (21 ago 2026)
+
+Ocho variantes —`primary`/`secondary` × `product`/`marketing` × Light/Dark— con los cinco estados cada una. Step 9 omitido, Step 10 crea la variante y su `#preview` pero no rellena la `#color-table`.
+
+**Tres cosas que hubo que resolver, y ninguna estaba en la skill:**
+
+| | |
+| --- | --- |
+| **El `#preview` trae un placeholder** de 1400×290 (`Light theme preview placeholder`) | Se colaba en el cálculo del ancho y lo disparaba a 7,6:1. **Hay que retirarlo antes de medir** |
+| **El fondo del preview no sigue el mode** | Es un color fijo. Se vincula a `background/primary` con `setBoundVariableForPaint`, y entonces Dark se ve oscuro |
+| **`cargarFuentes` sobre la instancia no basta** | La plantilla usa `Nunito Sans` y `Poppins`; hay que cargar las del **frame entero** antes de escribir cualquier título |
+
+🔴 **Un error mío que conviene no repetir:** al pintar las etiquetas de estado usé `wrapper.findOne(TEXT)`, que devuelve el **primer** texto del wrapper — y ese es el label **del botón**, no la etiqueta. *Pinté el texto interno de los botones de gris y la medición de contraste dio 1,01:1.* La etiqueta es el TEXT **hijo directo** del wrapper: `wrapper.children.find(c => c.type === 'TEXT')`. Se reparó con `resetOverrides()` + reponer los booleanos.
+
+*La lección: un número absurdo casi siempre acusa al método antes que al sistema. 1,01:1 no era un defecto del Button.*
+
+### Lo que sí encontró la medición, ya con los colores reales
+
+**36 de 40 combinaciones pasan** el 4,5:1 de WCAG AA. Los fallos:
+
+- 🔴 **`secondary` + `pressed` en Dark → 3,29:1.** Texto `#000000` sobre `background/brandPressed` (`#315fa3`). Afecta a las dos surfaces y **no estaba documentado**.
+- ⚠️ **`disabled` en Light → 4,50:1.** Cumple por décimas; cualquier ajuste lo tumba.
+
+*Ambos añadidos a `Known gaps` del `.md`.*

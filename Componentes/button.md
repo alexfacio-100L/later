@@ -34,6 +34,8 @@ Los elementos que componen el Button, en el orden en que los numera el preview. 
 ### Unresolved
 
 - **Alta** 🔴 — **`size` no escala la tipografía.** Los tres tamaños usan fuente 14: `size` solo cambia el padding. Antes del 20 de agosto lo único que diferenciaba `l` de `m` eran 2px fuera de escala; al alinearlos a la escala, la diferencia desapareció y se restauró con la progresión de padding. **Es un hueco abierto, no una decisión de diseño.**
+- **Alta** 🔴 — **`secondary` + `pressed` en Dark no llega al mínimo de contraste: 3.29:1.** El texto resuelve a `#000000` sobre `background/brandPressed` (`#315fa3`), por debajo del 4.5:1 que exige WCAG AA para texto de cuerpo. Afecta a las dos surfaces. *Medido el 21 ago 2026 sobre los previews de color, con los modes resueltos en Figma.*
+- **Media** — **`disabled` en Light queda justo en el límite: 4.50:1.** Cumple por décimas y cualquier ajuste de `neutral/600` o de `background/disabled` lo tumba. Conviene darle margen.
 - **Media** — **`background/disabled` apenas se distingue del lienzo en Light**: 1.30:1 sobre `background/primary`. El texto sí es legible (4.50:1), pero el contorno del control se pierde.
 - **Media** — el icono de carga sigue sin decidirse. `isLoading` es propiedad de código sin variante en Figma.
 - **Baja** — structure: Sin figmaLink: no se pudo verificar en vivo si el radio crudo (8/12) y el trazo de focus (1.5 en s/m, 2 en l) tienen binding a variables no resueltas  *(no verificable: se extrajo sin `figmaLink`)*

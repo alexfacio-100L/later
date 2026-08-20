@@ -3,6 +3,37 @@ name: create-color
 description: Generate color annotation specifications mapping UI elements to design tokens. Use when the user mentions "color", "color annotation", "color spec", "tokens", "design tokens", or wants to document which color tokens a component uses.
 ---
 
+---
+
+## ⚡ MODO SOLO-PREVIEW (adecuación local de 100 Ladrillos)
+
+**El sistema documenta en Supernova, no en Figma.** De cada variante solo se consume el `#preview`: la `#color-table` y el encabezado ya viajan en la sección `## Color` del `.md` y se convierten en bloques nativos al publicar.
+
+| Bloque | Qué hacer |
+| --- | --- |
+| **Step 9 — Fill Header Fields** | **OMITIR** |
+| **Step 10 — rellenar la `#color-table`** | **Crear la variante y su tabla, pero NO rellenar las filas.** La plantilla se deja intacta y vacía |
+| **Step 10 — `#preview`** | **Se ejecuta entero.** Es lo único que se consume |
+
+🔴 **La plantilla de la tabla NO se borra** — hace falta para el camino de contingencia (`DESTINO_DOCUMENTACION=figma`).
+
+### Ajuste del ancho del preview
+
+El alto se pega al contenido y el ancho se calcula por **fracción**, porque Supernova escala la imagen al ancho de la columna:
+
+| Skill | Fracción | Por qué |
+| --- | --- | --- |
+| `create-anatomy` | 33% | El contenido lleva marcadores alrededor |
+| `create-structure` · **`create-color`** | **50%** | Una fila de instancias, sin marcadores |
+
+**Y la proporción no puede pasar de 3,5:1.** *Una imagen apaisada encoge de alto al escalarla y el componente se ve pequeño aunque la fracción sea correcta. Con más de tres o cuatro instancias, repártelas en varias filas con `layoutWrap` — **el aire va en el `padding` lateral, no en ancho libre, o el wrap no se dispara**.*
+
+`npm run docs:previews` comprueba ambas cosas antes de publicar.
+
+*Adecuación local: no viene de uSpec. Ver `ACTUALIZAR-USPEC.md` — al actualizar hay que reaplicarla.*
+
+---
+
 # Create Color Annotation
 
 Generate a color annotation directly in Figma — tables mapping each visual element to its design token, organized by variant (Strategy A) or by section with per-state columns (Strategy B). This skill **renders the Color section from the component `.md`**; it does NOT re-extract token bindings from Figma.
@@ -212,6 +243,8 @@ Save the returned `frameId` — you need it for all subsequent steps.
 
 ### Step 9: Fill Header Fields
 
+> ⚡ **MODO SOLO-PREVIEW: OMITIR este paso entero.**
+
 Run via `figma_execute` (replace `__FRAME_ID__`, `__COMPONENT_NAME__`, and `__GENERAL_NOTES__`):
 
 ```javascript
@@ -253,6 +286,8 @@ return { success: true };
 Replace `__HAS_GENERAL_NOTES__` with `true` or `false` (from `HAS_GENERAL_NOTES`).
 
 ### Step 10: Render Variants
+
+> ⚡ **MODO SOLO-PREVIEW:** crea la variante, su `#preview` y su `#color-table`, pero **no rellenes las filas de la tabla**. La plantilla se deja vacía, no se borra.
 
 Use the rendering strategy detected in Step 0. Run **one `figma_execute` call per variant (Strategy A) or per section (Strategy B)** to avoid timeouts. All inputs come from the parsed `.md` + `render-meta` (Step 4/5) and, for Strategy B mode previews, the `COLLECTION_ID` / `MODE_ID` resolved in Step 6.
 

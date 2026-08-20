@@ -15,13 +15,6 @@
     "assetId": "547dc8fa-0535-453f-8a54-bdd42c7fa726",
     "url": "https://studio-assets.supernova.io/design-systems/825551/3dd6d4dd-7ee6-4b56-a6f7-3172d8790be7.png"
   },
-  "Size=S, Surface=Product, Type=Primary, State=Default": {
-    "nodo": "12314:1984",
-    "nombre": "Color · Product Primary (light)",
-    "assetId": "79da2e81-de8e-44b9-9bcf-3b7c90ddbb03",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/2f4a2de8-55e5-4839-84b5-add3d971fbcf.png",
-    "nodoPerdido": true
-  },
   "Type": {
     "nodo": "12302:2000",
     "nombre": "Properties · Type (light)",
@@ -44,5 +37,69 @@
     "fraccionAncho": 50,
     "assetId": "e1e0cac9-300a-46df-a0bb-fd70b930ac29",
     "url": "https://studio-assets.supernova.io/design-systems/825551/60e9e5ca-a029-4892-b990-1ad108307367.png"
+  },
+  "Primary / Product / Light": {
+    "nodo": "12529:2250",
+    "nombre": "Color · Primary / Product / Light",
+    "archivo": "frames/button-color-pp-light.png",
+    "fraccionAncho": 50,
+    "assetId": "93a3b9bd-bb4e-45e9-afd1-1888f5af6209",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/4c4d801e-7df7-4588-9c9e-b33a3fa0b6d4.png"
+  },
+  "Primary / Product / Dark": {
+    "nodo": "12529:2327",
+    "nombre": "Color · Primary / Product / Dark",
+    "archivo": "frames/button-color-pp-dark.png",
+    "fraccionAncho": 50,
+    "assetId": "1599b9ea-81d1-4893-8ce1-d48f56ad39d9",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/5e2b3d9c-6dcb-4601-92f5-6d5effc65f33.png"
+  },
+  "Primary / Marketing / Light": {
+    "nodo": "12529:2404",
+    "nombre": "Color · Primary / Marketing / Light",
+    "archivo": "frames/button-color-pm-light.png",
+    "fraccionAncho": 50,
+    "assetId": "1201d687-2fb8-4514-8dba-40bce1893bca",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/c708a34f-3e1d-4909-b240-1c66a856456f.png"
+  },
+  "Primary / Marketing / Dark": {
+    "nodo": "12529:2481",
+    "nombre": "Color · Primary / Marketing / Dark",
+    "archivo": "frames/button-color-pm-dark.png",
+    "fraccionAncho": 50,
+    "assetId": "243f0f2b-eb73-408b-a6ac-91b4d7b46597",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/e03e2080-6d35-49e5-873e-dbfbb09cd092.png"
+  },
+  "Secondary / Product / Light": {
+    "nodo": "12531:2417",
+    "nombre": "Color · Secondary / Product / Light",
+    "archivo": "frames/button-color-sp-light.png",
+    "fraccionAncho": 50,
+    "assetId": "31f117e9-e1b8-49b0-b765-946c10c0f4a8",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/707d6a8a-d617-4d12-b6f9-761f5d167be3.png"
+  },
+  "Secondary / Product / Dark": {
+    "nodo": "12531:2494",
+    "nombre": "Color · Secondary / Product / Dark",
+    "archivo": "frames/button-color-sp-dark.png",
+    "fraccionAncho": 50,
+    "assetId": "3764bfea-ed47-436c-87f1-05fd440d226f",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/b1f49190-5218-49f0-9ed2-33a17340fe38.png"
+  },
+  "Secondary / Marketing / Light": {
+    "nodo": "12531:2571",
+    "nombre": "Color · Secondary / Marketing / Light",
+    "archivo": "frames/button-color-sm-light.png",
+    "fraccionAncho": 50,
+    "assetId": "38f04e31-bcad-43f0-8cf0-9b91d69c28ce",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/fc9f0fd3-8125-4fb9-ab78-26aedd0e613b.png"
+  },
+  "Secondary / Marketing / Dark": {
+    "nodo": "12531:2648",
+    "nombre": "Color · Secondary / Marketing / Dark",
+    "archivo": "frames/button-color-sm-dark.png",
+    "fraccionAncho": 50,
+    "assetId": "97d1303d-fbb6-4d9d-b232-7cbe99bde9d9",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/21e44481-80ed-4ea9-a65f-bcd192bd022b.png"
   }
 }
