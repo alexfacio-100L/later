@@ -13,11 +13,18 @@ import sdkPkg from "@supernovaio/sdk"
 import { readFileSync, writeFileSync } from "node:fs"
 const { Supernova } = sdkPkg
 
+// Los PNG salen del frame YA DOCUMENTADO (`Button Anatomy`, 12362:5484), no de la
+// plantilla maestra. En la plantilla los cuatro iconos estan superpuestos dentro de
+// `#indicator`, asi que exportarlos uno a uno arrastra el borde redondeado del
+// contenedor y los descentra — `instance` salia recortado a 160x192 en vez de 192x192.
+// En el frame documentado cada fila tiene visible solo su icono, y salen limpios.
 const ICONOS = {
-  instance: { archivo: "frames/iconos-tipo/instance.png", nodo: "12214:6756", etiqueta: "Instance" },
-  text:     { archivo: "frames/iconos-tipo/text.png",     nodo: "12214:6758", etiqueta: "Text" },
-  slot:     { archivo: "frames/iconos-tipo/slot.png",     nodo: "12214:6760", etiqueta: "Slot" },
-  frame:    { archivo: "frames/iconos-tipo/frame.png",    nodo: "12214:6762", etiqueta: "Frame" },
+  instance: { archivo: "frames/iconos-tipo/instance.png", nodo: "12362:5586", etiqueta: "Instance" },
+  text:     { archivo: "frames/iconos-tipo/text.png",     nodo: "12362:5604", etiqueta: "Text" },
+  frame:    { archivo: "frames/iconos-tipo/frame.png",    nodo: "12362:5576", etiqueta: "Frame" },
+  // El Button no tiene ranuras, asi que no hay fila de slot que copiar: se exporto
+  // clonando un `#indicator` sobre fondo blanco y dejando visible solo `#slot`.
+  slot:     { archivo: "frames/iconos-tipo/slot.png",     nodo: "12362:5569 (clon)", etiqueta: "Slot" },
 }
 
 const sdk = new Supernova(apiKey)

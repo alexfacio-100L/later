@@ -1,30 +1,30 @@
 {
   "instance": {
     "archivo": "frames/iconos-tipo/instance.png",
-    "nodo": "12214:6756",
+    "nodo": "12362:5586",
     "etiqueta": "Instance",
-    "assetId": "11def006-544e-417f-a663-524d0045c9dd",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/52d0190f-55ec-411c-b18d-cc80a52fd623.png"
+    "assetId": "0013f902-a3d0-4eab-8a5f-5a6e8f0fee3a",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/6696c913-7d42-4f14-9a4f-0b7f18f26ab0.png"
   },
   "text": {
     "archivo": "frames/iconos-tipo/text.png",
-    "nodo": "12214:6758",
+    "nodo": "12362:5604",
     "etiqueta": "Text",
-    "assetId": "7f18c216-e5f5-4989-b220-1d388495a12b",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/f0e26866-a70b-480d-b349-dd7876f641eb.png"
-  },
-  "slot": {
-    "archivo": "frames/iconos-tipo/slot.png",
-    "nodo": "12214:6760",
-    "etiqueta": "Slot",
-    "assetId": "aef72644-5c6a-4c10-be72-0d1d7a841cb3",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/747351b8-9e0c-4671-a9e1-b043237f837c.png"
+    "assetId": "312afdde-6c69-4b12-84a1-74c3cf400a83",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/ca806171-0f3a-4046-b730-ae5e2d14f27a.png"
   },
   "frame": {
     "archivo": "frames/iconos-tipo/frame.png",
-    "nodo": "12214:6762",
+    "nodo": "12362:5576",
     "etiqueta": "Frame",
-    "assetId": "da960127-0870-48a1-a30a-05eb8f8c7b9e",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/8aa9b9ee-13dc-4c32-8708-8ea67de11891.png"
+    "assetId": "65fa1210-81e6-4615-a31b-5370222d390e",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/815bcd81-57ec-4765-b479-7d69fac59e35.png"
+  },
+  "slot": {
+    "archivo": "frames/iconos-tipo/slot.png",
+    "nodo": "12362:5569 (clon)",
+    "etiqueta": "Slot",
+    "assetId": "cac00312-d9cc-4f9b-9ddd-f9cb16fc3e9a",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/b034824d-b6de-4ab2-b155-7fecc44e2db4.png"
   }
 }

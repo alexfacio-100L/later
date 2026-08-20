@@ -169,3 +169,11 @@ npx uspec-skills@<versión> init
 - Una celda que empieza por `#` la lee Markdown como encabezado — **hay que escaparla**
 
 Los cuatro iconos de tipo se exportaron de la plantilla `.Anatomy` y se subieron **una sola vez** con `node experimento-canario/subir-iconos-tipo.mjs`; quedan en `iconos-tipo.json` y los reusan todos los componentes. **El `.md` dice `Instance` en texto plano; el conversor lo cambia por el icono.** *Así el `.md` sigue siendo legible para un ingeniero y Supernova recibe el icono.*
+
+#### De dónde salen los PNG de los iconos (corregido el 21 ago 2026)
+
+**Del frame ya documentado —`Button Anatomy`, `12362:5484`— no de la plantilla maestra.**
+
+*En la plantilla los cuatro iconos están **superpuestos** dentro de `#indicator`, uno visible por fila. Exportarlos ahí uno a uno arrastra el borde redondeado del contenedor y los descentra: `instance` salía recortado a **160×192** en vez de 192×192.* En el frame documentado cada fila tiene visible solo su icono y salen limpios y cuadrados.
+
+**El `slot` es la excepción:** el Button no tiene ranuras, así que no hay fila que copiar. Se exportó clonando un `#indicator` dentro de una caja con el mismo fondo que las celdas y dejando visible solo `#slot`. 🔴 **La caja tiene que cubrir el indicador entero** —`#slot` no vive en el origen, está a x=12— o el PNG sale con una franja del lienzo al lado.
