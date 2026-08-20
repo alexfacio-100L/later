@@ -54,14 +54,53 @@ const esFila       = l => /^\s*\|.*\|\s*$/.test(l)
 const esSeparador  = l => /^\s*\|[\s:|-]+\|\s*$/.test(l)
 const celdasDe     = l => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim())
 
+/** Ancho útil de una página de documentación de Supernova, en px. */
+const ANCHO_PAGINA = 760
+/** Por debajo de esto una columna deja de ser legible. */
+const ANCHO_MINIMO = 72
+
+/**
+ * Reparte el ancho **en proporción al contenido**, no a partes iguales.
+ *
+ * Sin esto las tablas se ven rotas: una columna de `true`/`false` recibe lo
+ * mismo que una de notas de 100 caracteres, así que la primera desperdicia
+ * espacio y la segunda se estrangula.
+ *
+ * La proporción se amortigua con una potencia < 1 para que una columna muy
+ * larga no aplaste a las demás, y luego se garantiza un mínimo legible.
+ */
+function anchosDeColumna(filas, columnas) {
+  const medias = []
+  for (let c = 0; c < columnas; c++) {
+    const largos = filas.map(f => (f[c] ?? "").length)
+    medias.push(Math.max(largos.reduce((a, b) => a + b, 0) / (largos.length || 1), 3))
+  }
+  // Amortiguar: sin esto, una nota larga se lleva casi todo el ancho.
+  const pesos = medias.map(m => Math.pow(m, 0.55))
+  const total = pesos.reduce((a, b) => a + b, 0)
+  let anchos = pesos.map(p => (p / total) * ANCHO_PAGINA)
+
+  // Garantizar el mínimo, quitando el excedente a las más anchas.
+  const deficit = anchos.reduce((acc, a) => acc + Math.max(0, ANCHO_MINIMO - a), 0)
+  if (deficit > 0) {
+    const holgadas = anchos.map(a => Math.max(0, a - ANCHO_MINIMO))
+    const disponible = holgadas.reduce((a, b) => a + b, 0)
+    anchos = anchos.map((a, i) =>
+      a < ANCHO_MINIMO ? ANCHO_MINIMO
+        : a - (disponible ? (holgadas[i] / disponible) * deficit : 0))
+  }
+  return anchos.map(a => Math.round(a * 100) / 100)
+}
+
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
 function tablaSN(filas) {
   const columnas = Math.max(...filas.map(f => f.length))
+  const anchos = anchosDeColumna(filas, columnas)
   const out = ["<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>"]
   for (const fila of filas) {
     out.push("  <SNTableRow>")
     for (let c = 0; c < columnas; c++) {
-      out.push(`    <SNTableCell alignment="Left">`)
+      out.push(`    <SNTableCell alignment="Left" columnWidth={${anchos[c]}}>`)
       out.push(`      ${(fila[c] ?? "").replace(/<br\s*\/?>/gi, " ")}`)
       out.push("    </SNTableCell>")
     }

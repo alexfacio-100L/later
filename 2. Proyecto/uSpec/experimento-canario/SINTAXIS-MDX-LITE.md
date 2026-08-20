@@ -169,3 +169,31 @@ Se calculaba como `760 / columnas`. **Con siete columnas daban 108 px cada una y
 | **Propiedades de componente** | `sn_get_component_property_list` — `status`, `isDocumented`, `figmaComponent`… |
 | **Tokens** | `sdk.tokens.getTokens(from)` o `sn_get_token_list` |
 | **Frames de Figma** | `sdk.resources.getFigmaFrames(from)` → usa su `persistentId` como `entityId` |
+
+---
+
+## El ancho de las columnas: ni fijo ni ausente
+
+**Dos intentos fallaron antes de dar con el criterio.**
+
+| Intento | Qué pasó |
+| --- | --- |
+| `columnWidth = 760 / columnas` | Con 7 columnas daban 108 px cada una: **aspecto de hoja de cálculo** |
+| **Sin `columnWidth`** | Supernova reparte a partes iguales: una columna de `true`/`false` recibe lo mismo que una de notas de 100 caracteres. **Las tablas se ven rotas** |
+
+**El criterio que funciona: repartir en proporción al contenido, amortiguado.**
+
+```js
+pesos  = media_de_caracteres ^ 0.55     // amortigua: sin esto una nota larga se lo lleva todo
+anchos = (peso / total) * 760           // ancho útil de la página
+// y después, garantizar 72px mínimos quitando el excedente a las más anchas
+```
+
+**El exponente `0.55` es lo que hace que funcione.** Con proporción directa, una columna de notas de 100 caracteres frente a una de 3 se llevaría el 97% del ancho. *Amortiguada, la relación queda en torno a 5:1 — que es lo que el ojo espera.*
+
+**Resultado real, tabla de cinco columnas:**
+
+```
+antes (uniforme):    152 + 152 + 152 + 152 + 152
+ahora (proporcional): 123 +  72 +  72 +  72 + 421
+```
