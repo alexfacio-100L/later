@@ -14,6 +14,7 @@
     "docs:validar": "node '2. Proyecto/uSpec/experimento-canario/publicar.mjs'",
     "docs:publicar": "node '2. Proyecto/uSpec/experimento-canario/publicar.mjs' --escribir",
     "docs:conexion": "node '2. Proyecto/uSpec/experimento-canario/verificar-conexion.mjs'",
+    "docs:estado": "node '2. Proyecto/uSpec/experimento-canario/diagnostico-supernova.mjs'",
     "docs:tokens": "node '2. Proyecto/uSpec/experimento-canario/mapa-tokens.mjs'"
   },
   "devDependencies": {

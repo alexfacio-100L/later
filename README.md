@@ -42,6 +42,7 @@ npm run docs:conexion
 | --- | --- |
 | `npm run tablero` | Verifica que el tablero no se contradiga. **Antes de proponer trabajo** |
 | `npm run docs:conexion` | Comprueba la API key y los permisos de escritura |
+| `npm run docs:estado` | **¿Se puede publicar ahora?** Distingue caída de Supernova de ruta rota |
 | `npm run docs:validar` | Convierte el `.md` y valida contra Supernova **sin escribir** |
 | `npm run docs:publicar` | Convierte y **publica** en Supernova |
 | `npm run docs:tokens` | Regenera el mapa de tokens que usan los bloques vivos |
@@ -91,6 +92,24 @@ DESTINO_DOCUMENTACION=figma       # contingencia
 ```
 
 > 🔴 **El camino de Figma cuesta ~100k tokens por skill, y son siete.** Solo debería usarse si Supernova no está disponible. **Los scripts se niegan a correr con el destino equivocado.**
+
+### Cómo decidir si hay que cambiar de destino
+
+```bash
+npm run docs:estado
+```
+
+**No te dice solo si responde: distingue tres situaciones que se parecen desde fuera** y piden respuestas opuestas.
+
+| | Qué hacer |
+| --- | --- |
+| ✅ **La API responde** | Publicar normalmente |
+| 🔴 **Ni API ni web** | Supernova caído → consultar [status.supernova.io](https://status.supernova.io) y, si urge entregar, `DESTINO=figma` |
+| 🔴 **La web responde y la API no** | **Es TU ruta, no Supernova.** Esperar no sirve |
+
+> ⚠️ **La tercera es la que engaña, y costó tiempo aprenderla.** El 20 de agosto se reinició el equipo buscando un fallo que estaba fuera: un problema de peering del ISP hacia AWS Irlanda. **La web de Supernova respondía perfectamente mientras su API era inalcanzable.**
+>
+> **La prueba que las separa:** `cloud.supernova.io` se sirve por CDN con presencia local; `api.supernova.io` apunta directo a Irlanda. **Si `cloud` responde y `api` no, el problema es de ruta.** *Se confirma probando `s3.eu-west-1.amazonaws.com`: si tampoco responde, es la región entera.* **La solución es una VPN o avisar al ISP — cambiar de red lo resolvió.**
 
 **Detalle:** `2. Proyecto/uSpec/DESTINO-DE-LA-DOCUMENTACION.md`
 

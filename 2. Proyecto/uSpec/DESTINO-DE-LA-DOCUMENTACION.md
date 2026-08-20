@@ -82,3 +82,25 @@ Este script publica en Supernova, pero el destino configurado es Figma.
 > Sin ella, quien llegue nuevo al repositorio no tiene forma de saber que las skills `create-*` cuestan cien veces más que el camino nuevo. **Lo descubriría gastándolo.**
 
 *Y deja registrado que el camino caro no está prohibido: está disponible, documentado, y con su precio a la vista.*
+
+---
+
+## Antes de cambiar de destino, comprueba por qué falla
+
+```bash
+npm run docs:estado
+```
+
+**Hay tres situaciones que se parecen desde fuera y piden respuestas opuestas:**
+
+| Diagnóstico | Qué significa | Qué hacer |
+| --- | --- | --- |
+| ✅ La API responde | Todo bien | Publicar |
+| 🔴 Ni API ni web | **Supernova caído** | Ver [status.supernova.io](https://status.supernova.io). Si urge entregar, `DESTINO=figma` |
+| 🔴 **Web sí, API no** | **Problema de RUTA desde tu conexión** | **VPN o avisar al ISP.** *Cambiar a `figma` no ayuda y cuesta caro* |
+
+> ⚠️ **La tercera es la trampa.** *El 20 ago 2026 se reinició el equipo buscando un fallo que estaba fuera:* un problema de peering hacia AWS Irlanda. **La web de Supernova respondía perfecto mientras su API era inalcanzable, y ningún host de `eu-west-1` — ni de Amazon — respondía.**
+>
+> **Cambiar de destino habría gastado ~700k tokens sin arreglar nada.** *Lo que lo resolvió fue cambiar de red.*
+
+**La prueba que las separa:** `cloud.supernova.io` va por CDN con presencia local; `api.supernova.io` apunta directo a Irlanda. **Misma empresa, rutas distintas.**
