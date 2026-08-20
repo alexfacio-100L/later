@@ -114,6 +114,19 @@ function marcarJerarquia(filas) {
   })
 }
 
+/**
+ * MDX lee `{` como inicio de expresión, así que un texto como `semantics { }`
+ * —sintaxis de Compose en las notas de accesibilidad— rompe la validación con
+ * "accepts text and <SNImage>, not mdxTextExpression".
+ *
+ * Se envuelven en código las llaves que viajan como texto, respetando lo que ya
+ * está entre backticks.
+ */
+const llavesLiterales = t =>
+  t.split("`").map((trozo, i) =>
+    i % 2 === 1 ? trozo : trozo.replace(/\{\s*\}/g, "`{ }`").replace(/(?<![`\w])\{(?![{\s]*[}])/g, "`{`")
+  ).join("`")
+
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
 function tablaSN(filas) {
   // La primera fila es la cabecera: se localiza.
@@ -126,7 +139,7 @@ function tablaSN(filas) {
     out.push("  <SNTableRow>")
     for (let c = 0; c < columnas; c++) {
       out.push(`    <SNTableCell alignment="Left" columnWidth={${anchos[c]}}>`)
-      out.push(`      ${(fila[c] ?? "").replace(/<br\s*\/?>/gi, " ")}`)
+      out.push(`      ${llavesLiterales((fila[c] ?? "").replace(/<br\s*\/?>/gi, " "))}`)
       out.push("    </SNTableCell>")
     }
     out.push("  </SNTableRow>")
