@@ -75,7 +75,7 @@ Later2.0/                              ← modelo IPO, la gestión del proyecto
 
 ⚠️ **`references/` tiene que ser hermano de `.claude/`.** Las skills lo referencian como `../../../references/`, así que **la pareja se mueve junta o no se mueve.**
 
-> 🔴 **El repositorio git cubre solo esta carpeta.** Lo que vive en `Later2.0/` —el tablero, el contexto, los diagnósticos— **no está versionado aquí.** *Conviene darle su propio repositorio o respaldarlo aparte.*
+> ✅ **`Later2.0/` tiene su propio repositorio desde el 21 ago 2026**, y cubre el modelo IPO: el tablero, el contexto y los diagnósticos. *Esta carpeta queda en su `.gitignore` — cada repo lleva su historial y su remoto, y no son submódulos a propósito.*
 
 ### Reporte de estado para stakeholders
 
