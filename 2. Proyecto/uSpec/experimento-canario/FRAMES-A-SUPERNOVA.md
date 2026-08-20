@@ -38,7 +38,9 @@ node subir-frame.mjs frames/button-anatomy.png "Anatomy" "12362:5484" "Button An
 
 ## Los frames disponibles del Button
 
-*Hay **dos juegos** de dos corridas de uSpec. Los `12362:*` son los recientes.*
+🔴 **CORRECCIÓN:** los dos juegos **no son dos corridas de uSpec** — son **los dos modos**. Los `12290`–`12318` son **light** (los produce uSpec) y los `12362:*` son **dark** (duplicados a mano por el Lead). *Se distinguen con `frame.explicitVariableModes`.*
+
+⚠️ **Y no se exporta el frame completo, sino su capa `#preview`** — nueve veces más ligero. **Ver `PREVIEWS-DE-FIGMA.md`, que es el procedimiento vigente.**
 
 | Sección | Nodo | Tamaño |
 | --- | --- | --- |
@@ -49,7 +51,7 @@ node subir-frame.mjs frames/button-anatomy.png "Anatomy" "12362:5484" "Button An
 | **Color** | `12362:6853` | 1720 × 4956 |
 | **Screen reader** | `12362:7428` | 2400 × 8545 |
 
-⚠️ **Borra el juego viejo (`12290`–`12318`) antes de trabajar con esto**, o se acabará subiendo el equivocado sin que nada avise.
+⚠️ **No borres ninguno de los dos juegos: son light y dark.** *Lo que hay que elegir bien es cuál se sube, y con qué capa.*
 
 ## Qué se puede subir así
 
