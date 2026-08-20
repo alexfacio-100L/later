@@ -10,7 +10,10 @@
 *_base.json
 
 node_modules/
-package-lock.json
+
+# El lock SÍ se versiona: es lo que fija la versión de uSpec para todo el
+# equipo. Ignorarlo dejaba que cada clon resolviera una versión distinta,
+# que es justo lo que el package.json venía a evitar.
 
 # Secretos — NUNCA versionar. La API key de Supernova vive aquí.
 .env

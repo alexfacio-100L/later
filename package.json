@@ -1,0 +1,22 @@
+{
+  "name": "later-brand-system",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Renovare · Later Brand System — herramientas de documentación del design system",
+  "type": "module",
+  "engines": {
+    "node": ">=21"
+  },
+  "scripts": {
+    "setup": "npm install --prefix '2. Proyecto/uSpec/experimento-canario'",
+    "tablero": "python3 '2. Proyecto/Contexto/verificar-tablero.py'",
+    "uspec:verificar": "node '2. Proyecto/uSpec/verificar-uspec.mjs'",
+    "docs:validar": "node '2. Proyecto/uSpec/experimento-canario/publicar.mjs'",
+    "docs:publicar": "node '2. Proyecto/uSpec/experimento-canario/publicar.mjs' --escribir",
+    "docs:conexion": "node '2. Proyecto/uSpec/experimento-canario/verificar-conexion.mjs'",
+    "docs:tokens": "node '2. Proyecto/uSpec/experimento-canario/mapa-tokens.mjs'"
+  },
+  "devDependencies": {
+    "uspec-skills": "0.3.2"
+  }
+}
