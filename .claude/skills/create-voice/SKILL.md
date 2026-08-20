@@ -241,6 +241,13 @@ First, build the full list of entries to render:
 For each entry, run via `figma_execute`. Replace all `__PLACEHOLDER__` values. `RENDER_ARTWORK` is always `true` (this skill always has the `.md` + `render-meta`):
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FONT_FAMILY = '__FONT_FAMILY__';
 const FRAME_ID = '__FRAME_ID__';
 const ENTRY_TITLE = '__ENTRY_TITLE__';
@@ -415,7 +422,7 @@ if (RENDER_ARTWORK) {
   const PADDING = 80;
   const COLLISION_GAP = 8;
 
-  const previewPlaceholder = stateClone.findOne(n => n.name === 'Preview placeholder');
+  const previewPlaceholder = stateClone.findOne(n => esPreview(n));
   if (previewPlaceholder) {
     const compNode = await figma.getNodeByIdAsync(COMP_SET_ID);
     if (!compNode || (compNode.type !== 'COMPONENT' && compNode.type !== 'COMPONENT_SET')) {

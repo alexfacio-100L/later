@@ -688,6 +688,13 @@ Run via `figma_execute`. Replace `__COMPOSITION_SECTION_ID__`, `__COMP_SET_NODE_
 **Table** (`#annotation-table`): Clone the template `row` for each element, filling 4 cells: `#number`, `#indicator` (show one of `#instance` / `#text` / `#slot`, hide the other two), `#element-name`, `#notes`.
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const COMPOSITION_SECTION_ID = '__COMPOSITION_SECTION_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const SELECTED_VARIANT_ID = '__SELECTED_VARIANT_ID__';
@@ -698,7 +705,7 @@ const elements = __ELEMENTS_JSON__;
 
 const section = await figma.getNodeByIdAsync(COMPOSITION_SECTION_ID);
 const frame = section.parent.parent;
-const preview = section.findOne(n => n.name === '#preview');
+const preview = section.findOne(n => esPreview(n));
 const markerExample = frame.findOne(n => n.name === '#marker-example');
 
 const MARKER_SIZE = 33;
@@ -1139,6 +1146,13 @@ Skip this step entirely if no child elements have `nodeType === 'INSTANCE'`, no 
 For **each** eligible child element (`shouldCreateSection === true`), run via `figma_execute` (replace `__FRAME_ID__`, `__CHILD_NAME__`, `__CHILD_COMP_ID__`, `__CHILD_IS_COMP_SET__` with values from the walk + seed). For direct INSTANCE children, use `mainComponentSetId` if `childIsComponentSet` is true, otherwise use `mainComponentId` (both from the Step 3' walk; or use `render-meta.subComponents[].subCompSetId` for constitutive children). For **instance-wrapper FRAMEs**, use `wrappedInstance.mainComponentSetId` if `wrappedInstance.childIsComponentSet` is true, otherwise use `wrappedInstance.mainComponentId`. For **slot elements with preferred instances** (`classification === 'slot'` and `slotPreferredComponentId` is set), use `slotPreferredComponentId` as `__CHILD_COMP_ID__` — this is the `componentId` from `render-meta.slotContents[].preferredComponents[]`. Use `getNodeByIdAsync(slotPreferredComponentId)` to get the component, then check if its parent is a COMPONENT_SET to determine `__CHILD_IS_COMP_SET__`. Replace `__CHILD_BOOLEAN_PROPS_JSON__` with the child sub-component's boolean properties — take them from `render-meta.slotContents[].preferredComponents[].booleanDefs` (for slot-filled children) when available; otherwise pass `[]` and rely on `directUnhide` to surface hidden descendants. If the child has no boolean properties, pass `[]`. Fonts are loaded in two phases: (1) template fonts from marker and section text nodes, and (2) instance fonts via `loadAllFonts` after `createInstance` and after `directUnhide` — this catches fonts used by the sub-component instance that differ from the template font. No `__FONT_FAMILY__` replacement needed:
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const CHILD_NAME = '__CHILD_NAME__';
 const CHILD_COMP_ID = '__CHILD_COMP_ID__';
@@ -1342,7 +1356,7 @@ if (gcElementsGrouped.length <= 1) {
 }
 
 // --- Build artwork in #preview ---
-const preview = childSection.findOne(n => n.name === '#preview');
+const preview = childSection.findOne(n => esPreview(n));
 
 const MARKER_SIZE = 33;
 const MARKER_OFFSET = 40;

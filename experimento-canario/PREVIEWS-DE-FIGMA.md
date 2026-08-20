@@ -35,14 +35,24 @@ frame.explicitVariableModes
 
 ⚠️ **El nombre no es consistente. Hay que buscar los tres:**
 
-| Sección | Nombre de la capa |
-| --- | --- |
-| Anatomy · Properties · Color | `#preview` |
-| **Structure** | `#Preview` — **con P mayúscula** |
-| **API** | **`Preview`** — **sin almohadilla** |
-| **Screen reader** | `Preview placeholder` |
+**Todas se llaman `#preview`** desde el 21 ago 2026. *Antes había cuatro nombres distintos para lo mismo:*
 
-🔴 **Son cuatro variantes, no tres.** *La de API se descubrió el 21 ago 2026 y hasta entonces esta misma tabla afirmaba que API no tenía previews. Buscar `#preview` no encuentra `Preview`.*
+| Plantilla | Se llamaba | Ahora |
+| --- | --- | --- |
+| Anatomy · Properties · Color | `#preview` | *(sin cambio)* |
+| **Structure** | `#Preview` | `#preview` |
+| **API** | `Preview` | `#preview` |
+| **Screen reader** | `Preview placeholder` | `#preview` |
+
+*`.Motion` no tiene contenedor de preview: produce una línea de tiempo, no una muestra.*
+
+🔴 **Aun así, las skills NO buscan por cadena exacta.** *Las seis usan un matcher por forma:*
+
+```js
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
+```
+
+**Por dos razones:** los frames renderizados **antes** del renombrado conservan el nombre viejo y deben seguir funcionando; y una plantilla que vuelva de una actualización de uSpec con el nombre de fábrica tampoco romperá nada. *El matcher deja fuera `#preview-instruction-light` y `Light theme preview placeholder`, que son placeholders internos, no el contenedor.*
 
 **Y hay previews vacíos.** En `Anatomy` hay dos: uno de 290 px **sin hijos** —la plantilla sin rellenar— y otro de 473 px con el botón y sus anotaciones numeradas. **Solo sirve el segundo.**
 

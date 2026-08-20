@@ -548,6 +548,13 @@ Replace the following placeholders with the values from Step 11a:
 - `__ANNOTATE_SCOPE__` — `"rootOnly"` or `"fullTree"`, from Step 11a's annotation-scope rule.
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const SECTION_ID = '__SECTION_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const SUB_COMP_SET_ID = '__SUB_COMP_SET_NODE_ID__';
@@ -618,7 +625,7 @@ let _p = section; while (_p.parent && _p.parent.type !== 'DOCUMENT') _p = _p.par
 if (_p.type === 'PAGE') await figma.setCurrentPageAsync(_p);
 const page = _p.type === 'PAGE' ? _p : figma.currentPage;
 
-const preview = section.findOne(n => n.name === '#Preview');
+const preview = section.findOne(n => esPreview(n));
 if (!preview) return { error: 'No #Preview frame in section: ' + SECTION_ID };
 
 const useSubComp = SUB_COMP_SET_ID && SUB_COMP_SET_ID !== '';

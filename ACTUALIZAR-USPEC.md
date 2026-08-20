@@ -301,3 +301,17 @@ Seis exhibits: `variant`, `surface`, `size`, `isDisabled`, `showIconLeft`, `show
 ## Corrección: `create-api` también produce previews
 
 **Conté los previews de cada skill buscando la cadena `#preview` y me dio 0 para `create-api`.** El Lead vio que su layout sí los tiene. *Es el segundo caso del mismo error de método en este repo —`create-voice` fue el primero—: buscar una cadena literal no prueba la ausencia de la cosa.*
+
+## Un solo nombre para el preview (21 ago 2026)
+
+**Las plantillas maestras llamaban de cuatro formas distintas a la misma cosa** — `#preview`, `#Preview`, `Preview` y `Preview placeholder` —, y por eso el inventario dio *"API: 0 previews"* durante cinco días. **Ahora las siete usan `#preview`.**
+
+🔴 **Pero renombrar no basta, y hacerlo solo habría roto las seis skills:** todas localizaban su contenedor con **igualdad estricta** (`n.name === '#Preview'`). Se cambiaron por un matcher por forma:
+
+```js
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
+```
+
+*Así siguen funcionando los frames ya renderizados con el nombre viejo, y también una plantilla que vuelva con el nombre de fábrica tras una actualización de uSpec.* Deja fuera `#preview-instruction-light` y `Light theme preview placeholder`, que son placeholders internos.
+
+**`.Motion` no tiene contenedor de preview.** *Eso sí era cierto: produce una línea de tiempo, no una muestra visual.*

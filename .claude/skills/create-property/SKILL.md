@@ -666,6 +666,13 @@ Run **one `figma_execute` call per exhibit** to avoid timeouts. The scripts belo
 For exhibit plan entries with `template: "6a"` (when `contextAxis` is null). Also used for composite entries without context — supply a customized `OPTIONS` array and `DEFAULT_PROPS` as determined by the exhibit plan:
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const PROPERTY_NAME = '__PROPERTY_NAME__';
@@ -727,7 +734,7 @@ if (sectionDesc) {
   if (t) t.characters = OPTIONS.length + ' options. Default: ' + DEFAULT_VALUE;
 }
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) {
   assetPlaceholder.children[0].remove();
 }
@@ -807,6 +814,13 @@ When `contextAxis` is non-null, use this template instead of 6a for variant chap
 Replace `CONTEXT_AXIS_NAME`, `CONTEXT_OPTIONS`, and `CONTEXT_DEFAULT` with the context axis data from the exhibit plan. Replace all other placeholders as in 6a:
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const PROPERTY_NAME = '__PROPERTY_NAME__';
@@ -871,7 +885,7 @@ if (sectionDesc) {
   if (t) t.characters = OPTIONS.length + ' options across ' + CONTEXT_OPTIONS.length + ' ' + CONTEXT_AXIS_NAME + 's. Default: ' + DEFAULT_VALUE;
 }
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) {
   assetPlaceholder.children[0].remove();
 }
@@ -997,6 +1011,13 @@ When the exhibit plan (Step 4e) identified a sparse axis pair, render a matrix c
 **Grid layout technique**: The matrix uses **absolute positioning** inside a non-auto-layout child frame, nested within the template's `#preview` frame. This prevents auto-layout from collapsing or misaligning cells when "N/A" placeholders are smaller than real instances.
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const PRIMARY_AXIS = '__PRIMARY_AXIS_NAME__';   // e.g., 'variant' (rows)
@@ -1051,7 +1072,7 @@ if (titleNode) titleNode.characters = CHAPTER_NAME;
 const descNode = chapter.findOne(n => n.name === '#property-description' && n.type === 'TEXT');
 if (descNode) descNode.characters = DESCRIPTION;
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) assetPlaceholder.children[0].remove();
 
 // --- Measure a sample instance to determine cell size ---
@@ -1182,6 +1203,13 @@ For exhibit plan entries with `template: "6b"` (when `contextAxis` is null).
 For each remaining boolean property, run via `figma_execute`:
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const PROPERTY_NAME = '__PROPERTY_NAME__';
@@ -1254,7 +1282,7 @@ if (sectionDesc) {
   if (t) t.characters = 'Boolean toggle. Default: ' + defaultStr + layerStr + gateStr;
 }
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) {
   assetPlaceholder.children[0].remove();
 }
@@ -1338,6 +1366,13 @@ When `contextAxis` is non-null, use this template instead of 6b for boolean chap
 For each remaining boolean property, run via `figma_execute`:
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const PROPERTY_NAME = '__PROPERTY_NAME__';
@@ -1413,7 +1448,7 @@ if (sectionDesc) {
   if (t) t.characters = 'Boolean toggle across ' + CONTEXT_OPTIONS.length + ' ' + CONTEXT_AXIS_NAME + 's. Default: ' + defaultStr + layerStr + gateStr;
 }
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) {
   assetPlaceholder.children[0].remove();
 }
@@ -1546,6 +1581,13 @@ If `variableModeProps` is not empty, render a visual chapter for each. Variable 
 For each variable mode property, run via `figma_execute`:
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const PROPERTY_NAME = '__PROPERTY_NAME__';
@@ -1624,7 +1666,7 @@ if (sectionDesc) {
   }
 }
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) {
   assetPlaceholder.children[0].remove();
 }
@@ -1698,6 +1740,13 @@ For each remaining child component variant axis, run via `figma_execute`. When t
 Replace placeholders with extracted data. Set `CONTROLLING_BOOL_RAW_KEY` to `null` if no controlling boolean was found.
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const CHILD_NAME = '__CHILD_LAYER_NAME__';
@@ -1771,7 +1820,7 @@ if (sectionDesc) {
   if (t) t.characters = 'Sub-component: ' + MAIN_COMP_NAME + '. ' + totalOptions + ' options' + offNote + '. Default: ' + axis.defaultValue;
 }
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) {
   assetPlaceholder.children[0].remove();
 }
@@ -1885,6 +1934,13 @@ Replace `__COMP_SET_NODE_ID__` with the **parent** component's `compSetNodeId` (
 For each remaining child boolean property, run via `figma_execute`. Each preview is a parent instance with the controlling boolean enabled and the child's boolean toggled.
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const CHILD_NAME = '__CHILD_LAYER_NAME__';
@@ -1974,7 +2030,7 @@ if (sectionDesc) {
   if (t) t.characters = 'Sub-component: ' + MAIN_COMP_NAME + '. Boolean toggle. Default: ' + defaultStr;
 }
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) {
   assetPlaceholder.children[0].remove();
 }
@@ -2101,6 +2157,13 @@ If `unifiedSlotChapters` from Step 4d-iii is not empty, render one chapter per e
 For each unified slot chapter, run via `figma_execute`:
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const CHILD_NAME = '__CHILD_LAYER_NAME__';
@@ -2168,7 +2231,7 @@ if (sectionDesc) {
   if (t) t.characters = PREVIEW_COMBINATIONS.length + ' combinations. Default: ' + DEFAULT_LABEL;
 }
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) {
   assetPlaceholder.children[0].remove();
 }
@@ -2259,6 +2322,13 @@ If `siblingBoolChapters` from Step 4d-iv is not empty, render one chapter per en
 For each sibling boolean chapter, run via `figma_execute`:
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const COMP_SET_ID = '__COMP_SET_NODE_ID__';
 const CHILD_NAME = '__CHILD_LAYER_NAME__';
@@ -2325,7 +2395,7 @@ if (sectionDesc) {
   if (t) t.characters = PREVIEW_COMBINATIONS.length + ' combinations. Default: ' + DEFAULT_LABEL;
 }
 
-const assetPlaceholder = chapter.findOne(n => n.name === '#preview');
+const assetPlaceholder = chapter.findOne(n => esPreview(n));
 while (assetPlaceholder.children.length > 0) {
   assetPlaceholder.children[0].remove();
 }

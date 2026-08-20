@@ -301,6 +301,13 @@ For each variant in the data, run the following script. Replace all `__PLACEHOLD
 - `__BOOLEAN_UNHIDES_JSON__` is `BOOLEAN_UNHIDES` (= `render-meta.booleanDefs[]` keys reshaped to `[{ booleanRawKey }]`). Set to `[]` if `booleanDefs` is empty.
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const VARIANT_NAME = '__VARIANT_NAME__';
 const COMPONENT_NAME = '__COMPONENT_NAME__';
@@ -387,7 +394,7 @@ if (titleFrame) {
   if (t) t.characters = VARIANT_NAME;
 }
 
-const previewContainer = variant.findOne(n => n.name === '#preview');
+const previewContainer = variant.findOne(n => esPreview(n));
 if (previewContainer && COMPONENT_SET_ID) {
   const componentSet = await figma.getNodeByIdAsync(COMPONENT_SET_ID);
   if (componentSet) {
@@ -575,6 +582,13 @@ For each section in the data, run the following script. Replace all `__PLACEHOLD
 - `__BOOLEAN_UNHIDES_JSON__` is `BOOLEAN_UNHIDES` (= `render-meta.booleanDefs[]` keys reshaped to `[{ booleanRawKey }]`). Set to `[]` if `booleanDefs` is empty.
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const VARIANT_NAME = '__VARIANT_NAME__';
 const COMPONENT_NAME = '__COMPONENT_NAME__';
@@ -677,7 +691,7 @@ function clearModesRecursive(node, col) {
   }
 }
 
-const previewContainer = variant.findOne(n => n.name === '#preview');
+const previewContainer = variant.findOne(n => esPreview(n));
 if (previewContainer && COMPONENT_SET_ID) {
   const componentSet = await figma.getNodeByIdAsync(COMPONENT_SET_ID);
   if (componentSet) {

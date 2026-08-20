@@ -464,6 +464,13 @@ For each example, run (replace `__FRAME_ID__`, `__EXAMPLE_TITLE__`, `__COMPONENT
 - `__EXAMPLE_PROPERTIES_JSON__` is the example table rows `{ property, value, notes }` parsed from the example's `code` string in Step 5 (human-readable names, verbatim).
 
 ```javascript
+// El contenedor del preview NO se llama igual en todas las plantillas: `#preview`
+// (anatomy, color, property), `#Preview` (structure), `Preview` (api) y
+// `Preview placeholder` (screen reader). Se localiza por forma, no por cadena
+// exacta, para que siga valiendo tras normalizar los nombres del maestro y para
+// no romper los frames ya renderizados con el nombre viejo.
+// Deja fuera `#preview-instruction-light` y otros placeholders internos.
+const esPreview = n => /^#?\s*preview(\s+placeholder)?$/i.test(n.name);
 const FRAME_ID = '__FRAME_ID__';
 const EXAMPLE_TITLE = '__EXAMPLE_TITLE__';
 const COMPONENT_SET_ID = '__COMPONENT_SET_NODE_ID__';
@@ -519,7 +526,7 @@ if (titleFrame) {
 }
 
 // Place live component instance in the Preview frame
-const preview = section.findOne(n => n.name === 'Preview');
+const preview = section.findOne(n => esPreview(n));
 if (preview) {
   // Remove the asset description text placeholder
   const assetDesc = preview.findOne(n => n.name === '#example-asset-description');
