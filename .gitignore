@@ -26,3 +26,6 @@ experimento-canario/tokens.json
 
 # Frames exportados de Figma — regenerables con download_assets
 experimento-canario/frames/
+
+# Copias del upstream guardadas antes de adecuar una skill
+.claude/skills/*/SKILL.md.orig

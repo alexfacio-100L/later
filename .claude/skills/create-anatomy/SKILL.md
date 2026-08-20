@@ -3,6 +3,28 @@ name: create-anatomy
 description: Generate a visual anatomy annotation in Figma showing numbered markers on a component instance with an attribute table. Use when the user mentions "anatomy", "anatomy annotation", "component anatomy", "create anatomy", or wants to annotate a component's structural elements.
 ---
 
+---
+
+## ⚡ MODO SOLO-PREVIEW (adecuación local de 100 Ladrillos)
+
+**El sistema documenta en Supernova, no en Figma.** De este frame solo se consume la capa `#preview`: la tabla de anotaciones, el encabezado y las notas ya viajan en el `.md` y se convierten en bloques nativos al publicar.
+
+**Por eso esta skill omite los bloques que rellenan lo que no se consume:**
+
+| Bloque | Qué hacer |
+| --- | --- |
+| **Step 7 — Fill Header Fields** | **OMITIR el relleno de textos del header.** Sí crear la sección (`#anatomy-section`), que es donde vive el `#preview` |
+| **Step 8 — `--- Fill annotation table ---`** | **OMITIR por completo.** La plantilla de la tabla se deja **intacta y vacía** |
+| **Step 8b — secciones por sub-componente** | **OMITIR salvo que haya hijos constitutivos** con `subCompSetId` no nulo en `_childComposition` |
+
+🔴 **La plantilla de la tabla NO se borra del frame.** *Sigue siendo necesaria para el camino de contingencia (`DESTINO_DOCUMENTACION=figma`): si Supernova no está disponible hay que poder rellenarla, y un frame sin plantilla deja el flujo sin dónde escribir.*
+
+**Todo lo demás se ejecuta igual**, en particular el Step 8 hasta la línea `--- Fill annotation table ---`: la instancia, los slots, los contornos y los marcadores numerados son justamente lo que da valor al `#preview`.
+
+*Adecuación local: no viene de uSpec. Ver `ACTUALIZAR-USPEC.md` — al actualizar hay que reaplicarla.*
+
+---
+
 # Create Anatomy Annotation
 
 Generate a hierarchical anatomy annotation directly in Figma — a **composition section** showing the top-level sub-components with numbered markers and a 4-column attribute table, then **per-child sections** for each INSTANCE sub-component showing all its internal elements (including hidden ones).
@@ -547,6 +569,8 @@ Save the returned `frameId` — you need it for all subsequent steps.
 
 ### Step 7: Fill Header Fields and Create Composition Section
 
+> ⚡ **MODO SOLO-PREVIEW:** crea la sección, **omite el relleno de textos del header**.
+
 This step fills the top-level header and creates a dedicated anatomy section by **cloning** `#anatomy-section`. The clone is renamed so it is not affected by other skills' cleanup. After cloning, the original `#anatomy-section` is **hidden** to prevent its placeholder text from appearing in screenshots. The property skill re-shows it if it needs additional clones.
 
 Run via `figma_execute` (replace `__FRAME_ID__`, `__COMPONENT_NAME__`, `__BRIEF_DESCRIPTION__`). Replace `__BRIEF_DESCRIPTION__` with the `briefDescription` composed during Step 4 sub-step 4c:
@@ -980,6 +1004,7 @@ for (const el of elements) {
 markerExample.visible = false;
 
 // --- Fill annotation table ---
+// ⚡ MODO SOLO-PREVIEW: OMITIR este bloque entero. La plantilla se deja vacía, no se borra.
 const annotationTable = section.findOne(n => n.name === '#annotation-table');
 const rows = annotationTable.children.filter(c => c.name === 'row');
 const rowTemplate = rows[rows.length - 1];
@@ -1051,6 +1076,8 @@ return { success: true };
 ```
 
 ### Step 8b: Per-Sub-Component Child Sections
+
+> ⚡ **MODO SOLO-PREVIEW:** omitir salvo que `_childComposition` tenga hijos **constitutivos** con `subCompSetId` no nulo.
 
 For each direct child that is an `INSTANCE` node (has `mainComponentId` or `mainComponentSetId` from the Step 3' walk), **an instance-wrapper FRAME** (has `wrappedInstance` set by the walk), **or a slot element with a preferred instance** (has `slotPreferredComponentId` set during Step 4 sub-step 3c from `render-meta.slotContents`), create a standalone anatomy section showing that child's internal structure. Sub-component identity can also be taken directly from the `SUB_COMPONENTS` seed (`render-meta.subComponents[].subCompSetId`) for constitutive children. The script starts with the default variant but **falls back to the richest variant** (most direct children) when the default has 1 or fewer children and the component set has multiple variants. All hidden descendants are made visible — this internal child walk is preserved and is the allowed mechanism for resolving a sub-component's own elements.
 
@@ -1471,6 +1498,7 @@ for (const el of gcElementsGrouped) {
 }
 
 // --- Fill annotation table ---
+// ⚡ MODO SOLO-PREVIEW: OMITIR este bloque entero. La plantilla se deja vacía, no se borra.
 const annotationTable = childSection.findOne(n => n.name === '#annotation-table');
 const rows = annotationTable.children.filter(c => c.name === 'row');
 const rowTemplate = rows[rows.length - 1];

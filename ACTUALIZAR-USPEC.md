@@ -96,3 +96,31 @@ npx uspec-skills@<versión> init
 🔴 **No existe `package.json` en la raíz del proyecto.** `npx uspec-skills` **resuelve la última versión publicada cada vez**. Hoy el config declara `0.3.2` y npm sirve `0.3.2` — **coinciden por casualidad, no por garantía.** *Cuando uSpec publique `0.4.0`, el proyecto la usará sin avisar y sin que nadie lo decida.*
 
 **Fijarla como `devDependency` es lo que convierte este procedimiento en una decisión en vez de un accidente.**
+
+---
+
+## Adecuaciones locales vigentes
+
+*Lo que hay que reaplicar tras cada actualización de uSpec. El verificador las lista solo.*
+
+### `create-anatomy` — modo solo-preview (20 ago 2026)
+
+**Qué:** una directiva al inicio de la skill y tres marcas en el cuerpo, para que solo construya la capa `#preview` y omita lo que ya viaja en el `.md`.
+
+| Bloque | Acción |
+| --- | --- |
+| Step 7 — relleno del header | Omitido *(la sección sí se crea: dentro vive el `#preview`)* |
+| Step 8 — `--- Fill annotation table ---` | Omitido por completo |
+| Step 8b — secciones por sub-componente | Omitido salvo hijos constitutivos |
+
+**Por qué:** el sistema documenta en Supernova. La tabla, el encabezado y las notas se convierten allí en bloques nativos; rellenarlos en Figma es trabajo que se tira.
+
+🔴 **La plantilla de la tabla NO se borra del frame.** *Decisión del Lead, y es la correcta: el camino de contingencia `DESTINO_DOCUMENTACION=figma` necesita esa plantilla para poder escribir. Un frame sin ella deja el flujo de respaldo sin destino.*
+
+**El original está en `SKILL.md.orig`, junto al modificado.** *No se versiona —es una copia del upstream— pero permite ver el diff en local.*
+
+### Lo que NO hace falta recortar
+
+**Solo cuatro skills producen `#preview`:** `create-anatomy`, `create-color`, `create-property` y `create-structure`.
+
+*`create-api`, `create-voice` y `create-motion` no generan ninguno.* **Si no se documenta en Figma, esas tres no se invocan nunca** — recortarlas no ahorra nada porque ya no se usan.
