@@ -208,14 +208,17 @@ npm run docs:previews      # informa
 npm run docs:publicar      # la corre sola y ABORTA si algo no pasa
 ```
 
+🔴 **La métrica es la fracción de ANCHO que ocupa el contenido, no el área.** *Supernova escala la imagen al ancho de la columna: el alto no interviene en cómo se percibe el tamaño.*
+
 | Límite | Valor | Por qué |
 | --- | --- | --- |
-| Ocupación mínima | **25%** | Por debajo, el componente se pierde en Supernova |
+| Fracción de ancho | **25–55%** | Por debajo se pierde; por encima se amplía y el trazo se ve tosco |
 | Lado máximo | 4096 px | Peso sin ganancia |
 | Lado mínimo | 120 px | Se pixela al ampliarla |
-| Proporción máxima | 6:1 | Delata una franja de vacío |
 
-🔴 **Un preview sin medir cuenta como suspenso, no como aprobado.** *La ocupación se mide en Figma al recortar y viaja en `frames-subidos.json`; `subir-frame.mjs` la acepta como quinto argumento y avisa si falta. La ausencia de medida no es evidencia de que esté bien.*
+**Los tres puntos medidos sobre el mismo preview del Button:** 14% diminuto · 71% gigante · **33% correcto**. *Pasarse de recorte cuesta lo mismo que quedarse corto.*
+
+🔴 **Un preview sin medir cuenta como suspenso, no como aprobado.** *La fracción se mide en Figma al ajustar y viaja en `frames-subidos.json`; `subir-frame.mjs` la acepta como quinto argumento y avisa si falta. La ausencia de medida no es evidencia de que esté bien.*
 
 `--forzar` salta la puerta cuando la desproporción es deliberada.
 

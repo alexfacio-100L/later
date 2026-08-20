@@ -15,11 +15,17 @@
  */
 import { readFileSync, existsSync, statSync } from "node:fs"
 
+// Supernova escala la imagen al ancho de la columna, asi que lo que decide como
+// se ve NO es el area ocupada sino la FRACCION DE ANCHO que ocupa el contenido.
+// Medido el 21 ago 2026 con el mismo preview del Button:
+//   contenido / ancho = 14%  →  diminuto
+//   contenido / ancho = 71%  →  gigante
+//   contenido / ancho = 33%  →  correcto
 export const LIMITES = {
-  ocupacionMinima: 25,   // % del wrapper ocupado por el contenido
+  fraccionAnchoMin: 25,  // % del ancho ocupado por el contenido
+  fraccionAnchoMax: 55,  // por encima, la imagen se amplia y el trazo se ve tosco
   ladoMaximo: 4096,      // px — por encima, la imagen pesa sin aportar
   ladoMinimo: 120,       // px — por debajo, se pixela al ampliarla
-  proporcionMaxima: 6,   // lado largo / lado corto
 }
 
 /** Lee ancho y alto de un PNG sin dependencias: bytes 16..24 de la cabecera IHDR. */
@@ -34,12 +40,14 @@ export function verificar(registro, baseUrl) {
   for (const [seccion, meta] of Object.entries(registro)) {
     const fila = { seccion, nombre: meta.nombre ?? seccion, problemas: [] }
 
-    const ocup = typeof meta.ocupacion === "number" ? meta.ocupacion : null
-    fila.ocupacion = ocup
-    if (ocup === null) {
-      fila.problemas.push("sin medir — falta `ocupacion` en el registro")
-    } else if (ocup < LIMITES.ocupacionMinima) {
-      fila.problemas.push(`ocupación ${ocup}% (mínimo ${LIMITES.ocupacionMinima}%) — se verá diminuto`)
+    const fr = typeof meta.fraccionAncho === "number" ? meta.fraccionAncho : null
+    fila.fraccionAncho = fr
+    if (fr === null) {
+      fila.problemas.push("sin medir — falta `fraccionAncho` en el registro")
+    } else if (fr < LIMITES.fraccionAnchoMin) {
+      fila.problemas.push(`el contenido ocupa el ${fr}% del ancho (mínimo ${LIMITES.fraccionAnchoMin}%) — se verá diminuto`)
+    } else if (fr > LIMITES.fraccionAnchoMax) {
+      fila.problemas.push(`el contenido ocupa el ${fr}% del ancho (máximo ${LIMITES.fraccionAnchoMax}%) — se verá desproporcionado`)
     }
 
     const ruta = meta.archivo ? new URL(meta.archivo, baseUrl) : null
@@ -51,9 +59,6 @@ export function verificar(registro, baseUrl) {
         const largo = Math.max(px.w, px.h), corto = Math.min(px.w, px.h)
         if (largo > LIMITES.ladoMaximo) fila.problemas.push(`${largo}px de lado (máximo ${LIMITES.ladoMaximo})`)
         if (corto < LIMITES.ladoMinimo) fila.problemas.push(`${corto}px de lado (mínimo ${LIMITES.ladoMinimo})`)
-        const prop = largo / corto
-        if (prop > LIMITES.proporcionMaxima)
-          fila.problemas.push(`proporción ${prop.toFixed(1)}:1 (máximo ${LIMITES.proporcionMaxima}:1) — franja de vacío`)
       }
     }
     filas.push(fila)
@@ -76,7 +81,7 @@ if (esEjecutable) {
   console.log("Previews registrados\n")
   for (const f of filas) {
     const marca = f.problemas.length ? "🔴" : "✅"
-    const ocup = f.ocupacion === null ? "  ?  " : `${String(f.ocupacion).padStart(3)}% `
+    const ocup = f.fraccionAncho === null ? "  ?  " : `${String(f.fraccionAncho).padStart(3)}% `
     console.log(`  ${marca} ${ocup} ${(f.px ?? "").padEnd(11)} ${f.seccion}`)
     for (const p of f.problemas) console.log(`         ↳ ${p}`)
   }
@@ -85,7 +90,7 @@ if (esEjecutable) {
   if (!malos.length) { console.log(`\n✓ ${filas.length} previews en regla.`); process.exit(0) }
 
   console.log(`\n🔴 ${malos.length} de ${filas.length} no cumplen.`)
-  console.log("   Recorta el Artwork wrapper al contenido y vuelve a exportar —")
+  console.log("   Reajusta el Artwork wrapper y vuelve a exportar —")
   console.log("   ver ACTUALIZAR-USPEC.md > «El recorte del artwork».")
   process.exit(process.argv.includes("--forzar") ? 0 : 1)
 }

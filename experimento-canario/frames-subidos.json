@@ -1,11 +1,11 @@
 {
   "Anatomy": {
     "nodo": "12508:2172",
-    "nombre": "Button Anatomy · #preview (recortado)",
-    "assetId": "224612a7-afd5-45a3-bcfe-808052b0dee7",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/32039e7f-7288-417b-a3bc-7ae17315491e.png",
-    "ocupacion": 49,
-    "archivo": "frames/button-anatomy-preview.png"
+    "nombre": "Button Anatomy · #preview",
+    "archivo": "frames/button-anatomy-preview.png",
+    "fraccionAncho": 33,
+    "assetId": "94e7c49c-7bac-4fb3-b787-b80fc3a778d8",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/1d7427c8-5009-4907-b432-65aecc1d00c1.png"
   },
   "Button sizes": {
     "nodo": "12307:2124",
