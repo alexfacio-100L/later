@@ -30,3 +30,12 @@ experimento-canario/frames/
 # Copias del upstream guardadas antes de adecuar una skill
 .claude/skills/*/SKILL.md.orig
 references/component-md/component-md-template.md.orig
+
+# ── Artefactos del editor ────────────────────────────────────────────
+# Son de cada máquina, no del proyecto: VS Code abre igual la carpeta sin
+# el .code-workspace, y los que había solo declaraban `path: "."`.
+*.code-workspace
+.vscode/
+.idea/
+*.swp
+*~
