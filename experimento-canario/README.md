@@ -7,7 +7,7 @@
 **Primero, una sola vez:** copia `.env.example` como `.env` en la **raíz del proyecto** y pega ahí tu API key.
 
 ```bash
-cp .env.example .env        # desde la raíz de "Later: Brand System"
+cp .env.example .env        # desde la raíz de "later-brand-system"
 ```
 
 **La key sale de** [cloud.supernova.io](https://cloud.supernova.io) → foto de perfil → *Profile settings* → *Authentication*. Hereda los permisos de quien la genera: hace falta **Editor u Owner**.

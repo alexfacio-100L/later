@@ -12,8 +12,8 @@
 Follow the skill at "…/2. Proyecto/uSpec/.claude/skills/create-<SKILL>/SKILL.md".
 
 PATHS:
-- uSpec root (uspecs.config.json): "…/Later: Brand System/2. Proyecto/uSpec"
-- componentMdPath: "…/Later: Brand System/3. Entregables/Componentes/<slug>.md"
+- uSpec root (uspecs.config.json): "…/later-brand-system/2. Proyecto/uSpec"
+- componentMdPath: "…/later-brand-system/3. Entregables/Componentes/<slug>.md"
 - There is NO .uspec-cache (regenerable, not migrated). Work from the .md alone —
   it ends with a render-meta JSON block carrying every node id.
 - fileKey: UGwIBzERV4vB7mk0mejZ0y · mcpProvider: figma-mcp

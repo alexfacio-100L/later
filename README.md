@@ -64,7 +64,7 @@ Later2.0/                              ← modelo IPO, la gestión del proyecto
 ├── 1. Recursos/                       input sin editar
 ├── 2. Proyecto/                       Contexto (tablero, estado, roadmap), Diagnóstico…
 ├── 3. Entregables/                    output no editable
-└── Later: Brand System/               ← ESTA CARPETA · el sistema, con git
+└── later-brand-system/               ← ESTA CARPETA · el sistema, con git
     ├── Componentes/                   las especificaciones producidas
     ├── .claude/skills/                las 13 skills de uSpec
     ├── references/                    plantillas de uSpec
@@ -179,7 +179,7 @@ Herramienta de terceros (MIT) que genera la especificación de un componente des
 Repositorio: `github.com/redongreen/uSpec` · Documentación: `docs.uspec.design`
 
 ```text
-Later: Brand System/
+later-brand-system/
 ├── .claude/skills/          las 13 skills (create-*, extract-*, firstrun)
 ├── references/              plantillas e instrucciones de terceros
 ├── uspecs.config.json       claves de las plantillas de Figma + tipografía
