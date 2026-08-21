@@ -1,0 +1,10 @@
+{
+  "storybook": {
+    "designSystemId": "825551",
+    "from": "../later-bricks-ui-canario/storybook-static",
+    "name": "bricks-ui-canario",
+    "brandId": "f1e4980b-bcf7-463f-9e99-a8d1122da3d5",
+    "sourceId": "91d6c553-da03-4649-a13e-3a10bc8d8b14",
+    "publicAccess": false
+  }
+}

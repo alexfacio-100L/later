@@ -39,3 +39,6 @@ references/component-md/component-md-template.md.orig
 .idea/
 *.swp
 *~
+
+# Volcado de tokens generado por el CLI de Supernova: se regenera y ensucia el diff
+tokens.json
