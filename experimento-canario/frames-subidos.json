@@ -68,32 +68,32 @@
     "nombre": "Color · Secondary / Product / Light",
     "archivo": "frames/button-color-sp-light.png",
     "fraccionAncho": 50,
-    "assetId": "31f117e9-e1b8-49b0-b765-946c10c0f4a8",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/707d6a8a-d617-4d12-b6f9-761f5d167be3.png"
+    "assetId": "37814cb6-a641-4414-8573-895c51ca25ac",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/25647387-7d34-422e-9ff5-55b9efb4f016.png"
   },
   "Secondary / Product / Dark": {
     "nodo": "12531:2494",
     "nombre": "Color · Secondary / Product / Dark",
     "archivo": "frames/button-color-sp-dark.png",
     "fraccionAncho": 50,
-    "assetId": "3764bfea-ed47-436c-87f1-05fd440d226f",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/b1f49190-5218-49f0-9ed2-33a17340fe38.png"
+    "assetId": "ba3bdddd-7e07-40c1-83da-c6b79c6ef5de",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/dd2c5a98-611c-4c1a-af80-005cf07ef2fb.png"
   },
   "Secondary / Marketing / Light": {
     "nodo": "12531:2571",
     "nombre": "Color · Secondary / Marketing / Light",
     "archivo": "frames/button-color-sm-light.png",
     "fraccionAncho": 50,
-    "assetId": "38f04e31-bcad-43f0-8cf0-9b91d69c28ce",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/fc9f0fd3-8125-4fb9-ab78-26aedd0e613b.png"
+    "assetId": "b6d031ed-53c9-491a-a220-293ec241f6cc",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/11384903-8a3e-4811-b9ad-bdaa04dc984a.png"
   },
   "Secondary / Marketing / Dark": {
     "nodo": "12531:2648",
     "nombre": "Color · Secondary / Marketing / Dark",
     "archivo": "frames/button-color-sm-dark.png",
     "fraccionAncho": 50,
-    "assetId": "97d1303d-fbb6-4d9d-b232-7cbe99bde9d9",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/21e44481-80ed-4ea9-a65f-bcd192bd022b.png"
+    "assetId": "ab1af2ed-b3e7-49f6-ad45-d77271359436",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/a9fad1e3-3b59-4ff5-bd1f-b676ee575224.png"
   },
   "variant": {
     "nodo": "12534:2534",

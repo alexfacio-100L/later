@@ -34,8 +34,7 @@ Los elementos que componen el Button, en el orden en que los numera el preview. 
 ### Unresolved
 
 - **Alta** 🔴 — **`size` no escala la tipografía.** Los tres tamaños usan fuente 14: `size` solo cambia el padding. Antes del 20 de agosto lo único que diferenciaba `l` de `m` eran 2px fuera de escala; al alinearlos a la escala, la diferencia desapareció y se restauró con la progresión de padding. **Es un hueco abierto, no una decisión de diseño.**
-- **Alta** 🔴 — **`secondary` + `pressed` en Dark no llega al mínimo de contraste: 3.29:1.** El texto resuelve a `#000000` sobre `background/brandPressed` (`#315fa3`), por debajo del 4.5:1 que exige WCAG AA para texto de cuerpo. Afecta a las dos surfaces. *Medido el 21 ago 2026 sobre los previews de color, con los modes resueltos en Figma.*
-- **Media** — **`disabled` en Light queda justo en el límite: 4.50:1.** Cumple por décimas y cualquier ajuste de `neutral/600` o de `background/disabled` lo tumba. Conviene darle margen.
+- **Baja** — **`disabled` se queda corto de contraste, pero está exento.** El texto da 4.50:1 en Light —justo en el límite— y el icono 1.74:1 en Light y 2.97:1 en Dark. 🟢 **WCAG excluye expresamente los componentes inactivos** de 1.4.3 y 1.4.11, así que **no es un incumplimiento**: es margen de calidad. *Cualquier ajuste de `neutral/600` o de `background/disabled` tumba el 4.50, así que conviene darle aire si se toca.*
 - **Media** — **`background/disabled` apenas se distingue del lienzo en Light**: 1.30:1 sobre `background/primary`. El texto sí es legible (4.50:1), pero el contorno del control se pierde.
 - **Media** — el icono de carga sigue sin decidirse. `isLoading` es propiedad de código sin variante en Figma.
 - **Baja** — structure: Sin figmaLink: no se pudo verificar en vivo si el radio crudo (8/12) y el trazo de focus (1.5 en s/m, 2 en l) tienen binding a variables no resueltas  *(no verificable: se extrajo sin `figmaLink`)*
@@ -188,7 +187,7 @@ Eje state: ninguna medida cambia salvo el grosor del trazo en focus. Padding, ra
 
 ## Color
 
-Los colores se resuelven por el mode de la colección semanticColors (Light y Dark); los nombres de token son idénticos en ambos modes y solo cambia el alias primitivo al que apuntan. background/brandHover y background/brandPressed aclaran en Light y oscurecen en Dark: la dirección la marca el fondo, no el mode. El estado disabled se corrigió el 20 de agosto — text/disabled pasó a neutral/600 en Light y neutral/700 en Dark, y el contraste sobre background/disabled subió de 1.74:1 a 4.50 (Light) y 4.89 (Dark). Sigue abierto que background/disabled apenas se distingue del lienzo en Light (1.30:1). En Dark, brandHover resuelve a neutral/300 (#BFBFBF) y brandPressed a neutral/200 (#DFDFDF), así que pressed queda más claro que hover sobre un fondo neutral/100: la progresión de énfasis se invierte. Se documenta tal cual está en Figma; conviene revisarlo. El eje size no cambia ningún token de color, solo el escalón de la rampa de sombra: s y m usan sm-1 en surface=product y sm-2 en surface=marketing, mientras que l usa sm-2 y sm-3 respectivamente; las secciones documentan size=s. El eje surface sí afecta la sombra — en product solo hay elevación en default y disabled, en marketing la hay en los cinco estados — por eso tiene sección propia pese a que crossVariant.axisClassification lo marca como color-irrelevant (la huella de ejes no cubre effect styles). iconLeft e iconRight son slots que alojan una instancia hoja de icono (ArrowRight por defecto, Phosphor Outline/Regular): el color lo decide el botón, por eso sus tokens viven en esta tabla. Las sombras (Shadows/Single/Small/sm-1–3) son effect styles con color fijo #0E1F35 al 12% de opacidad, no variables — no cambian con el mode.
+Los colores se resuelven por el mode de la colección semanticColors (Light y Dark); los nombres de token son idénticos en ambos modes y solo cambia el alias primitivo al que apuntan. background/brandHover y background/brandPressed aclaran en Light y oscurecen en Dark: la dirección la marca el fondo, no el mode. El estado disabled se corrigió el 20 de agosto — text/disabled pasó a neutral/600 en Light y neutral/700 en Dark, y el contraste sobre background/disabled subió de 1.74:1 a 4.50 (Light) y 4.89 (Dark). Sigue abierto que background/disabled apenas se distingue del lienzo en Light (1.30:1). En Dark, brandHover resuelve a neutral/300 (#BFBFBF) y brandPressed a neutral/200 (#DFDFDF), así que pressed queda más claro que hover sobre un fondo neutral/100: la progresión de énfasis se invierte. Se documenta tal cual está en Figma; conviene revisarlo. El eje size no cambia ningún token de color, solo el escalón de la rampa de sombra: s y m usan sm-1 en surface=product y sm-2 en surface=marketing, mientras que l usa sm-2 y sm-3 respectivamente; las secciones documentan size=s. El eje surface sí afecta la sombra — en product solo hay elevación en default y disabled, en marketing la hay en los cinco estados — por eso tiene sección propia pese a que crossVariant.axisClassification lo marca como color-irrelevant (la huella de ejes no cubre effect styles). iconLeft e iconRight son slots que alojan una instancia hoja de icono (ArrowRight por defecto, Phosphor Outline/Regular): el color lo decide el botón, por eso sus tokens viven en esta tabla. 🔴 **Regla que este componente aprendió por las malas: un token que invierte con el mode no puede ir sobre un fondo que no invierte.** `background/selected` resuelve a `#315fa3` en Light y en Dark —es un azul de marca, no depende del lienzo—, así que el texto y el icono sobre él usan las variantes **Static** (`text/primaryInverseStatic`, `icon/inverseStatic`), que valen `#f9f9f9` en los dos modes. *Antes usaban `text/primaryInverse` e heredaban `text/secondary`: en Light casaba por casualidad y en Dark el texto caía a 3.29:1 y el icono en Light a 2.67:1. Corregido el 21 ago 2026 en las seis variantes `secondary`+`pressed`.* Las sombras (Shadows/Single/Small/sm-1–3) son effect styles con color fijo #0E1F35 al 12% de opacidad, no variables — no cambian con el mode.
 
 *Estrategia B · 8 combinaciones · estados: `default`, `hover`, `pressed`, `focus`, `disabled`*
 
@@ -227,9 +226,9 @@ Los colores se resuelven por el mode de la colección semanticColors (Light y Da
 | Container fill | `background/secondary` | `background/hover` | `background/selected` | `background/hover` | `background/disabled` |
 | Container stroke | `text/secondary` | `text/secondary` | `text/secondary` | `border/focus` | `border/disabled` |
 | Drop shadow | `Shadows/Single/Small/sm-1` | `none` | `none` | `none` | `Shadows/Single/Small/sm-1` |
-| iconLeft | `text/secondary` | `text/secondary` | `text/secondary` | `text/secondary` | `icon/disabled` |
-| Label | `text/secondary` | `text/secondary` | `text/primaryInverse` | `text/secondary` | `text/disabled` |
-| iconRight | `text/secondary` | `text/secondary` | `text/secondary` | `text/secondary` | `icon/disabled` |
+| iconLeft | `text/secondary` | `text/secondary` | `icon/inverseStatic` | `text/secondary` | `icon/disabled` |
+| Label | `text/secondary` | `text/secondary` | `text/primaryInverseStatic` | `text/secondary` | `text/disabled` |
+| iconRight | `text/secondary` | `text/secondary` | `icon/inverseStatic` | `text/secondary` | `icon/disabled` |
 
 ### Secondary / Marketing
 
@@ -240,9 +239,9 @@ Los colores se resuelven por el mode de la colección semanticColors (Light y Da
 | Container fill | `background/secondary` | `background/hover` | `background/selected` | `background/hover` | `background/disabled` |
 | Container stroke | `text/secondary` | `text/secondary` | `text/secondary` | `border/focus` | `border/disabled` |
 | Drop shadow | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` | `Shadows/Single/Small/sm-2` |
-| iconLeft | `text/secondary` | `text/secondary` | `text/secondary` | `text/secondary` | `icon/disabled` |
-| Label | `text/secondary` | `text/secondary` | `text/primaryInverse` | `text/secondary` | `text/disabled` |
-| iconRight | `text/secondary` | `text/secondary` | `text/secondary` | `text/secondary` | `icon/disabled` |
+| iconLeft | `text/secondary` | `text/secondary` | `icon/inverseStatic` | `text/secondary` | `icon/disabled` |
+| Label | `text/secondary` | `text/secondary` | `text/primaryInverseStatic` | `text/secondary` | `text/disabled` |
+| iconRight | `text/secondary` | `text/secondary` | `icon/inverseStatic` | `text/secondary` | `icon/disabled` |
 
 ## Voice / Screen reader
 
