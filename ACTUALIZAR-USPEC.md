@@ -346,3 +346,32 @@ p.counterAxisSizingMode = 'AUTO';
 | API | 3 |
 
 **Las seis skills de render están adecuadas** y las ocho modificaciones locales aparecen en `npm run uspec:verificar`.
+
+---
+
+## 4.11 resuelta: `completar-md.mjs` (21 ago 2026)
+
+**Los tres defectos del `.md` dejan de depender de que un agente se acuerde.**
+
+```bash
+npm run md:verificar Componentes/button.md              # informa, sale 1 si falta algo
+node completar-md.mjs Componentes/button.md --escribir  # repara desde el cache
+```
+
+| Comprueba | Repara desde |
+| --- | --- |
+| El bloque `render-meta` — existe, parsea, trae `compSetNodeId`, sus booleanos usan `rawKey` y sus entradas BOOLEAN llevan `associatedLayerId` | `_base.json` |
+| La sección `## Anatomy` | `_base.json` › `variants[default].treeHierarchical` |
+| La columna `Spec` y las `Notes` de Structure | `<slug>-structure.json` |
+
+**Es idempotente:** correrlo dos veces no cambia nada la segunda.
+
+🔴 **Y `create-component-md` ya no lo pide, lo exige:** su directiva termina con el comando. *Una directiva es prosa que se puede saltar; un comando que falla con código 1, no.*
+
+### Dos cosas que salieron al probarlo
+
+**Se probó mutilando una copia del `.md`** —quitando el `render-meta`, borrando `## Anatomy` y vaciando la columna `Spec`— y comprobando que detectaba los tres y los reparaba idénticos al original. Ahí aparecieron dos desajustes:
+
+1. **Mi reparación a mano del 21 ago estaba incompleta.** Puse `associatedLayerId` en `booleanDefs` pero **no en las entradas BOOLEAN de `propertyDefs`**, que el esquema también exige. *El script salió mejor que el trabajo manual que venía a automatizar.*
+
+2. **El tipo de `labelBox` no coincidía con el preview.** `create-anatomy` desenvuelve un FRAME con un único hijo TEXT y lo cuenta como `Text`; el script lo daba como `Frame`. **La tabla habría contradicho al frame que dice describir.** *Replicado el desenvolvimiento — también para el caso FRAME con un único hijo INSTANCE.*

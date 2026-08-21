@@ -30,6 +30,18 @@ Rellena `{{ANATOMY_TABLE}}` con una tabla de cuatro columnas — `#`, `Type`, `E
 
 🔴 **La numeración es un contrato con el preview de Figma.** *`create-anatomy` numera empezando por el contenedor raíz sintético y sigue con los hijos directos del child container, en orden. Esta tabla debe usar exactamente el mismo criterio: los marcadores del frame y las filas de la tabla son la misma lista, y si se desincronizan el documento miente.*
 
+### 🔴 Paso obligatorio al terminar
+
+**No basta con intentar cumplir lo de arriba: hay que comprobarlo.** Al acabar de escribir el `.md`, corre
+
+```bash
+node completar-md.mjs <ruta-del-md>
+```
+
+**Si sale con código 1, el `.md` está incompleto.** Repáralo con `--escribir` —regenera las tres cosas desde `.uspec-cache/`, que es la fuente fiable— y vuelve a verificar.
+
+*Por qué existe el script y no solo esta directiva: una directiva es prosa que se puede saltar. El 21 ago 2026 los tres defectos aparecieron a la vez en el mismo `.md`, y los tres eran reparables desde el cache. Un comando que falla es más fiable que una instrucción que se recuerda.*
+
 *Adecuación local: no viene de uSpec. Ver `ACTUALIZAR-USPEC.md` — al actualizar hay que reaplicarla.*
 
 ---
