@@ -6,11 +6,11 @@ const sn = new Supernova(key)
 const v = await sn.versions.getActiveVersion("825551")
 const ref = { designSystemId:"825551", versionId:v.id, workspaceId:"767109" }
 const log = []
-for (const [nombre, id] of [["Uso","40847088"],["Especificación","40750051"],["Código","40847087"]]) {
+for (const [nombre, id] of [["Especificaciones","40847796"]]) {
   try {
     const raw = await sn.documentation.getDocumentationContentRaw(ref, id)
     const txt = typeof raw === "string" ? raw : JSON.stringify(raw)
-    log.push(`${nombre}: ${txt.length} caracteres de contenido`)
+    log.push(txt)
   } catch(e){ log.push(`${nombre}: ERR ${(e?.message??e).toString().slice(0,120)}`) }
 }
 fs.writeFileSync(process.argv[2], log.join("\n"))

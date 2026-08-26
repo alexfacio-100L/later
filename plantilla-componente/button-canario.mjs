@@ -47,7 +47,13 @@ const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
 /** `example-button--primary`. Simula que desarrollo ya consumió la spec. */
 const HISTORIA_BUTTON = "681057"
 
-/** Trae una tabla concreta del .md de uSpec, por el encabezado que la precede. */
+/**
+ * Trae una tabla del .md de uSpec y la emite como <SNTable>.
+ *
+ * 🔴 Emitirla con pipes NO funciona, y falla del peor modo posible: el validador
+ * la acepta y al escribir la descarta en silencio. La página queda con sus
+ * títulos y sus imágenes, y sin un solo dato, sin que nada lo avise.
+ */
 const tablaDelMd = (encabezado) => {
   const md = fs.readFileSync(path.join(RAIZ, "Componentes/button.md"), "utf8")
   const lineas = md.split("\n")
@@ -58,14 +64,17 @@ const tablaDelMd = (encabezado) => {
     if (/^\s*\|/.test(lineas[j])) filas.push(lineas[j])
     else if (filas.length) break
   }
-  return filas.join("\n")
+  if (!filas.length) return `*No encontré la tabla de ${encabezado}.*`
+  const celdas = (l) => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim())
+  const cuerpo = filas.map(celdas).filter(cs => !cs.every(c => /^:?-+:?$/.test(c)))
+  return tabla(cuerpo[0], cuerpo.slice(1))
 }
 
 const token = (ruta) => ({ entityId: TK[ruta], entityType: "Token" })
 const tokens = (...rutas) => JSON.stringify(rutas.map(token))
 
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
-const tabla = (cabecera, filas) => {
+export const tabla = (cabecera, filas) => {
   const ancho = Math.floor(760 / cabecera.length)
   const celda = (t) => `    <SNTableCell alignment="Left" columnWidth={${ancho}}>\n      ${t}\n    </SNTableCell>`
   const fila = (cs) => `  <SNTableRow>\n${cs.map(celda).join("\n")}\n  </SNTableRow>`
@@ -200,20 +209,6 @@ ${preview("Button states", "default, hover, pressed, focus y disabled")}
   </SNItem>
 </SNBlock>
 
-### Cada eje, en Figma
-
-${preview("variant", "variant · jerarquía visual")}
-
-${preview("surface", "surface · dónde vive el botón, no su jerarquía")}
-
-${preview("size", "size · controla el padding, no el tamaño de fuente")}
-
-${preview("isDisabled", "isDisabled · el único estado que fija un ingeniero")}
-
-${preview("showIconLeft", "showIconLeft")}
-
-${preview("showIconRight", "showIconRight")}
-
 ## Color
 
 El contraste lo calcula Supernova sobre los tokens vivos: **no hay ratios escritos a mano que puedan caducar.**
@@ -224,23 +219,13 @@ El contraste lo calcula Supernova sobre los tokens vivos: **no hay ratios escrit
   </SNItem>
 </SNBlock>
 
-### Las ocho combinaciones
+### Cómo resuelve en cada mode
 
 ${preview("Primary / Product / Light", "Primary · Product · Light")}
 
 ${preview("Primary / Product / Dark", "Primary · Product · Dark")}
 
-${preview("Primary / Marketing / Light", "Primary · Marketing · Light")}
-
-${preview("Primary / Marketing / Dark", "Primary · Marketing · Dark")}
-
-${preview("Secondary / Product / Light", "Secondary · Product · Light")}
-
-${preview("Secondary / Product / Dark", "Secondary · Product · Dark")}
-
-${preview("Secondary / Marketing / Light", "Secondary · Marketing · Light")}
-
-${preview("Secondary / Marketing / Dark", "Secondary · Marketing · Dark")}
+*Las ocho combinaciones completas —variant × surface × mode— están en la especificación del repo.*
 
 ### Los tokens del componente
 
