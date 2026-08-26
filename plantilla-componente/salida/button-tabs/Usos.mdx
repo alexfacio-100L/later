@@ -1,0 +1,75 @@
+# Uso
+
+El Button ejecuta una acción en el lugar donde está. Si la interacción lleva a otra pantalla o a otra URL, el componente correcto es `Link`.
+
+## Cuándo usar
+
+<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
+  <SNItem>
+    <SNProp name="type" value="do" />
+    <SNProp name="description" value="Para ejecutar una acción: guardar, enviar, confirmar, aplicar un filtro." />
+  </SNItem>
+</SNBlock>
+
+<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
+  <SNItem>
+    <SNProp name="type" value="do" />
+    <SNProp name="description" value="Usa primary para la acción principal de la pantalla, y solo una por vista." />
+  </SNItem>
+</SNBlock>
+
+## Cuándo no usar
+
+<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
+  <SNItem>
+    <SNProp name="type" value="dont" />
+    <SNProp name="description" value="No lo uses para navegar a otra pantalla o a una URL. Eso es un Link." />
+  </SNItem>
+</SNBlock>
+
+<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
+  <SNItem>
+    <SNProp name="type" value="dont" />
+    <SNProp name="description" value="No pongas dos botones primary compitiendo en la misma vista." />
+  </SNItem>
+</SNBlock>
+
+## Consideraciones
+
+<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
+  <SNItem>
+    <SNProp name="type" value="caution" />
+    <SNProp name="description" value="El estado deshabilitado apenas se distingue del lienzo en Light: 1.30:1. Antes de usarlo, considera un control habilitado que explique qué falta." />
+  </SNItem>
+</SNBlock>
+
+## Variantes y jerarquía
+
+**`variant`** define la jerarquía visual: `primary` para la acción principal, `secondary` para las de apoyo.
+
+**`surface`** no es jerarquía, es dónde vive el botón: `product` cubre app, login y modales; `marketing` cubre landings y campañas. Determina el peso tipográfico y el escalón de sombra.
+
+## Comportamiento
+
+**Los estados de interacción —hover, pressed, focus— los dibuja la plataforma y no se configuran por API.** El eje `state` de Figma existe para los diseñadores.
+
+**El único estado que fija un ingeniero es `isDisabled`**, que bloquea la interacción y saca el control del orden de tabulación.
+
+`showIconLeft` y `showIconRight` son independientes: el botón puede mostrar ninguno, uno u otro, o los dos.
+
+## Content guidelines
+
+*Pendiente: cómo se redacta el label y qué pasa cuando no cabe. Es contenido que ninguna herramienta genera — ni Figma lo contiene ni el código lo declara.*
+
+## Responsive
+
+*Pendiente: cómo cambia entre breakpoints. La relación entre el eje `size` y el breakpoint es una decisión abierta.*
+
+## Internacionalización
+
+*Pendiente: expansión de texto y RTL. El español expande respecto al inglés y no hay regla de ancho máximo definida.*
+
+## Componentes relacionados
+
+- **Link** — para navegar
+- **ArrowRight** — el icono por defecto de ambas ranuras

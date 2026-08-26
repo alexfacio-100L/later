@@ -37,11 +37,24 @@ const TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/button-tokens.json
 const FRAMES = JSON.parse(fs.readFileSync(
   path.join(RAIZ, "experimento-canario/frames-subidos.json"), "utf8"))
 
-/** Un preview ya subido, por el nombre de sección con el que se registró. */
+/** Los iconos que sustituyen al texto en la columna Type y marcan la jerarquía. */
+const ICONOS = JSON.parse(fs.readFileSync(
+  path.join(RAIZ, "experimento-canario/iconos-tipo.json"), "utf8"))
+
+/**
+ * Un preview ya subido, por el nombre de sección con el que se registró.
+ *
+ * 🔴 `resourceId` NO es el `assetId`. Son dos ids distintos: el del recurso vive
+ * dentro de la URL del asset. Pasar el `assetId` publica un bloque con
+ * `"url": ""` y la imagen no carga — y valida igual de bien, porque el
+ * validador comprueba la forma del valor, no que el recurso exista.
+ */
 const preview = (seccion, pie) => {
   const f = FRAMES[seccion]
   if (!f) return `*Falta el preview de ${seccion}.*`
-  return `<SNImage alignment="Left" resourceId="${f.assetId}"${pie ? ` caption="${pie}"` : ""} />`
+  const rid = idDelRecurso(f.url)
+  if (!rid) return `*El preview de ${seccion} no tiene URL registrada.*`
+  return `<SNImage alignment="Left" resourceId="${rid}"${pie ? ` caption="${pie}"` : ""} />`
 }
 const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
 /** `example-button--primary`. Simula que desarrollo ya consumió la spec. */
@@ -59,8 +72,11 @@ const tablaDelMd = (encabezado) => {
   const lineas = md.split("\n")
   const i = lineas.findIndex(l => l.trim() === encabezado)
   if (i < 0) return `*No encontré ${encabezado} en el .md.*`
+  // 🔴 Desde `i`, no desde `i + 1`: el encabezado ES la primera fila de la tabla.
+  // Empezar después lo descarta, la primera fila de datos pasa a hacer de
+  // cabecera, y la columna `Type` deja de encontrarse — sin que nada falle.
   const filas = []
-  for (let j = i + 1; j < lineas.length; j++) {
+  for (let j = i; j < lineas.length; j++) {
     if (/^\s*\|/.test(lineas[j])) filas.push(lineas[j])
     else if (filas.length) break
   }
@@ -73,12 +89,48 @@ const tablaDelMd = (encabezado) => {
 const token = (ruta) => ({ entityId: TK[ruta], entityType: "Token" })
 const tokens = (...rutas) => JSON.stringify(rutas.map(token))
 
+/** El id del recurso vive dentro de la URL del asset. NO es el assetId. */
+const idDelRecurso = (url) => (url ?? "").split("/").pop()?.replace(/\.[a-z]+$/i, "")
+
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
 export const tabla = (cabecera, filas) => {
-  const ancho = Math.floor(760 / cabecera.length)
-  const celda = (t) => `    <SNTableCell alignment="Left" columnWidth={${ancho}}>\n      ${t}\n    </SNTableCell>`
-  const fila = (cs) => `  <SNTableRow>\n${cs.map(celda).join("\n")}\n  </SNTableRow>`
-  return `<SNTable showBorder highlightHeaderRow>\n${[cabecera, ...filas].map(fila).join("\n")}\n</SNTable>`
+  const colTipo = cabecera.findIndex(c => /^type$/i.test(c.trim()))
+  const anchoBase = Math.floor(760 / cabecera.length)
+
+  /**
+   * ⚠️ Dentro de una celda, la imagen va en su PROPIO párrafo: texto, línea en
+   * blanco, imagen. En la misma línea que el texto —antes o después— el
+   * validador la rechaza con «accepts text and <SNImage>, not <SNImage>».
+   * Y `caption` dentro de una celda también la rechaza.
+   */
+  const textoConIcono = (texto, icono) => {
+    const rid = idDelRecurso(icono?.url)
+    if (!rid) return texto
+    return `${texto}\n\n      <SNImage alignment="Left" resourceId="${rid}" />`
+  }
+
+  const celda = (t, c, esCabecera) => {
+    let contenido = t, ancho = anchoBase
+    // La columna `Type` dice "Instance"; se publica como el icono de la plantilla.
+    if (!esCabecera && c === colTipo) {
+      const ic = ICONOS[(t ?? "").trim().toLowerCase()]
+      // ⚠️ Una celda NO acepta solo una imagen: el validador pide texto además.
+      // Así que el icono acompaña al nombre del tipo en vez de sustituirlo.
+      if (ic) { contenido = textoConIcono(t, ic); ancho = 96 }
+    }
+    // Los prefijos ├ └ del .md marcan anidamiento: se publican como el icono
+    // de jerarquía, que es lo que la plantilla usa para leerlo de un vistazo.
+    if (!esCabecera && /^[├└]/.test((t ?? "").trim())) {
+      contenido = textoConIcono(t.replace(/^[├└]\s*/, ""), ICONOS.jerarquia)
+    }
+    // ⚠️ Una celda que empieza por `#` la lee Markdown como encabezado y la
+    // rechaza. Se escapa: es el caso de la columna `#` de la anatomía.
+    const seguro = String(contenido).replace(/^(#+)(\s|$)/, "\\$1$2")
+    return `    <SNTableCell alignment="Left" columnWidth={${ancho}}>\n      ${seguro}\n    </SNTableCell>`
+  }
+
+  const fila = (cs, esCabecera) => `  <SNTableRow>\n${cs.map((t, c) => celda(t, c, esCabecera)).join("\n")}\n  </SNTableRow>`
+  return `<SNTable showBorder highlightHeaderRow>\n${fila(cabecera, true)}\n${filas.map(f => fila(f, false)).join("\n")}\n</SNTable>`
 }
 
 /** Un par Do/Don't/Caution. Los valores válidos son minúsculas: do · dont · caution. */
@@ -306,6 +358,14 @@ const main = async () => {
   const ref  = { designSystemId: DS, versionId: version.id, workspaceId: WS }
   const refW = { designSystemId: DS, versionId: version.id }
   const nombres = Object.keys(TABS)
+
+  if (process.argv.includes("--dump")) {
+    const dir = path.join(AQUI, "salida", "button-tabs")
+    fs.mkdirSync(dir, { recursive: true })
+    for (const n of nombres) fs.writeFileSync(path.join(dir, `${n}.mdx`), TABS[n])
+    console.log("volcado en salida/button-tabs/")
+    return
+  }
 
   // Validar TODO antes de crear nada.
   let ok = true

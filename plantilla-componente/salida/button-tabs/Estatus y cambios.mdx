@@ -1,0 +1,33 @@
+# Lifecycle
+
+**Transitional.** El componente está documentado y en uso, pero su escala dimensional va a cambiar: las alturas pasan de 37 · 45 · 53 a **48 · 56 · 64**, con texto e icono escalando en paralelo.
+
+<SNCallout variant="Warning">
+**La especificación de medidas de esta página describe la escala anterior.** El cambio está decidido pero no aplicado en Figma. Hasta entonces, las medidas publicadas son las vigentes.
+</SNCallout>
+
+## Component health
+
+<SNBlock packageId="io.supernova.block.component-health">
+  <SNItem>
+    <SNProp name="components" value={[{ entityId: "d4f71d86-4a9b-4535-949d-0b3aadd0818f", entityType: "Component" }]} />
+  </SNItem>
+</SNBlock>
+
+## Definition of done
+
+<SNBlock packageId="io.supernova.block.component-checklist">
+  <SNItem>
+    <SNProp name="components" value={[{ entityId: "d4f71d86-4a9b-4535-949d-0b3aadd0818f", entityType: "Component" }]} />
+  </SNItem>
+</SNBlock>
+
+## Changelog
+
+- **21 ago 2026** — corregidas las seis variantes `secondary` + `pressed`: el texto y el icono pasan a las variantes **Static**. En Dark el texto caía a 3.29:1.
+- **20 ago 2026** — `text/disabled` pasa a `neutral/600` en Light y `neutral/700` en Dark. El contraste sobre `background/disabled` sube de 1.74:1 a 4.50 y 4.89.
+- **20 ago 2026** — paddings alineados a la escala `space`: s 8/16 · m 12/16 · l 16/24.
+
+## Deprecation y migration
+
+*No aplica: el componente está activo.*

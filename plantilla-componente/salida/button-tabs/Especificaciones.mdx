@@ -1,0 +1,590 @@
+# Especificaciones
+
+Lo que sigue lo genera uSpec desde Figma. **Se regenera, no se edita a mano**: cada preview y cada medida salen del componente real.
+
+## Anatomía
+
+<SNImage alignment="Left" resourceId="1d7427c8-5009-4907-b432-65aecc1d00c1" caption="Los cuatro elementos, numerados" />
+
+**La numeración es un contrato:** los marcadores del frame y las filas de esta tabla son la misma lista.
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      #
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Type
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Element
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Notes
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      1
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={96}>
+      Frame
+
+      <SNImage alignment="Left" resourceId="e86ab5cc-6178-4d4c-9362-833a216ce545" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Button
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Contenedor raíz. Fondo tokenizado, radio 8 y sombra; fija el padding por `size` y la separación entre elementos.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      2
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={96}>
+      Instance
+
+      <SNImage alignment="Left" resourceId="828caadb-63c0-4778-9099-8b9e9c615ced" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      iconLeft
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Icono opcional antes del texto. Instancia de `ArrowRight` (Phosphor). Lo revela `showIconLeft`; oculto por defecto.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      3
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={96}>
+      Text
+
+      <SNImage alignment="Left" resourceId="72d4b7ba-1efa-4002-893f-409d318c63c6" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      labelBox
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      El texto de la acción. Siempre visible — es el único elemento obligatorio.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      4
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={96}>
+      Instance
+
+      <SNImage alignment="Left" resourceId="828caadb-63c0-4778-9099-8b9e9c615ced" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      iconRight
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Icono opcional después del texto. Instancia de `ArrowRight` (Phosphor). Lo revela `showIconRight`; oculto por defecto.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+## Medidas
+
+### Por tamaño
+
+<SNImage alignment="Left" resourceId="3dd6d4dd-7ee6-4b56-a6f7-3172d8790be7" />
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Spec
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      L
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      M
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      S
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Notes
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Container
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Raíz del componente: auto-layout horizontal, centrado en ambos ejes.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      verticalPadding
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/l (16)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/m (12)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/s (8)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Progresión corregida el 20 ago 2026: 16/12/8, toda dentro de la escala space. Es el único par que escala con size.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      horizontalPadding
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/xl (24)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/l (16)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/l (16)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      m y s comparten space/l (16); solo l sube a space/xl (24). Antes había 18 y 10 crudos, fuera de escala.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      itemSpacing
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/zero (0)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/zero (0)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/zero (0)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      El gap real entre icono y label no vive aquí: lo produce el horizontalPadding de labelBox (8).
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      cornerRadius
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      12
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      8
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      8
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Valor crudo, sin token: es la única familia dimensional sin tokenizar. También depende de surface (ver Button surface).
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      widthMode
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      hug
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      hug
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      hug
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Ancho gobernado por el contenido; no hay minWidth ni maxWidth definidos.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      heightMode
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      hug
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      hug
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      hug
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Altura derivada del padding vertical más la línea de 21: resulta 53 / 45 / 37. Ninguna llega a 44, el mínimo táctil de WCAG 2.5.8.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Content
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Wrapper de layout que agrupa iconLeft, labelBox e iconRight.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      padding
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Sin inset propio: el respiro lo pone el contenedor raíz.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      itemSpacing
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Sin gap propio; la separación la aporta el padding de labelBox.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Label box
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Caja que envuelve al texto y define su separación de los iconos.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      verticalPadding
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Cero deliberado: la altura de la caja la fija la línea del texto (21).
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      horizontalPadding
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/s (8)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/s (8)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      space/s (8)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Constante en los tres tamaños. Es el gap efectivo icono↔label, y no escala con size.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      cornerRadius
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      12
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      12
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      12
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Anomalía: labelBox no pinta relleno ni borde, así que este radio no tiene efecto visual. Candidato a limpieza.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Label
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Nodo de texto del botón; su contenido lo aporta la propiedad label.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      textStyle
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Text/M - Poppins/Regular
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Text/M - Poppins/Regular
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Text/M - Poppins/Regular
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      HUECO ABIERTO: size no escala la tipografía. Los tres tamaños usan el mismo estilo (14/21, letterSpacing 0.2). No es una decisión documentada.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Icon left
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Instancia opcional, gobernada por showIconLeft (default false).
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      iconName
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      ArrowRight
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      ArrowRight
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      ArrowRight
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Set de Phosphor. La instancia embebida trae Weight=Fill, no el Weight=Regular declarado como defecto: divergencia a revisar.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      iconSize
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      20
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      16
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      16
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Único elemento además del padding que reacciona a size: 20 en l, 16 en m y s.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Icon right
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Instancia opcional, gobernada por showIconRight (default false).
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      iconName
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      ArrowRight
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      ArrowRight
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      ArrowRight
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Mismo set y mismo defecto que iconLeft; el par es simétrico.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      iconSize
+
+      <SNImage alignment="Left" resourceId="460b16bc-7ea5-4982-8f6e-d9b372a554d1" />
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      20
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      16
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      16
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={152}>
+      Idéntico a iconLeft en los tres tamaños.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+### Por superficie
+
+<SNImage alignment="Left" resourceId="da9f6be7-054f-4c7c-98e4-faf9d1c81f2d" caption="product y marketing: cambian radio, peso tipográfico y escalón de sombra" />
+
+### Por estado
+
+<SNImage alignment="Left" resourceId="60e9e5ca-a029-4892-b990-1ad108307367" caption="default, hover, pressed, focus y disabled" />
+
+## Propiedades
+
+<SNBlock packageId="io.supernova.block.storybook" variantId="playground">
+  <SNItem>
+    <SNProp name="embed" value={[{ entityId: "681057" }]} />
+  </SNItem>
+</SNBlock>
+
+## Color
+
+El contraste lo calcula Supernova sobre los tokens vivos: **no hay ratios escritos a mano que puedan caducar.**
+
+<SNBlock packageId="io.supernova.block.color-accessibility-grid">
+  <SNItem>
+    <SNProp name="tokens" value={[{"entityId":"1bac692a-a1db-4d29-83b0-2aa1baf91a90","entityType":"Token"},{"entityId":"acaeb789-8a31-4905-bd7b-ecf941fa503e","entityType":"Token"},{"entityId":"90bbc464-5d3d-40cf-b249-91855080b3f2","entityType":"Token"},{"entityId":"31522e29-17dc-4834-8907-bcbd636f8b37","entityType":"Token"},{"entityId":"f78cfabe-4395-4449-872d-178b218e4e5f","entityType":"Token"},{"entityId":"99e42f9d-dff8-4e08-8821-5826555187c0","entityType":"Token"}]} />
+  </SNItem>
+</SNBlock>
+
+### Cómo resuelve en cada mode
+
+<SNImage alignment="Left" resourceId="4c4d801e-7df7-4588-9c9e-b33a3fa0b6d4" caption="Primary · Product · Light" />
+
+<SNImage alignment="Left" resourceId="5e2b3d9c-6dcb-4601-92f5-6d5effc65f33" caption="Primary · Product · Dark" />
+
+*Las ocho combinaciones completas —variant × surface × mode— están en la especificación del repo.*
+
+### Los tokens del componente
+
+<SNBlock packageId="io.supernova.block.design-tokens">
+  <SNItem>
+    <SNProp name="tokens" value={[{"entityId":"1bac692a-a1db-4d29-83b0-2aa1baf91a90","entityType":"Token"},{"entityId":"acaeb789-8a31-4905-bd7b-ecf941fa503e","entityType":"Token"},{"entityId":"90bbc464-5d3d-40cf-b249-91855080b3f2","entityType":"Token"},{"entityId":"26470139-ca4c-46b3-b43b-2470dd46150e","entityType":"Token"},{"entityId":"31522e29-17dc-4834-8907-bcbd636f8b37","entityType":"Token"},{"entityId":"f78cfabe-4395-4449-872d-178b218e4e5f","entityType":"Token"},{"entityId":"99e42f9d-dff8-4e08-8821-5826555187c0","entityType":"Token"},{"entityId":"f599268b-9b7d-4a71-81c0-87d356b0a135","entityType":"Token"},{"entityId":"2b398217-d7bf-4003-b58d-e62ecfcea85c","entityType":"Token"},{"entityId":"0a5bbb04-57c6-47c0-8d34-51d11032852a","entityType":"Token"},{"entityId":"4fb6c585-e162-4a7c-81df-9e9c752e49a4","entityType":"Token"},{"entityId":"59790516-5bfd-413f-9a1f-e3f87cb7d50d","entityType":"Token"},{"entityId":"178b347a-c917-46e2-9f6d-4635ddcb7237","entityType":"Token"},{"entityId":"1f292c74-b27d-4d6e-a890-1a090c0d7d67","entityType":"Token"},{"entityId":"1994004d-e599-4751-9095-2f8616c1f915","entityType":"Token"},{"entityId":"2e4ae5bf-dc92-4808-9a42-d7e4a894a787","entityType":"Token"}]} />
+  </SNItem>
+</SNBlock>
+
+<SNCallout variant="Warning">
+**Un token que invierte con el mode no puede ir sobre un fondo que no invierte.** `background/selected` resuelve `#315fa3` en Light y en Dark —es azul de marca, no depende del lienzo—, así que el texto y el icono sobre él usan las variantes **Static**. Antes heredaban las normales: en Light casaba por casualidad y en Dark el texto caía a 3.29:1.
+</SNCallout>
+
+## Accesibilidad
+
+- **Área táctil:** las alturas actuales son 37 · 45 · 53. Cumplen el mínimo AA de 24 px (WCAG 2.5.8); **`size=s` no alcanza los 44 de AAA**. La escala nueva —48 · 56 · 64— lo resuelve en los tres.
+- **Foco:** `border/focus` da **4.80:1 en Light y 4.07:1 en Dark** contra el lienzo, por encima del 3:1 que exige WCAG 1.4.11.
+- **Contraste:** el umbral es 4.5:1 en los tres tamaños — 12, 14 y 16 px son «texto normal» para WCAG.
+- **Teclado:** activable con Enter y Space. El atributo `disabled` nativo lo saca del orden de tabulación.
+- **Lector de pantalla:** el nombre accesible sale del `textContent`; los SVG van con `aria-hidden="true"` y `focusable="false"`.
+- *Reduced motion: pendiente, junto con la especificación de movimiento.*
+
+## Ejemplos
+
+<SNImage alignment="Left" resourceId="8fb5c969-035a-41bc-a974-9a64e80611ca" caption="Acción principal" />
+
+<SNImage alignment="Left" resourceId="accf8530-2b33-47f7-8aa6-6682b5530b7a" caption="Secundario con icono final" />
+
+<SNImage alignment="Left" resourceId="62f9b38b-41d6-483c-bd50-6687d450a816" caption="Deshabilitado" />
+
+## Foundations relacionadas
+
+- **Color** — la colección `semanticColors` y sus dos modes
+- **Espaciado** — la escala `space`, de la que salen todos los paddings
