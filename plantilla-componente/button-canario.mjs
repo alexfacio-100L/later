@@ -52,8 +52,8 @@ const ICONOS = JSON.parse(fs.readFileSync(
 const preview = (seccion, pie) => {
   const f = FRAMES[seccion]
   if (!f) return `*Falta el preview de ${seccion}.*`
-  const rid = idDelRecurso(f.url)
-  if (!rid) return `*El preview de ${seccion} no tiene URL registrada.*`
+  const rid = idDelRecurso(f)
+  if (!rid) return `*El preview de ${seccion} no tiene recurso registrado.*`
   return `<SNImage alignment="Left" resourceId="${rid}"${pie ? ` caption="${pie}"` : ""} />`
 }
 const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
@@ -89,8 +89,14 @@ const tablaDelMd = (encabezado) => {
 const token = (ruta) => ({ entityId: TK[ruta], entityType: "Token" })
 const tokens = (...rutas) => JSON.stringify(rutas.map(token))
 
-/** El id del recurso vive dentro de la URL del asset. NO es el assetId. */
-const idDelRecurso = (url) => (url ?? "").split("/").pop()?.replace(/\.[a-z]+$/i, "")
+/**
+ * El id del recurso ES el `assetId` del registro.
+ *
+ * ⚠️ El id que aparece dentro de la URL del asset NO existe como recurso: es
+ * solo el nombre del archivo en el almacén. Apuntar ahí publica un bloque que
+ * valida, se guarda, y no muestra nada. Verificado contra `getAssetResources`.
+ */
+const idDelRecurso = (registro) => registro?.assetId
 
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
 export const tabla = (cabecera, filas) => {
@@ -104,7 +110,7 @@ export const tabla = (cabecera, filas) => {
    * Y `caption` dentro de una celda también la rechaza.
    */
   const textoConIcono = (texto, icono) => {
-    const rid = idDelRecurso(icono?.url)
+    const rid = idDelRecurso(icono)
     if (!rid) return texto
     return `${texto}\n\n      <SNImage alignment="Left" resourceId="${rid}" />`
   }
