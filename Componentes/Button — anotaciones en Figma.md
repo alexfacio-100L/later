@@ -34,7 +34,11 @@
 
 **Lo que se conserva en inglés a propósito:** los encabezados de columna, los identificadores (`isDisabled`, `size`, `variant`) y los nombres de las propias anotaciones (*Screen reader*, *Notes*). La prosa es española; el vocabulario del sistema no se traduce.
 
-⚠️ **Defecto de la plantilla `Screen reader`, no de este render.** En la plantilla de la librería, el fondo de `#state-table` es blanco y el texto de `#header-row` está ligado a `text/primaryInverse` (#F9F9F9): **la fila del anuncio sale casi invisible.** Está igual en el componente sin tocar, así que se repetirá en toda anotación de voz futura. Se arregla en la plantilla —religando la variable— y re-renderizando; no se corrigió aquí porque implicaría pintar un nodo de texto a mano.
+🟢 **El defecto de contraste de la plantilla `Screen reader` está CORREGIDO.** *Verificado contra Figma el 26 ago 2026 en el nodo `12214:6577`:* `#header-row` tiene fondo **`background/subtle` (#e9e9e9)** y texto **`text/secondaryInverseStatic` (negro)**. Se lee sin problema.
+
+⚠️ **Este párrafo decía lo contrario hasta el 26 de agosto**, y contradecía a `ENCARGOS-DE-RENDER.md`, que registraba la corrección el 18 ago. *La contradicción llegó a costar trabajo: un dictamen la leyó, la dio por vigente, y estuvo a punto de hacer que se tocara el componente maestro de la librería para arreglar algo que ya estaba bien.*
+
+**La causa del defecto original, que sigue siendo doctrina útil:** se aplicó a `#header-row` la regla de `#header` **por parecido de nombre**. No son padre e hijo: `#header-row` no tiene fondo oscuro debajo, hereda el de `#state-table`. *Antes de aplicar una regla de color a una capa, hay que mirar qué hay debajo del nodo, no cómo se llama.*
 
 ⚠️ **Ninguna anotación cubre el modo oscuro.** Las previsualizaciones están fijadas en Light por una limitación del pipeline. La especificación **sí** trae los dos valores de cada token (`#Light · #Dark`), así que **para color en oscuro hay que ir al `.md`, no a Figma.**
 
