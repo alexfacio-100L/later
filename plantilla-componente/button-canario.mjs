@@ -49,12 +49,18 @@ const ICONOS = JSON.parse(fs.readFileSync(
  * `"url": ""` y la imagen no carga — y valida igual de bien, porque el
  * validador comprueba la forma del valor, no que el recurso exista.
  */
+/**
+ * 🔴 La imagen se referencia por URL con Markdown normal, NO con `<SNImage>`.
+ *
+ * `<SNImage resourceId="...">` valida, se guarda, y NO SE VE. Comprobado el 26
+ * ago 2026 publicando las tres formas juntas en la misma página: solo renderiza
+ * `![alt](url)`. El `resourceId` es correcto y el recurso existe — simplemente
+ * ese bloque no pinta nada.
+ */
 const preview = (seccion, pie) => {
   const f = FRAMES[seccion]
-  if (!f) return `*Falta el preview de ${seccion}.*`
-  const rid = idDelRecurso(f)
-  if (!rid) return `*El preview de ${seccion} no tiene recurso registrado.*`
-  return `<SNImage alignment="Left" resourceId="${rid}"${pie ? ` caption="${pie}"` : ""} />`
+  if (!f?.url) return `*Falta el preview de ${seccion}.*`
+  return `![${pie ?? seccion}](${f.url})`
 }
 const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
 /** `example-button--primary`. Simula que desarrollo ya consumió la spec. */
@@ -109,11 +115,16 @@ export const tabla = (cabecera, filas) => {
    * validador la rechaza con «accepts text and <SNImage>, not <SNImage>».
    * Y `caption` dentro de una celda también la rechaza.
    */
-  const textoConIcono = (texto, icono) => {
-    const rid = idDelRecurso(icono)
-    if (!rid) return texto
-    return `${texto}\n\n      <SNImage alignment="Left" resourceId="${rid}" />`
-  }
+  /**
+   * 🔴 Los iconos dentro de celdas NO son posibles hoy, y es un callejón cerrado:
+   * una celda solo acepta `<SNImage>` —rechaza la imagen Markdown— y `<SNImage>`
+   * valida pero no renderiza. No hay tercera forma.
+   *
+   * Así que la columna `Type` y los prefijos de jerarquía se quedan en texto.
+   * Se pierde el icono, no el dato. Cuando el bloque de imagen funcione dentro
+   * de celdas, esto vuelve en una línea.
+   */
+  const textoConIcono = (texto) => texto
 
   const celda = (t, c, esCabecera) => {
     let contenido = t, ancho = anchoBase
@@ -122,12 +133,12 @@ export const tabla = (cabecera, filas) => {
       const ic = ICONOS[(t ?? "").trim().toLowerCase()]
       // ⚠️ Una celda NO acepta solo una imagen: el validador pide texto además.
       // Así que el icono acompaña al nombre del tipo en vez de sustituirlo.
-      if (ic) { contenido = textoConIcono(t, ic); ancho = 96 }
+      if (ic) { contenido = t; ancho = 96 }
     }
     // Los prefijos ├ └ del .md marcan anidamiento: se publican como el icono
     // de jerarquía, que es lo que la plantilla usa para leerlo de un vistazo.
     if (!esCabecera && /^[├└]/.test((t ?? "").trim())) {
-      contenido = textoConIcono(t.replace(/^[├└]\s*/, ""), ICONOS.jerarquia)
+      contenido = `└ ${t.replace(/^[├└]\s*/, "")}`
     }
     // ⚠️ Una celda que empieza por `#` la lee Markdown como encabezado y la
     // rechaza. Se escapa: es el caso de la columna `#` de la anatomía.
