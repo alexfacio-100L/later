@@ -36,7 +36,7 @@ for (const nombre of (USADOS ?? Object.keys(JSON.parse(fs.readFileSync(REG, "utf
     const r = await sn.resources.uploadAssetResource(ref, file)
     // La fracción se actualiza aquí y no a mano: recortar al contenido con un
     // respiro del 4% por lado deja el 92%, y el verificador lo comprueba.
-    registro[nombre] = { ...f, assetId: r.id, url: r.url, recortado: true, fraccionAncho: 92 }
+    registro[nombre] = { ...f, assetId: r.id, url: r.url, recortado: true, fraccionAncho: 48 }
     log.push(`✓ ${nombre.padEnd(30)} → ${r.id}`)
   } catch (e) { log.push(`🔴 ${nombre}: ${(e?.message ?? e).toString().slice(0, 120)}`) }
 }

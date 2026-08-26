@@ -22,19 +22,19 @@ import { readFileSync, existsSync, statSync } from "node:fs"
 //   contenido / ancho = 71%  →  gigante
 //   contenido / ancho = 33%  →  correcto
 export const LIMITES = {
-  // 🔴 Recalibrado el 26 ago 2026, después de que el Lead viera los previews
-  // publicados y no se distinguieran.
+  // 🔴 Vuelto a 25–55% el 26 ago 2026, después de recalibrarlo mal ese mismo día.
   //
-  // El rango anterior era 25–55% y daba por BUENO el 50%, que es exactamente lo
-  // que tenían los veinte frames. El criterio estaba invertido: se pensó como
-  // «cuánto ocupa el dibujo dentro del frame de Figma», cuando lo que decide es
-  // «cuánto de la imagen subida es contenido». Supernova escala al ancho de la
-  // columna, así que la mitad de margen se come la mitad del espacio.
+  // Supernova escala la imagen al ancho de la columna (~760 px), así que el
+  // tamaño APARENTE del contenido es `760 × fracción`. No es «cuanto menos
+  // margen, mejor»: al 92% el botón se ve a ~700 px y resulta enorme.
   //
-  // Tras recortar al contenido con un respiro del 4%, la fracción real ronda el
-  // 92%. Por debajo de 70% sobra margen y hay que recortar.
-  fraccionAnchoMin: 70,  // % del ancho de la IMAGEN que es contenido
-  fraccionAnchoMax: 100,
+  //     48%  →  ~365 px  ✓
+  //     92%  →  ~700 px  enorme
+  //
+  // El rango original era correcto. Se subió a 70–100% razonando que el margen
+  // sobraba, sin comprobar cómo se veía el resultado.
+  fraccionAnchoMin: 25,
+  fraccionAnchoMax: 55,
   ladoMaximo: 4096,      // px — por encima, la imagen pesa sin aportar
   ladoMinimo: 120,       // px — por debajo, se pixela al ampliarla
   // Una imagen muy apaisada encoge de ALTO al escalarla al ancho de la columna,
@@ -60,9 +60,9 @@ export function verificar(registro, baseUrl) {
     if (fr === null) {
       fila.problemas.push("sin medir — falta `fraccionAncho` en el registro")
     } else if (fr < LIMITES.fraccionAnchoMin) {
-      fila.problemas.push(`solo el ${fr}% de la imagen es contenido (mínimo ${LIMITES.fraccionAnchoMin}%) — sobra margen, hay que recortar`)
+      fila.problemas.push(`el contenido ocupa el ${fr}% del ancho (mínimo ${LIMITES.fraccionAnchoMin}%) — se verá diminuto`)
     } else if (fr > LIMITES.fraccionAnchoMax) {
-      fila.problemas.push(`fracción imposible: ${fr}% (máximo ${LIMITES.fraccionAnchoMax}%)`)
+      fila.problemas.push(`el contenido ocupa el ${fr}% del ancho (máximo ${LIMITES.fraccionAnchoMax}%) — se verá enorme`)
     }
 
     const ruta = meta.archivo ? new URL(meta.archivo, baseUrl) : null
