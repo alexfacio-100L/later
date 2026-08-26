@@ -20,6 +20,76 @@
 
 El eje `state` de Figma se descompone: solo `disabled` llega a la API.
 
+<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={170.82}>
+      Figma
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={275.39}>
+      API
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={313.79}>
+      Runtime condition
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={170.82}>
+      `default`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={275.39}>
+      `isDisabled` = `false`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={313.79}>
+      enabled
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={170.82}>
+      `disabled`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={275.39}>
+      `isDisabled` = `true`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={313.79}>
+      isDisabled === true
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={170.82}>
+      `hover`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={275.39}>
+      `isDisabled` = `false`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={313.79}>
+      hovered (lo dibuja la plataforma)
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={170.82}>
+      `focus`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={275.39}>
+      `isDisabled` = `false`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={313.79}>
+      focused (lo dibuja la plataforma)
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={170.82}>
+      `pressed`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={275.39}>
+      `isDisabled` = `false`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={313.79}>
+      pressed (lo dibuja la plataforma)
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+
 ### Componentes referenciados
 
 - **ArrowRight** — ranura `iconLeft / iconRight` · configuración `Format=Outline, Weight=Fill` · nodo `12376:86676`

@@ -2,19 +2,44 @@
   "slug": "button",
   "titulo": "Button",
   "fuente": "Componentes/button.md",
-  "paginaSupernova": "40750051",
   "unaFrase": "Ejecuta una acción. Lo que navega es un Link.",
   "estado": "Transitional",
-  "sinonimos": ["Action", "Call to action", "CTA"],
+  "sinonimos": [
+    "Action",
+    "Call to action",
+    "CTA"
+  ],
   "paridad": [
-    { "plataforma": "Bricks UI",   "estado": "Pendiente", "enlace": "" },
-    { "plataforma": "Web Next",    "estado": "Pendiente", "enlace": "" },
-    { "plataforma": "Web Astro",   "estado": "Pendiente", "enlace": "" },
-    { "plataforma": "Mobile Expo", "estado": "Pendiente", "enlace": "" }
+    {
+      "plataforma": "Bricks UI",
+      "estado": "Pendiente",
+      "enlace": ""
+    },
+    {
+      "plataforma": "Web Next",
+      "estado": "Pendiente",
+      "enlace": ""
+    },
+    {
+      "plataforma": "Web Astro",
+      "estado": "Pendiente",
+      "enlace": ""
+    },
+    {
+      "plataforma": "Mobile Expo",
+      "estado": "Pendiente",
+      "enlace": ""
+    }
   ],
   "entidades": {
     "componenteFigma": "9570b904-18a9-4d4c-bb40-af53e6cff62c",
     "componenteCanonico": "d4f71d86-4a9b-4535-949d-0b3aadd0818f",
     "historiaStorybook": null
+  },
+  "grupoPestanas": "561d3e6e-c1fb-47b6-871e-b3a1b84d6d68",
+  "paginas": {
+    "1-uso": "40847088",
+    "2-especificacion": "40750051",
+    "3-codigo": "40847087"
   }
 }

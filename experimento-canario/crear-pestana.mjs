@@ -5,10 +5,12 @@ const key = fs.readFileSync("/Users/alexfacio/Proyectos/Later2.0/later-brand-sys
 const sn = new Supernova(key)
 const v = await sn.versions.getActiveVersion("825551")
 const ref = { designSystemId:"825551", versionId:v.id, workspaceId:"767109" }
-const items = await sn.documentation.getDocumentationStructure(ref)
-const log = [`elementos: ${items.length}`]
-for (const i of items) {
-  const esGrupo = Array.isArray(i.childrenIds ?? i.children)
-  log.push(`${esGrupo?"GRUPO":"pag  "}  ${(i.title??i.name??"?").padEnd(24)} id=${String(i.id).padEnd(10)} pid=${i.persistentId ?? "-"}`)
-}
-fs.writeFileSync(process.argv[2], log.join("\n"))
+const BUTTON_PID = process.argv[3] ?? "249d3b24-ca1f-4e1b-b27d-cd97f391d492"
+const nombre = process.argv[2]
+try {
+  const r = await sn.documentation.createDocumentationTab(ref, {
+    fromItemPersistentId: BUTTON_PID,
+    tabName: nombre,
+  })
+  console.log("OK creada:", JSON.stringify(r).slice(0,200))
+} catch(e){ console.log("ERR:", (e?.message ?? String(e)).slice(0,300)) }

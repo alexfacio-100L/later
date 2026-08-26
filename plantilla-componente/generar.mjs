@@ -143,9 +143,31 @@ const tablaDePropiedades = ({ componenteFigma, historiaStorybook }) => {
 </SNBlock>`
 }
 
-/** Quita de `## API` su tabla: la tabla se genera, el contrato se queda. */
-const contratoSinTabla = (cuerpo) =>
-  cuerpo.split("\n").filter(l => !/^\s*\|/.test(l)).join("\n").replace(/\n{3,}/g, "\n\n").trim()
+/**
+ * Quita de `## API` SOLO la tabla de propiedades: esa se genera del componente.
+ *
+ * ⚠️ Quitar toda línea que empiece por `|` se lleva por delante las tablas de
+ * ejemplos y deja encabezados huérfanos — válido en sintaxis, roto en contenido.
+ * Por eso se identifica la tabla por su cabecera y se elimina solo ese bloque.
+ */
+const contratoSinTabla = (cuerpo) => {
+  const lineas = cuerpo.split("\n")
+  const salida = []
+  let dentroDeLaTablaDeProps = false
+  for (const l of lineas) {
+    const esFila = /^\s*\|/.test(l)
+    if (esFila && !dentroDeLaTablaDeProps && /\|\s*Property\s*\|/i.test(l)) {
+      dentroDeLaTablaDeProps = true
+      continue
+    }
+    if (dentroDeLaTablaDeProps) {
+      if (esFila) continue
+      dentroDeLaTablaDeProps = false
+    }
+    salida.push(l)
+  }
+  return salida.join("\n").replace(/\n{3,}/g, "\n\n").trim()
+}
 
 /* ── Las tres pestañas ───────────────────────────────────────────────────── */
 
@@ -273,9 +295,20 @@ const main = async () => {
   if (!publicar) { console.log("\nValidado. Nada se escribió."); return }
 
   // 🔴 writeMarkdownToPage REEMPLAZA la página entera, y cada pestaña es una
-  // página hermana: son tantas escrituras como pestañas, no una.
-  console.log("\n⚠️ Publicar exige que las páginas de las pestañas existan y estén en config.")
-  console.log("   Cada pestaña se escribe por separado con su propio pageId.")
+  // página hermana: son tantas escrituras como pestañas, no una. Republicar una
+  // pestaña no toca las otras dos, que es justo lo que se quiere.
+  if (!cfg.paginas) {
+    console.error("🔴 Falta `paginas` en el config: un pageId por pestaña.")
+    process.exit(1)
+  }
+  console.log("")
+  for (const [nombre, contenido] of Object.entries(pestanas)) {
+    const pageId = cfg.paginas[nombre]
+    if (!pageId) { console.error(`  🔴 ${nombre}: sin pageId en config`); continue }
+    const r = await sn.import.writeMarkdownToPage(ref, pageId, contenido)
+    const bloques = r?.blockCount ?? r?.blocks?.length ?? "?"
+    console.log(`  ✓ ${nombre} → página ${pageId} · ${bloques} bloques`)
+  }
 }
 
 main().catch(e => { console.error("🔴 " + (e?.message ?? e)); process.exit(1) })
