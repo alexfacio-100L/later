@@ -9,7 +9,7 @@
  *   node verificar-previews.mjs          → informa y falla si algo no cumple
  *   node verificar-previews.mjs --forzar → informa pero deja pasar
  *
- * Cada entrada de frames-subidos.json debe traer `ocupacion` (el % del wrapper
+ * Cada entrada de frames-subidos.json debe traer `fraccionAncho` (el % del ancho
  * que ocupa el contenido dibujado, medido en Figma al recortar). Sin ese dato
  * el preview cuenta como NO verificado: la ausencia de medida no es aprobado.
  */
@@ -22,8 +22,19 @@ import { readFileSync, existsSync, statSync } from "node:fs"
 //   contenido / ancho = 71%  →  gigante
 //   contenido / ancho = 33%  →  correcto
 export const LIMITES = {
-  fraccionAnchoMin: 25,  // % del ancho ocupado por el contenido
-  fraccionAnchoMax: 55,  // por encima, la imagen se amplia y el trazo se ve tosco
+  // 🔴 Recalibrado el 26 ago 2026, después de que el Lead viera los previews
+  // publicados y no se distinguieran.
+  //
+  // El rango anterior era 25–55% y daba por BUENO el 50%, que es exactamente lo
+  // que tenían los veinte frames. El criterio estaba invertido: se pensó como
+  // «cuánto ocupa el dibujo dentro del frame de Figma», cuando lo que decide es
+  // «cuánto de la imagen subida es contenido». Supernova escala al ancho de la
+  // columna, así que la mitad de margen se come la mitad del espacio.
+  //
+  // Tras recortar al contenido con un respiro del 4%, la fracción real ronda el
+  // 92%. Por debajo de 70% sobra margen y hay que recortar.
+  fraccionAnchoMin: 70,  // % del ancho de la IMAGEN que es contenido
+  fraccionAnchoMax: 100,
   ladoMaximo: 4096,      // px — por encima, la imagen pesa sin aportar
   ladoMinimo: 120,       // px — por debajo, se pixela al ampliarla
   // Una imagen muy apaisada encoge de ALTO al escalarla al ancho de la columna,
@@ -49,9 +60,9 @@ export function verificar(registro, baseUrl) {
     if (fr === null) {
       fila.problemas.push("sin medir — falta `fraccionAncho` en el registro")
     } else if (fr < LIMITES.fraccionAnchoMin) {
-      fila.problemas.push(`el contenido ocupa el ${fr}% del ancho (mínimo ${LIMITES.fraccionAnchoMin}%) — se verá diminuto`)
+      fila.problemas.push(`solo el ${fr}% de la imagen es contenido (mínimo ${LIMITES.fraccionAnchoMin}%) — sobra margen, hay que recortar`)
     } else if (fr > LIMITES.fraccionAnchoMax) {
-      fila.problemas.push(`el contenido ocupa el ${fr}% del ancho (máximo ${LIMITES.fraccionAnchoMax}%) — se verá desproporcionado`)
+      fila.problemas.push(`fracción imposible: ${fr}% (máximo ${LIMITES.fraccionAnchoMax}%)`)
     }
 
     const ruta = meta.archivo ? new URL(meta.archivo, baseUrl) : null

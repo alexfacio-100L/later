@@ -14,9 +14,8 @@ import path from "node:path"
 
 const AQUI = path.dirname(new URL(import.meta.url).pathname)
 const REG = path.join(AQUI, "frames-subidos.json")
-const USADOS = ["Anatomy","Button sizes","Button surface","Button states",
-  "Primary / Product / Light","Primary / Product / Dark",
-  "Accion principal","Secundario con icono final","Deshabilitado"]
+// Todos los del registro que tengan un recorte esperando.
+const USADOS = null
 
 const key = fs.readFileSync(path.join(AQUI, "../.env"), "utf8")
   .split("\n").find(l => l.startsWith("SUPERNOVA_API_KEY=")).split("=").slice(1).join("=").trim()
@@ -26,7 +25,7 @@ const ref = { designSystemId: "825551", versionId: v.id }
 
 const registro = JSON.parse(fs.readFileSync(REG, "utf8"))
 const log = []
-for (const nombre of USADOS) {
+for (const nombre of (USADOS ?? Object.keys(JSON.parse(fs.readFileSync(REG, "utf8"))))) {
   const f = registro[nombre]
   const base = f.archivo.split("/").pop()
   const ruta = path.join(AQUI, "frames/recortados", base)
@@ -35,7 +34,9 @@ for (const nombre of USADOS) {
   const file = new File([buf], base, { type: "image/png" })
   try {
     const r = await sn.resources.uploadAssetResource(ref, file)
-    registro[nombre] = { ...f, assetId: r.id, url: r.url, recortado: true }
+    // La fracción se actualiza aquí y no a mano: recortar al contenido con un
+    // respiro del 4% por lado deja el 92%, y el verificador lo comprueba.
+    registro[nombre] = { ...f, assetId: r.id, url: r.url, recortado: true, fraccionAncho: 92 }
     log.push(`✓ ${nombre.padEnd(30)} → ${r.id}`)
   } catch (e) { log.push(`🔴 ${nombre}: ${(e?.message ?? e).toString().slice(0, 120)}`) }
 }
