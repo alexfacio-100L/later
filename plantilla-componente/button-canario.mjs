@@ -1,0 +1,259 @@
+/**
+ * El experimento del Button canario: la plantilla maestra, poblada con bloques vivos.
+ *
+ * 🔴 La lección que lo motiva. La primera publicación se rechazó —«estaba
+ * revuelta»— porque se volcó el `.md` repartido en pestañas: `Especificación`
+ * quedó con 1739 líneas y 13 tablas. **El `.md` de uSpec es INSUMO, no la página.**
+ *
+ * Aquí el contenido se COLOCA en la sección que le corresponde, y donde existe un
+ * bloque vivo que hace el trabajo, se usa el bloque en vez de la tabla escrita:
+ * el contraste lo calcula `color-accessibility-grid`, los valores los muestra
+ * `design-tokens`, las props las genera el playground de Storybook.
+ *
+ * Lo que no cabe en una sección de la plantilla NO entra a la página. Se queda
+ * en el repo, que es donde vive la especificación completa.
+ */
+import pkg from "@supernovaio/sdk"
+const { Supernova } = pkg
+import fs from "node:fs"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
+const AQUI = path.dirname(fileURLToPath(import.meta.url))
+const RAIZ = path.dirname(AQUI)
+const DS = "825551", WS = "767109"
+const GRUPO_COMPONENTES = "074cc38b-fbf2-40b8-8802-d519fff8c76e"
+
+const TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/button-tokens.json"), "utf8"))
+const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
+/** `example-button--primary`. Simula que desarrollo ya consumió la spec. */
+const HISTORIA_BUTTON = "681057"
+
+const token = (ruta) => ({ entityId: TK[ruta], entityType: "Token" })
+const tokens = (...rutas) => JSON.stringify(rutas.map(token))
+
+/** Las pipe tables no se soportan: se emiten como <SNTable>. */
+const tabla = (cabecera, filas) => {
+  const ancho = Math.floor(760 / cabecera.length)
+  const celda = (t) => `    <SNTableCell alignment="Left" columnWidth={${ancho}}>\n      ${t}\n    </SNTableCell>`
+  const fila = (cs) => `  <SNTableRow>\n${cs.map(celda).join("\n")}\n  </SNTableRow>`
+  return `<SNTable showBorder highlightHeaderRow>\n${[cabecera, ...filas].map(fila).join("\n")}\n</SNTable>`
+}
+
+/** Un par Do/Don't/Caution. Los valores válidos son minúsculas: do · dont · caution. */
+const guia = (tipo, texto) => `<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
+  <SNItem>
+    <SNProp name="type" value="${tipo}" />
+    <SNProp name="description" value="${texto}" />
+  </SNItem>
+</SNBlock>`
+
+const TABS = {
+"Resumen general": `# Button
+
+Ejecuta una acción. Lo que navega es un Link.
+
+<SNCallout variant="Info">
+**Estado:** Transitional · **También llamado:** Action, Call to action, CTA
+</SNCallout>
+
+## Propósito
+
+Es el control de acción del sistema: **ejecuta, no navega**. Lo que navega es un \`Link\`, que nació al separar el antiguo valor \`tertiary\`.
+
+<SNCallout variant="Warning">
+La propiedad se llama \`variant\`, no \`type\`: \`type\` está reservado en HTML para el tipo de botón. El antiguo \`tertiary\` pasó a ser el componente Link y \`quaternary\` se eliminó.
+</SNCallout>
+
+## Información general
+
+- **Categoría:** Action
+- **Owner:** Product Design
+- **Plataformas:** Web (Bricks UI) · pendiente en Astro, Next y Expo
+- **Componentes relacionados:** Link · ArrowRight
+
+## Disponibilidad por plataforma
+
+${tabla(["Plataforma", "Estado", "Implementación"], [
+  ["Bricks UI", "En curso", "Storybook conectado"],
+  ["Web Next", "Pendiente", "—"],
+  ["Web Astro", "Pendiente", "—"],
+  ["Mobile Expo", "Pendiente", "—"],
+])}`,
+
+"Usos": `# Uso
+
+El Button ejecuta una acción en el lugar donde está. Si la interacción lleva a otra pantalla o a otra URL, el componente correcto es \`Link\`.
+
+## Cuándo usar
+
+${guia("do", "Para ejecutar una acción: guardar, enviar, confirmar, aplicar un filtro.")}
+
+${guia("do", "Usa primary para la acción principal de la pantalla, y solo una por vista.")}
+
+## Cuándo no usar
+
+${guia("dont", "No lo uses para navegar a otra pantalla o a una URL. Eso es un Link.")}
+
+${guia("dont", "No pongas dos botones primary compitiendo en la misma vista.")}
+
+## Consideraciones
+
+${guia("caution", "El estado deshabilitado apenas se distingue del lienzo en Light: 1.30:1. Antes de usarlo, considera un control habilitado que explique qué falta.")}
+
+## Variantes y jerarquía
+
+**\`variant\`** define la jerarquía visual: \`primary\` para la acción principal, \`secondary\` para las de apoyo.
+
+**\`surface\`** no es jerarquía, es dónde vive el botón: \`product\` cubre app, login y modales; \`marketing\` cubre landings y campañas. Determina el peso tipográfico y el escalón de sombra.
+
+## Comportamiento
+
+**Los estados de interacción —hover, pressed, focus— los dibuja la plataforma y no se configuran por API.** El eje \`state\` de Figma existe para los diseñadores.
+
+**El único estado que fija un ingeniero es \`isDisabled\`**, que bloquea la interacción y saca el control del orden de tabulación.
+
+\`showIconLeft\` y \`showIconRight\` son independientes: el botón puede mostrar ninguno, uno u otro, o los dos.
+
+## Content guidelines
+
+*Pendiente: cómo se redacta el label y qué pasa cuando no cabe. Es contenido que ninguna herramienta genera — ni Figma lo contiene ni el código lo declara.*
+
+## Responsive
+
+*Pendiente: cómo cambia entre breakpoints. La relación entre el eje \`size\` y el breakpoint es una decisión abierta.*
+
+## Internacionalización
+
+*Pendiente: expansión de texto y RTL. El español expande respecto al inglés y no hay regla de ancho máximo definida.*
+
+## Componentes relacionados
+
+- **Link** — para navegar
+- **ArrowRight** — el icono por defecto de ambas ranuras`,
+
+"Especificaciones": `# Especificaciones
+
+La especificación dimensional completa —medidas por \`size\`, \`surface\` y \`state\`— se mantiene en uSpec y se regenera desde Figma. Aquí vive lo que se consulta a diario.
+
+## Propiedades
+
+<SNBlock packageId="io.supernova.block.storybook" variantId="playground">
+  <SNItem>
+    <SNProp name="embed" value={[{ entityId: "${HISTORIA_BUTTON}" }]} />
+  </SNItem>
+</SNBlock>
+
+## Color
+
+El contraste lo calcula Supernova sobre los tokens vivos: no hay ratios escritos a mano que puedan caducar.
+
+<SNBlock packageId="io.supernova.block.color-accessibility-grid">
+  <SNItem>
+    <SNProp name="tokens" value={${tokens("background/brandMain","background/brandHover","background/brandPressed","background/selected","background/secondary","background/disabled")}} />
+  </SNItem>
+</SNBlock>
+
+### Los tokens del componente
+
+<SNBlock packageId="io.supernova.block.design-tokens">
+  <SNItem>
+    <SNProp name="tokens" value={${tokens("background/brandMain","background/brandHover","background/brandPressed","background/hover","background/selected","background/secondary","background/disabled","text/primaryInverse","text/primaryInverseStatic","text/secondary","text/disabled","icon/inverse","icon/inverseStatic","icon/disabled","border/focus","border/disabled")}} />
+  </SNItem>
+</SNBlock>
+
+<SNCallout variant="Warning">
+**Un token que invierte con el mode no puede ir sobre un fondo que no invierte.** \`background/selected\` resuelve \`#315fa3\` en Light y en Dark —es azul de marca, no depende del lienzo—, así que el texto y el icono sobre él usan las variantes **Static**. Antes heredaban las normales: en Light casaba por casualidad y en Dark el texto caía a 3.29:1.
+</SNCallout>
+
+## Accesibilidad
+
+- **Área táctil:** las alturas actuales son 37 · 45 · 53. Cumplen el mínimo AA de 24 px (WCAG 2.5.8); **\`size=s\` no alcanza los 44 de AAA**. La escala nueva —48 · 56 · 64— lo resuelve en los tres.
+- **Foco:** \`border/focus\` da **4.80:1 en Light y 4.07:1 en Dark** contra el lienzo, por encima del 3:1 que exige WCAG 1.4.11.
+- **Contraste:** el umbral es 4.5:1 en los tres tamaños — 12, 14 y 16 px son «texto normal» para WCAG.
+- **Teclado:** activable con Enter y Space. El atributo \`disabled\` nativo lo saca del orden de tabulación.
+- **Lector de pantalla:** el nombre accesible sale del \`textContent\`; los SVG van con \`aria-hidden="true"\` y \`focusable="false"\`.
+- *Reduced motion: pendiente, junto con la especificación de movimiento.*
+
+## Foundations relacionadas
+
+- **Color** — la colección \`semanticColors\` y sus dos modes
+- **Espaciado** — la escala \`space\`, de la que salen todos los paddings`,
+
+"Estatus y cambios": `# Lifecycle
+
+**Transitional.** El componente está documentado y en uso, pero su escala dimensional va a cambiar: las alturas pasan de 37 · 45 · 53 a **48 · 56 · 64**, con texto e icono escalando en paralelo.
+
+<SNCallout variant="Warning">
+**La especificación de medidas de esta página describe la escala anterior.** El cambio está decidido pero no aplicado en Figma. Hasta entonces, las medidas publicadas son las vigentes.
+</SNCallout>
+
+## Component health
+
+<SNBlock packageId="io.supernova.block.component-health">
+  <SNItem>
+    <SNProp name="components" value={[{ entityId: "${COMPONENTE_CANONICO}", entityType: "Component" }]} />
+  </SNItem>
+</SNBlock>
+
+## Definition of done
+
+<SNBlock packageId="io.supernova.block.component-checklist">
+  <SNItem>
+    <SNProp name="components" value={[{ entityId: "${COMPONENTE_CANONICO}", entityType: "Component" }]} />
+  </SNItem>
+</SNBlock>
+
+## Changelog
+
+- **21 ago 2026** — corregidas las seis variantes \`secondary\` + \`pressed\`: el texto y el icono pasan a las variantes **Static**. En Dark el texto caía a 3.29:1.
+- **20 ago 2026** — \`text/disabled\` pasa a \`neutral/600\` en Light y \`neutral/700\` en Dark. El contraste sobre \`background/disabled\` sube de 1.74:1 a 4.50 y 4.89.
+- **20 ago 2026** — paddings alineados a la escala \`space\`: s 8/16 · m 12/16 · l 16/24.
+
+## Deprecation y migration
+
+*No aplica: el componente está activo.*`,
+}
+
+const leerKey = () => fs.readFileSync(path.join(RAIZ, ".env"), "utf8")
+  .split("\n").find(l => l.startsWith("SUPERNOVA_API_KEY=")).split("=").slice(1).join("=").trim()
+
+const main = async () => {
+  const publicar = process.argv.includes("--publicar")
+  const sn = new Supernova(leerKey())
+  const version = await sn.versions.getActiveVersion(DS)
+  const ref  = { designSystemId: DS, versionId: version.id, workspaceId: WS }
+  const refW = { designSystemId: DS, versionId: version.id }
+  const nombres = Object.keys(TABS)
+
+  // Validar TODO antes de crear nada.
+  let ok = true
+  for (const n of nombres) {
+    const r = await sn.import.validateMarkdown(refW, TABS[n])
+    if (r?.isValid) console.log(`  ✓ ${n}`)
+    else { console.log(`  🔴 ${n}: ${r?.error?.message}`); ok = false }
+  }
+  if (!ok) { console.error("\n🔴 No se crea nada con errores."); process.exit(1) }
+  if (!publicar) { console.log("\nValidado. Añade --publicar para crearlo."); return }
+
+  const paginaId = await sn.documentation.createDocumentationPage(ref, {
+    title: "Button", parentPersistentId: GRUPO_COMPONENTES,
+  })
+  const grupo = await sn.documentation.createDocumentationTab(ref, {
+    fromItemPersistentId: paginaId, tabName: nombres[0],
+  })
+  const pestanas = { [nombres[0]]: paginaId }
+  for (const n of nombres.slice(1)) {
+    pestanas[n] = await sn.documentation.createDocumentationTab(ref, { fromItemPersistentId: grupo, tabName: n })
+  }
+  const items = await sn.documentation.getDocumentationStructure(ref)
+  const numerico = new Map(items.map(i => [i.persistentId, String(i.id)]))
+  console.log("")
+  for (const n of nombres) {
+    const r = await sn.import.writeMarkdownToPage(refW, numerico.get(pestanas[n]), TABS[n])
+    console.log(`  ✓ ${n} → ${r?.blockCount ?? "?"} bloques`)
+  }
+  fs.writeFileSync(path.join(AQUI, "button.ids.json"), JSON.stringify({ grupo, pestanas }, null, 2) + "\n")
+}
+
+main().catch(e => { console.error("🔴 " + (e?.message ?? e)); process.exit(1) })

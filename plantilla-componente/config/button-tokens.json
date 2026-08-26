@@ -1,0 +1,18 @@
+{
+  "text/secondary": "0a5bbb04-57c6-47c0-8d34-51d11032852a",
+  "background/secondary": "f78cfabe-4395-4449-872d-178b218e4e5f",
+  "background/hover": "26470139-ca4c-46b3-b43b-2470dd46150e",
+  "text/primaryInverse": "f599268b-9b7d-4a71-81c0-87d356b0a135",
+  "background/selected": "31522e29-17dc-4834-8907-bcbd636f8b37",
+  "background/disabled": "99e42f9d-dff8-4e08-8821-5826555187c0",
+  "background/brandMain": "1bac692a-a1db-4d29-83b0-2aa1baf91a90",
+  "background/brandHover": "acaeb789-8a31-4905-bd7b-ecf941fa503e",
+  "background/brandPressed": "90bbc464-5d3d-40cf-b249-91855080b3f2",
+  "text/disabled": "4fb6c585-e162-4a7c-81df-9e9c752e49a4",
+  "text/primaryInverseStatic": "2b398217-d7bf-4003-b58d-e62ecfcea85c",
+  "icon/inverse": "59790516-5bfd-413f-9a1f-e3f87cb7d50d",
+  "icon/disabled": "1f292c74-b27d-4d6e-a890-1a090c0d7d67",
+  "icon/inverseStatic": "178b347a-c917-46e2-9f6d-4635ddcb7237",
+  "border/focus": "1994004d-e599-4751-9095-2f8616c1f915",
+  "border/disabled": "2e4ae5bf-dc92-4808-9a42-d7e4a894a787"
+}
