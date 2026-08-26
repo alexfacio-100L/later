@@ -25,9 +25,41 @@ const DS = "825551", WS = "767109"
 const GRUPO_COMPONENTES = "074cc38b-fbf2-40b8-8802-d519fff8c76e"
 
 const TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/button-tokens.json"), "utf8"))
+
+/**
+ * Los 21 previews que ya se subieron a Supernova el 21 de agosto. NO se vuelven
+ * a subir: el registro guarda su assetId, y la página los referencia.
+ *
+ * ⚠️ `fraccionAncho` es el % del ancho que ocupa el contenido dibujado, medido en
+ * Figma. Supernova escala la imagen al ancho de la columna, así que sin ese dato
+ * un preview sale diminuto o gigante — y valida igual de bien en los dos casos.
+ */
+const FRAMES = JSON.parse(fs.readFileSync(
+  path.join(RAIZ, "experimento-canario/frames-subidos.json"), "utf8"))
+
+/** Un preview ya subido, por el nombre de sección con el que se registró. */
+const preview = (seccion, pie) => {
+  const f = FRAMES[seccion]
+  if (!f) return `*Falta el preview de ${seccion}.*`
+  return `<SNImage alignment="Left" resourceId="${f.assetId}"${pie ? ` caption="${pie}"` : ""} />`
+}
 const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
 /** `example-button--primary`. Simula que desarrollo ya consumió la spec. */
 const HISTORIA_BUTTON = "681057"
+
+/** Trae una tabla concreta del .md de uSpec, por el encabezado que la precede. */
+const tablaDelMd = (encabezado) => {
+  const md = fs.readFileSync(path.join(RAIZ, "Componentes/button.md"), "utf8")
+  const lineas = md.split("\n")
+  const i = lineas.findIndex(l => l.trim() === encabezado)
+  if (i < 0) return `*No encontré ${encabezado} en el .md.*`
+  const filas = []
+  for (let j = i + 1; j < lineas.length; j++) {
+    if (/^\s*\|/.test(lineas[j])) filas.push(lineas[j])
+    else if (filas.length) break
+  }
+  return filas.join("\n")
+}
 
 const token = (ruta) => ({ entityId: TK[ruta], entityType: "Token" })
 const tokens = (...rutas) => JSON.stringify(rutas.map(token))
@@ -134,7 +166,31 @@ ${guia("caution", "El estado deshabilitado apenas se distingue del lienzo en Lig
 
 "Especificaciones": `# Especificaciones
 
-La especificación dimensional completa —medidas por \`size\`, \`surface\` y \`state\`— se mantiene en uSpec y se regenera desde Figma. Aquí vive lo que se consulta a diario.
+Lo que sigue lo genera uSpec desde Figma. **Se regenera, no se edita a mano**: cada preview y cada medida salen del componente real.
+
+## Anatomía
+
+${preview("Anatomy", "Los cuatro elementos, numerados")}
+
+**La numeración es un contrato:** los marcadores del frame y las filas de esta tabla son la misma lista.
+
+${tablaDelMd("| # | Type | Element | Notes |")}
+
+## Medidas
+
+### Por tamaño
+
+${preview("Button sizes")}
+
+${tablaDelMd("| Spec | L | M | S | Notes |")}
+
+### Por superficie
+
+${preview("Button surface", "product y marketing: cambian radio, peso tipográfico y escalón de sombra")}
+
+### Por estado
+
+${preview("Button states", "default, hover, pressed, focus y disabled")}
 
 ## Propiedades
 
@@ -144,15 +200,47 @@ La especificación dimensional completa —medidas por \`size\`, \`surface\` y \
   </SNItem>
 </SNBlock>
 
+### Cada eje, en Figma
+
+${preview("variant", "variant · jerarquía visual")}
+
+${preview("surface", "surface · dónde vive el botón, no su jerarquía")}
+
+${preview("size", "size · controla el padding, no el tamaño de fuente")}
+
+${preview("isDisabled", "isDisabled · el único estado que fija un ingeniero")}
+
+${preview("showIconLeft", "showIconLeft")}
+
+${preview("showIconRight", "showIconRight")}
+
 ## Color
 
-El contraste lo calcula Supernova sobre los tokens vivos: no hay ratios escritos a mano que puedan caducar.
+El contraste lo calcula Supernova sobre los tokens vivos: **no hay ratios escritos a mano que puedan caducar.**
 
 <SNBlock packageId="io.supernova.block.color-accessibility-grid">
   <SNItem>
     <SNProp name="tokens" value={${tokens("background/brandMain","background/brandHover","background/brandPressed","background/selected","background/secondary","background/disabled")}} />
   </SNItem>
 </SNBlock>
+
+### Las ocho combinaciones
+
+${preview("Primary / Product / Light", "Primary · Product · Light")}
+
+${preview("Primary / Product / Dark", "Primary · Product · Dark")}
+
+${preview("Primary / Marketing / Light", "Primary · Marketing · Light")}
+
+${preview("Primary / Marketing / Dark", "Primary · Marketing · Dark")}
+
+${preview("Secondary / Product / Light", "Secondary · Product · Light")}
+
+${preview("Secondary / Product / Dark", "Secondary · Product · Dark")}
+
+${preview("Secondary / Marketing / Light", "Secondary · Marketing · Light")}
+
+${preview("Secondary / Marketing / Dark", "Secondary · Marketing · Dark")}
 
 ### Los tokens del componente
 
@@ -174,6 +262,14 @@ El contraste lo calcula Supernova sobre los tokens vivos: no hay ratios escritos
 - **Teclado:** activable con Enter y Space. El atributo \`disabled\` nativo lo saca del orden de tabulación.
 - **Lector de pantalla:** el nombre accesible sale del \`textContent\`; los SVG van con \`aria-hidden="true"\` y \`focusable="false"\`.
 - *Reduced motion: pendiente, junto con la especificación de movimiento.*
+
+## Ejemplos
+
+${preview("Accion principal", "Acción principal")}
+
+${preview("Secundario con icono final", "Secundario con icono final")}
+
+${preview("Deshabilitado", "Deshabilitado")}
 
 ## Foundations relacionadas
 
@@ -235,6 +331,23 @@ const main = async () => {
   }
   if (!ok) { console.error("\n🔴 No se crea nada con errores."); process.exit(1) }
   if (!publicar) { console.log("\nValidado. Añade --publicar para crearlo."); return }
+
+  // Si el Button ya existe, se REESCRIBE. Crear otro duplicaría la página y
+  // consumiría cuatro más del presupuesto.
+  const registro = path.join(AQUI, "button.ids.json")
+  if (fs.existsSync(registro)) {
+    const { pestanas: previas } = JSON.parse(fs.readFileSync(registro, "utf8"))
+    const items = await sn.documentation.getDocumentationStructure(ref)
+    const numerico = new Map(items.map(i => [i.persistentId, String(i.id)]))
+    console.log("\nEl Button ya existe: se reescriben sus pestañas.")
+    for (const n of nombres) {
+      const id = numerico.get(previas[n])
+      if (!id) { console.log(`  🔴 ${n}: la pestaña ya no existe`); continue }
+      const r = await sn.import.writeMarkdownToPage(refW, id, TABS[n])
+      console.log(`  ✓ ${n} → ${r?.blockCount ?? "?"} bloques`)
+    }
+    return
+  }
 
   const paginaId = await sn.documentation.createDocumentationPage(ref, {
     title: "Button", parentPersistentId: GRUPO_COMPONENTES,
