@@ -1,0 +1,32 @@
+# Button · Código
+
+## Propiedades
+
+<SNBlock packageId="io.supernova.block.figma-components-propstable">
+  <SNItem>
+    <SNProp name="figmaComponent" value={[{ entityId: "9570b904-18a9-4d4c-bb40-af53e6cff62c", entityType: "FigmaComponent" }]} />
+  </SNItem>
+</SNBlock>
+
+## El contrato
+
+> Los estados de interaccion -hover, pressed, focus- los dibuja la plataforma y no se configuran por API. El eje `state` de Figma existe para los disenadores.
+
+> El unico estado que fija un ingeniero es `isDisabled`.
+
+> `showIconLeft` y `showIconRight` son independientes: el boton puede mostrar ninguno, uno u otro, o los dos.
+
+### State axis mapping
+
+El eje `state` de Figma se descompone: solo `disabled` llega a la API.
+
+### Componentes referenciados
+
+- **ArrowRight** — ranura `iconLeft / iconRight` · configuración `Format=Outline, Weight=Fill` · nodo `12376:86676`
+  Icono por defecto de ambas ranuras. Pertenece a la libreria Phosphor; su especificacion es propia. Spec: `./arrow-right.md`
+
+### Accion principal
+
+### Secundario con icono final
+
+### Deshabilitado

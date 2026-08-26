@@ -18,9 +18,11 @@
     "docs:tokens": "node experimento-canario/mapa-tokens.mjs",
     "docs:previews": "node experimento-canario/verificar-previews.mjs",
     "md:verificar": "node completar-md.mjs",
-    "md:completar": "node completar-md.mjs"
+    "md:completar": "node completar-md.mjs",
+    "plantilla": "node plantilla-componente/generar.mjs"
   },
   "devDependencies": {
+    "@supernovaio/sdk": "^2.5.0",
     "uspec-skills": "0.3.2"
   }
 }

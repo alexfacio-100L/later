@@ -1,0 +1,184 @@
+# Button
+
+Ejecuta una acción. Lo que navega es un Link.
+
+<SNCallout variant="Info">
+**Estado:** Transitional  ·  **También llamado:** Action, Call to action, CTA
+</SNCallout>
+
+## Disponibilidad por plataforma
+
+<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={307.25}>
+      Plataforma
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={288.81}>
+      Estado
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={163.94}>
+      Storybook
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={307.25}>
+      Bricks UI
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={288.81}>
+      Pendiente
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={163.94}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={307.25}>
+      Web Next
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={288.81}>
+      Pendiente
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={163.94}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={307.25}>
+      Web Astro
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={288.81}>
+      Pendiente
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={163.94}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={307.25}>
+      Mobile Expo
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={288.81}>
+      Pendiente
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={163.94}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+
+## Qué es
+
+El Button es el control de acción del sistema: **ejecuta, no navega**. Lo que navega es un `Link`, que nació al separar el antiguo valor `tertiary`.
+
+**Ejes de variante.** `variant`, `surface`, `size` y `state`, que se descompone en la API. Son 60 variantes en Figma; la API expone 9 propiedades.
+
+> **Nota sobre el idioma.** La prosa está en español; **los encabezados de sección, los nombres de columna y los identificadores están en inglés a propósito**. Los nombres de propiedad y de token deben coincidir con el código.
+
+### Composición
+
+- **content** — decorative · se pliega en Structure y Color
+- **labelBox** — decorative · se pliega en Structure y Color
+- **iconLeft** — referenced · se documenta como componente referenciado, no se re-especifica
+
+## Anatomía
+
+Los elementos que componen el Button, en el orden en que los numera el preview. **La numeración es un contrato: los marcadores del frame y las filas de esta tabla son la misma lista.**
+
+<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={72.99}>
+      \#
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={104.89}>
+      Tipo
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={123.46}>
+      Elemento
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={458.65}>
+      Notas
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={72.99}>
+      1
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={104.89}>
+      Frame
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={123.46}>
+      Button
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={458.65}>
+      Contenedor raíz. Fondo tokenizado, radio 8 y sombra; fija el padding por `size` y la separación entre elementos.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={72.99}>
+      2
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={104.89}>
+      Instance
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={123.46}>
+      iconLeft
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={458.65}>
+      Icono opcional antes del texto. Instancia de `ArrowRight` (Phosphor). Lo revela `showIconLeft`; oculto por defecto.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={72.99}>
+      3
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={104.89}>
+      Text
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={123.46}>
+      labelBox
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={458.65}>
+      El texto de la acción. Siempre visible — es el único elemento obligatorio.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={72.99}>
+      4
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={104.89}>
+      Instance
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={123.46}>
+      iconRight
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={458.65}>
+      Icono opcional después del texto. Instancia de `ArrowRight` (Phosphor). Lo revela `showIconRight`; oculto por defecto.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+
+**El preview muestra la variante por defecto** —`size=s, surface=product, variant=primary, state=default`— con ambos iconos revelados, para que los cuatro elementos sean visibles a la vez. En uso real los iconos son opcionales e independientes.
+
+## Cuándo usarlo
+
+*Pendiente: los pares do/don't — el primero: este componente frente a su alternativa. Es contenido que ninguna herramienta genera — ni Figma lo contiene ni el código lo declara.*
+
+## Contenido
+
+*Pendiente: cómo se redacta el label y qué pasa cuando no cabe. Es contenido que ninguna herramienta genera — ni Figma lo contiene ni el código lo declara.*
+
+## Comportamiento
+
+*Pendiente: foco, teclado, área táctil y estado de carga. Es contenido que ninguna herramienta genera — ni Figma lo contiene ni el código lo declara.*
+
+## Responsive
+
+*Pendiente: cómo cambia entre breakpoints. Es contenido que ninguna herramienta genera — ni Figma lo contiene ni el código lo declara.*
+
+## Relacionados
+
+- `Link` — el antiguo `variant=tertiary`. Un enlace navega; un botón actúa.
+- `ArrowRight` — icono por defecto de ambas ranuras. Librería Phosphor.
+- Tokens de color: colección `semanticColors`, modes Light y Dark.
