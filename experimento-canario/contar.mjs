@@ -5,15 +5,11 @@ const key = fs.readFileSync("/Users/alexfacio/Proyectos/Later2.0/later-brand-sys
 const sn = new Supernova(key)
 const v = await sn.versions.getActiveVersion("825551")
 const ref = { designSystemId:"825551", versionId:v.id, workspaceId:"767109" }
-const ids = JSON.parse(fs.readFileSync("/Users/alexfacio/Proyectos/Later2.0/later-brand-system/plantilla-componente/maestra.ids.json","utf8"))
 const items = await sn.documentation.getDocumentationStructure(ref)
-const porPid = new Map(items.map(i => [i.persistentId, i]))
-const grupo = porPid.get(ids.grupo)
-const log = [`grupo: ${grupo?.title} · behavior: ${grupo?.groupBehavior ?? "?"}`, "pestañas en orden:"]
-for (const cid of (grupo?.childrenIds ?? [])) {
-  const h = items.find(i => String(i.id) === String(cid))
-  log.push(`   ${h?.title ?? cid}`)
-}
 const paginas = items.filter(i => !Array.isArray(i.childrenIds ?? i.children))
-log.push(`\nPÁGINAS: ${paginas.length} de 20`)
+const log = [`PÁGINAS: ${paginas.length} de 20`, ""]
+for (const p of paginas) {
+  const bloques = (p.blocks ?? []).length
+  log.push(`  ${(p.title ?? "?").padEnd(32)} ${bloques ? bloques + " bloques" : "— vacía —"}`)
+}
 fs.writeFileSync(process.argv[2], log.join("\n"))
