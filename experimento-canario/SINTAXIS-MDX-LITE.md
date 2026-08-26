@@ -211,3 +211,53 @@ ahora (proporcional): 123 +  72 +  72 +  72 + 421
 > **La solución: el `.md` conserva el inglés como contrato técnico, y la traducción ocurre al emitir.** *El documento de trabajo queda estable; lo que lee el equipo, en español.*
 
 **Lo que NO se traduce, nunca:** nombres de token, propiedades (`isLoading`, `size`) y valores (`primary`, `marketing`, `L`/`M`/`S`). **Deben coincidir con el código.**
+
+---
+
+## 🔴 Las imágenes: lo que costó una tarde entera (26 ago 2026)
+
+### `<SNImage>` valida, se guarda y NO SE VE
+
+**Las imágenes se referencian con Markdown normal apuntando a la URL del recurso:**
+
+```markdown
+![pie de foto](https://studio-assets.supernova.io/design-systems/825551/….png)
+```
+
+⚠️ **`<SNImage alignment="Left" resourceId="…" />` NO renderiza.** El recurso existe, el `resourceId` es correcto, el bloque se publica y queda registrado en la página — **y no aparece nada**.
+
+*Se descubrió publicando las tres formas juntas en la misma página y mirando cuál se veía. Antes se habían gastado cuatro rondas deduciéndolo desde el JSON de la página publicada, sin llegar a nada.* **La prueba de variantes cuesta un comando; la deducción no funcionó.**
+
+### El `resourceId` es el `assetId`, no el id de la URL
+
+Son dos ids distintos y ambos aparecen en el registro. **El del recurso es `assetId`**; el que va dentro de la URL es solo el nombre del archivo en el almacén. *Verificado contra `getAssetResources`.*
+
+### El margen NO es desperdicio: fija el tamaño aparente
+
+**Supernova escala la imagen al ancho de la columna (~760 px)**, así que el contenido se ve a `760 × fracción`:
+
+| Fracción del ancho que ocupa el contenido | Cómo se ve |
+| --- | --- |
+| **25–55%** | ✅ el rango bueno — a ~365 px |
+| 92% | 🔴 enorme, se come el ancho entero |
+
+*El 26 de agosto se recortaron los previews «pegados» al contenido, razonando que el margen sobraba. Salieron gigantes.* **El recorte correcto es en dos pasos: detectar el contenido y devolverle margen hasta la fracción objetivo.** Lo comprueba `verificar-previews.mjs`.
+
+### Dentro de una celda de tabla no hay imagen posible
+
+**Callejón cerrado, comprobado:** una `<SNTableCell>` **solo** acepta `<SNImage>` —rechaza la imagen Markdown con *«accepts text and `<SNImage>`, not image»*— y `<SNImage>` no renderiza.
+
+*Por eso la columna `Type` de la anatomía va en texto y la jerarquía usa el carácter `└`.* **Se pierde el icono, no el dato.**
+
+### Y una celda con imagen, si alguna vez funciona, la lleva en su propio párrafo
+
+Texto, línea en blanco, imagen. En la misma línea —antes o después— se rechaza, y `caption` dentro de una celda también.
+
+## 🔴 Validar no garantiza que se publique
+
+**Dos casos del mismo día, y los dos silenciosos:**
+
+- **Las pipe tables** validan y `writeMarkdownToPage` **las descarta al escribir**. La página queda con sus títulos y sus imágenes y sin un solo dato. Hay que emitirlas como `<SNTable>`.
+- **`<SNImage>`** valida, se publica, y no pinta.
+
+*El `✓ válido` responde por la sintaxis. No dice si el bloque sobrevive a la escritura, ni si se ve.* **La única comprobación real es publicar y mirar.**
