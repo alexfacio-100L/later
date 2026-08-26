@@ -336,6 +336,70 @@ if (bloqueStructure && structure) {
   }
 }
 
+
+// ── 4 · El carry voice-render-meta ──────────────────────────────────────────
+//
+// 🔴 Sin este bloque, `create-voice` hace fail-fast en su Step 0: el carry es su
+// ÚNICA fuente para saber qué capa de Figma rodear con la anotación. Nunca se
+// emitía, así que la skill no podía correr sobre ningún componente.
+//
+// ⚠️ Y hay una trampa que este bloque señala pero no puede resolver sola: dentro
+// del Button hay DOS nodos llamados `Button` —la raíz y el TEXT del label—, y
+// `findStopNode` busca solo entre descendientes, así que marca el texto. Cuando
+// el `layerName` coincide con el nombre del componente, se emite `preferRoot`
+// para que el render elija la raíz. **La skill tiene que honrarlo**; hasta
+// entonces el aviso queda a la vista de quien la ejecute.
+
+const TIENE_VOICE_META = /<!-- voice-render-meta v=1/.test(md)
+const rutaVoice = join(cacheDir, `${slug}-voice.json`)
+
+if (/^## Voice \/ Screen reader$/m.test(md) && existsSync(rutaVoice)) {
+  if (!TIENE_VOICE_META) {
+    hallazgos.push("falta el carry `voice-render-meta`: `create-voice` no puede correr sin él")
+    try {
+      const voz = JSON.parse(readFileSync(rutaVoice, "utf8"))?.data ?? {}
+      const nombreComponente = voz.componentName ?? ""
+      const vistos = new Map()
+
+      for (const estado of voz.states ?? []) {
+        for (const seccion of estado.sections ?? []) {
+          for (const t of seccion.tables ?? []) {
+            if (!t?.name || vistos.has(t.name)) continue
+            const layerName = t.layerName ?? null
+            const stop = {
+              name: t.name,
+              focusOrderIndex: t.focusOrderIndex ?? null,
+              layerName,
+              slotIndex: t.slotIndex ?? null,
+            }
+            // La ambigüedad que rompe el artwork, marcada en el propio dato.
+            if (layerName && layerName === nombreComponente) stop.preferRoot = true
+            vistos.set(t.name, stop)
+          }
+        }
+      }
+
+      const focusStops = [...vistos.values()]
+        .sort((a, b) => (a.focusOrderIndex ?? 99) - (b.focusOrderIndex ?? 99))
+
+      if (focusStops.length) {
+        const carry = `\n<!-- voice-render-meta v=1 ${JSON.stringify({ focusStops })} -->\n`
+        const iniVoz = md.indexOf("## Voice / Screen reader")
+        const sig = md.indexOf("\n## ", iniVoz + 1)
+        const corte = sig === -1 ? md.length : sig
+        md = md.slice(0, corte) + carry + md.slice(corte)
+        const ambiguos = focusStops.filter(f => f.preferRoot).length
+        reparados.push(`carry \`voice-render-meta\` emitido · ${focusStops.length} focus stops` +
+          (ambiguos ? ` · ${ambiguos} con nombre ambiguo, marcados \`preferRoot\`` : ""))
+      } else {
+        hallazgos.push("el cache de voice no trae focus stops: no se pudo emitir el carry")
+      }
+    } catch (e) {
+      hallazgos.push(`no pude leer el cache de voice: ${e.message}`)
+    }
+  }
+}
+
 // ── Informe ────────────────────────────────────────────────────────────────
 console.log(`\n${basename(ruta)}  ${c("tenue", `· cache: ${cacheDir}`)}\n`)
 

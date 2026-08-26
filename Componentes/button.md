@@ -351,6 +351,8 @@ Estado disabled (state=disabled en Figma, isDisabled=true en la API). El compone
 | `tabindex` | no aplica (disabled) | No agregar tabindex="0" a un boton deshabilitado. |
 | `Do NOT` | No dejarlo enfocable estando disabled | Do not keep the stop focusable when disabled — use the native disabled attribute (or aria-disabled=true plus tabindex=-1 when the control must stay discoverable). |
 
+<!-- voice-render-meta v=1 {"focusStops":[{"name":"Button (fuera del orden de foco)","focusOrderIndex":0,"layerName":"Button","slotIndex":null,"preferRoot":true},{"name":"Button","focusOrderIndex":1,"layerName":"Button","slotIndex":null,"preferRoot":true}]} -->
+
 ## Cross-references
 
 - `Link` — el antiguo `variant=tertiary`. Un enlace navega; un botón actúa.
