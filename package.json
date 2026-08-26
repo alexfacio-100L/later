@@ -17,6 +17,7 @@
     "docs:estado": "node experimento-canario/diagnostico-supernova.mjs",
     "docs:tokens": "node experimento-canario/mapa-tokens.mjs",
     "docs:previews": "node experimento-canario/verificar-previews.mjs",
+    "docs:size": "node experimento-canario/verificar-size.mjs",
     "md:verificar": "node completar-md.mjs",
     "md:completar": "node completar-md.mjs",
     "plantilla": "node plantilla-componente/generar.mjs"
