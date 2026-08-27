@@ -65,7 +65,20 @@ export function verificar(registro, baseUrl) {
       fila.problemas.push(`el contenido ocupa el ${fr}% del ancho (máximo ${LIMITES.fraccionAnchoMax}%) — se verá enorme`)
     }
 
-    const ruta = meta.archivo ? new URL(meta.archivo, baseUrl) : null
+    // 🔴 Se mide el RECORTADO, que es el que se sube, no el original.
+    //
+    // Hasta el 27 ago 2026 esto medía `meta.archivo` — el export crudo de Figma,
+    // que nunca llega a Supernova. Es el mismo error de método que la regla 16:
+    // la comprobación no podía ver el defecto porque miraba otro archivo. Ese día
+    // seis previews de Color daban 3.6:1 en el original y 2.6:1 ya recortados
+    // (habrían suspendido sin motivo), mientras «Button sizes» pasaba a 3.2:1 en
+    // el original y se subía a 3.8:1 (habría aprobado con el defecto puesto).
+    const base = meta.archivo?.split("/").pop()
+    const recortado = base ? new URL(`frames/recortados/${base}`, baseUrl) : null
+    const ruta = recortado && existsSync(recortado)
+      ? recortado
+      : (meta.archivo ? new URL(meta.archivo, baseUrl) : null)
+    fila.medido = ruta === recortado ? "recortado" : "original"
     if (ruta && existsSync(ruta)) {
       const px = medirPNG(ruta)
       if (px) {

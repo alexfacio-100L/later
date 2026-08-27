@@ -1,4 +1,5 @@
-El componente se auditó y corrigió el 19 y 20 de agosto de 2026. Ten en cuenta:
+El componente se auditó y corrigió el 19 y 20 de agosto de 2026, y su escala
+dimensional se rehízo por completo el 27 de agosto (tarea 4.18). Ten en cuenta:
 
 NOMBRES DE PROPIEDAD (cambiaron; la documentación anterior está caduca)
 - El eje "Type" ahora se llama "variant". Se renombró porque `type` está
@@ -10,17 +11,85 @@ NOMBRES DE PROPIEDAD (cambiaron; la documentación anterior está caduca)
   eliminó. En producción el 53% de los botones eran quaternary: al migrar
   se llevaron a Link.
 
-ESPACIADO (corregido el 20 de agosto)
-- Los paddings están tokenizados al 100%: ningún valor crudo en las 60
-  variantes. Antes había 18px y 10px, que no existían en la escala.
-- La progresión es s: 8/16 · m: 12/16 · l: 16/24, toda dentro de la escala
-  space (8·12·16·24). Alturas resultantes 37, 45 y 53.
-- El gap usa space/zero.
+ESCALA DIMENSIONAL (rehecha el 27 de agosto — LO ANTERIOR ES FALSO)
+- La escala vieja era 37 · 45 · 53 de altura con texto 14 en las tres
+  tallas. NO la uses: ya no existe. Si algo en el archivo todavía la
+  sugiere, es residuo.
+- La escala vigente, toda bindeada a token y verificada variante a variante:
+      talla         s              m              l
+      minHeight     size/control/s size/control/m size/control/l
+      minWidth      (48)           (56)           (64)
+      paddingInline space/l (16)   space/xl (24)  space/2xl (32)
+      paddingBlock  space/s (8)    space/s (8)    space/s (8)   <- constante
+      icono         size/icon/s    size/icon/m    size/icon/l
+                    (16)           (20)           (24)
+      texto         Text/S (12)    Text/M (14)    Text/L (16)
+  El texto es Regular en surface=product y Semi Bold en surface=marketing.
+- La razón de la terna: altura / tamaño de texto = 4 en las tres tallas.
+- Son `min-height` y `min-width`, NUNCA altura fija. Ninguna variante lleva
+  altura fija: `heightMode` sigue en `hug`. Esto es deliberado y hay que
+  documentarlo así — una altura fija rompería WCAG 1.4.12 (Text Spacing).
+- El gap icono/label vive ahora en `content.itemSpacing` (space/s). El
+  `horizontalPadding` de labelBox se desbindeó y bajó a 0: antes añadía 8 px
+  por lado siempre, incluso sin icono, así que el padding declarado no era
+  el real.
 
-DEFECTO CONOCIDO, NO CORREGIDO
-- `size` NO escala la tipografía: los tres tamaños usan fuente 14. Antes
-  del 20 de agosto lo único que diferenciaba l de m eran 2px de padding
-  fuera de escala. Documéntalo como hueco abierto, no como decisión.
+EL DEFECTO DE TIPOGRAFÍA YA NO EXISTE
+- La versión anterior de este contexto decía que `size` NO escala la
+  tipografía y pedía documentarlo como hueco abierto. Eso quedó RESUELTO el
+  27 de agosto: los tres tamaños tienen ahora su propio estilo de texto
+  (12 · 14 · 16). No lo documentes como hueco.
+
+DEFECTO ABIERTO Y NUEVO: cornerRadius entre estados (severidad alta)
+- El 27 de agosto se ajustó el cornerRadius de las variantes `primary` y
+  SOLO en el estado `default`. El resto de estados quedó sin tocar, así que
+  el botón CAMBIA DE FORMA al pasar el cursor.
+- Estado medido, sin interpretar:
+      primary/product/s     default 16 · hover, pressed, focus, disabled  8
+      primary/product/m     default 24 · resto  8
+      primary/product/l     default 24 · resto 12
+      primary/marketing/s   default 16 · resto 12
+      primary/marketing/m   default 16 · resto 12
+      primary/marketing/l   default 24 · resto 12
+      secondary/*           sin tocar: 8 en product s/m, 12 en el resto
+- Documéntalo como lo que se mide: un ajuste de expresión de marca aplicado
+  solo al estado default, que produce un salto de forma en la interacción
+  (de 24 a 8 en product/m). NO lo presentes como intencional en todos los
+  estados y NO inventes la intención.
+- La progresión entre tallas tampoco es coherente: product 16 · 24 · 24 y
+  marketing 16 · 16 · 24.
+- Y agrava algo que ya estaba fichado: cornerRadius es la ÚNICA familia
+  dimensional sin tokenizar —valores crudos— y antes dependía de dos ejes
+  (size y surface). Ahora depende de tres: size, surface y state. Menciónalo;
+  no lo resuelvas: hay una evaluación aparte en curso.
+
+ÁREA TÁCTIL — CÓMO SE CITA, Y ES IMPORTANTE
+- NO escribas que 44 px es "WCAG 2.5.8" ni "AA en 2.2". Es falso y estuvo
+  publicado. Los criterios reales son dos y distintos:
+      2.5.8 Target Size (Minimum)   nivel AA   24 x 24 CSS px
+      2.5.5 Target Size (Enhanced)  nivel AAA  44 x 44 CSS px
+- Los 44 px son un ESTÁNDAR PROPIO de 100 Ladrillos, alineado a WCAG 2.5.5
+  (AAA) y a las Apple HIG. Se declara como estándar propio, no como
+  corrección de conformidad.
+- Estado actual: con 48 · 56 · 64 en min-height Y min-width, las tres tallas
+  superan tanto los 24 px de 2.5.8 (AA) como los 44 px de 2.5.5 (AAA).
+  El hueco de área táctil que la documentación anterior marcaba en rojo está
+  CERRADO. Tampoco vuelvas a escribir "ningún tamaño llega a 44": era falso
+  incluso con la escala vieja, donde m (45) y l (53) ya llegaban.
+- El supuesto que hay que dejar dicho: se asume 1 px de Figma = 1 px CSS.
+
+TEXTO DE 12 px EN LA TALLA `s` — conformidad y usabilidad son cosas distintas
+- WCAG no fija ningún tamaño mínimo de texto. No hay criterio que lo exija,
+  así que 12 px NO es un fallo de conformidad.
+- Lo que sí aplica: 1.4.4 Resize Text (AA) —debe poder ampliarse al 200% sin
+  perder contenido ni función, y `min-height` en vez de `height` es
+  precisamente lo que lo permite— y 1.4.3 Contrast (AA), donde 12 px cuenta
+  como texto normal y exige 4.5:1, no los 3:1 del texto grande.
+- La advertencia honesta que hay que dejar escrita: conforma, pero 12 px
+  queda por debajo de la práctica habitual para texto interactivo y es
+  medible­mente más difícil para baja visión y para usuarios de 65+. Se
+  aceptó a sabiendas. Documéntalo como decisión con costo declarado, no
+  como defecto ni como algo resuelto.
 
 COLOR
 - El estado disabled se corrigió: text/disabled pasó de neutralSoft/700 a
@@ -30,12 +99,27 @@ COLOR
   Light aclaran, en Dark oscurecen. La dirección la marca el fondo, no el
   mode.
 - Sigue abierto: background/disabled apenas se distingue del lienzo en
-  Light (1.30:1).
+  Light (1.30:1). Ninguno de los dos defectos depende de `size`, así que la
+  escala nueva no los toca.
+- El indicador de foco SÍ cumple: border/focus da 4.80:1 en Light y 4.07:1
+  en Dark contra el lienzo, por encima del 3:1 que exige 1.4.11 para
+  contraste no textual. El borde de secondary da 15.9 y 17.3.
+
+EJES Y DEFECTO POR OMISIÓN
+- El eje `size` tiene default `m` desde el 27 de agosto (antes era `s`). Es
+  el cambio de más alcance: todo lo que instancia el Button sin especificar
+  talla cambia de aspecto al actualizar la librería.
+- El default lo fija la POSICIÓN en el canvas —la variante superior-izquierda
+  del component set—, no el orden de capas. Por eso la rejilla está en orden
+  `m · s · l` y no ascendente. Es deliberado: no lo señales como anomalía ni
+  sugieras reordenarla.
 
 ICONOS
 - La librería es Phosphor, no Heroicons. Los iconos usan Format=Outline y
   Weight=Regular por defecto.
 - El icono por defecto de iconLeft/iconRight es ArrowRight.
+- La instancia embebida trae Weight=Fill mientras el defecto declarado de la
+  librería es Weight=Regular. Sigue siendo una anomalía que anotar.
 - Existe un icono de marca propio: "Ladrillo", con Weight=Fill y
   Weight=Duotone. Los otros cuatro pesos están pendientes de dibujar.
 

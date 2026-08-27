@@ -4,8 +4,8 @@
     "nombre": "Button Anatomy · #preview",
     "archivo": "frames/button-anatomy-preview.png",
     "fraccionAncho": 48,
-    "assetId": "d441997f-522d-451b-a07c-8077f0825533",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/46b9dfb1-161f-4e6a-b60d-5c51d9ccd631.png",
+    "assetId": "0824dd4c-f547-48a3-9e49-02407091afcb",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/809ab805-671d-4cf6-ba21-b3f9473b5ffa.png",
     "recortado": true
   },
   "Button sizes": {
@@ -13,8 +13,8 @@
     "nombre": "Structure · Button sizes",
     "archivo": "frames/button-structure-sizes.png",
     "fraccionAncho": 48,
-    "assetId": "8946315f-5ae6-4780-ad69-29bd822e6cb2",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/06ba19b8-ddc7-4047-a2ca-07f3c55f3d74.png",
+    "assetId": "fe49d4dc-cc31-4c1b-b629-bb449c4b6680",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/9443ddab-cc86-4030-b786-467d3781be5a.png",
     "recortado": true
   },
   "Button surface": {
@@ -22,8 +22,8 @@
     "nombre": "Structure · Button surface",
     "archivo": "frames/button-structure-surface.png",
     "fraccionAncho": 48,
-    "assetId": "abbee407-4537-44c2-89f7-d3daa8df3703",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/9e9172c1-5e5f-42d4-a670-4cd4f56c6d39.png",
+    "assetId": "be5bca24-e3dd-49f2-ad5a-a8bdadc58495",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/63604970-c7a4-4bb4-afc7-eac774eec6c2.png",
     "recortado": true
   },
   "Button states": {
@@ -31,8 +31,8 @@
     "nombre": "Structure · Button states",
     "archivo": "frames/button-structure-states.png",
     "fraccionAncho": 48,
-    "assetId": "671bc3cf-947c-42a9-9c59-7132d82a3c92",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/750331a6-7794-4bfe-b4bb-970852e6ab4b.png",
+    "assetId": "2d572ced-abb3-4bee-a432-c538061f18d3",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/4508f6e8-980e-4ea4-a555-b278f9ba00fa.png",
     "recortado": true
   },
   "Primary / Product / Light": {
@@ -40,8 +40,8 @@
     "nombre": "Color · Primary / Product / Light",
     "archivo": "frames/button-color-pp-light.png",
     "fraccionAncho": 48,
-    "assetId": "e436b346-544a-40d3-aa63-3c40f7fa5c75",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/e6aa67cc-1fd3-4744-bba3-a9775bebbc82.png",
+    "assetId": "4dfc19ad-612d-48bc-bd95-3af317891c6f",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/b0753fd1-dd3e-44fd-b807-de4160c2c7aa.png",
     "recortado": true
   },
   "Primary / Product / Dark": {
@@ -49,8 +49,8 @@
     "nombre": "Color · Primary / Product / Dark",
     "archivo": "frames/button-color-pp-dark.png",
     "fraccionAncho": 48,
-    "assetId": "cb1288e9-bcff-4877-b7ad-419f68de5d55",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/267c5e82-403a-425b-85b5-930524902336.png",
+    "assetId": "f98255b2-e2ae-457a-a525-b4e2625d5bde",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/3d319bf2-529a-4d2f-b497-c1c6d07a6a71.png",
     "recortado": true
   },
   "Primary / Marketing / Light": {
@@ -58,8 +58,8 @@
     "nombre": "Color · Primary / Marketing / Light",
     "archivo": "frames/button-color-pm-light.png",
     "fraccionAncho": 48,
-    "assetId": "cd8f819a-4750-4c68-9610-3d25d4abaef9",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/7d655c08-b476-42be-9ed8-f7e47494e261.png",
+    "assetId": "443dfb04-c7d4-4f41-8923-db06da837c9a",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/89c7f73f-2f29-45d2-a069-849d25f51eb7.png",
     "recortado": true
   },
   "Primary / Marketing / Dark": {
@@ -67,8 +67,8 @@
     "nombre": "Color · Primary / Marketing / Dark",
     "archivo": "frames/button-color-pm-dark.png",
     "fraccionAncho": 48,
-    "assetId": "d5d45f5d-30eb-454d-90c0-5ceabca0264a",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/18aa0371-f621-401c-84a1-78bb90f7ecc2.png",
+    "assetId": "c7087ef2-7719-444e-a26e-3e8187fcbb7e",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/c5754809-88ef-46c7-889c-d815e9d1cbba.png",
     "recortado": true
   },
   "Secondary / Product / Light": {
@@ -76,8 +76,8 @@
     "nombre": "Color · Secondary / Product / Light",
     "archivo": "frames/button-color-sp-light.png",
     "fraccionAncho": 48,
-    "assetId": "0cfa2db0-ea57-40c0-81c2-0cb461076ab0",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/6074896a-e612-4c48-a9d5-3168d1d2fc17.png",
+    "assetId": "b09f9d4a-43c7-4774-8c46-7dce7d78692e",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/bbe203e7-9e98-4fac-bd99-684bb81d766b.png",
     "recortado": true
   },
   "Secondary / Product / Dark": {
@@ -85,8 +85,8 @@
     "nombre": "Color · Secondary / Product / Dark",
     "archivo": "frames/button-color-sp-dark.png",
     "fraccionAncho": 48,
-    "assetId": "e98576fb-87eb-4fa6-b509-c75cf31eb438",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/88bf8098-2423-4b80-8ca3-82180902d1c5.png",
+    "assetId": "fde4c85b-4d43-41e3-9e5c-45463e489cff",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/f1f3539c-59dd-4ac5-b0f6-25a5d48e55c6.png",
     "recortado": true
   },
   "Secondary / Marketing / Light": {
@@ -94,8 +94,8 @@
     "nombre": "Color · Secondary / Marketing / Light",
     "archivo": "frames/button-color-sm-light.png",
     "fraccionAncho": 48,
-    "assetId": "6a5c3042-ec05-444f-9423-b58ae3759216",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/ceecc795-cd3d-4838-ae6e-df8e5f683600.png",
+    "assetId": "a564331f-c8f1-4b3a-8fa1-efb8ed328954",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/c5eded2a-7e9d-466b-bcdc-878ea626bea1.png",
     "recortado": true
   },
   "Secondary / Marketing / Dark": {
@@ -103,8 +103,8 @@
     "nombre": "Color · Secondary / Marketing / Dark",
     "archivo": "frames/button-color-sm-dark.png",
     "fraccionAncho": 48,
-    "assetId": "ac404aad-eeb7-4ec6-b5ba-360043738a3b",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/fc493ee5-95c4-4a41-aa7c-cd894e3cada5.png",
+    "assetId": "78fe6f23-7223-41c6-9782-c0e63a0c08e8",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/34105d7f-2c41-4cd2-9ea6-9ecb31147f2a.png",
     "recortado": true
   },
   "variant": {
@@ -112,8 +112,8 @@
     "nombre": "Property · variant",
     "archivo": "frames/button-prop-variant.png",
     "fraccionAncho": 48,
-    "assetId": "97ba0a78-ad43-4025-a847-97e58def8ac6",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/c5bcf5ff-e5fb-4825-9010-55ea58ae91e5.png",
+    "assetId": "32f9b0b2-fe1b-439c-995a-0efc54b7d3ad",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/51606d73-b8ba-48f9-a402-469f21d3e101.png",
     "recortado": true
   },
   "surface": {
@@ -121,8 +121,8 @@
     "nombre": "Property · surface",
     "archivo": "frames/button-prop-surface.png",
     "fraccionAncho": 48,
-    "assetId": "f69b2d21-9859-47bd-908c-b1c61587f1a4",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/c4cad26b-e4e7-4203-bc39-bfd7a2dfe2cf.png",
+    "assetId": "a4a3d1fc-b5d9-474f-b0cc-5693741ebf64",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/07d5fa4f-5d80-4275-9ac3-8cb5baa9daea.png",
     "recortado": true
   },
   "size": {
@@ -130,8 +130,8 @@
     "nombre": "Property · size",
     "archivo": "frames/button-prop-size.png",
     "fraccionAncho": 48,
-    "assetId": "2c909d25-ad6b-43d8-adff-5ad18bbd0e3a",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/7c8917fb-acfa-4a52-a8bf-3ba95212c220.png",
+    "assetId": "df1f1810-08ac-4334-b0ab-91ce1d541f30",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/61467b1e-b189-40b5-b6ef-8021d8b9a0a6.png",
     "recortado": true
   },
   "isDisabled": {
@@ -139,8 +139,8 @@
     "nombre": "Property · isDisabled",
     "archivo": "frames/button-prop-isDisabled.png",
     "fraccionAncho": 48,
-    "assetId": "4d34bef0-1d9e-4726-8125-8092f1056c41",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/3e72b1d9-a110-41c3-a617-d80836844edb.png",
+    "assetId": "d4f10aae-2199-4d85-b06e-f48f8d26be25",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/365ab973-5aaf-4159-b8c2-e5af64bb677f.png",
     "recortado": true
   },
   "showIconLeft": {
@@ -148,8 +148,8 @@
     "nombre": "Property · showIconLeft",
     "archivo": "frames/button-prop-showIconLeft.png",
     "fraccionAncho": 48,
-    "assetId": "e65a82fb-b934-44e5-ab5a-6112c1823cc0",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/099b44ac-fb49-4f68-8255-68605499e8f8.png",
+    "assetId": "402e8527-1579-4293-845c-b6cd756b8f91",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/42205344-2a1a-44d2-a3d1-986a7d3ad57e.png",
     "recortado": true
   },
   "showIconRight": {
@@ -157,8 +157,8 @@
     "nombre": "Property · showIconRight",
     "archivo": "frames/button-prop-showIconRight.png",
     "fraccionAncho": 48,
-    "assetId": "23cf1745-36ca-4ef7-a595-28fd05dae85c",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/29aa9758-04ea-4e23-9cb8-bc9f168bbf84.png",
+    "assetId": "0ba1718e-3ca2-4123-867a-00feaf55d1dc",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/efbdbf5f-4056-4744-a4d1-5d4bbc56bc08.png",
     "recortado": true
   },
   "Accion principal": {
@@ -166,8 +166,8 @@
     "nombre": "API · Accion principal",
     "archivo": "frames/button-api-accion-principal.png",
     "fraccionAncho": 48,
-    "assetId": "116da94a-218e-4de0-a01c-cb14be2a1fd1",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/f52141bd-9929-4c4e-b2cd-7fd23a4dabb8.png",
+    "assetId": "ab14fd2c-01d3-4ff6-b58b-010e1242ea47",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/06b91f12-ec07-4d34-ad85-bc8b79e3678d.png",
     "recortado": true
   },
   "Secundario con icono final": {
@@ -175,8 +175,8 @@
     "nombre": "API · Secundario con icono final",
     "archivo": "frames/button-api-secundario-icono.png",
     "fraccionAncho": 48,
-    "assetId": "81f5f5d8-188c-43eb-a35c-2bfd78e437bb",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/7ec63b86-87a3-4a24-805e-10e32cb5d46e.png",
+    "assetId": "e3b4165a-9967-4424-8ea2-53e2980cd835",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/44efa3c4-60dd-439f-b176-ae8df25de77a.png",
     "recortado": true
   },
   "Deshabilitado": {
@@ -184,8 +184,8 @@
     "nombre": "API · Deshabilitado",
     "archivo": "frames/button-api-deshabilitado.png",
     "fraccionAncho": 48,
-    "assetId": "f29bc4fb-b4c9-4480-a5d0-ffed1f990bc9",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/cde30937-fdab-40bd-8d87-fdee6eb27b79.png",
+    "assetId": "6ab8b06f-7b0c-4251-b80a-f2bad79ff51c",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/abfaea95-2bcf-4dd4-946c-611cfa24c715.png",
     "recortado": true
   }
 }

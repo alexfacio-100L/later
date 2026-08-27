@@ -42,3 +42,7 @@ references/component-md/component-md-template.md.orig
 
 # Volcado de tokens generado por el CLI de Supernova: se regenera y ensucia el diff
 tokens.json
+
+# Entorno de Python para recortar.py — Pillow no está en el Python del sistema.
+# Se recrea con: python3 -m venv experimento-canario/.venv && experimento-canario/.venv/bin/pip install Pillow
+experimento-canario/.venv/
