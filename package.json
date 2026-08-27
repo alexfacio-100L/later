@@ -8,6 +8,7 @@
     "node": ">=21"
   },
   "scripts": {
+    "preflight": "node experimento-canario/preflight.mjs",
     "setup": "npm install --prefix experimento-canario",
     "tablero": "python3 '../2. Proyecto/Contexto/verificar-tablero.py'",
     "uspec:verificar": "node verificar-uspec.mjs",
