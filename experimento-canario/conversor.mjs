@@ -53,7 +53,21 @@ const etiquetasCitadas = t =>
 
 const esFila       = l => /^\s*\|.*\|\s*$/.test(l)
 const esSeparador  = l => /^\s*\|[\s:|-]+\|\s*$/.test(l)
-const celdasDe     = l => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim())
+/**
+ * 🔴 El pipe escapado `\|` es UN DATO, no un separador de celda.
+ *
+ * uSpec lo emite en toda columna de valores de enum —`primary \| secondary`,
+ * `Thin \| Light \| Regular`—, que es la notación estándar de Markdown para
+ * meter una barra dentro de una celda. Partir por `|` a secas convierte una
+ * fila de 5 celdas en una de 11, y Supernova la rechaza con `RaggedTableRow`
+ * al publicar. Pasó el 27 ago 2026 con las tablas `Properties` del Button:
+ * 10 filas irregulares, y la validación no lo dice hasta el momento de escribir.
+ *
+ * Se parte solo por los pipes NO escapados, y dentro de la celda el `\|`
+ * vuelve a ser el carácter que representa.
+ */
+const celdasDe     = l => l.trim().replace(/^\|/, "").replace(/\|$/, "")
+  .split(/(?<!\\)\|/).map(c => c.trim().replace(/\\\|/g, "|"))
 
 /** Ancho útil de una página de documentación de Supernova, en px. */
 const ANCHO_PAGINA = 760

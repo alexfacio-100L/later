@@ -87,7 +87,13 @@ const tablaDelMd = (encabezado) => {
     else if (filas.length) break
   }
   if (!filas.length) return `*No encontré la tabla de ${encabezado}.*`
-  const celdas = (l) => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim())
+  // 🔴 `\|` es un dato dentro de la celda, no un separador. uSpec lo emite en
+  // toda columna de valores de enum. Partir por `|` a secas hizo que 10 filas
+  // de `Properties` salieran con el doble de celdas y Supernova rechazara la
+  // pagina entera con `RaggedTableRow` (27 ago 2026). Mismo arreglo que en
+  // experimento-canario/conversor.mjs — ojo: el troceador esta duplicado.
+  const celdas = (l) => l.trim().replace(/^\|/, "").replace(/\|$/, "")
+    .split(/(?<!\\)\|/).map(c => c.trim().replace(/\\\|/g, "|"))
   const cuerpo = filas.map(celdas).filter(cs => !cs.every(c => /^:?-+:?$/.test(c)))
   return tabla(cuerpo[0], cuerpo.slice(1))
 }
@@ -164,7 +170,7 @@ const TABS = {
 Ejecuta una acción. Lo que navega es un Link.
 
 <SNCallout variant="Info">
-**Estado:** Transitional · **También llamado:** Action, Call to action, CTA
+**Estado:** Stable · **También llamado:** Action, Call to action, CTA
 </SNCallout>
 
 ## Propósito
@@ -310,7 +316,7 @@ ${preview("Primary / Product / Dark", "Primary · Product · Dark")}
 
 ## Accesibilidad
 
-- **Área táctil:** las alturas actuales son 37 · 45 · 53. Cumplen el mínimo AA de 24 px (WCAG 2.5.8); **\`size=s\` no alcanza los 44 de AAA**. La escala nueva —48 · 56 · 64— lo resuelve en los tres.
+- **Área táctil:** las alturas son **48 · 56 · 64**, en \`min-height\` **y** en \`min-width\`. Las tres tallas superan tanto los 24 x 24 px de **WCAG 2.5.8 Target Size (Minimum), nivel AA**, como los 44 x 44 de **2.5.5 Target Size (Enhanced), nivel AAA**. Los 44 px son un **estándar propio de 100 Ladrillos** alineado a 2.5.5 y a las Apple HIG, no una corrección de conformidad. Supuesto declarado: 1 px de Figma = 1 px CSS.
 - **Foco:** \`border/focus\` da **4.80:1 en Light y 4.07:1 en Dark** contra el lienzo, por encima del 3:1 que exige WCAG 1.4.11.
 - **Contraste:** el umbral es 4.5:1 en los tres tamaños — 12, 14 y 16 px son «texto normal» para WCAG.
 - **Teclado:** activable con Enter y Space. El atributo \`disabled\` nativo lo saca del orden de tabulación.
@@ -332,10 +338,10 @@ ${preview("Deshabilitado", "Deshabilitado")}
 
 "Estatus y cambios": `# Lifecycle
 
-**Transitional.** El componente está documentado y en uso, pero su escala dimensional va a cambiar: las alturas pasan de 37 · 45 · 53 a **48 · 56 · 64**, con texto e icono escalando en paralelo.
+**Stable.** El componente está documentado y en uso, y su escala dimensional ya se rehízo: alturas **48 · 56 · 64**, texto **12 · 14 · 16**, iconos **16 · 20 · 24**, con \`paddingBlock\` constante. La documentación de esta página describe la escala vigente.
 
-<SNCallout variant="Warning">
-**La especificación de medidas de esta página describe la escala anterior.** El cambio está decidido pero no aplicado en Figma. Hasta entonces, las medidas publicadas son las vigentes.
+<SNCallout variant="Info">
+**El cambio de escala más relevante para quien consume el componente es el defecto del eje \`size\`, que pasó de \`s\` a \`m\`.** Todo lo que instancia el Button sin especificar talla cambia de aspecto al actualizar la librería.
 </SNCallout>
 
 ## Component health
