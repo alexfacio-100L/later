@@ -96,7 +96,7 @@ npm run docs:estado
 | Diagnóstico | Qué significa | Qué hacer |
 | --- | --- | --- |
 | ✅ La API responde | Todo bien | Publicar |
-| 🔴 Ni API ni web | **Supernova caído** | Ver [status.supernova.io](https://status.supernova.io). Si urge entregar, `DESTINO=figma` |
+| 🔴 Ni API ni web | **Supernova caído** | Ver [supernova.statuspage.io](https://supernova.statuspage.io). Si urge entregar, `DESTINO=figma` |
 | 🔴 **Web sí, API no** | **Problema de RUTA desde tu conexión** | **VPN o avisar al ISP.** *Cambiar a `figma` no ayuda y cuesta caro* |
 
 > ⚠️ **La tercera es la trampa.** *El 20 ago 2026 se reinició el equipo buscando un fallo que estaba fuera:* un problema de peering hacia AWS Irlanda. **La web de Supernova respondía perfecto mientras su API era inalcanzable, y ningún host de `eu-west-1` — ni de Amazon — respondía.**
@@ -104,3 +104,43 @@ npm run docs:estado
 > **Cambiar de destino habría gastado ~700k tokens sin arreglar nada.** *Lo que lo resolvió fue cambiar de red.*
 
 **La prueba que las separa:** `cloud.supernova.io` va por CDN con presencia local; `api.supernova.io` apunta directo a Irlanda. **Misma empresa, rutas distintas.**
+
+
+---
+
+## ¿Y si el que falla es Figma?
+
+**La bandera NO tiene simétrico, y la razón importa: Figma es la fuente, Supernova es el destino.**
+
+```
+Figma  ──►  _base.json  ──►  button.md  ──┬──►  Supernova
+ fuente                                    └──►  Figma (contingencia)
+```
+
+**Si cae Supernova**, la documentación se produce igual y se dibuja en Figma. *Caro, pero existe.*
+🔴 **Si cae Figma, no hay a dónde ir**: sin Figma no se extrae, así que no hay `.md` nuevo que producir. **Los dos caminos de la bandera arrancan del mismo sitio.**
+
+### Lo que sí se puede hacer con Figma caído
+
+**Publicar lo que ya está extraído.** Si el `.md` existe en el repo, `publicar.mjs` no necesita Figma para nada:
+
+| Qué | ¿Sobrevive sin Figma? |
+| --- | --- |
+| El texto, las tablas, el contrato de API | ✅ salen del `.md` |
+| Tokens y contraste calculado | ✅ los resuelve Supernova |
+| El playground de Storybook | ✅ es del código |
+| **Los previews** | ✅ **si ya están subidos** — viven en Supernova, no en Figma |
+| **Re-extraer o regenerar el `.md`** | 🔴 **no** |
+| `figma-frames` y `figma-components-propstable` con datos nuevos | 🔴 **no** |
+
+> **En corto: con Figma caído se publica, pero no se actualiza.** *Y eso casi siempre es suficiente para no bloquear una entrega.*
+
+### Antes de dar Figma por caído
+
+```bash
+node experimento-canario/verificar-status.mjs
+```
+
+Consulta **Figma y Supernova** a la vez y **avisa de incidentes de las últimas 48 h aunque hoy esté todo verde** — un fallo de ayer se explica con un incidente de ayer.
+
+⚠️ **Y aplica aquí la misma trampa que la tabla de arriba:** *el 26 ago 2026 los scripts contra Figma daban timeout y se culpó al encargo —«demasiadas variantes, agente saturado»—, hasta el punto de estar a punto de rediseñar una tarea de 60 variantes.* **Era una interrupción MAJOR del MCP de Figma, publicada en su status ese mismo día.** Páginas: [status.figma.com](https://status.figma.com/) · [supernova.statuspage.io](https://supernova.statuspage.io)
