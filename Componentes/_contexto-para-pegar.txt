@@ -40,7 +40,16 @@ EL DEFECTO DE TIPOGRAFÍA YA NO EXISTE
   27 de agosto: los tres tamaños tienen ahora su propio estilo de texto
   (12 · 14 · 16). No lo documentes como hueco.
 
-DEFECTO ABIERTO Y NUEVO: cornerRadius entre estados (severidad alta)
+cornerRadius — ⚠️ EN DECISIÓN. NO LO REDACTES COMO HUECO ABIERTO TODAVÍA.
+- Hay una propuesta sobre la mesa —colapsar los tres ejes a uno solo y bindear
+  `radius/l` (16) en las 60 variantes— y el Lead la está decidiendo. Si se
+  aprueba, TODO lo que sigue en este bloque deja de ser cierto y el hueco
+  desaparece en vez de quedar abierto.
+- Mientras no haya confirmación: describe los valores medidos y di que el
+  criterio está en revisión. NO lo clasifiques con severidad, NO lo llames
+  defecto permanente y NO propongas remedio.
+- Los valores de abajo son los medidos el 27 de agosto y valen como
+  fotografía del estado, no como veredicto.
 - El 27 de agosto se ajustó el cornerRadius de las variantes `primary` y
   SOLO en el estado `default`. El resto de estados quedó sin tocar, así que
   el botón CAMBIA DE FORMA al pasar el cursor.
