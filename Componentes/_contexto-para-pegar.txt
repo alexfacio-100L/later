@@ -40,37 +40,32 @@ EL DEFECTO DE TIPOGRAFÍA YA NO EXISTE
   27 de agosto: los tres tamaños tienen ahora su propio estilo de texto
   (12 · 14 · 16). No lo documentes como hueco.
 
-cornerRadius — ⚠️ EN DECISIÓN. NO LO REDACTES COMO HUECO ABIERTO TODAVÍA.
-- Hay una propuesta sobre la mesa —colapsar los tres ejes a uno solo y bindear
-  `radius/l` (16) en las 60 variantes— y el Lead la está decidiendo. Si se
-  aprueba, TODO lo que sigue en este bloque deja de ser cierto y el hueco
-  desaparece en vez de quedar abierto.
-- Mientras no haya confirmación: describe los valores medidos y di que el
-  criterio está en revisión. NO lo clasifiques con severidad, NO lo llames
-  defecto permanente y NO propongas remedio.
-- Los valores de abajo son los medidos el 27 de agosto y valen como
-  fotografía del estado, no como veredicto.
-- El 27 de agosto se ajustó el cornerRadius de las variantes `primary` y
-  SOLO en el estado `default`. El resto de estados quedó sin tocar, así que
-  el botón CAMBIA DE FORMA al pasar el cursor.
-- Estado medido, sin interpretar:
-      primary/product/s     default 16 · hover, pressed, focus, disabled  8
-      primary/product/m     default 24 · resto  8
-      primary/product/l     default 24 · resto 12
-      primary/marketing/s   default 16 · resto 12
-      primary/marketing/m   default 16 · resto 12
-      primary/marketing/l   default 24 · resto 12
-      secondary/*           sin tocar: 8 en product s/m, 12 en el resto
-- Documéntalo como lo que se mide: un ajuste de expresión de marca aplicado
-  solo al estado default, que produce un salto de forma en la interacción
-  (de 24 a 8 en product/m). NO lo presentes como intencional en todos los
-  estados y NO inventes la intención.
-- La progresión entre tallas tampoco es coherente: product 16 · 24 · 24 y
-  marketing 16 · 16 · 24.
-- Y agrava algo que ya estaba fichado: cornerRadius es la ÚNICA familia
-  dimensional sin tokenizar —valores crudos— y antes dependía de dos ejes
-  (size y surface). Ahora depende de tres: size, surface y state. Menciónalo;
-  no lo resuelvas: hay una evaluación aparte en curso.
+cornerRadius — RESUELTO EL 27 DE AGOSTO. NO ES UN HUECO ABIERTO.
+- Las 60 variantes tienen `radius/l` (16) en las CUATRO esquinas, bindeado a
+  la variable. Un solo valor, cero excepciones, cero valores crudos.
+- No varía por size, ni por surface, ni por variant, ni por state. Documenta
+  un único radio para el componente entero.
+- Ratios contra la altura: 33,3% en s · 28,6% en m · 25% en l. Ninguno llega
+  a pill; los umbrales son 24 · 28 · 32.
+- Lo que había antes y ya NO es cierto: cuatro tokens distintos repartidos
+  sin razón declarada (radius/m en 36 variantes, radius/s en 18, radius/l en
+  3 y radius/xl en 3), más un experimento del 27 de agosto que subía el radio
+  solo en primary y solo en `default`. Ese experimento se cerró: producía un
+  salto de forma al pasar el cursor, y el criterio que lo descartó es que una
+  propiedad de forma no varía por un eje cuyos valores se ven juntos.
+- ⚠️ NO escribas que cornerRadius era la única familia dimensional sin
+  tokenizar. Es falso: siempre estuvo bindeado. El problema era otro —cuatro
+  tokens para una misma propiedad sin razón declarada— y ya está resuelto.
+- Queda declarada viva una alternativa que el Lead puede pedir: escalar
+  12 · 14 · 16 por talla. Exigiría crear un peldaño de 14 que hoy no existe
+  en la escala. NO la documentes como pendiente del componente: es una
+  decisión de foundations, no un hueco del Button.
+
+RESIDUO QUE SÍ HAY QUE ANOTAR
+- Los 60 `labelBox` internos conservan un cornerRadius de 12, bindeado a
+  token. No se ve —labelBox no tiene relleno— pero existe y llega a la
+  extracción. Es geometría sobrante de haber mudado su horizontalPadding a 0
+  el 27 de agosto. Anótalo como residuo a limpiar, no como decisión.
 
 ÁREA TÁCTIL — CÓMO SE CITA, Y ES IMPORTANTE
 - NO escribas que 44 px es "WCAG 2.5.8" ni "AA en 2.2". Es falso y estuvo
