@@ -135,7 +135,7 @@ Build these values:
 - **`SECTIONS` (per entry)** — for each `### State: {name}`, the array of 3 platform sections, each `{ title, tables: [{ name, announcement, focusOrderIndex, properties: [{property, value, notes}] }] }`, copied verbatim from the parsed per-state platform tables. For the Focus Order entry, `SECTIONS = [{ title: "Focus order", tables: <focus-order tables> }]`.
 - **`COMP_SET_ID`** — `render-meta.component.compSetNodeId`.
 - **`BOOLEAN_DEFS`** — reshape `render-meta.booleanDefs[]` → `{ [key]: default }` (raw component-property keys; see Step 0.4).
-- **`FOCUS_STOPS` (per entry)** — built from the `voice-render-meta` carry. For the Focus Order entry, all `focusStops[]`. For a per-state entry, the subset whose `name` appears as a `#####` table in that state (match by part name). Each stop is `{ index: focusOrderIndex, name: layerName, slotIndex }` — **`name` is the carry's `layerName`**, because `findStopNode` matches `node.name === stop.name`. Skip a stop entirely when its `layerName` is `null` (no backing node → no marker).
+- **`FOCUS_STOPS` (per entry)** — built from the `voice-render-meta` carry. For the Focus Order entry, all `focusStops[]`. For a per-state entry, the subset whose `name` appears as a `#####` table in that state (match by part name). Each stop is `{ index: focusOrderIndex, name: layerName, slotIndex, preferRoot }` — **`name` is the carry's `layerName`**, because `findStopNode` matches `node.name === stop.name`. **Carry `preferRoot` through when the carry sets it**: it resolves the case where the root instance and one of its descendants share the layer name. Skip a stop entirely when its `layerName` is `null` (no backing node → no marker).
 - **`SLOT_INSERTIONS` (per entry)** — from the parsed `### Slot insertions` prose: `{ slotName, componentNodeId, nestedOverrides?, textOverrides? }`. Resolve `componentNodeId` against `render-meta.slotContents[].preferredComponents[].componentId` when the prose carries a name instead of an id. Use `[]` when the default slot content already realizes the documented stops.
 
 `VARIANT_PROPS` is derived in Step 5.
@@ -516,6 +516,13 @@ if (RENDER_ARTWORK) {
     }
 
     function findStopNode(root, stop, visibleOnly) {
+      // `preferRoot` viene del carry `voice-render-meta`. Lo emite `completar-md.mjs`
+      // cuando el nombre de capa de la parada coincide con el nombre del componente,
+      // porque entonces hay DOS nodos con ese nombre —la raiz y, tipicamente, el TEXT
+      // del label— y `findAll`/`findOne` solo recorren DESCENDIENTES: sin esta guarda
+      // el marcador y el contorno punteado rodean el texto en vez del componente.
+      // Verificado en Button (28 ago 2026): raiz `Button` + TEXT `Button`.
+      if (stop.preferRoot && root.name === stop.name) return root;
       const nameFilter = n => n.name === stop.name;
       if (stop.slotIndex !== undefined) {
         const all = root.findAll(nameFilter);
@@ -838,7 +845,7 @@ For each state:
 - `FONT_FAMILY` = the `fontFamily` value from `uspecs.config.json` (default: `Inter`)
 - `RENDER_ARTWORK` = always `true` — this skill always has the `.md` + `render-meta` (there is no screenshot-only path).
 - `COMP_SET_ID` = `render-meta.component.compSetNodeId`
-- `FOCUS_STOPS` = array of `{ index, name, slotIndex? }` built from the `voice-render-meta` carry, where **`name` is the carry's `layerName`** — `findStopNode` resolves by `node.name === stop.name`, so a human part name will fail silently. `slotIndex` comes from the carry (present for composable-slot siblings). The render script reads each stop's live `bbox` itself; you do not supply bbox. Exclude stops whose `layerName` is `null`.
+- `FOCUS_STOPS` = array of `{ index, name, slotIndex?, preferRoot? }` built from the `voice-render-meta` carry, where **`name` is the carry's `layerName`**. **`preferRoot` must be carried through verbatim**: when it is `true` and the root instance itself carries the stop's name, `findStopNode` returns the root instead of searching descendants. Dropping it makes the marker land on a same-named descendant (e.g. the label TEXT) with no error to warn you — `findStopNode` resolves by `node.name === stop.name`, so a human part name will fail silently. `slotIndex` comes from the carry (present for composable-slot siblings). The render script reads each stop's live `bbox` itself; you do not supply bbox. Exclude stops whose `layerName` is `null`.
 - `VARIANT_PROPS` = variant axis values for this entry, from Step 5 (focus-order: richest state; per-state: the state mapping).
 - `BOOLEAN_DEFS` = `render-meta.booleanDefs[]` reshaped to `{ [key]: default }` (raw component-property keys).
 - `SLOT_INSERTIONS` = array of `{ slotName, componentNodeId, nestedOverrides?, textOverrides? }` parsed from the `### Slot insertions` block (resolve `componentNodeId` via `render-meta.slotContents` when needed). All overrides must be applied before `appendChild` into the slot. Set to `[]` when no slot population is needed.

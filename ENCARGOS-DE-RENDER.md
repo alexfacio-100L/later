@@ -9,11 +9,11 @@
 ## Bloque común — va en todos los encargos
 
 ```text
-Follow the skill at "…/2. Proyecto/uSpec/.claude/skills/create-<SKILL>/SKILL.md".
+Follow the skill at "…/later-brand-system/.claude/skills/create-<SKILL>/SKILL.md".
 
 PATHS:
-- uSpec root (uspecs.config.json): "…/later-brand-system/2. Proyecto/uSpec"
-- componentMdPath: "…/later-brand-system/3. Entregables/Componentes/<slug>.md"
+- uSpec root (uspecs.config.json): "…/later-brand-system"
+- componentMdPath: "…/later-brand-system/Componentes/<slug>.md"
 - There is NO .uspec-cache (regenerable, not migrated). Work from the .md alone —
   it ends with a render-meta JSON block carrying every node id.
 - fileKey: UGwIBzERV4vB7mk0mejZ0y · mcpProvider: figma-mcp
@@ -59,20 +59,37 @@ and anything you could not complete. Do not paste frame contents.
 
 ---
 
-## Los cuatro que faltan del Button
+## Estado del Button — COMPLETO (28 ago 2026)
 
-Página destino en todos: `↳ Button` (id `80:19`). **Borrar primero el frame en inglés** y renderizar en su sitio.
+**Las seis anotaciones están renderizadas, en español y con las plantillas brandeadas.** Página `↳ Button` (`80:19`), todas en `y −716`:
 
-| Skill | Plantilla local | Frame a reemplazar | Posición |
+| Anotación | Node id | x | Tamaño |
 | --- | --- | --- | --- |
-| `create-property` | `.Property` · `12214:6624` | `Button Properties` · `12236:11098` | x 5606, y −716 |
-| `create-structure` | `.Structure` · `12214:6590` | `Button Structure` · `12242:1646` | x 7800, y −716 |
-| `create-color` | `.Color Annotation` · `12214:6768` | `Button Color` · `12249:1648` | x 10000, y −716 |
-| `create-voice` | `.Screen reader` · `12214:6551` | `Button Screen reader` · `12258:2172` | x 12200, y −716 |
+| `Anatomy` | `12701:2299` | 1206 | 1720 × 1614 |
+| `API` | `12705:1716` | 3406 | 1720 × 6426 |
+| `Properties` | `12709:2296` | 5606 | 1720 × 3490 |
+| `Structure` | `12716:1664` | 7800 | 1720 × 8087 |
+| `Color` | `12728:2634` | 10000 | 1720 × 6608 |
+| `Screen reader` | `12744:2637` | 12200 | 2400 × 5956 |
 
-**Las seis reconstruidas con la plantilla brandeada, en español (18 ago):**
-`Anatomy` `12290:10522` · `API` `12292:10564` · `Properties` `12301:2020` · `Structure` `12304:2187` · `Color` `12311:2189` · `Screen reader` `12318:2192`
-Los seis frames en inglés del 17 ago fueron borrados.
+**Los seis frames del ciclo del 18 ago fueron borrados.** Los seis `— solo-preview` del ciclo anterior **siguen en el canvas** a la espera de que el Lead decida; no son documentación vigente.
+
+### ⚠️ Trocear no es una recomendación: es la causa de tres sesiones muertas
+
+`Structure` y `Color` mataron una sesión cada una por meter una tabla entera en un solo script contra el MCP. **Una llamada `use_figma` por sección como máximo**, y dejar el frame en estado consistente entre llamada y llamada — así se pudo retomar `Structure` sin rehacer sus 36 filas, y `Color` desde el Step 10 sobre un frame que ya tenía el header puesto.
+
+### Plantillas locales y posiciones, para el siguiente componente
+
+| Skill | Plantilla local | Posición usada en Button |
+| --- | --- | --- |
+| `create-anatomy` | `.Anatomy` | x 1206 |
+| `create-api` | `.API` | x 3406 |
+| `create-property` | `.Property` · `12214:6624` | x 5606 |
+| `create-structure` | `.Structure` · `12214:6590` | x 7800 |
+| `create-color` | `.Color Annotation` · `12214:6768` | x 10000 |
+| `create-voice` | `.Screen reader` · `12214:6551` | x 12200 |
+
+`create-motion` no aplica al Button: **no hay composición de After Effects**, que es su entrada.
 
 ### Contexto que conviene pasar a cada una
 
@@ -80,9 +97,11 @@ Los seis frames en inglés del 17 ago fueron borrados.
 
 **`create-structure`** — el `.md` trae *Type deltas* y tres secciones dimensionales: *Button sizes* (30 filas), *Button surface shape* (3) y *Button focus ring* (3). El render-meta lleva los `sectionTargets` y `groupTargets` de las tres.
 
-**`create-color`** — Strategy B: cuatro secciones, una por combinación `Surface`×`Type`, con las columnas ya relabeladas a condiciones de ejecución. ⚠️ **Las celdas ahora traen dos valores: `token (#Light · #Dark)`.** Copiarlos tal cual — es la única forma en que el modo oscuro aparece en la documentación.
+**`create-color`** — Strategy B: cuatro secciones con las columnas relabeladas a condiciones de ejecución (`rest · hover · active · focus-visible · isDisabled === true`). ⚠️ **Corregido el 28 ago:** las cuatro secciones son `variant` × **modo** —`primary / Light`, `primary / Dark`, `secondary / Light`, `secondary / Dark`— y **cada celda trae UN solo hex**, el de su modo. *Hasta el 28 ago este párrafo decía `Surface`×`Type` con celdas de dos valores `token (#Light · #Dark)`: era la forma anterior al `.md` regenerado el 27 ago, y describía algo que ya no existe.* Los ejes `surface` y `size` no abren sección: su único efecto de color son las cuatro filas de Drop shadow. **9 filas × 5 columnas × 4 secciones = 180 celdas: trocear por sección o da timeout.**
 
-**`create-voice`** — 4 estados × 3 plataformas, una sola parada de foco. El `.md` lleva un comentario oculto `<!-- voice-render-meta v=1 … -->` con los nombres de capa de las paradas. ⚠️ **Dentro del Button hay dos nodos llamados `Button`** —la raíz y el TEXT del label—: `findStopNode` busca solo descendientes y marca el texto. Preferir la raíz cuando `root.name === stop.name`.
+**`create-voice`** — ⚠️ **Corregido el 28 ago: son DOS estados × 3 plataformas, 6 tablas** (`rest / hover / active / focus-visible` e `isDisabled === true`). *Este párrafo decía «4 estados» hasta el 28 ago.* En `isDisabled === true` el `.md` documenta `focus stops: 0`: ahí va `FOCUS_STOPS = []`, sin marcadores ni contornos.
+
+🟢 **El bloqueo de `findStopNode` está RESUELTO en la skill desde el 28 ago — no lo redescubras.** Dentro del Button hay **dos nodos llamados `Button`** —la raíz y el TEXT del label— y `findAll`/`findOne` de Figma solo recorren **descendientes**, así que el contorno rodeaba el texto. `completar-md.mjs` ya emitía `preferRoot: true` en el carry `voice-render-meta`, pero la skill ignoraba el campo. Ahora `findStopNode` abre con `if (stop.preferRoot && root.name === stop.name) return root;`. **Lo único que hay que hacer es arrastrar `preferRoot` tal cual del carry a `FOCUS_STOPS`: si se pierde al mapear, el contorno vuelve a salir mal sin ningún error que lo avise.**
 
 ---
 
