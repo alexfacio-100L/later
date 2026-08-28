@@ -4,7 +4,7 @@ Lo que sigue lo genera uSpec desde Figma. **Se regenera, no se edita a mano**: c
 
 ## Anatomía
 
-<SNImage alignment="Left" resourceId="6eacc267-b177-47ef-a028-c0c3306bbe99" caption="Los cuatro elementos, numerados" />
+![Los cuatro elementos, numerados](https://studio-assets.supernova.io/design-systems/825551/3d63b628-f478-49c4-9127-81befbc535bf.png)
 
 **La numeración es un contrato:** los marcadores del frame y las filas de esta tabla son la misma lista.
 
@@ -29,14 +29,12 @@ Lo que sigue lo genera uSpec desde Figma. **Se regenera, no se edita a mano**: c
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={96}>
       Frame
-
-      <SNImage alignment="Left" resourceId="f8fd9043-ebbf-45c1-a57f-12b4554343d6" />
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={190}>
-      Button
+      `Button`
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={190}>
-      Contenedor raíz. Fondo tokenizado, radio 8 y sombra; fija el padding por `size` y la separación entre elementos.
+      Contenedor raíz y área táctil. Fija fondo, borde, sombra, el radio `radius/l` (16) y el inset `paddingInline`/`paddingBlock`. `min-height` y `min-width` de 48 · 56 · 64 según `size`; nunca altura fija.
     </SNTableCell>
   </SNTableRow>
   <SNTableRow>
@@ -45,14 +43,12 @@ Lo que sigue lo genera uSpec desde Figma. **Se regenera, no se edita a mano**: c
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={96}>
       Instance
-
-      <SNImage alignment="Left" resourceId="5e0d19b0-656d-4c23-9291-09bf5628f66f" />
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={190}>
-      iconLeft
+      `iconLeft`
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={190}>
-      Icono opcional antes del texto. Instancia de `ArrowRight` (Phosphor). Lo revela `showIconLeft`; oculto por defecto.
+      Instancia referenciada de `ArrowRight` (Phosphor), tamaño `size/icon/s|m|l` (16 · 20 · 24). Decorativa para la tecnología asistiva. Oculto por defecto; lo revela `showIconLeft`.
     </SNTableCell>
   </SNTableRow>
   <SNTableRow>
@@ -61,14 +57,12 @@ Lo que sigue lo genera uSpec desde Figma. **Se regenera, no se edita a mano**: c
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={96}>
       Text
-
-      <SNImage alignment="Left" resourceId="a16be980-3409-4da4-b5ba-1788ac240064" />
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={190}>
-      labelBox
+      `labelBox`
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={190}>
-      El texto de la acción. Siempre visible — es el único elemento obligatorio.
+      Envoltorio del texto del botón; sin relleno ni borde propios. Su contenido es el nombre accesible del control. Residuo a limpiar: conserva un `cornerRadius` de 12 que no se ve.
     </SNTableCell>
   </SNTableRow>
   <SNTableRow>
@@ -77,14 +71,12 @@ Lo que sigue lo genera uSpec desde Figma. **Se regenera, no se edita a mano**: c
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={96}>
       Instance
-
-      <SNImage alignment="Left" resourceId="5e0d19b0-656d-4c23-9291-09bf5628f66f" />
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={190}>
-      iconRight
+      `iconRight`
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={190}>
-      Icono opcional después del texto. Instancia de `ArrowRight` (Phosphor). Lo revela `showIconRight`; oculto por defecto.
+      Instancia referenciada de `ArrowRight` (Phosphor), simétrica al icono leading. Decorativa para la tecnología asistiva. Oculto por defecto; lo revela `showIconRight`.
     </SNTableCell>
   </SNTableRow>
 </SNTable>
@@ -93,441 +85,17 @@ Lo que sigue lo genera uSpec desde Figma. **Se regenera, no se edita a mano**: c
 
 ### Por tamaño
 
-<SNImage alignment="Left" resourceId="201204a6-a16a-42c4-b852-99b96e0e5c53" />
+![Button sizes](https://studio-assets.supernova.io/design-systems/825551/9443ddab-cc86-4030-b786-467d3781be5a.png)
 
-<SNTable showBorder highlightHeaderRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Spec
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      L
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      M
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      S
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Notes
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Container
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Raíz del componente: auto-layout horizontal, centrado en ambos ejes.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      verticalPadding
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/l (16)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/m (12)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/s (8)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Progresión corregida el 20 ago 2026: 16/12/8, toda dentro de la escala space. Es el único par que escala con size.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      horizontalPadding
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/xl (24)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/l (16)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/l (16)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      m y s comparten space/l (16); solo l sube a space/xl (24). Antes había 18 y 10 crudos, fuera de escala.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      itemSpacing
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/zero (0)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/zero (0)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/zero (0)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      El gap real entre icono y label no vive aquí: lo produce el horizontalPadding de labelBox (8).
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      cornerRadius
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      12
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      8
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      8
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Valor crudo, sin token: es la única familia dimensional sin tokenizar. También depende de surface (ver Button surface).
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      widthMode
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      hug
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      hug
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      hug
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Ancho gobernado por el contenido; no hay minWidth ni maxWidth definidos.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      heightMode
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      hug
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      hug
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      hug
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Altura derivada del padding vertical más la línea de 21: resulta 53 / 45 / 37. Ninguna llega a 44, el mínimo táctil de WCAG 2.5.8.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Content
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Wrapper de layout que agrupa iconLeft, labelBox e iconRight.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      padding
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      0
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      0
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      0
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Sin inset propio: el respiro lo pone el contenedor raíz.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      itemSpacing
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      0
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      0
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      0
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Sin gap propio; la separación la aporta el padding de labelBox.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Label box
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Caja que envuelve al texto y define su separación de los iconos.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      verticalPadding
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      0
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      0
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      0
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Cero deliberado: la altura de la caja la fija la línea del texto (21).
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      horizontalPadding
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/s (8)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/s (8)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      space/s (8)
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Constante en los tres tamaños. Es el gap efectivo icono↔label, y no escala con size.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      cornerRadius
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      12
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      12
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      12
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Anomalía: labelBox no pinta relleno ni borde, así que este radio no tiene efecto visual. Candidato a limpieza.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Label
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Nodo de texto del botón; su contenido lo aporta la propiedad label.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      textStyle
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Text/M - Poppins/Regular
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Text/M - Poppins/Regular
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Text/M - Poppins/Regular
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      HUECO ABIERTO: size no escala la tipografía. Los tres tamaños usan el mismo estilo (14/21, letterSpacing 0.2). No es una decisión documentada.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Icon left
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Instancia opcional, gobernada por showIconLeft (default false).
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      iconName
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      ArrowRight
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      ArrowRight
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      ArrowRight
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Set de Phosphor. La instancia embebida trae Weight=Fill, no el Weight=Regular declarado como defecto: divergencia a revisar.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      iconSize
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      20
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      16
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      16
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Único elemento además del padding que reacciona a size: 20 en l, 16 en m y s.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Icon right
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      –
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Instancia opcional, gobernada por showIconRight (default false).
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      iconName
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      ArrowRight
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      ArrowRight
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      ArrowRight
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Mismo set y mismo defecto que iconLeft; el par es simétrico.
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      iconSize
-
-      <SNImage alignment="Left" resourceId="e3b92133-1e6a-4ee2-95a7-edf087e20be1" />
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      20
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      16
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      16
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={152}>
-      Idéntico a iconLeft en los tres tamaños.
-    </SNTableCell>
-  </SNTableRow>
-</SNTable>
+*No encontré | Spec | L | M | S | Notes | en el .md.*
 
 ### Por superficie
 
-<SNImage alignment="Left" resourceId="b5228248-f140-477e-905c-5b1ac91b9c1a" caption="product y marketing: cambian radio, peso tipográfico y escalón de sombra" />
+![product y marketing: cambian radio, peso tipográfico y escalón de sombra](https://studio-assets.supernova.io/design-systems/825551/63604970-c7a4-4bb4-afc7-eac774eec6c2.png)
 
 ### Por estado
 
-<SNImage alignment="Left" resourceId="9da8b7fc-593b-41aa-bd07-446550c94942" caption="default, hover, pressed, focus y disabled" />
+![default, hover, pressed, focus y disabled](https://studio-assets.supernova.io/design-systems/825551/4508f6e8-980e-4ea4-a555-b278f9ba00fa.png)
 
 ## Propiedades
 
@@ -549,9 +117,9 @@ El contraste lo calcula Supernova sobre los tokens vivos: **no hay ratios escrit
 
 ### Cómo resuelve en cada mode
 
-<SNImage alignment="Left" resourceId="e6e766e7-5094-4e30-907c-128493d3e1f1" caption="Primary · Product · Light" />
+![Primary · Product · Light](https://studio-assets.supernova.io/design-systems/825551/b0753fd1-dd3e-44fd-b807-de4160c2c7aa.png)
 
-<SNImage alignment="Left" resourceId="10c8b6ad-a3f4-4449-8b68-9e2009265d6d" caption="Primary · Product · Dark" />
+![Primary · Product · Dark](https://studio-assets.supernova.io/design-systems/825551/3d319bf2-529a-4d2f-b497-c1c6d07a6a71.png)
 
 *Las ocho combinaciones completas —variant × surface × mode— están en la especificación del repo.*
 
@@ -567,9 +135,734 @@ El contraste lo calcula Supernova sobre los tokens vivos: **no hay ratios escrit
 **Un token que invierte con el mode no puede ir sobre un fondo que no invierte.** `background/selected` resuelve `#315fa3` en Light y en Dark —es azul de marca, no depende del lienzo—, así que el texto y el icono sobre él usan las variantes **Static**. Antes heredaban las normales: en Light casaba por casualidad y en Dark el texto caía a 3.29:1.
 </SNCallout>
 
+## Lector de pantalla
+
+Qué anuncia cada plataforma, estado por estado. **Es una decisión de diseño, no una consecuencia del marcado:** el código tiene atributos, no anuncios comprometidos.
+
+_Confidence: high._ _Reconciliation: 1 auto-fixed, 0 retried, 0 unresolved._
+
+> Button es un componente simple: un único focus stop. El texto de `labelBox` (label) se fusiona en el nombre accesible del botón y NO es un focus stop propio; `iconLeft` e `iconRight` son decorativos y se ocultan a la tecnologia asistiva. Ningun eje visual —`size`, `surface`, `variant`— altera la semántica de lector de pantalla: solo el eje `state` lo hace, y dentro de el unicamente `disabled`. Por eso los estados `rest`, `hover`, `active` y `focus-visible` están agrupados en una sola entrada: mismo focus stop, mismos roles y mismas propiedades; solo cambian relleno, borde y sombra.
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Tema
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      Criterio
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Merge analysis
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      Focus stop: el nodo raíz `Button` (COMPONENT). Fusionados: `labelBox` (aporta el nombre accesible). Decorativos: `iconLeft`, `iconRight` (instancias de ArrowRight de Phosphor, ocultas por defecto — `showIconLeft` y `showIconRight` en `false`). Live regions: ninguna. Cuando el consumidor active `leadingIcon` o `trailingIcon`, el conteo de focus stops NO cambia: el icono acompana al label, no es una acción independiente. Si algun día un icono necesita acción propia, deja de ser Button y pasa a ser un compuesto con dos stops.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Nombre accesible
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      El label visible manda. En el default extraido el texto es "Button", que es contenido de plantilla: en produccion el label debe describir la acción ("Guardar", "Enviar"), no la apariencia. Un botón solo-icono no existe hoy en este component set; si se crea, exigira `accessibilityLabel` / `contentDescription` / `aria-label` explicitos.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Plataformas y merge
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      iOS fusiona con `accessibilityElement(children: .combine)` sobre el contenedor; Android con `semantics(mergeDescendants = true)`; Web lo obtiene gratis usando `<button>` nativo con el texto como contenido. Prefiere siempre `<button>` sobre `<div role="button">`.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Disabled
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      `state=disabled` equivale a `isDisabled === true` en la API. En ese estado el componente sale por completo del orden de foco: cero focus stops. Usa `.disabled(true)` (iOS), `disabled()` en el bloque `semantics` (Android) y el atributo nativo `disabled` (Web). Si el producto necesita que el botón siga siendo enfocable para explicar por que esta bloqueado, usa `aria-disabled="true"` en lugar del atributo nativo y documenta el motivo — pero el default del sistema es sacarlo del orden de foco.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Advertencias universales
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      (1) Estabilidad del orden de foco: no reordenes stops entre estados; el indice se mantiene estable para que los gestos del usuario sean predecibles. (2) Longitud del anuncio: no metas el hint, el valor y el estado dentro del nombre accesible; cada uno tiene su propiedad. (3) Paridad entre plataformas: aquí las tres plataformas fusionan igual, así que no hay divergencia que documentar.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Área táctil
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      Los 44x44 px son un estándar propio de 100 Ladrillos, alineado a WCAG 2.5.5 Target Size (Enhanced), nivel AAA, y a las Apple HIG. NO son el criterio AA: el criterio AA es 2.5.8 Target Size (Minimum), 24x24 CSS px. Con la escala vigente —48, 56 y 64 px en `min-height` Y en `min-width`— las tres tallas superan tanto los 24 px de 2.5.8 (AA) como los 44 px de 2.5.5 (AAA), así que el hueco de área táctil esta cerrado. Supuesto declarado: se asume 1 px de Figma = 1 px CSS; si el consumidor escala el layout, hay que reverificar.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Texto de 12 px en la talla `s`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      WCAG no fija ningun tamaño mínimo de texto, de modo que 12 px no es un fallo de conformidad. Lo que si aplica es 1.4.4 Resize Text (AA) —el texto debe poder ampliarse al 200% sin perder contenido ni funcion, y usar `min-height` en vez de altura fija es precisamente lo que lo permite— y 1.4.3 Contrast (AA), donde 12 px cuenta como texto normal y exige 4.5:1, no los 3:1 del texto grande. Advertencia honesta y aceptada a sabiendas: 12 px queda por debajo de la práctica habitual para texto interactivo y es mediblemente mas difícil para baja vision y para usuarios de 65+. Es una decision con costo declarado, no un defecto ni algo resuelto.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Contraste y foco
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      El indicador de foco cumple 1.4.11 Non-text Contrast: `border/focus` da 4.80:1 en Light y 4.07:1 en Dark contra el lienzo, por encima del 3:1 exigido; el borde de `secondary` da 15.9 y 17.3. El texto deshabilitado se corrigio y ahora da 4.50:1 en Light y 4.89:1 en Dark. Queda abierto un punto que no depende de esta especificacion de voz: `background/disabled` apenas se distingue del lienzo en Light (1.30:1) — no afecta al lector de pantalla, pero si a quien ve la pantalla.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Nunca elimines el indicador de foco visible
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={580}>
+      El estado `focus` del component set representa `:focus-visible`; su semántica de lector de pantalla es identica a `rest`, pero su funcion visual es la que satisface 2.4.7 Focus Visible.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+### State: rest / hover / active / focus-visible
+
+Estados agrupados: idénticos en conteo de focus stops (1), en propiedades semánticas y en patrón de anuncio. Solo difieren en relleno, borde y sombra. Se documenta `rest` como representante; `variantProps` usa el variant por defecto (`state=default`).
+
+#### VoiceOver (iOS)
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Property
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Value
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Notes
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Announcement
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button, button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `accessibilityLabel`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Proviene del texto de `labelBox`, fusionado en el botón. En produccion debe describir la acción, no la apariencia.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `accessibilityTraits`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      .isButton
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Declara el rol; sin el, VoiceOver anuncia el elemento como texto estatico y el usuario no sabe que es accionable.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `accessibilityValue`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Button no tiene valor: no es un control ajustable ni conmutable.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `accessibilityHint`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Se omite porque la acción es obvia desde el label. Anadelo solo si el resultado de pulsar no es evidente.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `accessibilityElement(children:)`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      .combine
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Fusiona `labelBox` y los iconos en un único elemento accesible, para que el usuario haga un solo swipe.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `accessibilityHidden (iconLeft / iconRight)`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      true
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Los iconos ArrowRight son decorativos y acompanan al label; anunciarlos duplica información.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No leer el label dos veces
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El label se fusiona en el nombre del stop; `labelBox` no debe exponerse como elemento enfocable aparte.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No anunciar el icono decorativo
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Marca `iconLeft` e `iconRight` con `accessibilityHidden = true`; su significado ya esta en el label.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No incluir el tipo en el label
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Escribir "Botón guardar" produce "Botón guardar, button". El trait ya aporta el rol.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+#### TalkBack (Android)
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Property
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Value
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Notes
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Announcement
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button, button, double-tap to activate"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `contentDescription`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Proviene del texto de `labelBox`. Si el texto visible ya es suficiente, dejalo fluir en vez de duplicarlo.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `role`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Role.Button
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      TalkBack anade "button" y la pista "double-tap to activate" a partir de este rol.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `stateDescription`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No hay estado que comunicar: hover, pressed y focus no producen anuncio propio en Android.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `semantics(mergeDescendants)`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      true
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Agrupa label e iconos en un único nodo de accesibilidad.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `contentDescription (iconLeft / iconRight)`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      null
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `null` marca el icono como decorativo en Compose; equivale a excluirlo del arbol de accesibilidad.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No leer el label dos veces
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Con `mergeDescendants = true`, no anadas además un `contentDescription` propio a `labelBox`.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No anunciar el icono decorativo
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Usa `contentDescription = null` o `invisibleToUser()` en `iconLeft` e `iconRight`.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No incluir el rol en el contentDescription
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      TalkBack ya anade "button"; escribirlo produce "Guardar botón, button".
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+#### ARIA (Web)
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Property
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Value
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Notes
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Announcement
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button, button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `element`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `<button type="button">`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Nativo antes que ARIA: aporta rol, foco por teclado y activacion con Enter y Espacio sin código extra. El eje se llama `variant` precisamente porque `type` esta reservado para button/submit/reset.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `textContent`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El texto visible es el nombre accesible; no hace falta `aria-label`.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `role`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      button (implicito)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No lo declares explicitamente sobre un `<button>` nativo: es redundante.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `aria-label`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      –
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Solo necesario si algun día existe una variante solo-icono, que hoy este component set no ofrece.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `aria-hidden (iconLeft / iconRight)`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      true
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El SVG de ArrowRight es decorativo; anade también `focusable="false"` para el modo de compatibilidad de navegadores antiguos.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `focus indicator`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      border/focus — 4.80:1 (Light), 4.07:1 (Dark)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Supera el 3:1 que exige 1.4.11 Non-text Contrast y satisface 2.4.7 Focus Visible. Nunca lo suprimas con `outline: none` sin sustituto equivalente.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No leer el label dos veces
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Con texto visible dentro del `<button>`, anadir `aria-label` lo sobrescribe y desincroniza el nombre hablado del visible.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No anunciar el icono decorativo
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Marca el SVG con `aria-hidden="true"`; sin ello algunos lectores leen el nombre del símbolo.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No usar `<div role="button">`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Obliga a replicar a mano `tabindex`, Enter y Espacio, y se rompe en cuanto uno se olvida.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+### State: isDisabled === true
+
+Corresponde a `state=disabled` en Figma y a `isDisabled: true` en la API. El componente sale por completo del orden de foco: cero focus stops. Las tres secciones de plataforma documentan como declararlo inerte; la tabla no representa una parada de foco.
+
+#### VoiceOver (iOS)
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Property
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Value
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Notes
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Announcement
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button, dimmed, button" — solo si se alcanza por exploracion táctil; el swipe secuencial lo salta.
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `.disabled(true)`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      true
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Anade el trait `.notEnabled`, que VoiceOver verbaliza como "dimmed".
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `accessibilityLabel`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El nombre se conserva para que la exploracion táctil siga identificando el control.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `accessibilityTraits`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      [.isButton, .notEnabled]
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El rol se mantiene; lo que cambia es la disponibilidad.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `focus stops`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El componente no se lista en el orden de foco; no lleva marcador numerado.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No dejarlo enfocable al estar deshabilitado
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Sacalo del orden de foco y marca `.notEnabled`; un stop que no hace nada rompe la expectativa del usuario.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+#### TalkBack (Android)
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Property
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Value
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Notes
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Announcement
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button, button, disabled" — solo por exploracion táctil.
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `semantics { disabled() }`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      true
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      TalkBack anade "disabled" tras el rol y omite la pista "double-tap to activate".
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `enabled`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      false
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      En Compose, `Button(enabled = false)` ya aplica la semántica; no la dupliques a mano.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `role`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Role.Button
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El rol se conserva en todos los estados del componente, por consistencia.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `focus stops`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Excluido del recorrido secuencial de TalkBack.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No dejarlo enfocable al estar deshabilitado
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Usa `enabled = false` en vez de solo atenuar el color: el cambio visual no llega al lector de pantalla.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+#### ARIA (Web)
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Property
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Value
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Notes
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Announcement
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      "Button, button, unavailable" — solo en modo exploracion; el recorrido con Tab lo salta.
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `element`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `<button type="button" disabled>`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El atributo nativo `disabled` elimina el elemento del orden de tabulacion y bloquea el evento de activacion.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `aria-disabled`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      true (alternativa)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Solo si el producto necesita que siga siendo enfocable para explicar el bloqueo. Entonces hay que impedir la activacion por código: `aria-disabled` no lo hace por si solo.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `text/disabled contrast`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      4.50:1 (Light) · 4.89:1 (Dark)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El texto deshabilitado se corrigio a `neutral/600` (Light) y `neutral/700` (Dark). 1.4.3 exime al texto de controles inactivos, pero el sistema decidio cumplirlo igual.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `focus stops`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Con el atributo nativo el botón no recibe foco de teclado.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No dejarlo enfocable al estar deshabilitado
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Con el atributo nativo `disabled` ya sale del orden de foco; no anadas `tabindex="0"` encima.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `Do NOT`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      No confiar solo en el color para comunicar el estado
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      `background/disabled` apenas se distingue del lienzo en Light (1.30:1). Es un defecto abierto de color, y el estado debe llegar también por semántica.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+---
+
 ## Accesibilidad
 
-- **Área táctil:** las alturas actuales son 37 · 45 · 53. Cumplen el mínimo AA de 24 px (WCAG 2.5.8); **`size=s` no alcanza los 44 de AAA**. La escala nueva —48 · 56 · 64— lo resuelve en los tres.
+- **Área táctil:** las alturas son **48 · 56 · 64**, en `min-height` **y** en `min-width`. Las tres tallas superan tanto los 24 x 24 px de **WCAG 2.5.8 Target Size (Minimum), nivel AA**, como los 44 x 44 de **2.5.5 Target Size (Enhanced), nivel AAA**. Los 44 px son un **estándar propio de 100 Ladrillos** alineado a 2.5.5 y a las Apple HIG, no una corrección de conformidad. Supuesto declarado: 1 px de Figma = 1 px CSS.
 - **Foco:** `border/focus` da **4.80:1 en Light y 4.07:1 en Dark** contra el lienzo, por encima del 3:1 que exige WCAG 1.4.11.
 - **Contraste:** el umbral es 4.5:1 en los tres tamaños — 12, 14 y 16 px son «texto normal» para WCAG.
 - **Teclado:** activable con Enter y Space. El atributo `disabled` nativo lo saca del orden de tabulación.
@@ -578,11 +871,11 @@ El contraste lo calcula Supernova sobre los tokens vivos: **no hay ratios escrit
 
 ## Ejemplos
 
-<SNImage alignment="Left" resourceId="62dcb76a-e6f4-4bb1-85f5-1d5a9e4ae961" caption="Acción principal" />
+![Acción principal](https://studio-assets.supernova.io/design-systems/825551/06b91f12-ec07-4d34-ad85-bc8b79e3678d.png)
 
-<SNImage alignment="Left" resourceId="cd14fc12-fe0a-41f2-b593-1d40a285e486" caption="Secundario con icono final" />
+![Secundario con icono final](https://studio-assets.supernova.io/design-systems/825551/44efa3c4-60dd-439f-b176-ae8df25de77a.png)
 
-<SNImage alignment="Left" resourceId="fb043f1e-ab61-4db7-9273-f4d3472d15de" caption="Deshabilitado" />
+![Deshabilitado](https://studio-assets.supernova.io/design-systems/825551/abfaea95-2bcf-4dd4-946c-611cfa24c715.png)
 
 ## Foundations relacionadas
 

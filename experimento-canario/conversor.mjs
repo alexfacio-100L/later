@@ -13,6 +13,8 @@
 // Configuración del componente que se documenta
 // ─────────────────────────────────────────────────────────────
 
+import { reagruparCitas } from "./citas.mjs"
+
 export const CONFIG = {
   componenteId: "d4f71d86-4a9b-4535-949d-0b3aadd0818f",
   propiedadesChecklist: [
@@ -299,7 +301,18 @@ const tokensProp = ids =>
 export function convertir(md, tokens = {}, frames = {}, iconosTipo = {}) {
   const informe = { omitidas: [], vivas: [], tablas: 0, callouts: 0, tokensNoResueltos: new Set() }
 
-  let texto = etiquetasCitadas(sinComentarios(md))
+  // 🔴 Las citas, ANTES de trocear en líneas y DESPUÉS de citar las etiquetas.
+  // El orden no es negociable: la regla emite `<SNTable>`, y `etiquetasCitadas`
+  // envolvería en backticks las etiquetas que ella misma acaba de crear — el
+  // fallo del 19 ago, que validaba al 100% y renderizaba las tablas como texto.
+  //
+  // Sin esto, `docs:validar` rechazaba el documento entero con «A blockquote
+  // accepts a single paragraph»: el `.md` trae citas de diez párrafos y
+  // Supernova acepta uno.
+  let texto = reagruparCitas(etiquetasCitadas(sinComentarios(md)),
+    // ⚠️ `tablaSN` devuelve un ARRAY de líneas, no una cadena. Interpolarlo
+    // directamente las une con comas y publica la tabla entera en un renglón.
+    (cabecera, filas) => tablaSN([cabecera, ...filas]).join("\n"))
   const lineas = texto.split("\n")
   const salida = []
 

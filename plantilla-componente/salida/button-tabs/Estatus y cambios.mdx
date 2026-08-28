@@ -1,9 +1,9 @@
 # Lifecycle
 
-**Transitional.** El componente está documentado y en uso, pero su escala dimensional va a cambiar: las alturas pasan de 37 · 45 · 53 a **48 · 56 · 64**, con texto e icono escalando en paralelo.
+**Stable.** El componente está documentado y en uso, y su escala dimensional ya se rehízo: alturas **48 · 56 · 64**, texto **12 · 14 · 16**, iconos **16 · 20 · 24**, con `paddingBlock` constante. La documentación de esta página describe la escala vigente.
 
-<SNCallout variant="Warning">
-**La especificación de medidas de esta página describe la escala anterior.** El cambio está decidido pero no aplicado en Figma. Hasta entonces, las medidas publicadas son las vigentes.
+<SNCallout variant="Info">
+**El cambio de escala más relevante para quien consume el componente es el defecto del eje `size`, que pasó de `s` a `m`.** Todo lo que instancia el Button sin especificar talla cambia de aspecto al actualizar la librería.
 </SNCallout>
 
 ## Component health

@@ -1,11 +1,11 @@
 {
   "Anatomy": {
-    "nodo": "12508:2172",
+    "nodo": "12689:2638",
     "nombre": "Button Anatomy · #preview",
     "archivo": "frames/button-anatomy-preview.png",
     "fraccionAncho": 48,
-    "assetId": "0824dd4c-f547-48a3-9e49-02407091afcb",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/809ab805-671d-4cf6-ba21-b3f9473b5ffa.png",
+    "assetId": "64cb2f3a-4dd4-406f-bf11-06ed941a2355",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/3d63b628-f478-49c4-9127-81befbc535bf.png",
     "recortado": true
   },
   "Button sizes": {
@@ -186,6 +186,24 @@
     "fraccionAncho": 48,
     "assetId": "6ab8b06f-7b0c-4251-b80a-f2bad79ff51c",
     "url": "https://studio-assets.supernova.io/design-systems/825551/abfaea95-2bcf-4dd4-946c-611cfa24c715.png",
+    "recortado": true
+  },
+  "State: rest / hover / active / focus-visible": {
+    "nodo": "12691:2682",
+    "nombre": "Screen reader · Button enabled",
+    "archivo": "frames/button-voice-enabled.png",
+    "fraccionAncho": 48,
+    "assetId": "5fc5e1e6-c4be-4b47-82ff-f176baacd128",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/3db75921-81bc-4837-aff2-74a132653685.png",
+    "recortado": true
+  },
+  "State: isDisabled === true": {
+    "nodo": "12691:3081",
+    "nombre": "Screen reader · Button isDisabled === true",
+    "archivo": "frames/button-voice-isdisabled.png",
+    "fraccionAncho": 48,
+    "assetId": "79f324a3-753e-4e64-8af7-5939f63a682e",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/a53160d5-68f2-446d-893a-ec86f3afc623.png",
     "recortado": true
   }
 }

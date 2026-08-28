@@ -18,6 +18,8 @@ const { Supernova } = pkg
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { aplicarPestanas } from "./pestanas-plataforma.mjs"
+import { reagruparCitas } from "../experimento-canario/citas.mjs"
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url))
 const RAIZ = path.dirname(AQUI)
@@ -127,13 +129,10 @@ const seccionDelMd = (encabezado) => {
   // y exige cerrarlo. Aquí son DATO —el marcado que el lector de pantalla
   // espera— así que van como código, no como etiqueta.
   txt = txt.replace(/(?<!`)<(\/?[a-z][a-z0-9]*(?:\s[^<>]*?)?)>(?!`)/g, "`<$1>`")
-  // ⚠️ Un blockquote de Supernova acepta UN solo párrafo. Los del .md traen
-  // varios, así que cada bloque de líneas `>` consecutivas se une en uno.
-  txt = txt.replace(/(?:^>.*(?:\n|$))+/gm, (bloque) => {
-    const unido = bloque.split("\n").filter(Boolean)
-      .map(l => l.replace(/^>\s?/, "").trim()).filter(Boolean).join(" ")
-    return unido ? `> ${unido}\n` : ""
-  })
+  // La regla de las citas vive en experimento-canario/citas.mjs, compartida con
+  // el conversor: los dos pipelines fallaban en el mismo punto de formas
+  // distintas y la regla no puede existir por duplicado.
+  txt = reagruparCitas(txt, (cabecera, filas) => tabla(cabecera, filas, [180, 580]))
   // 🔴 Y las pipe tables a <SNTable>. Es el fallo más silencioso de la
   // plataforma: validan, se publican, y al escribir se descartan sin aviso.
   // La sección quedaba con sus títulos y sin una sola tabla de anuncios.
@@ -165,9 +164,16 @@ const tokens = (...rutas) => JSON.stringify(rutas.map(token))
 const idDelRecurso = (registro) => registro?.assetId
 
 /** Las pipe tables no se soportan: se emiten como <SNTable>. */
-export const tabla = (cabecera, filas) => {
+/**
+ * @param anchos - Reparto explícito del ancho, en px por columna. Sin él, las
+ *   columnas van a partes iguales. Se pasa cuando el reparto uniforme rompe la
+ *   tabla: una columna de rótulos de 20 caracteres junto a una de párrafos de
+ *   600 no se leen igual con 380 px cada una.
+ */
+export const tabla = (cabecera, filas, anchos) => {
   const colTipo = cabecera.findIndex(c => /^type$/i.test(c.trim()))
   const anchoBase = Math.floor(760 / cabecera.length)
+  const anchoDe = (c) => anchos?.[c] ?? anchoBase
 
   /**
    * ⚠️ Dentro de una celda, la imagen va en su PROPIO párrafo: texto, línea en
@@ -187,7 +193,7 @@ export const tabla = (cabecera, filas) => {
   const textoConIcono = (texto) => texto
 
   const celda = (t, c, esCabecera) => {
-    let contenido = t, ancho = anchoBase
+    let contenido = t, ancho = anchoDe(c)
     // La columna `Type` dice "Instance"; se publica como el icono de la plantilla.
     if (!esCabecera && c === colTipo) {
       const ic = ICONOS[(t ?? "").trim().toLowerCase()]
@@ -434,6 +440,19 @@ ${preview("Deshabilitado", "Deshabilitado")}
 const leerKey = () => fs.readFileSync(path.join(RAIZ, ".env"), "utf8")
   .split("\n").find(l => l.startsWith("SUPERNOVA_API_KEY=")).split("=").slice(1).join("=").trim()
 
+/**
+ * 🔴 Corre SIEMPRE justo después de escribir, y ese orden no se puede invertir.
+ *
+ * `writeMarkdownToPage` reemplaza la página entera, así que borra las Sections
+ * de pestañas de la publicación anterior. Volver a crearlas no es un remiendo:
+ * es el segundo paso obligatorio de cada publicación. Markdown no sabe emitir
+ * Sections — solo `elementAction` — y por eso son dos pasos y no uno.
+ */
+const agruparPlataformas = async (sn, ref, idPagina, nombre) => {
+  const { secciones } = await aplicarPestanas(sn, ref, idPagina)
+  for (const s of secciones) console.log(`    ↳ pestañas en ${nombre}: ${s.join(" · ")}`)
+}
+
 const main = async () => {
   const publicar = process.argv.includes("--publicar")
   const sn = new Supernova(leerKey())
@@ -473,6 +492,7 @@ const main = async () => {
       if (!id) { console.log(`  🔴 ${n}: la pestaña ya no existe`); continue }
       const r = await sn.import.writeMarkdownToPage(refW, id, TABS[n])
       console.log(`  ✓ ${n} → ${r?.blockCount ?? "?"} bloques`)
+      await agruparPlataformas(sn, ref, id, n)
     }
     return
   }
@@ -493,6 +513,7 @@ const main = async () => {
   for (const n of nombres) {
     const r = await sn.import.writeMarkdownToPage(refW, numerico.get(pestanas[n]), TABS[n])
     console.log(`  ✓ ${n} → ${r?.blockCount ?? "?"} bloques`)
+    await agruparPlataformas(sn, ref, numerico.get(pestanas[n]), n)
   }
   fs.writeFileSync(path.join(AQUI, "button.ids.json"), JSON.stringify({ grupo, pestanas }, null, 2) + "\n")
 }

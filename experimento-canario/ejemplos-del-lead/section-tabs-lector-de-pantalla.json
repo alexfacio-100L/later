@@ -1,0 +1,847 @@
+{
+  "_nota": "Section de tipo Tabs creada A MANO por el Lead en la pagina Especificaciones (40847796) el 28 ago 2026. writeMarkdownToPage REEMPLAZA la pagina entera: esta Section se destruye en la siguiente publicacion. Este archivo es el unico ejemplar. NO BORRAR.",
+  "_pagina": "40847796",
+  "_indice_original": 32,
+  "section": {
+    "id": "53bcb1e1-d5d1-4ebb-bf55-037077acd83c",
+    "type": "Section",
+    "variantId": "Tabs",
+    "sectionType": "Tabs",
+    "items": [
+      {
+        "id": "fd5bf971-c3c2-4fbd-a772-5c1f16b12824",
+        "title": "VoiceOver (iOS)",
+        "columns": [
+          {
+            "id": "55244584-3d2c-4b98-a36e-aeb09cf1da3e",
+            "blocks": [
+              {
+                "id": "f80bbf03-aecd-4e49-848a-1870e1d867c6",
+                "type": "Block",
+                "data": {
+                  "packageId": "io.supernova.block.table",
+                  "variantId": "default",
+                  "indentLevel": 0,
+                  "items": [
+                    {
+                      "id": "f80bbf03-aecd-4e49-848a-1870e1d867c6",
+                      "props": {
+                        "table": {
+                          "value": [
+                            {
+                              "cells": [
+                                {
+                                  "id": "4c26af7d-8aff-4ad1-8982-72011fa63dbf",
+                                  "nodes": [
+                                    {
+                                      "id": "02e76d1e-c9b2-4b43-bc1a-92a61aaffd03",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Property",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "1a72d89b-fd40-4d41-ba52-4c390b609bbb",
+                                  "nodes": [
+                                    {
+                                      "id": "2b14701f-2565-445b-b1a8-91a1ff6f7ea5",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Value",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "4d0f6ad8-8e6c-475a-88e0-157d9d4b66c3",
+                                  "nodes": [
+                                    {
+                                      "id": "c197b49a-5c32-4fae-a9b4-d3beb9f02f49",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Notes",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "d3131208-fe48-4b4c-8658-31b043a7d3a0",
+                                  "nodes": [
+                                    {
+                                      "id": "1126c9ad-98d2-4de0-a5d6-d973d9915983",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Announcement",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "32573fe4-8adf-4b73-b0d1-a203c44bde8a",
+                                  "nodes": [
+                                    {
+                                      "id": "12dbeb73-c6b3-4214-bd79-b5b1c67a1e9f",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "\"Button, button\"",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "b819b6f9-f9d6-41bf-958a-9500f8d950a4",
+                                  "nodes": [
+                                    {
+                                      "id": "1a2cdbd4-4974-4a79-b86c-29b73972519a",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "—",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "97b452f6-574f-433c-919b-7ad5401b2e46",
+                                  "nodes": [
+                                    {
+                                      "id": "66a13a76-3c4d-48d0-b1fe-94608243f3a2",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "accessibilityLabel",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "6436a393-1d6b-4811-b312-a983dfc969c5",
+                                  "nodes": [
+                                    {
+                                      "id": "f614aff0-0445-4353-b056-c660b5050561",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "\"Button\"",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "c7b3457b-d0e4-46ce-ad87-8b8d53ab84e3",
+                                  "nodes": [
+                                    {
+                                      "id": "66604532-ed1b-4f73-9d8c-9852e43f47bd",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Proviene del texto de ",
+                                            "attributes": []
+                                          },
+                                          {
+                                            "text": "labelBox",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "text": ", fusionado en el botón. En produccion debe describir la acción, no la apariencia.",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "5ffa42c3-a13b-4c2f-a705-dd70406fceb3",
+                                  "nodes": [
+                                    {
+                                      "id": "35c254ea-e3ed-4f22-b752-ef68c507e6e7",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "accessibilityTraits",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "c028a1fc-b991-4b92-a0be-b30279a4df34",
+                                  "nodes": [
+                                    {
+                                      "id": "2e8958dd-512a-4930-b4f0-696371b27d12",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": ".isButton",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "4fb29e60-2e82-41df-9f5a-3b2cfba25451",
+                                  "nodes": [
+                                    {
+                                      "id": "89719180-55b2-4a7a-8f70-5c160eb72758",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Declara el rol; sin el, VoiceOver anuncia el elemento como texto estatico y el usuario no sabe que es accionable.",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "aa307b08-1564-44e5-af65-d7c3662127e8",
+                                  "nodes": [
+                                    {
+                                      "id": "64640c24-fa25-41fc-827d-ebcd2a51543c",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "accessibilityValue",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "dd41cacf-2f78-4a06-a044-d496b2164124",
+                                  "nodes": [
+                                    {
+                                      "id": "593c46af-21bd-4ab8-a78f-f078b0626992",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "–",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "6f55375b-79a8-4c48-97ab-7c8a79e82a17",
+                                  "nodes": [
+                                    {
+                                      "id": "ebde3848-f8e3-4914-a06a-4d9c0c6e2764",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Button no tiene valor: no es un control ajustable ni conmutable.",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "f953331d-7a13-4a60-810f-9421aef72e41",
+                                  "nodes": [
+                                    {
+                                      "id": "afa5b7ac-294b-462b-9e7e-148378307a23",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "accessibilityHint",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "2b0ee0fe-fd01-42c4-8dd1-55023b93628c",
+                                  "nodes": [
+                                    {
+                                      "id": "cf278686-377d-4ef6-bdb0-2175f6bb018e",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "–",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "ede6e54d-ba3d-45a1-84a2-f65aef5f0600",
+                                  "nodes": [
+                                    {
+                                      "id": "1ab1ee5f-a074-43a5-8499-d97b6bd7f47e",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Se omite porque la acción es obvia desde el label. Anadelo solo si el resultado de pulsar no es evidente.",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "bcde44e9-c43f-4166-b6b5-14609c13aafd",
+                                  "nodes": [
+                                    {
+                                      "id": "ff8ac01e-b21f-4e21-9073-d31324ba5ed8",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "accessibilityElement(children:)",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "c09249e8-755e-46f0-acce-932db634a1ac",
+                                  "nodes": [
+                                    {
+                                      "id": "ce9ffdec-944a-41d2-b74c-aebeeb2205bd",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": ".combine",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "4e938fd6-636f-4484-a3fe-8724a7aac0fc",
+                                  "nodes": [
+                                    {
+                                      "id": "e67bf947-1144-4b69-b9c7-f1abf0b38704",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Fusiona ",
+                                            "attributes": []
+                                          },
+                                          {
+                                            "text": "labelBox",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "text": " y los iconos en un único elemento accesible, para que el usuario haga un solo swipe.",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "f764b103-2d65-462e-870d-18d18f16ece2",
+                                  "nodes": [
+                                    {
+                                      "id": "8279838c-f70b-4305-8e27-eeda4bfc5ce3",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "accessibilityHidden (iconLeft / iconRight)",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "ae37d607-0a01-4dce-b093-a56423dbc4dc",
+                                  "nodes": [
+                                    {
+                                      "id": "70d4b107-c0f8-47c3-b0ca-e6f2384b71c1",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "true",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "93228cae-4f78-4865-9e2e-161b64d8221f",
+                                  "nodes": [
+                                    {
+                                      "id": "b6e3e3f8-bc4f-46d7-bca2-b64f95d9994b",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Los iconos ArrowRight son decorativos y acompanan al label; anunciarlos duplica información.",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "42bdbe3b-afb1-4a35-a92d-be56f15b93bd",
+                                  "nodes": [
+                                    {
+                                      "id": "b30716f3-0473-49d1-a4d9-795d7999c9c5",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Do NOT",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "d6ac5299-358b-4641-b302-e2a33b0f3948",
+                                  "nodes": [
+                                    {
+                                      "id": "04caad27-1d84-4b2b-90ac-bb59ae536cb0",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "No leer el label dos veces",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "0181a0e5-ce48-4cd1-9548-aad0666d5cdd",
+                                  "nodes": [
+                                    {
+                                      "id": "f9a13412-64b4-4382-b902-dfe429b54a45",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "El label se fusiona en el nombre del stop; ",
+                                            "attributes": []
+                                          },
+                                          {
+                                            "text": "labelBox",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "text": " no debe exponerse como elemento enfocable aparte.",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "66c6918a-8108-4c72-8946-613cc43848d0",
+                                  "nodes": [
+                                    {
+                                      "id": "1c02c634-b15c-427d-94a1-55dacba9b592",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Do NOT",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "ce812d60-ed71-484a-890f-90cafc2fe936",
+                                  "nodes": [
+                                    {
+                                      "id": "2aa7c288-e616-4b91-8b3d-aeedeeabd079",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "No anunciar el icono decorativo",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "bdefdd17-90d6-4150-ae19-caf2607410ad",
+                                  "nodes": [
+                                    {
+                                      "id": "8afc0552-b28c-4ebd-987b-f70b3eb8157b",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Marca ",
+                                            "attributes": []
+                                          },
+                                          {
+                                            "text": "iconLeft",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "text": " e ",
+                                            "attributes": []
+                                          },
+                                          {
+                                            "text": "iconRight",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "text": " con ",
+                                            "attributes": []
+                                          },
+                                          {
+                                            "text": "accessibilityHidden = true",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "text": "; su significado ya esta en el label.",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            },
+                            {
+                              "cells": [
+                                {
+                                  "id": "ebe21aa7-9992-4168-a7a4-19cb9b4cc99f",
+                                  "nodes": [
+                                    {
+                                      "id": "8087b94b-bb3d-4767-9949-9999a1dd9a79",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Do NOT",
+                                            "attributes": [
+                                              {
+                                                "type": "Code"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "bffdd0f2-473c-4059-a659-75deaa1c0c67",
+                                  "nodes": [
+                                    {
+                                      "id": "18593f2b-d9ca-4678-add9-7566cde5c5f7",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "No incluir el tipo en el label",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                },
+                                {
+                                  "id": "d2126614-a115-4793-9ac0-36a4e1663ec2",
+                                  "nodes": [
+                                    {
+                                      "id": "8c626e33-9cd2-4607-ac50-b3e1d4048ab4",
+                                      "type": "RichText",
+                                      "value": {
+                                        "spans": [
+                                          {
+                                            "text": "Escribir \"Botón guardar\" produce \"Botón guardar, button\". El trait ya aporta el rol.",
+                                            "attributes": []
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "alignment": "Left",
+                                  "columnWidth": 253
+                                }
+                              ]
+                            }
+                          ],
+                          "showBorder": true,
+                          "highlightHeaderRow": true,
+                          "highlightHeaderColumn": false
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "cbc63558-1399-4112-bc47-2397d143a788",
+                "type": "Block",
+                "data": {
+                  "packageId": "io.supernova.block.rich-text",
+                  "variantId": "default",
+                  "indentLevel": 0,
+                  "items": [
+                    {
+                      "id": "cbc63558-1399-4112-bc47-2397d143a788",
+                      "props": {
+                        "text": {
+                          "value": {
+                            "spans": []
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
