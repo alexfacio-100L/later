@@ -98,6 +98,60 @@ const tablaDelMd = (encabezado) => {
   return tabla(cuerpo[0], cuerpo.slice(1))
 }
 
+/**
+ * Trae una sección completa del .md de uSpec, por su encabezado de nivel 2.
+ *
+ * 🔴 Existe porque su ausencia costó una sección entera publicada a medias: al
+ * reescribir esta pestaña para meter los previews, la línea que insertaba
+ * `## Voice / Screen reader` desapareció sin que nada fallara. El .md la tenía,
+ * el generador no la colocaba, y la página salió con el resto correcto — que es
+ * la forma más silenciosa de perder contenido.
+ */
+const seccionDelMd = (encabezado) => {
+  const md = fs.readFileSync(path.join(RAIZ, "Componentes/button.md"), "utf8")
+  const lineas = md.split("\n")
+  const i = lineas.findIndex(l => l.trim() === `## ${encabezado}`)
+  if (i < 0) return `*No encontré la sección ${encabezado} en el .md.*`
+  const cuerpo = []
+  for (let j = i + 1; j < lineas.length; j++) {
+    if (/^## /.test(lineas[j])) break
+    cuerpo.push(lineas[j])
+  }
+  // ⚠️ Fuera los comentarios: Supernova no admite ninguno, ni HTML ni MDX, y
+  // esta sección lleva dentro el carry `voice-render-meta` que consume uSpec.
+  let txt = cuerpo.join("\n")
+    // ⚠️ Fuera los comentarios: Supernova no admite ninguno, ni HTML ni MDX, y
+    // esta sección lleva dentro el carry `voice-render-meta` que consume uSpec.
+    .replace(/<!--[\s\S]*?-->/g, "")
+  // ⚠️ Y las etiquetas HTML citadas: MDX lee `<button>` como un componente JSX
+  // y exige cerrarlo. Aquí son DATO —el marcado que el lector de pantalla
+  // espera— así que van como código, no como etiqueta.
+  txt = txt.replace(/(?<!`)<(\/?[a-z][a-z0-9]*(?:\s[^<>]*?)?)>(?!`)/g, "`<$1>`")
+  // ⚠️ Un blockquote de Supernova acepta UN solo párrafo. Los del .md traen
+  // varios, así que cada bloque de líneas `>` consecutivas se une en uno.
+  txt = txt.replace(/(?:^>.*(?:\n|$))+/gm, (bloque) => {
+    const unido = bloque.split("\n").filter(Boolean)
+      .map(l => l.replace(/^>\s?/, "").trim()).filter(Boolean).join(" ")
+    return unido ? `> ${unido}\n` : ""
+  })
+  // 🔴 Y las pipe tables a <SNTable>. Es el fallo más silencioso de la
+  // plataforma: validan, se publican, y al escribir se descartan sin aviso.
+  // La sección quedaba con sus títulos y sin una sola tabla de anuncios.
+  const lineas2 = txt.split("\n")
+  const salida = []
+  for (let j = 0; j < lineas2.length; j++) {
+    if (!/^\s*\|/.test(lineas2[j])) { salida.push(lineas2[j]); continue }
+    const filas = []
+    while (j < lineas2.length && /^\s*\|/.test(lineas2[j])) filas.push(lineas2[j++])
+    j--
+    const celdas = (l) => l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map(c => c.trim())
+    const cuerpo2 = filas.map(celdas).filter(cs => !cs.every(c => /^:?-+:?$/.test(c)))
+    if (cuerpo2.length) salida.push(tabla(cuerpo2[0], cuerpo2.slice(1)))
+  }
+  txt = salida.join("\n")
+  return txt.replace(/\n{3,}/g, "\n\n").trim()
+}
+
 const token = (ruta) => ({ entityId: TK[ruta], entityType: "Token" })
 const tokens = (...rutas) => JSON.stringify(rutas.map(token))
 
@@ -313,6 +367,12 @@ ${preview("Primary / Product / Dark", "Primary · Product · Dark")}
 <SNCallout variant="Warning">
 **Un token que invierte con el mode no puede ir sobre un fondo que no invierte.** \`background/selected\` resuelve \`#315fa3\` en Light y en Dark —es azul de marca, no depende del lienzo—, así que el texto y el icono sobre él usan las variantes **Static**. Antes heredaban las normales: en Light casaba por casualidad y en Dark el texto caía a 3.29:1.
 </SNCallout>
+
+## Lector de pantalla
+
+Qué anuncia cada plataforma, estado por estado. **Es una decisión de diseño, no una consecuencia del marcado:** el código tiene atributos, no anuncios comprometidos.
+
+${seccionDelMd("Voice / Screen reader")}
 
 ## Accesibilidad
 
