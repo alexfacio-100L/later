@@ -53,6 +53,12 @@ The template (`component-md/component-md-template.md`) uses `{{UPPER_SNAKE}}` pl
 | `{{COLOR_BODY}}` | Rendered Color section (see **Color body rendering**) | yes |
 | `{{VOICE_BODY}}` | Rendered Voice section (see **Voice body rendering**) | yes |
 | `{{CROSS_REFERENCES}}` | Deduplicated cross-references (see **Cross-references**) | yes |
+| `{{BEHAVIOR_BODY}}` | **Not extractable.** Authored, except the generated Touch-target table (see **Behavior & interaction**). | yes |
+| `{{MOTION_BODY}}` | **Not extractable.** Authored motion intent (see **Motion**). Not produced by `create-motion`. | yes |
+| `{{RESPONSIVE_BODY}}` | **Not extractable.** Authored (see **Responsive rules**). | yes |
+| `{{CONTENT_ASSUMPTIONS_BODY}}` | **Not extractable.** Authored (see **Content & data assumptions**). | yes |
+| `{{TOKEN_RESOLUTION}}` | **Generated** from `color.data.variants[]` + `modeDetection` (see **Token resolution**) | yes |
+| `{{ACCEPTANCE_CRITERIA}}` | **Generated** baseline battery + authored component-specific block (see **Acceptance criteria**) | yes |
 | `{{RENDER_META_JSON}}` | Machine-readable component metadata appendix carrying node IDs (see **RENDER_META_JSON**) | yes |
 
 ## Composition subsection (`{{COMPOSITION_SUBSECTION}}`)
@@ -371,6 +377,173 @@ Rules:
 - Behavioral states (not backed by a Figma variant) are rendered identically to Figma-variant states. The only difference is `state.variantProps` will match the default variant props.
 - The `voice-render-meta` carry is the **only** machine-readable addition to the Voice body. It never appears as visible text; `create-voice` parses it from the raw `.md`. If `layerName` is `null` for a stop, the carry still lists it (with `"layerName": null`) so consumers can degrade gracefully.
 
+## The five non-extractable slots
+
+Five sections of the template carry information that **no extractor can produce**, because the four
+extractors read Figma and Figma does not contain it. This is not an extraction bug to be fixed later —
+it is the ceiling of the source. `## Behavior & interaction`, `## Motion`, `## Responsive rules`,
+`## Content & data assumptions` and the component-specific half of `## Acceptance criteria` are written
+by a person, and the pipeline's job is to make sure their absence is **loud**.
+
+**The default for an unwritten slot is never silence.** `validateMarkdown` accepts the syntax and says
+nothing about whether the page reads well, so an empty section publishes without complaint. Emit this
+blockquote verbatim as the body of any slot nobody has written:
+
+```markdown
+> 🔴 **Sin documentar.** Figma no contiene esta información y todavía nadie la ha escrito.
+> No implementes este componente sin resolverla — no es una omisión benigna.
+```
+
+`completar-md.mjs` inserts any missing slot with that default, counts the ones still carrying it, and
+**exits non-zero**. That exit code is the guard: the marker is visible to a reader, and the failing exit
+is visible to whoever is about to publish. Neither depends on anyone remembering to check.
+
+> **Why the rule is mechanical and not a judgement call.** The team's own FODA records a lack of habit
+> around documenting results. A rule that needs criterion in order to run does not get run. This one runs
+> by itself: the section is inserted whether or not anyone asks, and the script fails until it is filled.
+
+## Behavior & interaction (`{{BEHAVIOR_BODY}}`)
+
+Every row answers **"what does it DO"**, never "what does it look like". Appearance is already covered by
+Structure and Color; repeating it here is the most common way this section goes wrong.
+
+Cover, at minimum: what activates the component (pointer, `Enter`, `Space`), what happens while an action
+is in flight, what becomes unreachable in each state, and what the component does with focus.
+
+**One sub-block is generated and must not be authored by hand — the Touch target table.** It is the single
+exception to "not extractable": size is measured, and the threshold is a declared number, so the comparison
+is mechanical. Read the structure section containing a `minHeight` row and emit:
+
+```markdown
+### Touch target
+
+Generated from the Structure cache. Threshold: **44 px** — Later's own declared standard
+(WCAG 2.5.5 AAA), not the 2.5.8 AA minimum.
+
+| Size | min-height | min-width | ≥ 44 px |
+| --- | --- | --- | --- |
+| `s` | 48 | 48 | ✅ pass |
+```
+
+One row per size column of that section, in the section's own column order. The verdict column is
+`✅ pass` when **both** axes are ≥ 44, and `🔴 **fail**` otherwise — a component that fails must show it
+here rather than in a footnote. When no `minHeight` row exists, emit an HTML comment saying so instead of
+omitting the sub-block silently.
+
+> **Why this table exists at all.** Before the slot existed, the 44 px minimum ended up as a footnote in
+> `## Known gaps` — not because anyone judged it minor, but because there was no box to put it in.
+> A requirement filed as a defect reads as optional.
+
+## Motion (`{{MOTION_BODY}}`)
+
+This section is the motion **intent** an engineer implements: what animates, how long, which easing, and
+what happens under `prefers-reduced-motion`. It sits directly after `## Behavior & interaction` because
+motion is behaviour, not appearance — and because a single behaviour is otherwise documented in two
+places, half in one tab and half in another.
+
+🔴 **Read this before assuming it overlaps with the `create-motion` skill.** `create-motion` renders a
+detailed timeline spec **into Figma** from an After Effects export. Its input is AE, its output is Figma;
+it neither reads nor writes the `.md`, which is exactly what its scope declaration says. The two are
+different artifacts on different surfaces and **neither generates the other**. When an AE spec exists for
+this component, link it from here.
+
+Prefix the section body with this note so the frontier travels with the document:
+
+```markdown
+_Motion **intent**, for the engineer to implement: what animates, how long, which easing, and what
+happens under `prefers-reduced-motion`. The `create-motion` skill is a different artifact — it renders
+a detailed timeline spec **into Figma** from an After Effects export, and neither one generates the other.
+When an AE spec exists for this component, link it here._
+```
+
+## Responsive rules (`{{RESPONSIVE_BODY}}`)
+
+A component set encodes variants, not breakpoint behaviour — the two are routinely confused because both
+look like "a set of sizes". Cover: what changes per breakpoint, what never changes, and **whether a size
+is chosen by the consumer or by the viewport**. That last question is the one that decides whether the
+component needs a `size` prop at all, so answer it explicitly even when the answer is "the consumer".
+
+## Content & data assumptions (`{{CONTENT_ASSUMPTIONS_BODY}}`)
+
+Placeholder text in a mockup is not a contract. Cover: label length limits and what happens on overflow,
+behaviour with empty / loading / error data, i18n expansion, and what the component assumes about what it
+receives. When a limit is real, state it as a number — "keep labels short" is not implementable.
+
+## Token resolution (`{{TOKEN_RESOLUTION}}`)
+
+**This is the block that turns the `.md` from a visual specification into a buildable contract.** Before it
+existed, a competent engineer could reproduce how the component looks and could not resolve a single token
+to a value: the Color tables carried one hex per cell, belonging to whichever mode the component happened
+to be extracted in, so the other mode was not implementable from this file at all.
+
+**It is render, not judgement — never a network call.** Everything needed is already in the color cache:
+
+| What | Where |
+|---|---|
+| One entry per mode × colour-variant | `color.data.variants[]`, each with its `modeId` |
+| `modeId` → mode name | `color.data._extractionArtifacts.modeDetection.modeIds` |
+| The mode list | `…modeDetection.modes` (e.g. `["Light","Dark"]`) |
+| Per-cell hex | `variants[].tables[].elementHexesByState[i].hexByState[state]` |
+| Per-cell token | `variants[].tables[].elements[i].tokensByState[state]` |
+| The declared token set | `…_extractionArtifacts.uniqueTokens` |
+
+**Rendering.** Walk every variant × table × element × state. Map `variant.modeId` through `modeIds` to get
+the mode name; accumulate `token → mode → set of hex`. Emit one row per token, ordered by the union of
+`uniqueTokens` and the tokens actually seen, sorted:
+
+```markdown
+| Token | Light | Dark | Code (raw — no exporter configured, see 7.3) |
+| --- | --- | --- | --- |
+| `background/brandMain` | `#041B3D` | `#FFFFFF` | `background/brandMain` |
+```
+
+Rules:
+
+- **Never derive a mode's hex from another mode's.** `modeTokenMap` resolves a semantic token to its
+  *alias* per mode, but the alias's own hex is only known for primitives some mode actually paints —
+  on the Button that path resolves 11 of 19 tokens and silently loses the rest. The per-variant
+  `elementHexesByState` is complete; use it and nothing else.
+- A token declared in `uniqueTokens` but absent from every table **still gets a row**, with `—` in the
+  missing columns. Dropping it would hide a token the component names but never resolves.
+- When one token resolves to more than one hex within a single mode, render every value joined by ` / `
+  **and report it as a finding**. That is a defect in the token, not a formatting choice.
+- When `modeIds` is missing, degrade to a single value column. Do not guess which column is which mode.
+
+🔴 **The `Code` column carries the raw token path, deliberately.** Later's naming convention states that
+translation to code is done by an exporter, *by rule and not token by token*, and that exporter is task
+7.3 — **it has never run**. The convention's own standing caveat is that until then, "what reaches code
+will be the raw name". Emitting `--background-brand-main` / `backgroundBrandMain` / `BackgroundBrandMain`
+here would invent a three-platform contract nobody configured and replicate it across every component in
+the catalogue. The header declares the absence so the column cannot be mistaken for a decision that was
+made. When 7.3 lands, this column becomes the exporter's output and every `.md` is regenerated.
+
+## Acceptance criteria (`{{ACCEPTANCE_CRITERIA}}`)
+
+Each line must be verifiable **by someone who did not build the component**. "Looks right" is not a
+criterion; "the focus ring measures ≥ 3:1 against the adjacent surface" is.
+
+The block has two halves. **The baseline battery is generated** — eight assertions that are identical for
+every component in the system, emitted automatically so nobody has to remember them:
+
+| # | Area | Criterion |
+| --- | --- | --- |
+| B1 | A11y | Focus indicator ≥ 3:1 against the adjacent surface, never conveyed by colour alone |
+| B2 | A11y | `Enter` and `Space` both activate, with the same result as a pointer activation |
+| B3 | A11y | A `disabled` instance is removed from the tab order |
+| B4 | A11y | Every interactive target ≥ 44 px on both axes |
+| B5 | Tokens | Zero raw values — every colour and dimension resolves through a token |
+| B6 | Tokens | Every token resolves to its `## Token resolution` value **in each mode** |
+| B7 | Motion | `prefers-reduced-motion: reduce` honoured, with no information lost |
+| B8 | States | Every state in `## API` is reachable and visually distinct, in both modes |
+
+The battery is emitted verbatim from `AC_BASE` in `completar-md.mjs` and carries the marker
+`<!-- ac-baseline v=1 n=8 -->`. **Identify it by that marker, never by matching its prose** — a reformat
+must not read as a missing battery, and a change to `AC_BASE` must mark the whole catalogue stale.
+Do not hand-edit the B-rows in a `.md`; change `AC_BASE` so every component changes with it.
+
+The second half, `### Component-specific`, is authored and follows the non-extractable-slot rule above:
+until someone writes it, it carries the `Sin documentar` marker and the block is not complete.
+
 ## Known gaps
 
 The `{{KNOWN_GAPS}}` block is the first substantive block after the Overview — it tells an engineer up front which parts of the spec are measured, inferred, or missing, and whether any extraction-time anomalies need attention before implementation.
@@ -663,6 +836,14 @@ Before the orchestrator writes the final file, verify:
 - [ ] Every `sectionTargets[<name>]` entry whose `name !== "__root__"` and is non-null has a non-null `nodeId`. Source preference: read `section._anchor` from the structure cache (preferred); fall back to `_base.json.variants[<default>].layoutTree` walk only when `_anchor` is absent (legacy cache). When any entry leaves `nodeId: null`, the Known-gaps block contains a corresponding `medium` line: `render-meta: could not resolve nodeId for sectionTargets["<name>"] — ...`.
 - [ ] Every `groupTargets[<section>][<group>]` entry has both non-null `name` and non-null `nodeId`. Source preference: read `row._layerName` / `row._layerId` from the structure cache's group-header rows (preferred); fall back to layoutTree name-walk only when those fields are absent (legacy cache). Same Known-gaps coupling rule as above on failure.
 - [ ] Render-meta does not echo plugin-internal vocabulary (`parentSetName` strings, `subCompSetName` beyond the `{ name, subCompSetId }` shape, `_extractionArtifacts` references). The block only contains the documented schema fields.
+
+- [ ] All five non-extractable slots exist as headings. Any slot nobody has written carries the verbatim `Sin documentar` blockquote — never an empty body, never a silently omitted heading.
+- [ ] `## Behavior & interaction` contains the generated `### Touch target` table, one row per size, with an explicit `✅ pass` / `🔴 **fail**` verdict per row against the 44 px threshold.
+- [ ] `## Motion` sits immediately after `## Behavior & interaction` and opens with the `create-motion` frontier note. It is never merged into, or generated from, a `create-motion` artifact.
+- [ ] `## Token resolution` has one row per token in the union of `uniqueTokens` and the tokens seen in the tables, and one column per entry in `modeDetection.modes`. No cell is derived from another mode via `modeTokenMap`.
+- [ ] Every `## Token resolution` cell is either a `#RRGGBB` hex, several joined by ` / ` (reported as a finding), or `—`. A token declared in `uniqueTokens` and never painted still has its row.
+- [ ] The `Code` column header names the absent exporter. No `.md` emits a per-platform code name while task 7.3 has not run.
+- [ ] `## Acceptance criteria` carries the `<!-- ac-baseline v=1 n=N -->` marker with `N` equal to the current `AC_BASE` length, plus a `### Component-specific` sub-heading.
 
 If any check fails, fix the rendering code — do **not** patch the produced `.md` by hand.
 

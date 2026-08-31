@@ -375,3 +375,29 @@ node completar-md.mjs Componentes/button.md --escribir  # repara desde el cache
 1. **Mi reparación a mano del 21 ago estaba incompleta.** Puse `associatedLayerId` en `booleanDefs` pero **no en las entradas BOOLEAN de `propertyDefs`**, que el esquema también exige. *El script salió mejor que el trabajo manual que venía a automatizar.*
 
 2. **El tipo de `labelBox` no coincidía con el preview.** `create-anatomy` desenvuelve un FRAME con un único hijo TEXT y lo cuenta como `Text`; el script lo daba como `Frame`. **La tabla habría contradicho al frame que dice describir.** *Replicado el desenvolvimiento — también para el caso FRAME con un único hijo INSTANCE.*
+
+---
+
+## Adecuación 31 ago 2026 · Los seis slots del `.md` (tarea 4.15)
+
+**Sube el conteo de adecuaciones locales de 8 a 10.** Las dos nuevas son
+`references/component-md/agent-component-md-instruction.md` y
+`.claude/skills/create-motion/SKILL.md`. Las ocho anteriores siguen intactas —
+verificado con `npm run uspec:verificar` antes y después.
+
+| Archivo | Qué se cambió | Por qué se perdería mal |
+| --- | --- | --- |
+| `references/component-md/component-md-template.md` | Seis secciones nuevas: `## Behavior & interaction`, `## Motion`, `## Responsive rules`, `## Content & data assumptions`, `## Token resolution`, `## Acceptance criteria` | Sin ellas el `.md` es una especificación visual, no un contrato de implementación |
+| `references/component-md/agent-component-md-instruction.md` | Seis filas en `## Placeholders`, seis secciones de *rendering rules*, siete líneas de auditoría | **Sin la guía la plantilla no se rellena**: el orquestador no sabe qué poner en los slots |
+| `.claude/skills/create-motion/SKILL.md` | Se retira la cláusula *"and no Motion section in the `.md`"* y se sustituye por una nota que declara la frontera | La frase quedó **falsa** al crear el slot, y un agente futuro borraría `## Motion` apoyándose en ella |
+
+🔴 **La de `create-motion` es la que hay que reaplicar sí o sí al actualizar.** Las
+otras dos se notan en cuanto alguien mira el `.md`; ésta es una frase que
+contradice a la plantilla y **cuya única consecuencia visible sería que alguien
+borre trabajo bueno creyendo que sobra**.
+
+**Lo que NO es adecuación de uSpec y no se pierde al actualizar:**
+`completar-md.mjs` es nuestro. Ahí viven la generación de `## Token resolution`,
+la batería `AC_BASE` y la guarda de publicación — deliberadamente, porque una
+directiva en prosa dentro de una skill es algo que un agente puede saltarse, y
+esto tiene que ser determinista. *Es el mismo motivo por el que ese script existe.*
