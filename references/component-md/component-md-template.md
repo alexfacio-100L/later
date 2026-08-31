@@ -19,6 +19,40 @@
 
 {{ANATOMY_TABLE}}
 
+## Behavior & interaction
+
+<!-- NOT extractable from Figma. Figma holds geometry, not behavior. -->
+<!-- Author: whoever documents the component. The generator emits the touch-target row and the placeholder; the rest is human. -->
+<!-- Every row answers "what does it DO", never "what does it look like". -->
+
+{{BEHAVIOR_BODY}}
+
+## Motion
+
+<!-- NOT extractable from Figma, and NOT produced by the `create-motion` skill either. -->
+<!-- ⚠️ READ THIS BEFORE ASSUMING THEY OVERLAP. `create-motion` renders a detailed motion spec
+     INTO FIGMA from an After Effects timeline export. It declares itself out of scope of the
+     `.md` consumer contract: no `_base.json`, no `extract-motion`, no `.md` input.
+     This section is the OTHER half: the motion INTENT an engineer must implement — what animates,
+     how long, which easing, and what happens under `prefers-reduced-motion`.
+     When an AE spec exists for this component, link it here. Neither generates the other. -->
+
+{{MOTION_BODY}}
+
+## Responsive rules
+
+<!-- NOT extractable from Figma. A component set encodes variants, not breakpoint behavior. -->
+<!-- Covers: what changes per breakpoint, what never changes, and whether size is chosen by the consumer or by the viewport. -->
+
+{{RESPONSIVE_BODY}}
+
+## Content & data assumptions
+
+<!-- NOT extractable from Figma. Placeholder text in a mockup is not a contract. -->
+<!-- Covers: label length limits and overflow, empty/loading/error data, i18n expansion, and what the component assumes it receives. -->
+
+{{CONTENT_ASSUMPTIONS_BODY}}
+
 ## Known gaps
 
 <!-- Aggregated severity-tagged anomalies: missing measurements, identity gaps, extraction warnings. -->
@@ -57,9 +91,28 @@
 
 ---
 
+## Token resolution
+
+<!-- GENERATED. Every token named anywhere above, resolved to what an engineer needs to type. -->
+<!-- This is the block that turns the .md from "a visual spec" into "a buildable contract". -->
+<!-- Source: the extract-color cache already resolves aliases. This is render, not judgement. -->
+
+{{TOKEN_RESOLUTION}}
+
 ## Voice / Screen reader
 
 {{VOICE_BODY}}
+
+---
+
+## Acceptance criteria
+
+<!-- PARTLY GENERATED. The baseline battery below is identical for every component in the system
+     and is emitted automatically; the component-specific criteria are authored. -->
+<!-- Each line must be verifiable by someone who did not build the component. -->
+<!-- "Looks right" is not a criterion. "Focus ring measures >= 3:1 against the adjacent surface" is. -->
+
+{{ACCEPTANCE_CRITERIA}}
 
 ---
 
