@@ -522,9 +522,19 @@ for (const s of SLOTS) {
   const cuerpoActual = cuerpoDeSeccion(s.titulo)
   if (/Sin documentar/.test(cuerpoActual) || !cuerpoActual.trim()) sinDocumentar.push(s.titulo)
 }
+// 🔴 El quinto slot humano vive dentro de `## Acceptance criteria`, no como `##`
+// propio, y por eso el barrido de arriba no lo veía: `md:verificar` salía en
+// VERDE con `### Component-specific` todavía en marcador. Es la forma «falso
+// completo» de la regla 16 del área — un método que resuelve 4 de 5 y no lo
+// declara se lee como si hubiera resuelto todo. El denominador es 5.
+const cuerpoEspecifico = cuerpoDeSeccion("## Acceptance criteria").split("### Component-specific")[1] ?? ""
+const TOTAL_SLOTS = SLOTS.length + 1
+if (/Sin documentar/.test(cuerpoEspecifico) || !cuerpoEspecifico.trim()) {
+  sinDocumentar.push("### Component-specific (en `## Acceptance criteria`)")
+}
 if (sinDocumentar.length) {
   hallazgos.push(
-    `**${sinDocumentar.length} de ${SLOTS.length} slots sin documentar** (${sinDocumentar.join(", ")}) — ` +
+    `**${sinDocumentar.length} de ${TOTAL_SLOTS} slots sin documentar** (${sinDocumentar.join(", ")}) — ` +
     `visibles en la página y bloqueando la publicación. Los llena una persona; no salen de Figma.`)
 }
 

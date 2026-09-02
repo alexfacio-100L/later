@@ -657,8 +657,25 @@ Component-specific criteria are authored underneath it — this block is not com
 
 ### Component-specific
 
-> 🔴 **Sin documentar.** Figma no contiene esta información y todavía nadie la ha escrito.
-> No implementes este componente sin resolverla — no es una omisión benigna.
+Quince criterios propios del Button, por encima de la batería base. Cada uno lo puede verificar alguien que no construyó el componente, y ninguno se comprueba mirando.
+
+| # | Area | Criterion |
+| --- | --- | --- |
+| C1 | Dimensions | Las tres tallas rinden `min-height` 48 · 56 · 64 y un `min-width` igual a su `min-height`. Ninguna variante lleva altura fija. |
+| C2 | Dimensions | Un label de un solo carácter en talla `s` sigue midiendo **≥ 48 px** de ancho. |
+| C3 | Dimensions | Instanciado sin especificar talla, el botón renderiza **`m`**. |
+| C4 | Dimensions | Las cuatro esquinas resuelven `radius/l` (16) en las 60 variantes. Ni `size`, ni `surface`, ni `variant`, ni `state` lo cambian. |
+| C5 | Loading | Con `isLoading = true` el botón **conserva el foco** y su posición de tabulación, expone `aria-busy="true"`, y **no** expone `disabled` ni `aria-disabled`. |
+| C6 | Loading | Con `isLoading = true`, diez activaciones seguidas —puntero y teclado— disparan la acción **exactamente una vez**. |
+| C7 | Loading | Con `trailingIcon` presente, el ancho renderizado con `isLoading = true` es **idéntico** al de `false` para el mismo label y la misma talla. Se mide, no se mira. |
+| C8 | Loading | Sin ningún icono, `isLoading = true` ensancha el botón en exactamente `size/icon/*` + `space/s` = **24 · 28 · 32 px** según la talla. |
+| C9 | Loading | Con solo `leadingIcon`, el icono izquierdo permanece visible y el spinner aparece a la derecha del label. |
+| C10 | Loading | El label visible y el nombre accesible son **idénticos** antes, durante y después de la carga. |
+| C11 | Loading | Los tokens de color del botón durante la carga son los de `rest`. `background/disabled` no aparece en ningún momento. |
+| C12 | Motion | El spinner completa una vuelta en **800 ms** con `linear`; bajo `prefers-reduced-motion: reduce` pasa a **1200 ms** y **no se detiene**. |
+| C13 | Motion | El paso `rest` → `hover` tarda **120 ms**; `active` y el borde de foco aparecen **sin transición**. |
+| C14 | Content | Un label de 24 caracteres en talla `l` se renderiza completo en **una sola línea**, sin elipsis y sin salto: el botón crece. |
+| C15 | Responsive | Al 200% de zoom del navegador y con el texto del sistema al máximo, ningún label se recorta y el botón crece en vertical. Ninguna medida cambia al cruzar un breakpoint. |
 
 ---
 
