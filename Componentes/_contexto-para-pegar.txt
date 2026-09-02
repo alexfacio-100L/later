@@ -118,6 +118,32 @@ EJES Y DEFECTO POR OMISIÓN
   `m · s · l` y no ascendente. Es deliberado: no lo señales como anomalía ni
   sugieras reordenarla.
 
+isLoading — ES PROPIEDAD, Y LA EXTRACCIÓN ANTERIOR LA PERDIÓ
+- El Button tiene DOS propiedades de estado, no una: `isDisabled` e
+  `isLoading`. La extracción del 27 de agosto solo emitió `isDisabled`, así
+  que la tabla `### Properties` del .md quedó sin `isLoading`. Es una
+  omisión, no una decisión: hay que emitirla.
+      isLoading   boolean   default false
+- NO tiene variante en Figma, ni borrada ni reemplazada. El eje `state` tiene
+  cinco valores (3 size x 2 surface x 2 variant x 5 state = 60 variantes
+  exactas). `isLoading` es propiedad de código compuesta con los slots de
+  icono que ya existen: cuesta CERO variantes nuevas. No propongas un sexto
+  valor de `state` — costaría 12 variantes y ya se descartó.
+- Comportamiento, decidido por el Lead el 31 de agosto de 2026: al pulsar,
+  un spinner ocupa el slot de icono DERECHO y el botón se bloquea contra
+  clics repetidos. Al terminar, el icono vuelve y ocurre el resultado.
+      icono a la derecha  -> el spinner lo reemplaza; el ancho no cambia
+      ningún icono        -> aparece a la derecha y el botón crece
+      icono solo izquierdo-> el izquierdo se queda; el spinner va a la derecha
+- El icono del spinner es `CircleNotch` de Phosphor, elegido por ser el único
+  diseñado para girar en bucle.
+- ⚠️ NO escribas que el botón se deshabilita al cargar. Bloqueado y
+  deshabilitado son cosas distintas: `aria-busy="true"`, NUNCA `disabled` ni
+  `aria-disabled`, y el foco SE CONSERVA. Deshabilitado dice «no puedes»;
+  cargando dice «espera». Además `background/disabled` da 1.30:1 y el botón
+  se desvanecería justo cuando el usuario lo mira.
+- El detalle completo vive en `## Behavior & interaction` del button.md.
+
 ICONOS
 - La librería es Phosphor, no Heroicons. Los iconos usan Format=Outline y
   Weight=Regular por defecto.
