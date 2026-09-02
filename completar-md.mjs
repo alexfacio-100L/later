@@ -668,22 +668,30 @@ if (escribir && !TIENE_TOKEN_RES) {
 // "Se ve bien" no es criterio; "el foco mide >= 3:1" sí.
 
 const AC_BASE = [
-  ["A11y", "The focus indicator measures **≥ 3:1** against the adjacent surface, and is never conveyed by colour alone (WCAG 1.4.11, 1.4.1)."],
-  ["A11y", "**Enter and Space** both activate the component when it is focused, and produce the same result as a pointer activation."],
-  ["A11y", "A `disabled` instance is **removed from the tab order** and is not reachable by keyboard."],
-  ["A11y", "Every interactive target measures **≥ 44 px** on both axes — see the Touch target table under `## Behavior & interaction`."],
-  ["Tokens", "Every colour and dimension resolves through a token. **Zero raw values** — no literal hex, no literal px, in any state or mode."],
-  ["Tokens", "Every token resolves to the value listed in `## Token resolution` **in each mode**, and switching mode changes nothing else."],
-  ["Motion", "`prefers-reduced-motion: reduce` is honoured: motion is removed or reduced to a non-vestibular equivalent, and no information is lost when it is."],
-  ["States", "Every state documented in `## API` is reachable and visually distinct from every other, in both modes."],
+  // 🔴 Traducida al español el 2 sep 2026. La batería salía en inglés y se
+  // publicaba junto a criterios propios en español, dentro de una página en
+  // español: dos voces en la misma tabla. La regla de idioma del área es
+  // español, con el naming técnico en inglés — y eso es lo que hace ahora.
+  //
+  // ⚠️ Y las referencias cruzadas dejan de apuntar a secciones del `.md`.
+  // `## Behavior & interaction` no existe en la página publicada: quien la lee
+  // se queda buscando un ancla que no está. Se nombra el dato, no el archivo.
+  ["A11y", "El indicador de foco mide **≥ 3:1** contra la superficie contigua, y nunca se comunica solo por color (WCAG 1.4.11, 1.4.1)."],
+  ["A11y", "**Enter y Espacio** activan el componente cuando tiene el foco, con el mismo resultado que una activación por puntero."],
+  ["A11y", "Una instancia `disabled` **sale del orden de tabulación** y no se alcanza por teclado."],
+  ["A11y", "Todo objetivo interactivo mide **≥ 44 px** en los dos ejes — ver la tabla de área táctil."],
+  ["Tokens", "Cada color y cada dimensión resuelven a través de un token. **Cero valores crudos**: ningún hex literal, ningún px literal, en ningún estado ni modo."],
+  ["Tokens", "Cada token resuelve al valor documentado **en cada modo**, y cambiar de modo no cambia nada más."],
+  ["Motion", "`prefers-reduced-motion: reduce` se respeta: el movimiento se elimina o se reduce a un equivalente no vestibular, y no se pierde información al hacerlo."],
+  ["States", "Todo estado documentado es alcanzable y visualmente distinto de los demás, en los dos modos."],
 ]
 
 function construirAC() {
   return [
-    "The baseline battery below is **identical for every component in the system** and is emitted automatically.",
-    "Component-specific criteria are authored underneath it — this block is not complete until they exist.",
+    "La batería base es **idéntica para todos los componentes del sistema** y se emite sola.",
+    "Los criterios propios del componente se escriben debajo: el bloque no está completo hasta que existan.",
     "",
-    "| # | Area | Criterion |",
+    "| # | Área | Criterio |",
     "| --- | --- | --- |",
     ...AC_BASE.map(([area, texto], i) => `| B${i + 1} | ${area} | ${texto} |`),
     "",

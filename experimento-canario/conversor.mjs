@@ -248,6 +248,11 @@ const CABECERAS_ES = {
   "Token": "Token", "Layer": "Capa", "Size": "Tamaño",
   "Role": "Rol", "Required": "Obligatorio", "Optional": "Opcional",
   "Spec": "Especificación", "Specs": "Especificaciones",
+  // Añadidas el 2 sep 2026 al publicar el Button con la capa editorial: eran
+  // las que quedaban en inglés dentro de una página en español.
+  "Criterion": "Criterio", "Criteria": "Criterios", "Area": "Área",
+  "Condition": "Condición", "Platform": "Plataforma", "Input": "Entrada",
+  "Dimension": "Dimensión", "Announcement": "Anuncio", "Behavior": "Comportamiento",
 }
 
 /** Cabeceras con parte variable, que un diccionario plano no cubre. */
@@ -257,7 +262,7 @@ const CABECERAS_PATRON = [
 ]
 
 const traducirSeccion = t => SECCIONES_ES[t.trim()] ?? t
-const traducirCabecera = c => {
+export const traducirCabecera = c => {
   const limpio = c.replace(/\*\*/g, "").trim()
   const es = CABECERAS_ES[limpio]
   if (es) return c.replace(limpio, es)
