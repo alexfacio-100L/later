@@ -2,52 +2,105 @@
 
 El Button ejecuta una acción en el lugar donde está. Si la interacción lleva a otra pantalla o a otra URL, el componente correcto es `Link`.
 
-## Cuándo usar
+## Cuándo usar y cuándo no
 
-<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
-  <SNItem>
-    <SNProp name="type" value="do" />
-    <SNProp name="description" value="Para ejecutar una acción: guardar, enviar, confirmar, aplicar un filtro." />
-  </SNItem>
-</SNBlock>
+**La primera decisión es si esto es un botón.** Las cinco de abajo se leen enfrentadas a propósito: el error que se comete a diario no es elegir mal un valor, es elegir mal el componente.
 
-<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
-  <SNItem>
-    <SNProp name="type" value="do" />
-    <SNProp name="description" value="Usa primary para la acción principal de la pantalla, y solo una por vista." />
-  </SNItem>
-</SNBlock>
+### Button o Link
 
-## Cuándo no usar
+<SNGuidelines variant="prominent" columns={2}>
+  <SNGuideline type="do">
+    Usa **Button** para **ejecutar una acción en el sitio donde estás**: guardar, enviar, confirmar, aplicar un filtro, abrir un modal.
+  </SNGuideline>
 
-<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
-  <SNItem>
-    <SNProp name="type" value="dont" />
-    <SNProp name="description" value="No lo uses para navegar a otra pantalla o a una URL. Eso es un Link." />
-  </SNItem>
-</SNBlock>
+  <SNGuideline type="dont">
+    No uses Button para **ir a otra pantalla o a otra URL**. Eso es un `Link`, y es el componente en el que se convirtió el antiguo `tertiary`.
+  </SNGuideline>
+</SNGuidelines>
 
-<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
-  <SNItem>
-    <SNProp name="type" value="dont" />
-    <SNProp name="description" value="No pongas dos botones primary compitiendo en la misma vista." />
-  </SNItem>
-</SNBlock>
+**La regla, en una línea: un enlace navega, un botón actúa.** Si al pulsarlo cambia la dirección, es un Link aunque parezca un botón.
 
-## Consideraciones
+### Jerarquía
 
-<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
-  <SNItem>
-    <SNProp name="type" value="caution" />
-    <SNProp name="description" value="El estado deshabilitado apenas se distingue del lienzo en Light: 1.30:1. Antes de usarlo, considera un control habilitado que explique qué falta." />
-  </SNItem>
-</SNBlock>
+<SNGuidelines variant="prominent" columns={2}>
+  <SNGuideline type="do">
+    Reserva `variant=primary` para **la acción principal de la vista**, y usa `secondary` para las de apoyo.
+  </SNGuideline>
 
-## Variantes y jerarquía
+  <SNGuideline type="dont">
+    No pongas **dos `primary` compitiendo** en la misma vista: si todo destaca, nada destaca y el usuario tiene que leerlo todo para decidir.
+  </SNGuideline>
+</SNGuidelines>
 
-**`variant`** define la jerarquía visual: `primary` para la acción principal, `secondary` para las de apoyo.
+### `surface` no es jerarquía
 
-**`surface`** no es jerarquía, es dónde vive el botón: `product` cubre app, login y modales; `marketing` cubre landings y campañas. Determina el peso tipográfico y el escalón de sombra.
+<SNGuidelines variant="prominent" columns={2}>
+  <SNGuideline type="do">
+    Elige `surface` por **dónde vive el botón**: `product` en app, login y modales; `marketing` en landings y campañas.
+  </SNGuideline>
+
+  <SNGuideline type="dont">
+    No uses `marketing` **para dar más peso** a un botón dentro del producto. No es un escalón de jerarquía — solo cambia el peso tipográfico del label y su escalón de sombra.
+  </SNGuideline>
+</SNGuidelines>
+
+### El label
+
+<SNGuidelines variant="prominent" columns={2}>
+  <SNGuideline type="do">
+    Escribe un label que **describa la acción**: «Guardar», «Enviar», «Invertir». Es el nombre accesible del control: es lo único que anuncia el lector de pantalla.
+  </SNGuideline>
+
+  <SNGuideline type="dont">
+    No uses labels que describan **la apariencia o el genérico** —«Botón», «Aceptar» para todo—. Y no existe hoy un botón solo de icono: si hiciera falta, exigiría `aria-label` explícito.
+  </SNGuideline>
+</SNGuidelines>
+
+### El estado deshabilitado
+
+<SNGuidelines variant="prominent" columns={2}>
+  <SNGuideline type="do">
+    Prefiere un **control habilitado que explique qué falta** antes de deshabilitarlo. Un botón que no se puede pulsar y no dice por qué deja al usuario sin salida.
+  </SNGuideline>
+
+  <SNGuideline type="dont">
+    No te apoyes en `isDisabled` **como forma de guiar**. En Light el fondo deshabilitado da **1.30:1** contra el lienzo: no se percibe como control, así que ni siquiera comunica que existe.
+  </SNGuideline>
+</SNGuidelines>
+
+<SNGuidelines variant="prominent" columns={1}>
+  <SNGuideline type="caution">
+    El estado deshabilitado se distingue **solo por color** —ni forma, ni borde, ni texto—. Para la tecnología asistiva sí se expone, porque el atributo nativo `disabled` lo declara; el problema es de quien mira la pantalla, no de quien la escucha.
+  </SNGuideline>
+</SNGuidelines>
+
+## Los ejes, uno a uno
+
+Cada eje, con todos sus valores en la misma imagen. **Es la respuesta visual a «¿cuál elijo?»**, que es la pregunta de esta pestaña: los valores están en la especificación, pero la diferencia entre dos valores solo se ve mirándolos juntos.
+
+### `variant` — la jerarquía
+
+![primary y secondary, enfrentados](https://studio-assets.supernova.io/design-systems/825551/51606d73-b8ba-48f9-a402-469f21d3e101.png)
+
+### `surface` — dónde vive el botón
+
+![product y marketing: cambia el peso tipográfico y el escalón de sombra](https://studio-assets.supernova.io/design-systems/825551/07d5fa4f-5d80-4275-9ac3-8cb5baa9daea.png)
+
+### `size` — la talla
+
+![s, m y l. El defecto es m desde el 27 ago 2026](https://studio-assets.supernova.io/design-systems/825551/61467b1e-b189-40b5-b6ef-8021d8b9a0a6.png)
+
+### `isDisabled` — el estado bloqueado
+
+![habilitado y deshabilitado, en las dos variantes](https://studio-assets.supernova.io/design-systems/825551/365ab973-5aaf-4159-b8c2-e5af64bb677f.png)
+
+### `showIconLeft` y `showIconRight` — las dos ranuras
+
+Son **ortogonales**: el botón puede mostrar ninguna, una, la otra, o las dos.
+
+![con y sin icono inicial](https://studio-assets.supernova.io/design-systems/825551/42205344-2a1a-44d2-a3d1-986a7d3ad57e.png)
+
+![con y sin icono final](https://studio-assets.supernova.io/design-systems/825551/efbdbf5f-4056-4744-a4d1-5d4bbc56bc08.png)
 
 ## Comportamiento
 

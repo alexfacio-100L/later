@@ -769,6 +769,14 @@ El contraste lo calcula Supernova sobre los tokens vivos: **no hay ratios escrit
 
 Qué anuncia cada plataforma, estado por estado. **Es una decisión de diseño, no una consecuencia del marcado:** el código tiene atributos, no anuncios comprometidos.
 
+### Dónde cae el foco
+
+Las tablas dicen **qué se anuncia**; estas dos imágenes dicen **dónde para el foco**, que es lo único que el texto no puede enseñar.
+
+![rest, hover, active y focus-visible: una sola parada de foco, la misma en los cuatro](https://studio-assets.supernova.io/design-systems/825551/3db75921-81bc-4837-aff2-74a132653685.png)
+
+![isDisabled === true: cero paradas de foco — el control sale del orden de tabulación](https://studio-assets.supernova.io/design-systems/825551/a53160d5-68f2-446d-893a-ec86f3afc623.png)
+
 _Confidence: high._ _Reconciliation: 1 auto-fixed, 0 retried, 0 unresolved._
 
 > Button es un componente simple: un único focus stop. El texto de `labelBox` (label) se fusiona en el nombre accesible del botón y NO es un focus stop propio; `iconLeft` e `iconRight` son decorativos y se ocultan a la tecnologia asistiva. Ningun eje visual —`size`, `surface`, `variant`— altera la semántica de lector de pantalla: solo el eje `state` lo hace, y dentro de el unicamente `disabled`. Por eso los estados `rest`, `hover`, `active` y `focus-visible` están agrupados en una sola entrada: mismo focus stop, mismos roles y mismas propiedades; solo cambian relleno, borde y sombra.

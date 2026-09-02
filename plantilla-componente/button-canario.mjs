@@ -66,6 +66,52 @@ const preview = (seccion, pie) => {
     `   Registrados: ${Object.keys(FRAMES).join(" · ")}`)
   return `![${pie ?? seccion}](${f.url})`
 }
+/**
+ * Los previews que NO se colocan en la página, y por qué. Un preview registrado
+ * tiene que estar o colocado o aquí: no hay tercera opción.
+ *
+ * 🔴 Existe porque el 27 de agosto se contaron «12 previews sueltos» y el número
+ * ya era falso al escribirse — el 28 se registraron dos más y nadie recontó, así
+ * que eran 14. Un conteo a mano de un conjunto que crece es un dato con fecha de
+ * caducidad y sin aviso de caducidad. `verificarCobertura()` lo cuenta solo.
+ *
+ * 🟡 DECISIÓN EDITORIAL, 2 sep 2026 — los seis previews de color quedan fuera.
+ * La página publica los mismos valores con `color-accessibility-grid`, que los
+ * calcula sobre los tokens VIVOS. Una imagen de color miente en silencio en
+ * cuanto un token cambia: sigue viéndose bien, y ya no dice la verdad. Es el
+ * defecto que el bloque vivo existe para no tener. Las ocho combinaciones
+ * completas siguen en la especificación del repo, que es donde deben estar.
+ * No se borran de Supernova: cuestan cero y sirven si la decisión cambia.
+ */
+const FUERA_A_PROPOSITO = {
+  "Primary / Marketing / Light":   "cubierto por color-accessibility-grid, que resuelve sobre tokens vivos",
+  "Primary / Marketing / Dark":    "cubierto por color-accessibility-grid, que resuelve sobre tokens vivos",
+  "Secondary / Product / Light":   "cubierto por color-accessibility-grid, que resuelve sobre tokens vivos",
+  "Secondary / Product / Dark":    "cubierto por color-accessibility-grid, que resuelve sobre tokens vivos",
+  "Secondary / Marketing / Light": "cubierto por color-accessibility-grid, que resuelve sobre tokens vivos",
+  "Secondary / Marketing / Dark":  "cubierto por color-accessibility-grid, que resuelve sobre tokens vivos",
+}
+
+/**
+ * Cuenta cuántos previews registrados llegan a la página y falla si alguno no
+ * está ni colocado ni declarado fuera. **Emite la cobertura siempre**, en regla
+ * o no: un método que resuelve un conjunto dice sobre cuántos de cuántos.
+ */
+const verificarCobertura = (paginas) => {
+  const texto = Object.values(paginas).join("\n")
+  const registrados = Object.keys(FRAMES)
+  const colocados = registrados.filter(s => texto.includes(FRAMES[s].url))
+  const fuera = registrados.filter(s => s in FUERA_A_PROPOSITO && !colocados.includes(s))
+  const huerfanos = registrados.filter(s => !colocados.includes(s) && !(s in FUERA_A_PROPOSITO))
+  console.log(`  Previews: ${colocados.length} colocados + ${fuera.length} fuera a propósito = ` +
+              `${colocados.length + fuera.length} de ${registrados.length} registrados.`)
+  if (huerfanos.length) throw new Error(
+    `${huerfanos.length} preview(s) registrados no están ni colocados ni declarados fuera:\n` +
+    huerfanos.map(s => `     · ${s}`).join("\n") +
+    `\n   Colócalos en una pestaña o añádelos a FUERA_A_PROPOSITO con su razón.`)
+  return { colocados: colocados.length, fuera: fuera.length, total: registrados.length }
+}
+
 const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
 /** `example-button--primary`. Simula que desarrollo ya consumió la spec. */
 const HISTORIA_BUTTON = "681057"
@@ -225,13 +271,54 @@ export const tabla = (cabecera, filas, anchos) => {
   return `<SNTable showBorder highlightHeaderRow>\n${fila(cabecera, true)}\n${filas.map(f => fila(f, false)).join("\n")}\n</SNTable>`
 }
 
-/** Un par Do/Don't/Caution. Los valores válidos son minúsculas: do · dont · caution. */
-const guia = (tipo, texto) => `<SNBlock packageId="io.supernova.block.do-dont-guidelines" variantId="prominent">
-  <SNItem>
-    <SNProp name="type" value="${tipo}" />
-    <SNProp name="description" value="${texto}" />
-  </SNItem>
-</SNBlock>`
+/**
+ * Un par Do/Don't, en UN bloque de dos columnas. Los tipos son minúsculas:
+ * do · dont · caution.
+ *
+ * 🔴 Esta función se reescribió el 2 sep 2026 porque la anterior publicaba los
+ * bloques VACÍOS, y es el fallo silencioso de la plataforma en su peor forma.
+ * Emitía `<SNProp name="description" value="…" />`: `validateMarkdown` lo
+ * aceptaba, la escritura conservaba el `type` y DESCARTABA el texto. La página
+ * llevaba cinco bloques Do/Don't sin una sola palabra dentro, con la forma
+ * correcta y sin error que revisar. `description` no es un prop de texto — es
+ * un prop de RICH TEXT, y el rich text va como HIJO, nunca como atributo.
+ *
+ * 🟢 La forma canónica, verificada el 2 sep 2026 escribiendo y volviendo a leer
+ * (validar NO basta: las tres formas candidatas validaban igual):
+ *
+ *     <SNGuidelines variant="prominent" columns={2}>
+ *       <SNGuideline type="do">texto **con** markdown</SNGuideline>
+ *       <SNGuideline type="dont">texto</SNGuideline>
+ *     </SNGuidelines>
+ *
+ * Es la abreviatura que la propia plataforma devuelve al releer la página, y
+ * admite negrita y `código` en línea. Un par va en un solo bloque con
+ * `columns={2}` para que el do y el dont se lean enfrentados, que es lo que
+ * hace útil al patrón: la comparación, no la lista.
+ *
+ * ⚠️ Y la lección de método, que es la regla 16 otra vez: la primera sonda dio
+ * «texto DESCARTADO» en las tres formas porque leía con
+ * `getDocumentationContentRaw`, que para un id de página UUID devuelve un
+ * registro vacío. Hasta el texto plano de control salió ausente. Para verificar
+ * una escritura hay que releer con el MCP (`sn_get_documentation_page_content`)
+ * — el raw del SDK no es capaz de mostrar la presencia.
+ */
+const par = (hacer, noHacer) => `<SNGuidelines variant="prominent" columns={2}>
+  <SNGuideline type="do">
+    ${hacer}
+  </SNGuideline>
+
+  <SNGuideline type="dont">
+    ${noHacer}
+  </SNGuideline>
+</SNGuidelines>`
+
+/** Una advertencia suelta, sin contraparte. */
+const cuidado = (texto) => `<SNGuidelines variant="prominent" columns={1}>
+  <SNGuideline type="caution">
+    ${texto}
+  </SNGuideline>
+</SNGuidelines>`
 
 const TABS = {
 "Resumen general": `# Button
@@ -270,27 +357,76 @@ ${tabla(["Plataforma", "Estado", "Implementación"], [
 
 El Button ejecuta una acción en el lugar donde está. Si la interacción lleva a otra pantalla o a otra URL, el componente correcto es \`Link\`.
 
-## Cuándo usar
+## Cuándo usar y cuándo no
 
-${guia("do", "Para ejecutar una acción: guardar, enviar, confirmar, aplicar un filtro.")}
+**La primera decisión es si esto es un botón.** Las cinco de abajo se leen enfrentadas a propósito: el error que se comete a diario no es elegir mal un valor, es elegir mal el componente.
 
-${guia("do", "Usa primary para la acción principal de la pantalla, y solo una por vista.")}
+### Button o Link
 
-## Cuándo no usar
+${par(
+  "Usa **Button** para **ejecutar una acción en el sitio donde estás**: guardar, enviar, confirmar, aplicar un filtro, abrir un modal.",
+  "No uses Button para **ir a otra pantalla o a otra URL**. Eso es un \`Link\`, y es el componente en el que se convirtió el antiguo \`tertiary\`."
+)}
 
-${guia("dont", "No lo uses para navegar a otra pantalla o a una URL. Eso es un Link.")}
+**La regla, en una línea: un enlace navega, un botón actúa.** Si al pulsarlo cambia la dirección, es un Link aunque parezca un botón.
 
-${guia("dont", "No pongas dos botones primary compitiendo en la misma vista.")}
+### Jerarquía
 
-## Consideraciones
+${par(
+  "Reserva \`variant=primary\` para **la acción principal de la vista**, y usa \`secondary\` para las de apoyo.",
+  "No pongas **dos \`primary\` compitiendo** en la misma vista: si todo destaca, nada destaca y el usuario tiene que leerlo todo para decidir."
+)}
 
-${guia("caution", "El estado deshabilitado apenas se distingue del lienzo en Light: 1.30:1. Antes de usarlo, considera un control habilitado que explique qué falta.")}
+### \`surface\` no es jerarquía
 
-## Variantes y jerarquía
+${par(
+  "Elige \`surface\` por **dónde vive el botón**: \`product\` en app, login y modales; \`marketing\` en landings y campañas.",
+  "No uses \`marketing\` **para dar más peso** a un botón dentro del producto. No es un escalón de jerarquía — solo cambia el peso tipográfico del label y su escalón de sombra."
+)}
 
-**\`variant\`** define la jerarquía visual: \`primary\` para la acción principal, \`secondary\` para las de apoyo.
+### El label
 
-**\`surface\`** no es jerarquía, es dónde vive el botón: \`product\` cubre app, login y modales; \`marketing\` cubre landings y campañas. Determina el peso tipográfico y el escalón de sombra.
+${par(
+  "Escribe un label que **describa la acción**: «Guardar», «Enviar», «Invertir». Es el nombre accesible del control: es lo único que anuncia el lector de pantalla.",
+  "No uses labels que describan **la apariencia o el genérico** —«Botón», «Aceptar» para todo—. Y no existe hoy un botón solo de icono: si hiciera falta, exigiría \`aria-label\` explícito."
+)}
+
+### El estado deshabilitado
+
+${par(
+  "Prefiere un **control habilitado que explique qué falta** antes de deshabilitarlo. Un botón que no se puede pulsar y no dice por qué deja al usuario sin salida.",
+  "No te apoyes en \`isDisabled\` **como forma de guiar**. En Light el fondo deshabilitado da **1.30:1** contra el lienzo: no se percibe como control, así que ni siquiera comunica que existe."
+)}
+
+${cuidado("El estado deshabilitado se distingue **solo por color** —ni forma, ni borde, ni texto—. Para la tecnología asistiva sí se expone, porque el atributo nativo \`disabled\` lo declara; el problema es de quien mira la pantalla, no de quien la escucha.")}
+
+## Los ejes, uno a uno
+
+Cada eje, con todos sus valores en la misma imagen. **Es la respuesta visual a «¿cuál elijo?»**, que es la pregunta de esta pestaña: los valores están en la especificación, pero la diferencia entre dos valores solo se ve mirándolos juntos.
+
+### \`variant\` — la jerarquía
+
+${preview("variant", "primary y secondary, enfrentados")}
+
+### \`surface\` — dónde vive el botón
+
+${preview("surface", "product y marketing: cambia el peso tipográfico y el escalón de sombra")}
+
+### \`size\` — la talla
+
+${preview("size", "s, m y l. El defecto es m desde el 27 ago 2026")}
+
+### \`isDisabled\` — el estado bloqueado
+
+${preview("isDisabled", "habilitado y deshabilitado, en las dos variantes")}
+
+### \`showIconLeft\` y \`showIconRight\` — las dos ranuras
+
+Son **ortogonales**: el botón puede mostrar ninguna, una, la otra, o las dos.
+
+${preview("showIconLeft", "con y sin icono inicial")}
+
+${preview("showIconRight", "con y sin icono final")}
 
 ## Comportamiento
 
@@ -387,6 +523,14 @@ ${preview("Primary / Product / Dark", "Primary · Product · Dark")}
 
 Qué anuncia cada plataforma, estado por estado. **Es una decisión de diseño, no una consecuencia del marcado:** el código tiene atributos, no anuncios comprometidos.
 
+### Dónde cae el foco
+
+Las tablas dicen **qué se anuncia**; estas dos imágenes dicen **dónde para el foco**, que es lo único que el texto no puede enseñar.
+
+${preview("State: rest / hover / active / focus-visible", "rest, hover, active y focus-visible: una sola parada de foco, la misma en los cuatro")}
+
+${preview("State: isDisabled === true", "isDisabled === true: cero paradas de foco — el control sale del orden de tabulación")}
+
 ${seccionDelMd("Voice / Screen reader")}
 
 ## Accesibilidad
@@ -469,6 +613,11 @@ const main = async () => {
   const ref  = { designSystemId: DS, versionId: version.id, workspaceId: WS }
   const refW = { designSystemId: DS, versionId: version.id }
   const nombres = Object.keys(TABS)
+
+  // 🔴 Antes que nada, y también en --dump: un preview registrado tiene que
+  // estar colocado o declarado fuera. Sin esta puerta, la página sale con la
+  // forma correcta y con previews perdidos que nada delata.
+  verificarCobertura(TABS)
 
   if (process.argv.includes("--dump")) {
     const dir = path.join(AQUI, "salida", "button-tabs")
