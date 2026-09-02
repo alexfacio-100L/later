@@ -113,7 +113,25 @@ const verificarCobertura = (paginas) => {
 }
 
 const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
-/** `example-button--primary`. Simula que desarrollo ya consumió la spec. */
+/**
+ * 🔴 RETIRADO DE LA PÁGINA EL 2 SEP 2026, y conviene entender qué se retiró.
+ *
+ * `681057` es `Example/Button — Primary`: el botón de ANDAMIAJE DE FÁBRICA de
+ * Storybook, el que viene en cualquier proyecto recién inicializado. No es el
+ * Button de Later. Verificado contra la plataforma:
+ *   URL → .../alias/bricks-ui-canario/iframe.html?id=example-button--primary
+ *   Title → "Example/Button"
+ *
+ * Se puso «para simular que desarrollo ya consumió la spec», y esa simulación
+ * SE PUBLICÓ: la pestaña `Especificaciones` —la página que un externo abre para
+ * juzgar el sistema— enseñaba un botón de demo genérico bajo el título
+ * «Propiedades», sin decir en ningún sitio que no era el componente.
+ *
+ * ⚠️ No se sustituye por otro embed porque no hay por qué sustituirlo: hoy hay
+ * **cero componentes de código** en Supernova y las 11 historias conectadas son
+ * todas `Example/*`. Un hueco declarado es honesto; un demo sin etiquetar, no.
+ * Vuelve cuando exista el Button en código — que va después de 7.3, no antes.
+ */
 const HISTORIA_BUTTON = "681057"
 
 /**
@@ -483,11 +501,9 @@ ${preview("Button states", "default, hover, pressed, focus y disabled")}
 
 ## Propiedades
 
-<SNBlock packageId="io.supernova.block.storybook" variantId="playground">
-  <SNItem>
-    <SNProp name="embed" value={[{ entityId: "${HISTORIA_BUTTON}" }]} />
-  </SNItem>
-</SNBlock>
+<SNCallout variant="Warning">
+**Pendiente: el playground interactivo.** Aquí va la tabla de propiedades en vivo cuando el Button exista en código. Hoy no existe —cero componentes de código en el sistema— y las medidas comprometidas están arriba, en Medidas.
+</SNCallout>
 
 ## Color
 
