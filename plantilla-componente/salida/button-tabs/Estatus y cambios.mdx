@@ -1,12 +1,10 @@
-# Lifecycle
+**Stable.** El componente está documentado, en uso, y con su escala dimensional ya rehecha: alturas **48 · 56 · 64**, texto **12 · 14 · 16**, iconos **16 · 20 · 24**.
 
-**Stable.** El componente está documentado y en uso, y su escala dimensional ya se rehízo: alturas **48 · 56 · 64**, texto **12 · 14 · 16**, iconos **16 · 20 · 24**, con `paddingBlock` constante. La documentación de esta página describe la escala vigente.
-
-<SNCallout variant="Info">
-**El cambio de escala más relevante para quien consume el componente es el defecto del eje `size`, que pasó de `s` a `m`.** Todo lo que instancia el Button sin especificar talla cambia de aspecto al actualizar la librería.
+<SNCallout type="Info">
+**El cambio de más alcance para quien consume el componente es el defecto de `size`, que pasó de `s` a `m`.** Toda instancia que no especifique talla cambia de aspecto al actualizar la librería.
 </SNCallout>
 
-## Component health
+## Salud del componente
 
 <SNBlock packageId="io.supernova.block.component-health">
   <SNItem>
@@ -22,12 +20,77 @@
   </SNItem>
 </SNBlock>
 
+## Defectos abiertos
+
+Cuatro, y ninguno impide usar el componente. Se publican porque afectan a quien lo consume.
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={330}>
+      Qué
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={300}>
+      A quién afecta
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={130}>
+      Estado
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={330}>
+      `background/disabled` apenas se distingue del lienzo en Light — **1.30:1**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={300}>
+      A quien mira la pantalla. Quien la escucha sí recibe el estado: el atributo nativo lo declara
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={130}>
+      Abierto
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={330}>
+      Las instancias de icono embebidas traen `Weight=Fill`; el defecto declarado de la librería Phosphor es `Weight=Regular`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={300}>
+      Al aspecto del icono en las dos ranuras
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={130}>
+      Abierto
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={330}>
+      Los 60 `labelBox` conservan un `cornerRadius` de 12 que no se ve —no tienen relleno— pero llega a la extracción
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={300}>
+      A nadie visualmente. Es residuo de bajar su inset a 0
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={130}>
+      A limpiar
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={330}>
+      El anuncio asistivo de `isLoading` está dibujado en Figma y no transcrito: esta página documenta 2 de las 4 paradas de foco
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={300}>
+      A quien implemente el estado de carga en iOS o Android
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={130}>
+      Abierto
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
 ## Changelog
 
+- **1 sep 2026** — `isLoading` queda especificado: spinner `CircleNotch` en la ranura derecha, **sin una sola variante nueva en Figma**. Con él entran el movimiento, las reglas responsive, los supuestos de contenido y quince criterios de aceptación propios.
+- **27 ago 2026** — escala dimensional rehecha: alturas **48 · 56 · 64**, radio único `radius/l` (16) en las 60 variantes, y el defecto de `size` pasa de `s` a `m`.
 - **21 ago 2026** — corregidas las seis variantes `secondary` + `pressed`: el texto y el icono pasan a las variantes **Static**. En Dark el texto caía a 3.29:1.
-- **20 ago 2026** — `text/disabled` pasa a `neutral/600` en Light y `neutral/700` en Dark. El contraste sobre `background/disabled` sube de 1.74:1 a 4.50 y 4.89.
-- **20 ago 2026** — paddings alineados a la escala `space`: s 8/16 · m 12/16 · l 16/24.
+- **20 ago 2026** — `text/disabled` pasa a `neutral/600` en Light y `neutral/700` en Dark. El contraste sobre `background/disabled` sube de 1.74:1 a **4.50** y **4.89**.
+- **20 ago 2026** — insets alineados a la escala `space`.
+- **17 ago 2026** — `tertiary` sale del componente y nace **Link**; `quaternary` se elimina. El Button pasa de **175 a 60 variantes** y su API de **16 propiedades a 9**, idéntica a la del Link.
 
-## Deprecation y migration
+## Deprecación y migración
 
-*No aplica: el componente está activo.*
+Nada deprecado. **La única migración viva es el defecto de `size`:** revisa las instancias que no especifican talla antes de actualizar la librería, porque van a cambiar de `s` a `m`.

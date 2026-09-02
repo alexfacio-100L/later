@@ -1,38 +1,34 @@
-# Uso
+Esta pestaña responde una sola pregunta: **¿cuál elijo?**
 
-El Button ejecuta una acción en el lugar donde está. Si la interacción lleva a otra pantalla o a otra URL, el componente correcto es `Link`.
-
-## Cuándo usar y cuándo no
-
-**La primera decisión es si esto es un botón.** Las cinco de abajo se leen enfrentadas a propósito: el error que se comete a diario no es elegir mal un valor, es elegir mal el componente.
-
-### Button o Link
+## Button o Link
 
 <SNGuidelines variant="prominent" columns={2}>
   <SNGuideline type="do">
-    Usa **Button** para **ejecutar una acción en el sitio donde estás**: guardar, enviar, confirmar, aplicar un filtro, abrir un modal.
+    Usa **Button** para **ejecutar una acción donde estás**: guardar, enviar, confirmar, filtrar, abrir un modal.
   </SNGuideline>
 
   <SNGuideline type="dont">
-    No uses Button para **ir a otra pantalla o a otra URL**. Eso es un `Link`, y es el componente en el que se convirtió el antiguo `tertiary`.
+    No uses Button para **ir a otra pantalla o a otra URL**. Eso es un `Link`, el componente en el que se convirtió el antiguo `tertiary`.
   </SNGuideline>
 </SNGuidelines>
 
-**La regla, en una línea: un enlace navega, un botón actúa.** Si al pulsarlo cambia la dirección, es un Link aunque parezca un botón.
+**Un enlace navega, un botón actúa.** Si al pulsarlo cambia la dirección, es un Link aunque se parezca a un botón. En código son `<a href>` y `<button>`, y el lector de pantalla los anuncia distinto.
 
-### Jerarquía
+## Cuál variante
 
 <SNGuidelines variant="prominent" columns={2}>
   <SNGuideline type="do">
-    Reserva `variant=primary` para **la acción principal de la vista**, y usa `secondary` para las de apoyo.
+    Reserva `primary` para **la acción principal de la vista**. Usa `secondary` para las de apoyo.
   </SNGuideline>
 
   <SNGuideline type="dont">
-    No pongas **dos `primary` compitiendo** en la misma vista: si todo destaca, nada destaca y el usuario tiene que leerlo todo para decidir.
+    No pongas **dos `primary` compitiendo** en la misma vista. Si todo destaca, nada destaca.
   </SNGuideline>
 </SNGuidelines>
 
-### `surface` no es jerarquía
+![primary y secondary, enfrentados](https://studio-assets.supernova.io/design-systems/825551/51606d73-b8ba-48f9-a402-469f21d3e101.png)
+
+## Cuál superficie
 
 <SNGuidelines variant="prominent" columns={2}>
   <SNGuideline type="do">
@@ -40,23 +36,45 @@ El Button ejecuta una acción en el lugar donde está. Si la interacción lleva 
   </SNGuideline>
 
   <SNGuideline type="dont">
-    No uses `marketing` **para dar más peso** a un botón dentro del producto. No es un escalón de jerarquía — solo cambia el peso tipográfico del label y su escalón de sombra.
+    No uses `marketing` **para dar más peso** dentro del producto. No es un escalón de jerarquía: solo cambia el peso tipográfico del label y su escalón de sombra.
   </SNGuideline>
 </SNGuidelines>
 
-### El label
+![product y marketing: cambia el peso tipográfico y el escalón de sombra](https://studio-assets.supernova.io/design-systems/825551/07d5fa4f-5d80-4275-9ac3-8cb5baa9daea.png)
+
+## Cuál talla
+
+**La talla la eliges tú, por dónde vive el botón.** Un CTA de hero es `l`; uno de fila de tabla es `s`. El componente no la deduce del ancho de la pantalla.
+
+![s, m y l](https://studio-assets.supernova.io/design-systems/825551/61467b1e-b189-40b5-b6ef-8021d8b9a0a6.png)
+
+<SNCallout type="Warning">
+**El defecto es `m` desde el 27 de agosto de 2026** — antes era `s`. Toda instancia que no especifique talla cambia de aspecto al actualizar la librería.
+</SNCallout>
+
+## Cómo se escribe el label
+
+El label **es** el nombre accesible del control: es lo único que anuncia el lector de pantalla.
+
+- **De una a tres palabras, en verbo de acción.** «Guardar», «Ver detalle», «Invertir ahora».
+- **Máximo 24 caracteres con espacios.** Pasado ese número es un hallazgo de revisión, no criterio de quien escribe.
+- **No se trunca, no lleva elipsis y no envuelve.** Si no cabe, se acorta el texto — el botón no.
+- **Las mayúsculas se escriben, no se transforman.** Nada de `text-transform`: altera la pronunciación en algunos motores de lectura y no se puede deshacer.
+- **Llega ya traducido y ya formateado.** «Invertir $10,000» lo compone quien usa el componente, separadores de locale incluidos.
 
 <SNGuidelines variant="prominent" columns={2}>
   <SNGuideline type="do">
-    Escribe un label que **describa la acción**: «Guardar», «Enviar», «Invertir». Es el nombre accesible del control: es lo único que anuncia el lector de pantalla.
+    Escribe un label que **describa la acción**: «Guardar», «Enviar», «Invertir ahora».
   </SNGuideline>
 
   <SNGuideline type="dont">
-    No uses labels que describan **la apariencia o el genérico** —«Botón», «Aceptar» para todo—. Y no existe hoy un botón solo de icono: si hiciera falta, exigiría `aria-label` explícito.
+    No uses labels que describan **la apariencia o el genérico** —«Botón», «Aceptar» para todo—.
   </SNGuideline>
 </SNGuidelines>
 
-### El estado deshabilitado
+**Al traducir, presupuesta +30% de ancho**, y cuenta con que una cadena de menos de 10 caracteres puede duplicarse («Ver» → «Anzeigen»). Un layout que solo encaje con la cadena exacta en español está roto antes de traducirse.
+
+## Cuándo no deshabilitar
 
 <SNGuidelines variant="prominent" columns={2}>
   <SNGuideline type="do">
@@ -68,61 +86,86 @@ El Button ejecuta una acción en el lugar donde está. Si la interacción lleva 
   </SNGuideline>
 </SNGuidelines>
 
+![habilitado y deshabilitado, en las dos variantes](https://studio-assets.supernova.io/design-systems/825551/365ab973-5aaf-4159-b8c2-e5af64bb677f.png)
+
 <SNGuidelines variant="prominent" columns={1}>
   <SNGuideline type="caution">
-    El estado deshabilitado se distingue **solo por color** —ni forma, ni borde, ni texto—. Para la tecnología asistiva sí se expone, porque el atributo nativo `disabled` lo declara; el problema es de quien mira la pantalla, no de quien la escucha.
+    El estado deshabilitado se distingue **solo por color** —ni forma, ni borde, ni texto—. La tecnología asistiva sí lo recibe, porque el atributo nativo lo declara; el problema es de quien mira la pantalla, no de quien la escucha.
   </SNGuideline>
 </SNGuidelines>
 
-## Los ejes, uno a uno
+## Qué pasa mientras carga
 
-Cada eje, con todos sus valores en la misma imagen. **Es la respuesta visual a «¿cuál elijo?»**, que es la pregunta de esta pestaña: los valores están en la especificación, pero la diferencia entre dos valores solo se ve mirándolos juntos.
+Al pulsar, un spinner ocupa la ranura derecha y el botón deja de aceptar activaciones. **Conserva el foco, conserva su color y conserva su label.**
 
-### `variant` — la jerarquía
+**No se deshabilita**, y la razón está en el mensaje: deshabilitar comunica «no puedes», y aquí lo que hay que comunicar es «espera».
 
-![primary y secondary, enfrentados](https://studio-assets.supernova.io/design-systems/825551/51606d73-b8ba-48f9-a402-469f21d3e101.png)
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El botón tiene
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Al cargar
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Ancho
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Icono a la derecha (`trailingIcon`)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El spinner **lo reemplaza** temporalmente y vuelve al terminar
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      **Sin cambio**
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Ningún icono
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El spinner **aparece** a la derecha
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      **Crece** `size/icon/*` + `space/s` = 24 · 28 · 32 px
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Icono solo a la izquierda (`leadingIcon`)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      El izquierdo se queda; el spinner aparece a la derecha del label
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      **Crece** 24 · 28 · 32 px
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
 
-### `surface` — dónde vive el botón
+El componente **no lanza la petición, no cronometra y no reintenta**. Si la petición nunca resuelve, el botón se queda bloqueado: el timeout y el camino de error son de quien lo usa.
 
-![product y marketing: cambia el peso tipográfico y el escalón de sombra](https://studio-assets.supernova.io/design-systems/825551/07d5fa4f-5d80-4275-9ac3-8cb5baa9daea.png)
+## Las dos ranuras de icono
 
-### `size` — la talla
-
-![s, m y l. El defecto es m desde el 27 ago 2026](https://studio-assets.supernova.io/design-systems/825551/61467b1e-b189-40b5-b6ef-8021d8b9a0a6.png)
-
-### `isDisabled` — el estado bloqueado
-
-![habilitado y deshabilitado, en las dos variantes](https://studio-assets.supernova.io/design-systems/825551/365ab973-5aaf-4159-b8c2-e5af64bb677f.png)
-
-### `showIconLeft` y `showIconRight` — las dos ranuras
-
-Son **ortogonales**: el botón puede mostrar ninguna, una, la otra, o las dos.
+Son independientes: ninguna, una, la otra, o las dos. Y son **decorativas** — un icono nunca puede ser el único portador del significado.
 
 ![con y sin icono inicial](https://studio-assets.supernova.io/design-systems/825551/42205344-2a1a-44d2-a3d1-986a7d3ad57e.png)
 
 ![con y sin icono final](https://studio-assets.supernova.io/design-systems/825551/efbdbf5f-4056-4744-a4d1-5d4bbc56bc08.png)
 
-## Comportamiento
+## Lo que este componente no hace
 
-**Los estados de interacción —hover, pressed, focus— los dibuja la plataforma y no se configuran por API.** El eje `state` de Figma existe para los diseñadores.
-
-**El único estado que fija un ingeniero es `isDisabled`**, que bloquea la interacción y saca el control del orden de tabulación.
-
-`showIconLeft` y `showIconRight` son independientes: el botón puede mostrar ninguno, uno u otro, o los dos.
-
-## Content guidelines
-
-*Pendiente: cómo se redacta el label y qué pasa cuando no cabe. Es contenido que ninguna herramienta genera — ni Figma lo contiene ni el código lo declara.*
-
-## Responsive
-
-*Pendiente: cómo cambia entre breakpoints. La relación entre el eje `size` y el breakpoint es una decisión abierta.*
-
-## Internacionalización
-
-*Pendiente: expansión de texto y RTL. El español expande respecto al inglés y no hay regla de ancho máximo definida.*
+- **No hay modo solo-icono.** El label siempre está presente.
+- **No es un toggle.** No mantiene estado presionado; `aria-pressed` no se usa nunca.
+- **No decide el resultado.** Modal, navegación o recarga los resuelve quien lo usa.
+- **No muestra el resultado.** Éxito, error y validación viven en el contenedor, nunca dentro del control.
+- **No reacciona al breakpoint.** Ninguna medida suya cambia con el ancho de la pantalla.
 
 ## Componentes relacionados
 
 - **Link** — para navegar
-- **ArrowRight** — el icono por defecto de ambas ranuras
+- **ArrowRight** — el icono por defecto de las dos ranuras

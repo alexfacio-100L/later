@@ -20,10 +20,11 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { aplicarPestanas } from "./pestanas-plataforma.mjs"
 import { reagruparCitas } from "../experimento-canario/citas.mjs"
+import { traducirCabecera } from "../experimento-canario/conversor.mjs"
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url))
 const RAIZ = path.dirname(AQUI)
-const DS = "825551", WS = "767109"
+// DS y WS ya NO se escriben a mano: `main()` los resuelve por API.
 const GRUPO_COMPONENTES = "074cc38b-fbf2-40b8-8802-d519fff8c76e"
 
 const TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/button-tokens.json"), "utf8"))
@@ -132,7 +133,7 @@ const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
  * todas `Example/*`. Un hueco declarado es honesto; un demo sin etiquetar, no.
  * Vuelve cuando exista el Button en código — que va después de 7.3, no antes.
  */
-const HISTORIA_BUTTON = "681057"
+// (La constante se retiró: no queda ningún embed de Storybook en la página.)
 
 /**
  * Trae una tabla del .md de uSpec y la emite como <SNTable>.
@@ -141,10 +142,20 @@ const HISTORIA_BUTTON = "681057"
  * la acepta y al escribir la descarta en silencio. La página queda con sus
  * títulos y sus imágenes, y sin un solo dato, sin que nada lo avise.
  */
-const tablaDelMd = (encabezado) => {
+const tablaDelMd = (encabezado, ocurrencia = 1) => {
   const md = fs.readFileSync(path.join(RAIZ, "Componentes/button.md"), "utf8")
   const lineas = md.split("\n")
-  const i = lineas.findIndex(l => l.trim() === encabezado)
+  // ⚠️ Cuatro encabezados del .md se repiten —`| Spec | s | m | l | Notes |` está
+  // en «Button sizes» y en «Button — Focus»; `| # | Area | Criterion |` está en
+  // la batería base y en los criterios propios—. Sin `ocurrencia` el segundo es
+  // inalcanzable, y pedirlo devuelve el primero SIN avisar: la página sale bien
+  // formada con la tabla equivocada. Es la regla 16 en su forma de falso completo.
+  let i = -1, vistas = 0
+  for (let k = 0; k < lineas.length; k++) {
+    if (lineas[k].trim() === encabezado && ++vistas === ocurrencia) { i = k; break }
+  }
+  if (i < 0 && vistas > 0) throw new Error(
+    `La tabla «${encabezado}» aparece ${vistas} vez/veces en button.md, y se pidió la ${ocurrencia}.ª.`)
   if (i < 0) throw new Error(
     `No encontré la tabla «${encabezado}» en button.md.\n` +
     `   Encabezados de tabla que SÍ existen en el .md:\n` +
@@ -167,7 +178,9 @@ const tablaDelMd = (encabezado) => {
   const celdas = (l) => l.trim().replace(/^\|/, "").replace(/\|$/, "")
     .split(/(?<!\\)\|/).map(c => c.trim().replace(/\\\|/g, "|"))
   const cuerpo = filas.map(celdas).filter(cs => !cs.every(c => /^:?-+:?$/.test(c)))
-  return tabla(cuerpo[0], cuerpo.slice(1))
+  // 🔴 La cabecera al español. Sin esto la página quedaba en español con
+  // once tablas encabezadas en inglés: la segunda voz que había que quitar.
+  return tabla(cuerpo[0].map(traducirCabecera), cuerpo.slice(1))
 }
 
 /**
@@ -222,6 +235,62 @@ const seccionDelMd = (encabezado) => {
   }
   txt = salida.join("\n")
   return txt.replace(/\n{3,}/g, "\n\n").trim()
+}
+
+/**
+ * Las tres tablas de anuncio —VoiceOver, TalkBack, ARIA— de UN estado.
+ *
+ * 🔴 Sustituye a `seccionDelMd("Voice / Screen reader")`, y ésa es la corrección
+ * editorial más grande de esta reescritura. Volcar la sección entera arrastraba
+ * el bloque de cita de nueve párrafos que la abre: «Merge analysis», «Confidence»,
+ * «Reconciliation», la voz del extractor en crudo. Ese vertido es el que hacía
+ * que `Especificaciones` se leyera como un reporte y no como una herramienta.
+ *
+ * Aquí entran los DATOS —los tres H4 y sus tablas, que son lo que un ingeniero
+ * consulta— y el encuadre lo escribe la página, en su voz. El bloque de cita no
+ * se pierde: sigue íntegro en `Componentes/button.md`, que es su sitio.
+ *
+ * Los H4 se conservan tal cual porque `aplicarPestanas` los agrupa en Tabs: el
+ * nombre de plataforma es su única señal.
+ */
+const tablasDeEstado = (estado) => {
+  const md = fs.readFileSync(path.join(RAIZ, "Componentes/button.md"), "utf8")
+  const lineas = md.split("\n")
+  const i = lineas.findIndex(l => l.trim() === `### ${estado}`)
+  if (i < 0) throw new Error(
+    `No encontré el estado «### ${estado}» en button.md.\n` +
+    `   Estados que SÍ existen:\n` +
+    lineas.filter(l => /^### State: /.test(l)).map(l => `     ${l.trim()}`).join("\n"))
+  const salida = []
+  let plataformas = 0
+  for (let j = i + 1; j < lineas.length; j++) {
+    const l = lineas[j]
+    if (/^#{1,3} /.test(l)) break                 // otro estado o sección: se acabó
+    if (/^#### /.test(l)) { plataformas++; salida.push(l); continue }
+    if (!/^\s*\|/.test(l)) continue                // fuera la prosa: la escribe la página
+    const filas = []
+    while (j < lineas.length && /^\s*\|/.test(lineas[j])) filas.push(lineas[j++])
+    j--
+    const celdas = (t) => t.trim().replace(/^\|/, "").replace(/\|$/, "")
+      .split(/(?<!\\)\|/).map(c => c.trim().replace(/\\\|/g, "|"))
+    const cuerpo = filas.map(celdas).filter(cs => !cs.every(c => /^:?-+:?$/.test(c)))
+    // ⚠️ `<button type="button">` y `<div role="button">` son DATO en la columna
+    // Value: MDX los leería como JSX y exigiría cerrarlos. Van como código.
+    const seguro = cuerpo.map(cs => cs.map(c =>
+      c.replace(/(?<!`)<(\/?[a-z][a-z0-9]*(?:\s[^<>]*?)?)>(?!`)/g, "`<$1>`")))
+    // ⚠️ Dos rótulos de la primera columna NO son nombres canónicos —no son
+    // `accessibilityLabel` ni `aria-hidden`—: son etiquetas de fila, y en una
+    // tabla en español se leían como un injerto. Se traducen solo esos dos.
+    const ROTULOS = { "Announcement": "Anuncio", "`Do NOT`": "**No hagas**" }
+    const es = seguro.map((cs, f) => f === 0 ? cs.map(traducirCabecera)
+                                             : cs.map((c, k) => k === 0 ? (ROTULOS[c] ?? c) : c))
+    if (es.length) salida.push(tabla(es[0], es.slice(1), [200, 220, 340]))
+  }
+  // 🔴 Cobertura, no confianza: las tres plataformas o nada. Si uSpec deja de
+  // emitir una, la página saldría con dos y sin hueco visible.
+  if (plataformas !== 3) throw new Error(
+    `«${estado}» trajo ${plataformas} de 3 plataformas. Faltan tablas en button.md.`)
+  return salida.join("\n\n")
 }
 
 const token = (ruta) => ({ entityId: TK[ruta], entityType: "Token" })
@@ -338,176 +407,245 @@ const cuidado = (texto) => `<SNGuidelines variant="prominent" columns={1}>
   </SNGuideline>
 </SNGuidelines>`
 
+/**
+ * 🔴 LAS CUATRO PESTAÑAS, REESCRITAS EL 2 SEP 2026 CON LA CAPA EDITORIAL.
+ *
+ * El motivo, en las palabras del Lead al leer la publicación anterior: «me da
+ * hueva leerlo». Estructuralmente estaba bien —las cuatro pestañas, cada cosa en
+ * su sitio— y aun así no se leía. El diagnóstico fue que la página tenía TRES
+ * voces mezcladas: la escrita a mano aquí, la del extractor volcada en crudo
+ * (`Merge analysis`, `Confidence`, los bloques de cita de nueve párrafos), y la
+ * del generador (`*Pendiente: …*` siete veces).
+ *
+ * 🟢 Las tres reglas que ordenan esta reescritura:
+ *
+ *   1. UNA SOLA VOZ. Toda la prosa se escribe aquí. Del `.md` entran DATOS
+ *      —tablas—, nunca párrafos. Decisión primero, razón después.
+ *   2. VARÍA LA PROFUNDIDAD, NO LA ESCRITURA. `Especificaciones` CONTIENE lo
+ *      denso; no se ESCRIBE denso. Una tabla de medidas se lee en diez segundos;
+ *      el párrafo que la explica con rodeos es lo que cansa.
+ *   3. LO QUE NO EXISTE NO SE PUBLICA. Cero `Pendiente`. O la sección se omite,
+ *      o el hueco se declara como hecho, con su razón. «El Button no reacciona
+ *      al breakpoint» es información; «*Pendiente: responsive*» es un placeholder.
+ *
+ * ⚠️ Y nada del `.md` se pierde por no publicarse: `Componentes/button.md` sigue
+ * siendo la especificación completa. Esta página es la experiencia de lectura.
+ */
 const TABS = {
-"Resumen general": `# Button
+// ⚠️ La primera línea NO repite la descripción de la pestaña. Supernova ya
+// pinta el título y la descripción arriba —«Ejecuta una acción. Lo que navega
+// es un Link.»— y volver a escribirla la deja dos veces seguidas en pantalla.
+"Resumen general": `El control de acción del sistema. Sesenta variantes sobre cuatro ejes, una sola parada de foco y label siempre visible.
 
-Ejecuta una acción. Lo que navega es un Link.
-
-<SNCallout variant="Info">
-**Estado:** Stable · **También llamado:** Action, Call to action, CTA
+<SNCallout type="Info">
+**Estado:** Stable · **Categoría:** Acciones · **Dueño:** Product Design · **También llamado:** Action, CTA, Call to action
 </SNCallout>
 
-## Propósito
+## Qué resuelve
 
-Es el control de acción del sistema: **ejecuta, no navega**. Lo que navega es un \`Link\`, que nació al separar el antiguo valor \`tertiary\`.
+Button es el control con el que alguien **hace que algo pase**: guardar, enviar, confirmar, aplicar un filtro, abrir un modal. La acción ocurre donde está el botón.
 
-<SNCallout variant="Warning">
-La propiedad se llama \`variant\`, no \`type\`: \`type\` está reservado en HTML para el tipo de botón. El antiguo \`tertiary\` pasó a ser el componente Link y \`quaternary\` se eliminó.
+Si al pulsarlo cambia la dirección —otra pantalla, otra URL—, el componente correcto es **Link**. Salió de aquí: el antiguo valor \`tertiary\` se convirtió en Link porque un enlace navega y un botón actúa, y en código son dos elementos distintos.
+
+## Cómo está construido
+
+- **Una sola parada de foco.** El label, los iconos y el fondo se anuncian como un único control.
+- **El label es obligatorio.** No existe un botón solo de icono.
+- **Dos ranuras de icono**, izquierda y derecha, independientes entre sí.
+- **Tres tallas y dos superficies**, todas con el mismo radio.
+- **Sesenta variantes** en la librería, sobre cuatro ejes.
+
+<SNCallout type="Warning">
+La propiedad de jerarquía se llama \`variant\`, no \`type\`. En HTML \`type\` ya significa otra cosa —\`button\`, \`submit\`, \`reset\`— y usar ese nombre confundiría las dos.
 </SNCallout>
 
-## Información general
+## Dónde está disponible
 
-- **Categoría:** Action
-- **Owner:** Product Design
-- **Plataformas:** Web (Bricks UI) · pendiente en Astro, Next y Expo
-- **Componentes relacionados:** Link · ArrowRight
-
-## Disponibilidad por plataforma
-
-${tabla(["Plataforma", "Estado", "Implementación"], [
+${tabla(["Plataforma", "Estado", "Qué hay hoy"], [
   ["Bricks UI", "En curso", "Storybook conectado"],
-  ["Web Next", "Pendiente", "—"],
-  ["Web Astro", "Pendiente", "—"],
-  ["Mobile Expo", "Pendiente", "—"],
-])}`,
+  ["Web · Next", "Sin implementar", "Consume esta especificación"],
+  ["Web · Astro", "Sin implementar", "Consume esta especificación"],
+  ["Mobile · Expo", "Sin implementar", "Consume esta especificación"],
+])}
 
-"Usos": `# Uso
+**Bricks UI es la única implementación en curso.** Las demás plataformas todavía trabajan contra esta especificación, no contra un componente existente.`,
 
-El Button ejecuta una acción en el lugar donde está. Si la interacción lleva a otra pantalla o a otra URL, el componente correcto es \`Link\`.
+"Usos": `Esta pestaña responde una sola pregunta: **¿cuál elijo?**
 
-## Cuándo usar y cuándo no
-
-**La primera decisión es si esto es un botón.** Las cinco de abajo se leen enfrentadas a propósito: el error que se comete a diario no es elegir mal un valor, es elegir mal el componente.
-
-### Button o Link
+## Button o Link
 
 ${par(
-  "Usa **Button** para **ejecutar una acción en el sitio donde estás**: guardar, enviar, confirmar, aplicar un filtro, abrir un modal.",
-  "No uses Button para **ir a otra pantalla o a otra URL**. Eso es un \`Link\`, y es el componente en el que se convirtió el antiguo \`tertiary\`."
+  "Usa **Button** para **ejecutar una acción donde estás**: guardar, enviar, confirmar, filtrar, abrir un modal.",
+  "No uses Button para **ir a otra pantalla o a otra URL**. Eso es un \`Link\`, el componente en el que se convirtió el antiguo \`tertiary\`."
 )}
 
-**La regla, en una línea: un enlace navega, un botón actúa.** Si al pulsarlo cambia la dirección, es un Link aunque parezca un botón.
+**Un enlace navega, un botón actúa.** Si al pulsarlo cambia la dirección, es un Link aunque se parezca a un botón. En código son \`<a href>\` y \`<button>\`, y el lector de pantalla los anuncia distinto.
 
-### Jerarquía
+## Cuál variante
 
 ${par(
-  "Reserva \`variant=primary\` para **la acción principal de la vista**, y usa \`secondary\` para las de apoyo.",
-  "No pongas **dos \`primary\` compitiendo** en la misma vista: si todo destaca, nada destaca y el usuario tiene que leerlo todo para decidir."
+  "Reserva \`primary\` para **la acción principal de la vista**. Usa \`secondary\` para las de apoyo.",
+  "No pongas **dos \`primary\` compitiendo** en la misma vista. Si todo destaca, nada destaca."
 )}
 
-### \`surface\` no es jerarquía
+${preview("variant", "primary y secondary, enfrentados")}
+
+## Cuál superficie
 
 ${par(
   "Elige \`surface\` por **dónde vive el botón**: \`product\` en app, login y modales; \`marketing\` en landings y campañas.",
-  "No uses \`marketing\` **para dar más peso** a un botón dentro del producto. No es un escalón de jerarquía — solo cambia el peso tipográfico del label y su escalón de sombra."
+  "No uses \`marketing\` **para dar más peso** dentro del producto. No es un escalón de jerarquía: solo cambia el peso tipográfico del label y su escalón de sombra."
 )}
 
-### El label
+${preview("surface", "product y marketing: cambia el peso tipográfico y el escalón de sombra")}
+
+## Cuál talla
+
+**La talla la eliges tú, por dónde vive el botón.** Un CTA de hero es \`l\`; uno de fila de tabla es \`s\`. El componente no la deduce del ancho de la pantalla.
+
+${preview("size", "s, m y l")}
+
+<SNCallout type="Warning">
+**El defecto es \`m\` desde el 27 de agosto de 2026** — antes era \`s\`. Toda instancia que no especifique talla cambia de aspecto al actualizar la librería.
+</SNCallout>
+
+## Cómo se escribe el label
+
+El label **es** el nombre accesible del control: es lo único que anuncia el lector de pantalla.
+
+- **De una a tres palabras, en verbo de acción.** «Guardar», «Ver detalle», «Invertir ahora».
+- **Máximo 24 caracteres con espacios.** Pasado ese número es un hallazgo de revisión, no criterio de quien escribe.
+- **No se trunca, no lleva elipsis y no envuelve.** Si no cabe, se acorta el texto — el botón no.
+- **Las mayúsculas se escriben, no se transforman.** Nada de \`text-transform\`: altera la pronunciación en algunos motores de lectura y no se puede deshacer.
+- **Llega ya traducido y ya formateado.** «Invertir $10,000» lo compone quien usa el componente, separadores de locale incluidos.
 
 ${par(
-  "Escribe un label que **describa la acción**: «Guardar», «Enviar», «Invertir». Es el nombre accesible del control: es lo único que anuncia el lector de pantalla.",
-  "No uses labels que describan **la apariencia o el genérico** —«Botón», «Aceptar» para todo—. Y no existe hoy un botón solo de icono: si hiciera falta, exigiría \`aria-label\` explícito."
+  "Escribe un label que **describa la acción**: «Guardar», «Enviar», «Invertir ahora».",
+  "No uses labels que describan **la apariencia o el genérico** —«Botón», «Aceptar» para todo—."
 )}
 
-### El estado deshabilitado
+**Al traducir, presupuesta +30% de ancho**, y cuenta con que una cadena de menos de 10 caracteres puede duplicarse («Ver» → «Anzeigen»). Un layout que solo encaje con la cadena exacta en español está roto antes de traducirse.
+
+## Cuándo no deshabilitar
 
 ${par(
   "Prefiere un **control habilitado que explique qué falta** antes de deshabilitarlo. Un botón que no se puede pulsar y no dice por qué deja al usuario sin salida.",
   "No te apoyes en \`isDisabled\` **como forma de guiar**. En Light el fondo deshabilitado da **1.30:1** contra el lienzo: no se percibe como control, así que ni siquiera comunica que existe."
 )}
 
-${cuidado("El estado deshabilitado se distingue **solo por color** —ni forma, ni borde, ni texto—. Para la tecnología asistiva sí se expone, porque el atributo nativo \`disabled\` lo declara; el problema es de quien mira la pantalla, no de quien la escucha.")}
-
-## Los ejes, uno a uno
-
-Cada eje, con todos sus valores en la misma imagen. **Es la respuesta visual a «¿cuál elijo?»**, que es la pregunta de esta pestaña: los valores están en la especificación, pero la diferencia entre dos valores solo se ve mirándolos juntos.
-
-### \`variant\` — la jerarquía
-
-${preview("variant", "primary y secondary, enfrentados")}
-
-### \`surface\` — dónde vive el botón
-
-${preview("surface", "product y marketing: cambia el peso tipográfico y el escalón de sombra")}
-
-### \`size\` — la talla
-
-${preview("size", "s, m y l. El defecto es m desde el 27 ago 2026")}
-
-### \`isDisabled\` — el estado bloqueado
-
 ${preview("isDisabled", "habilitado y deshabilitado, en las dos variantes")}
 
-### \`showIconLeft\` y \`showIconRight\` — las dos ranuras
+${cuidado("El estado deshabilitado se distingue **solo por color** —ni forma, ni borde, ni texto—. La tecnología asistiva sí lo recibe, porque el atributo nativo lo declara; el problema es de quien mira la pantalla, no de quien la escucha.")}
 
-Son **ortogonales**: el botón puede mostrar ninguna, una, la otra, o las dos.
+## Qué pasa mientras carga
+
+Al pulsar, un spinner ocupa la ranura derecha y el botón deja de aceptar activaciones. **Conserva el foco, conserva su color y conserva su label.**
+
+**No se deshabilita**, y la razón está en el mensaje: deshabilitar comunica «no puedes», y aquí lo que hay que comunicar es «espera».
+
+${tablaDelMd("| El botón tiene | Al cargar | Ancho |")}
+
+El componente **no lanza la petición, no cronometra y no reintenta**. Si la petición nunca resuelve, el botón se queda bloqueado: el timeout y el camino de error son de quien lo usa.
+
+## Las dos ranuras de icono
+
+Son independientes: ninguna, una, la otra, o las dos. Y son **decorativas** — un icono nunca puede ser el único portador del significado.
 
 ${preview("showIconLeft", "con y sin icono inicial")}
 
 ${preview("showIconRight", "con y sin icono final")}
 
-## Comportamiento
+## Lo que este componente no hace
 
-**Los estados de interacción —hover, pressed, focus— los dibuja la plataforma y no se configuran por API.** El eje \`state\` de Figma existe para los diseñadores.
-
-**El único estado que fija un ingeniero es \`isDisabled\`**, que bloquea la interacción y saca el control del orden de tabulación.
-
-\`showIconLeft\` y \`showIconRight\` son independientes: el botón puede mostrar ninguno, uno u otro, o los dos.
-
-## Content guidelines
-
-*Pendiente: cómo se redacta el label y qué pasa cuando no cabe. Es contenido que ninguna herramienta genera — ni Figma lo contiene ni el código lo declara.*
-
-## Responsive
-
-*Pendiente: cómo cambia entre breakpoints. La relación entre el eje \`size\` y el breakpoint es una decisión abierta.*
-
-## Internacionalización
-
-*Pendiente: expansión de texto y RTL. El español expande respecto al inglés y no hay regla de ancho máximo definida.*
+- **No hay modo solo-icono.** El label siempre está presente.
+- **No es un toggle.** No mantiene estado presionado; \`aria-pressed\` no se usa nunca.
+- **No decide el resultado.** Modal, navegación o recarga los resuelve quien lo usa.
+- **No muestra el resultado.** Éxito, error y validación viven en el contenedor, nunca dentro del control.
+- **No reacciona al breakpoint.** Ninguna medida suya cambia con el ancho de la pantalla.
 
 ## Componentes relacionados
 
 - **Link** — para navegar
-- **ArrowRight** — el icono por defecto de ambas ranuras`,
+- **ArrowRight** — el icono por defecto de las dos ranuras`,
 
-"Especificaciones": `# Especificaciones
-
-Lo que sigue lo genera uSpec desde Figma. **Se regenera, no se edita a mano**: cada preview y cada medida salen del componente real.
+"Especificaciones": `Todo lo de abajo sale del componente real y se regenera con él.
 
 ## Anatomía
 
 ${preview("Anatomy", "Los cuatro elementos, numerados")}
 
-**La numeración es un contrato:** los marcadores del frame y las filas de esta tabla son la misma lista.
+Los marcadores del dibujo y las filas de la tabla son la misma lista, en el mismo orden.
 
 ${tablaDelMd("| # | Type | Element | Notes |")}
 
+## Propiedades
+
+Lo que se configura desde código. \`hover\`, \`pressed\` y \`focus\` no están aquí a propósito: son condiciones de runtime que resuelve la plataforma.
+
+${tablaDelMd("| Property | Type | Values | Default | Notes |")}
+
+Las dos ranuras aceptan cualquier icono de la librería Phosphor. El que traen por defecto es \`ArrowRight\`, en \`Format=Outline\`.
+
+## Estados
+
+${tablaDelMd("| Condition | Qué la dispara | Qué cambia | Focus stops |")}
+
+- Es \`focus-visible\`, no \`focus\`: el anillo aparece para el teclado, no tras un clic. **No se suprime nunca** — es lo que satisface WCAG 2.4.7.
+- \`hover\` **no puede ser el único portador de información**: en táctil no existe.
+- El puntero activa **al soltar dentro del control**, no al presionar. Arrastrar fuera antes de soltar cancela.
+- El teclado activa con **Enter y Espacio**. Las tres plataformas lo dan gratis con el control nativo: no lo reimplementes sobre un \`<div>\`.
+
+### Cómo se declara \`isLoading\`
+
+${tablaDelMd("| Platform | Declaración | No uses |")}
+
+🔴 **\`aria-busy\` no bloquea nada por sí solo.** El bloqueo contra clics repetidos se implementa en código: mientras \`isLoading\` sea \`true\`, toda activación —puntero o teclado— se ignora.
+
 ## Medidas
 
-### Por tamaño
+Las alturas y los anchos son **mínimos, nunca fijos**: \`heightMode\` es \`hug\` en las 60 variantes, y es lo que permite que el texto crezca al 200% sin recortarse.
 
-${preview("Button sizes")}
+### Área táctil
+
+${tablaDelMd("| Size | min-height | min-width | ≥ 44 px |")}
+
+El umbral son **44 px, estándar propio de 100 Ladrillos**, alineado a WCAG 2.5.5 (AAA) y a las Apple HIG. El mínimo AA de 2.5.8 son 24 px. Supuesto declarado: 1 px de Figma = 1 px CSS.
+
+### Por talla
+
+${preview("Button sizes", "s, m y l con sus medidas")}
 
 ${tablaDelMd("| Spec | s | m | l | Notes |")}
 
 ### Por superficie
 
-${preview("Button surface", "product y marketing: cambian radio, peso tipográfico y escalón de sombra")}
+${preview("Button surface", "product y marketing")}
 
-### Por estado
+${tablaDelMd("| Spec | product | marketing | Notes |")}
+
+### Por variante
+
+${tablaDelMd("| Spec | primary | secondary | Notes |")}
+
+### En foco
 
 ${preview("Button states", "default, hover, pressed, focus y disabled")}
 
-## Propiedades
+${tablaDelMd("| Spec | s | m | l | Notes |", 2)}
 
-<SNCallout variant="Warning">
-**Pendiente: el playground interactivo.** Aquí va la tabla de propiedades en vivo cuando el Button exista en código. Hoy no existe —cero componentes de código en el sistema— y las medidas comprometidas están arriba, en Medidas.
-</SNCallout>
+## Ancho, alto y zoom
+
+${tablaDelMd("| Dimension | Comportamiento |")}
+
+**El botón nunca se pone al 100% por su cuenta.** Estirarlo es decisión del contenedor; al estirarse, el contenido sigue centrado y el inset no cambia.
+
+🔴 **Nunca cambies \`min-height\` por \`height\` para cuadrar un layout.** Es exactamente el defecto que corrigió la escala del 27 de agosto.
+
+**Light y Dark no son responsive:** el modo lo resuelve la colección \`semanticColors\` en la capa de tema, no una media query dentro del componente.
 
 ## Color
 
-El contraste lo calcula Supernova sobre los tokens vivos: **no hay ratios escritos a mano que puedan caducar.**
+El contraste lo calcula Supernova sobre los tokens vivos. **Ningún ratio escrito a mano puede caducar aquí.**
 
 <SNBlock packageId="io.supernova.block.color-accessibility-grid">
   <SNItem>
@@ -521,7 +659,7 @@ ${preview("Primary / Product / Light", "Primary · Product · Light")}
 
 ${preview("Primary / Product / Dark", "Primary · Product · Dark")}
 
-*Las ocho combinaciones completas —variant × surface × mode— están en la especificación del repo.*
+Las ocho combinaciones —\`variant\` × \`surface\` × mode— están en la especificación del repositorio.
 
 ### Los tokens del componente
 
@@ -531,9 +669,25 @@ ${preview("Primary / Product / Dark", "Primary · Product · Dark")}
   </SNItem>
 </SNBlock>
 
-<SNCallout variant="Warning">
+<SNCallout type="Warning">
 **Un token que invierte con el mode no puede ir sobre un fondo que no invierte.** \`background/selected\` resuelve \`#315fa3\` en Light y en Dark —es azul de marca, no depende del lienzo—, así que el texto y el icono sobre él usan las variantes **Static**. Antes heredaban las normales: en Light casaba por casualidad y en Dark el texto caía a 3.29:1.
 </SNCallout>
+
+## Movimiento
+
+No hay especificación de After Effects para este componente. Lo de abajo es la intención a implementar.
+
+${tablaDelMd("| # | Qué anima | Duración | Easing | Notas |")}
+
+### Con \`prefers-reduced-motion: reduce\`
+
+${tablaDelMd("| # | Qué pasa |")}
+
+**El spinner se ralentiza; no se quita.** \`reduce\` significa eliminar el movimiento capaz de provocar malestar vestibular —desplazamientos grandes, paralaje, zoom— **sin perder información**. El spinner mide 16 · 20 · 24 px, gira sobre su propio centro y es la única señal visible de que el botón está trabajando.
+
+## Contenido que recibe
+
+${tablaDelMd("| Input | Type | Required | Lo que el componente asume |")}
 
 ## Lector de pantalla
 
@@ -543,20 +697,25 @@ Qué anuncia cada plataforma, estado por estado. **Es una decisión de diseño, 
 
 Las tablas dicen **qué se anuncia**; estas dos imágenes dicen **dónde para el foco**, que es lo único que el texto no puede enseñar.
 
-${preview("State: rest / hover / active / focus-visible", "rest, hover, active y focus-visible: una sola parada de foco, la misma en los cuatro")}
+${preview("State: rest / hover / active / focus-visible", "Una sola parada de foco, la misma en los cuatro estados")}
 
-${preview("State: isDisabled === true", "isDisabled === true: cero paradas de foco — el control sale del orden de tabulación")}
+${preview("State: isDisabled === true", "Cero paradas de foco: el control sale del orden de tabulación")}
 
-${seccionDelMd("Voice / Screen reader")}
+### En reposo, con el puntero encima, presionado y con foco
 
-## Accesibilidad
+Una sola parada de foco y el mismo anuncio en los cuatro. Solo cambian relleno, borde y sombra.
 
-- **Área táctil:** las alturas son **48 · 56 · 64**, en \`min-height\` **y** en \`min-width\`. Las tres tallas superan tanto los 24 x 24 px de **WCAG 2.5.8 Target Size (Minimum), nivel AA**, como los 44 x 44 de **2.5.5 Target Size (Enhanced), nivel AAA**. Los 44 px son un **estándar propio de 100 Ladrillos** alineado a 2.5.5 y a las Apple HIG, no una corrección de conformidad. Supuesto declarado: 1 px de Figma = 1 px CSS.
-- **Foco:** \`border/focus\` da **4.80:1 en Light y 4.07:1 en Dark** contra el lienzo, por encima del 3:1 que exige WCAG 1.4.11.
-- **Contraste:** el umbral es 4.5:1 en los tres tamaños — 12, 14 y 16 px son «texto normal» para WCAG.
-- **Teclado:** activable con Enter y Space. El atributo \`disabled\` nativo lo saca del orden de tabulación.
-- **Lector de pantalla:** el nombre accesible sale del \`textContent\`; los SVG van con \`aria-hidden="true"\` y \`focusable="false"\`.
-- *Reduced motion: pendiente, junto con la especificación de movimiento.*
+${tablasDeEstado("State: rest / hover / active / focus-visible")}
+
+### Deshabilitado
+
+Cero paradas de foco: el control sale por completo del orden de tabulación.
+
+${tablasDeEstado("State: isDisabled === true")}
+
+<SNCallout type="Info">
+El anuncio de \`isLoading\` está especificado en Figma y todavía no transcrito aquí: esta página documenta **2 de las 4** paradas de foco de la anotación. Lo que falta está registrado en Defectos abiertos.
+</SNCallout>
 
 ## Ejemplos
 
@@ -566,20 +725,30 @@ ${preview("Secundario con icono final", "Secundario con icono final")}
 
 ${preview("Deshabilitado", "Deshabilitado")}
 
+## Criterios de aceptación
+
+Lo que hay que poder comprobar para dar el componente por construido. **Ninguno se verifica mirando.**
+
+### Batería base — idéntica en todo el sistema
+
+${tablaDelMd("| # | Área | Criterio |")}
+
+### Propios del Button
+
+${tablaDelMd("| # | Área | Criterio |", 2)}
+
 ## Foundations relacionadas
 
 - **Color** — la colección \`semanticColors\` y sus dos modes
-- **Espaciado** — la escala \`space\`, de la que salen todos los paddings`,
+- **Espaciado** — la escala \`space\`, de la que salen todos los insets`,
 
-"Estatus y cambios": `# Lifecycle
+"Estatus y cambios": `**Stable.** El componente está documentado, en uso, y con su escala dimensional ya rehecha: alturas **48 · 56 · 64**, texto **12 · 14 · 16**, iconos **16 · 20 · 24**.
 
-**Stable.** El componente está documentado y en uso, y su escala dimensional ya se rehízo: alturas **48 · 56 · 64**, texto **12 · 14 · 16**, iconos **16 · 20 · 24**, con \`paddingBlock\` constante. La documentación de esta página describe la escala vigente.
-
-<SNCallout variant="Info">
-**El cambio de escala más relevante para quien consume el componente es el defecto del eje \`size\`, que pasó de \`s\` a \`m\`.** Todo lo que instancia el Button sin especificar talla cambia de aspecto al actualizar la librería.
+<SNCallout type="Info">
+**El cambio de más alcance para quien consume el componente es el defecto de \`size\`, que pasó de \`s\` a \`m\`.** Toda instancia que no especifique talla cambia de aspecto al actualizar la librería.
 </SNCallout>
 
-## Component health
+## Salud del componente
 
 <SNBlock packageId="io.supernova.block.component-health">
   <SNItem>
@@ -595,19 +764,78 @@ ${preview("Deshabilitado", "Deshabilitado")}
   </SNItem>
 </SNBlock>
 
+## Defectos abiertos
+
+Cuatro, y ninguno impide usar el componente. Se publican porque afectan a quien lo consume.
+
+${tabla(["Qué", "A quién afecta", "Estado"], [
+  ["\`background/disabled\` apenas se distingue del lienzo en Light — **1.30:1**", "A quien mira la pantalla. Quien la escucha sí recibe el estado: el atributo nativo lo declara", "Abierto"],
+  ["Las instancias de icono embebidas traen \`Weight=Fill\`; el defecto declarado de la librería Phosphor es \`Weight=Regular\`", "Al aspecto del icono en las dos ranuras", "Abierto"],
+  ["Los 60 \`labelBox\` conservan un \`cornerRadius\` de 12 que no se ve —no tienen relleno— pero llega a la extracción", "A nadie visualmente. Es residuo de bajar su inset a 0", "A limpiar"],
+  ["El anuncio asistivo de \`isLoading\` está dibujado en Figma y no transcrito: esta página documenta 2 de las 4 paradas de foco", "A quien implemente el estado de carga en iOS o Android", "Abierto"],
+], [330, 300, 130])}
+
 ## Changelog
 
+- **1 sep 2026** — \`isLoading\` queda especificado: spinner \`CircleNotch\` en la ranura derecha, **sin una sola variante nueva en Figma**. Con él entran el movimiento, las reglas responsive, los supuestos de contenido y quince criterios de aceptación propios.
+- **27 ago 2026** — escala dimensional rehecha: alturas **48 · 56 · 64**, radio único \`radius/l\` (16) en las 60 variantes, y el defecto de \`size\` pasa de \`s\` a \`m\`.
 - **21 ago 2026** — corregidas las seis variantes \`secondary\` + \`pressed\`: el texto y el icono pasan a las variantes **Static**. En Dark el texto caía a 3.29:1.
-- **20 ago 2026** — \`text/disabled\` pasa a \`neutral/600\` en Light y \`neutral/700\` en Dark. El contraste sobre \`background/disabled\` sube de 1.74:1 a 4.50 y 4.89.
-- **20 ago 2026** — paddings alineados a la escala \`space\`: s 8/16 · m 12/16 · l 16/24.
+- **20 ago 2026** — \`text/disabled\` pasa a \`neutral/600\` en Light y \`neutral/700\` en Dark. El contraste sobre \`background/disabled\` sube de 1.74:1 a **4.50** y **4.89**.
+- **20 ago 2026** — insets alineados a la escala \`space\`.
+- **17 ago 2026** — \`tertiary\` sale del componente y nace **Link**; \`quaternary\` se elimina. El Button pasa de **175 a 60 variantes** y su API de **16 propiedades a 9**, idéntica a la del Link.
 
-## Deprecation y migration
+## Deprecación y migración
 
-*No aplica: el componente está activo.*`,
+Nada deprecado. **La única migración viva es el defecto de \`size\`:** revisa las instancias que no especifican talla antes de actualizar la librería, porque van a cambiar de \`s\` a \`m\`.`,
 }
 
-const leerKey = () => fs.readFileSync(path.join(RAIZ, ".env"), "utf8")
-  .split("\n").find(l => l.startsWith("SUPERNOVA_API_KEY=")).split("=").slice(1).join("=").trim()
+/**
+ * 🔴 ESCRIBIR NO ES PUBLICAR, y la distinción es de proceso, no de detalle.
+ *
+ * `writeMarkdownToPage` deja el contenido en la página. Sacarlo al sitio público
+ * es OTRA llamada —`sdk.documentation.publish(ref, "Live")`— que este script no
+ * hace y no va a hacer. Verificado el 2 sep 2026 contra los tipos del paquete
+ * (`DocumentationEnvironment` tiene `Preview` y `Live` como entornos separados)
+ * y contra la plataforma: tras escribir, `isPublishing` sigue en idle y el
+ * `publishMetadata` de las cuatro pestañas no cambia.
+ *
+ * El flujo acordado con el Lead: se escribe → se revisa en `Preview` → **una
+ * persona aprueba** → el Lead publica a mano. La aprobación es juicio humano y
+ * no la automatiza nadie.
+ */
+const NO_PUBLICA = `
+  ⚠️  Esto ESCRIBIÓ la página; NO la publicó al sitio público.
+      Revísala en Preview. La publicación a Live la hace el Lead a mano.`
+
+/**
+ * 🔴 Antes de nada, el destino. Copiado del patrón de `publicar.mjs`, que era
+ * el único de los tres caminos que lo tenía: si el `.env` apunta a la vía de
+ * contingencia, escribir en Supernova es un accidente caro.
+ */
+import { exigirDestino, destino } from "../experimento-canario/destino.mjs"
+/**
+ * 🔴 Y la key por `entorno.mjs`, no a mano. El `leerKey()` anterior hacía
+ * `.find(...).split(...)` sin comprobar que la línea existiera: sin `.env`
+ * reventaba con un TypeError que no dice qué falta. `entorno.mjs` usa
+ * `process.loadEnvFile`, respeta la variable de entorno si ya está puesta —así
+ * funciona igual en CI— y sale con instrucciones si falta.
+ */
+import { apiKey } from "../experimento-canario/entorno.mjs"
+
+/**
+ * 🔴 La puerta de previews, también de `publicar.mjs`. Va ANTES de escribir:
+ * `validateMarkdown` responde por la sintaxis, no por lo que se ve. Un preview
+ * sin `fraccionAncho` sale diminuto o gigante y valida igual de bien.
+ */
+const verificarPreviews = async () => {
+  const { verificar } = await import("../experimento-canario/verificar-previews.mjs")
+  const malos = verificar(FRAMES, import.meta.url).filter(f => f.problemas.length)
+  if (!malos.length) { console.log(`  Previews en regla: ${Object.keys(FRAMES).length}.`); return }
+  console.error(`\n🔴 ${malos.length} preview(s) con problemas:`)
+  for (const f of malos) console.error(`     · ${f.seccion} — ${f.problemas.join(" · ")}`)
+  console.error("   Corrígelos, o escribe con --forzar si es deliberado.")
+  process.exit(1)
+}
 
 /**
  * 🔴 Corre SIEMPRE justo después de escribir, y ese orden no se puede invertir.
@@ -623,11 +851,22 @@ const agruparPlataformas = async (sn, ref, idPagina, nombre) => {
 }
 
 const main = async () => {
-  const publicar = process.argv.includes("--publicar")
-  const sn = new Supernova(leerKey())
-  const version = await sn.versions.getActiveVersion(DS)
-  const ref  = { designSystemId: DS, versionId: version.id, workspaceId: WS }
-  const refW = { designSystemId: DS, versionId: version.id }
+  // `--escribir` es el nombre correcto; `--publicar` se conserva porque estaba
+  // en uso, pero MIENTE: este script nunca publica al sitio público.
+  const escribir = process.argv.includes("--escribir") || process.argv.includes("--publicar")
+  exigirDestino("supernova")
+  console.log(`  destino de documentación: ${destino.nombre} (${destino.estado})`)
+  const sn = new Supernova(apiKey)
+  // 🔴 DS y WS se resuelven por API, no se escriben a mano. Estaban hardcodeados
+  // y eso ata el script a un espacio concreto sin decirlo.
+  const me = await sn.me.me()
+  const ws = (await sn.workspaces.workspaces(me.id))[0]
+  const ds = (await sn.designSystems.designSystems(ws.id)).find(d => /later/i.test(d.name))
+  if (!ds) throw new Error(`No encontré un design system «Later» en el workspace ${ws.id}.`)
+  const version = await sn.versions.getActiveVersion(ds.id)
+  const ref  = { designSystemId: ds.id, versionId: version.id, workspaceId: ws.id }
+  const refW = { designSystemId: ds.id, versionId: version.id }
+  console.log(`  destino: ${ds.name} (${ds.id}) · workspace ${ws.id} · versión ${version.id}`)
   const nombres = Object.keys(TABS)
 
   // 🔴 Antes que nada, y también en --dump: un preview registrado tiene que
@@ -651,7 +890,8 @@ const main = async () => {
     else { console.log(`  🔴 ${n}: ${r?.error?.message}`); ok = false }
   }
   if (!ok) { console.error("\n🔴 No se crea nada con errores."); process.exit(1) }
-  if (!publicar) { console.log("\nValidado. Añade --publicar para crearlo."); return }
+  if (!escribir) { console.log("\nValidado. Añade --escribir para volcarlo a la página."); return }
+  if (!process.argv.includes("--forzar")) await verificarPreviews()
 
   // Si el Button ya existe, se REESCRIBE. Crear otro duplicaría la página y
   // consumiría cuatro más del presupuesto.
@@ -668,6 +908,7 @@ const main = async () => {
       console.log(`  ✓ ${n} → ${r?.blockCount ?? "?"} bloques`)
       await agruparPlataformas(sn, ref, id, n)
     }
+    console.log(NO_PUBLICA)
     return
   }
 
@@ -690,6 +931,7 @@ const main = async () => {
     await agruparPlataformas(sn, ref, numerico.get(pestanas[n]), n)
   }
   fs.writeFileSync(path.join(AQUI, "button.ids.json"), JSON.stringify({ grupo, pestanas }, null, 2) + "\n")
+  console.log(NO_PUBLICA)
 }
 
 main().catch(e => { console.error("🔴 " + (e?.message ?? e)); process.exit(1) })

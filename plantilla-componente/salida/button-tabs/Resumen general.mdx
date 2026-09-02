@@ -1,27 +1,28 @@
-# Button
-
 Ejecuta una acción. Lo que navega es un Link.
 
-<SNCallout variant="Info">
-**Estado:** Stable · **También llamado:** Action, Call to action, CTA
+<SNCallout type="Info">
+**Estado:** Stable · **Categoría:** Acciones · **Dueño:** Product Design · **También llamado:** Action, CTA, Call to action
 </SNCallout>
 
-## Propósito
+## Qué resuelve
 
-Es el control de acción del sistema: **ejecuta, no navega**. Lo que navega es un `Link`, que nació al separar el antiguo valor `tertiary`.
+Button es el control con el que alguien **hace que algo pase**: guardar, enviar, confirmar, aplicar un filtro, abrir un modal. La acción ocurre donde está el botón.
 
-<SNCallout variant="Warning">
-La propiedad se llama `variant`, no `type`: `type` está reservado en HTML para el tipo de botón. El antiguo `tertiary` pasó a ser el componente Link y `quaternary` se eliminó.
+Si al pulsarlo cambia la dirección —otra pantalla, otra URL—, el componente correcto es **Link**. Salió de aquí: el antiguo valor `tertiary` se convirtió en Link porque un enlace navega y un botón actúa, y en código son dos elementos distintos.
+
+## Cómo está construido
+
+- **Una sola parada de foco.** El label, los iconos y el fondo se anuncian como un único control.
+- **El label es obligatorio.** No existe un botón solo de icono.
+- **Dos ranuras de icono**, izquierda y derecha, independientes entre sí.
+- **Tres tallas y dos superficies**, todas con el mismo radio.
+- **Sesenta variantes** en la librería, sobre cuatro ejes.
+
+<SNCallout type="Warning">
+La propiedad de jerarquía se llama `variant`, no `type`. En HTML `type` ya significa otra cosa —`button`, `submit`, `reset`— y usar ese nombre confundiría las dos.
 </SNCallout>
 
-## Información general
-
-- **Categoría:** Action
-- **Owner:** Product Design
-- **Plataformas:** Web (Bricks UI) · pendiente en Astro, Next y Expo
-- **Componentes relacionados:** Link · ArrowRight
-
-## Disponibilidad por plataforma
+## Dónde está disponible
 
 <SNTable showBorder highlightHeaderRow>
   <SNTableRow>
@@ -32,7 +33,7 @@ La propiedad se llama `variant`, no `type`: `type` está reservado en HTML para 
       Estado
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={253}>
-      Implementación
+      Qué hay hoy
     </SNTableCell>
   </SNTableRow>
   <SNTableRow>
@@ -48,35 +49,37 @@ La propiedad se llama `variant`, no `type`: `type` está reservado en HTML para 
   </SNTableRow>
   <SNTableRow>
     <SNTableCell alignment="Left" columnWidth={253}>
-      Web Next
+      Web · Next
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={253}>
-      Pendiente
+      Sin implementar
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={253}>
-      —
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={253}>
-      Web Astro
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={253}>
-      Pendiente
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={253}>
-      —
+      Consume esta especificación
     </SNTableCell>
   </SNTableRow>
   <SNTableRow>
     <SNTableCell alignment="Left" columnWidth={253}>
-      Mobile Expo
+      Web · Astro
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={253}>
-      Pendiente
+      Sin implementar
     </SNTableCell>
     <SNTableCell alignment="Left" columnWidth={253}>
-      —
+      Consume esta especificación
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Mobile · Expo
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Sin implementar
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={253}>
+      Consume esta especificación
     </SNTableCell>
   </SNTableRow>
 </SNTable>
+
+**Bricks UI es la única implementación en curso.** Las demás plataformas todavía trabajan contra esta especificación, no contra un componente existente.
