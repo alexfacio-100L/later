@@ -32,7 +32,15 @@
 
 ✅ **Re-renderizadas el 28 ago 2026**, en español y con las plantillas del brand system, desde la especificación regenerada el 27 ago. **Los IDs de arriba son los únicos vigentes.** Los seis frames del ciclo del 18 ago ya no existen, y este documento apuntó a nodos muertos hasta ese día.
 
-🟢 **Los seis ids resuelven — verificado el 2 sep 2026, 6 de 6.** *Método: los seis aparecen con su id y su nombre exactos en la estructura de Figma que importa Supernova (`nodos-button.mjs`), y `Screen reader` (`12744:2637`) se resolvió además en vivo contra Figma, midiendo **2400 × 5956**.* **Se declara el método porque el defecto que se está evitando es precisamente citar un id sin resolverlo:** este documento ya corrigió una vez un puntero muerto con otro puntero muerto.
+🟢 **Los seis ids resuelven — reverificado contra Figma EN VIVO el 2 sep 2026 a las 15:27 CST. 12 de 12.** *Método: los seis aparecen con su id y su nombre exactos en la estructura de Figma que importa Supernova (`nodos-button.mjs`), y `Screen reader` (`12744:2637`) se resolvió además en vivo contra Figma, midiendo **2400 × 5956**.* **Se declara el método porque el defecto que se está evitando es precisamente citar un id sin resolverlo:** este documento ya corrigió una vez un puntero muerto con otro puntero muerto.
+
+**Qué se comprobó y con qué método, porque la hora importa aquí:** se pidió a Figma el árbol vivo de la página `↳ Button` (`80:19`) y se buscaron en él los doce ids uno a uno — **las seis anotaciones y los seis frames `— solo-preview`**. Los doce aparecen con su nombre exacto.
+
+⚠️ **La primera comprobación de ese mismo día NO servía para esto, y conviene saber por qué.** Se hizo con `nodos-button.mjs`, que lee **la estructura de Figma que Supernova tiene importada** — una caché. *Un frame borrado en Figma sigue apareciendo ahí hasta la siguiente importación*, así que ese método puede confirmar que un id existió, nunca que siga existiendo. **Para un borrado reciente solo vale la lectura en vivo.**
+
+🟢 **Y el método sí es capaz de mostrar una ausencia**, que es lo que lo hace concluyente: en el mismo árbol, el control `3566:3197` (el component set del Button) aparece, y los dos ids de la generación muerta —`12362:7428` y `12362:8040`— **no aparecen**. Distingue presencia de ausencia; su silencio sobre un nodo es un dato, no una laguna.
+
+⚪ **Alcance declarado:** se verificó **la página `↳ Button`**. *No se comprobó el resto del archivo*, así que esto no dice nada sobre lienzos de otras páginas.
 
 ⚠️ **Y una cifra de este documento que estaba caducada:** la anotación de `Screen reader` mide **5956 de alto, no 8545**. *El 8545 es del render anterior, y se citó en el tablero para decidir cómo exportarla.*
 
