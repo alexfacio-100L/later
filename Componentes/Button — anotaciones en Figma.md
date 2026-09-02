@@ -30,9 +30,15 @@
 
 ## Estado
 
-✅ **Re-renderizadas el 28 ago 2026**, en español y con las plantillas del brand system, desde la especificación regenerada el 27 ago. **Los IDs de arriba son los únicos vigentes.** Los seis frames del ciclo del 18 ago ya no existen, y este documento apuntó a nodos muertos hasta hoy.
+✅ **Re-renderizadas el 28 ago 2026**, en español y con las plantillas del brand system, desde la especificación regenerada el 27 ago. **Los IDs de arriba son los únicos vigentes.** Los seis frames del ciclo del 18 ago ya no existen, y este documento apuntó a nodos muertos hasta ese día.
 
-⚠️ **En el canvas siguen seis frames `— solo-preview`** (`12507:2610`, `12518:2226`, `12528:2288`, `12533:2549`, `12539:2707`, `12691:2632`), a la izquierda y por encima de la fila de anotaciones. **Son del ciclo anterior y no son documentación vigente.** Se dejaron a propósito, pendientes de que el Lead decida si se borran.
+🟢 **Los seis ids resuelven — verificado el 2 sep 2026, 6 de 6.** *Método: los seis aparecen con su id y su nombre exactos en la estructura de Figma que importa Supernova (`nodos-button.mjs`), y `Screen reader` (`12744:2637`) se resolvió además en vivo contra Figma, midiendo **2400 × 5956**.* **Se declara el método porque el defecto que se está evitando es precisamente citar un id sin resolverlo:** este documento ya corrigió una vez un puntero muerto con otro puntero muerto.
+
+⚠️ **Y una cifra de este documento que estaba caducada:** la anotación de `Screen reader` mide **5956 de alto, no 8545**. *El 8545 es del render anterior, y se citó en el tablero para decidir cómo exportarla.*
+
+⚠️ **En el canvas hay seis frames `— solo-preview`** (`12507:2610`, `12518:2226`, `12528:2288`, `12533:2549`, `12539:2707`, `12691:2632`), a la izquierda y por encima de la fila de anotaciones. **No son documentación: son la fuente de la que se exporta la imagen de cada anotación**, uno por anotación. 🔴 **Corrección del 2 sep 2026 — este párrafo decía que los seis eran «del ciclo anterior y no vigentes», y es falso:** `Button Screen reader — solo-preview` (`12691:2632`) **se creó el 28 de agosto** precisamente porque era el único que faltaba, y de él salen los dos previews de foco que hoy publica la página. **Borrarlos rompería la re-exportación**, así que no se borran.
+
+🟡 **Defecto abierto de un minuto, y su arreglo NO es a mano:** el `#header` de `Button Screen reader` (`12744:2639`) se llama y dice **«Color Annotation»**, arrastrado de la plantilla de la que se copió. *Corregirlo en Figma no sirve: el siguiente render lo pisa, porque estas anotaciones se generan.* **El arreglo va en la plantilla de la skill `create-voice`**, que es de dónde sale el encabezado.
 
 **Lo que se conserva en inglés a propósito:** los encabezados de columna, los identificadores (`isDisabled`, `size`, `variant`) y los nombres de las propias anotaciones (*Screen reader*, *Notes*). La prosa es española; el vocabulario del sistema no se traduce.
 
