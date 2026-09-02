@@ -61,7 +61,9 @@ const ICONOS = JSON.parse(fs.readFileSync(
  */
 const preview = (seccion, pie) => {
   const f = FRAMES[seccion]
-  if (!f?.url) return `*Falta el preview de ${seccion}.*`
+  if (!f?.url) throw new Error(
+    `No hay preview registrado para «${seccion}» en frames-subidos.json.\n` +
+    `   Registrados: ${Object.keys(FRAMES).join(" · ")}`)
   return `![${pie ?? seccion}](${f.url})`
 }
 const COMPONENTE_CANONICO = "d4f71d86-4a9b-4535-949d-0b3aadd0818f"
@@ -79,7 +81,11 @@ const tablaDelMd = (encabezado) => {
   const md = fs.readFileSync(path.join(RAIZ, "Componentes/button.md"), "utf8")
   const lineas = md.split("\n")
   const i = lineas.findIndex(l => l.trim() === encabezado)
-  if (i < 0) return `*No encontré ${encabezado} en el .md.*`
+  if (i < 0) throw new Error(
+    `No encontré la tabla «${encabezado}» en button.md.\n` +
+    `   Encabezados de tabla que SÍ existen en el .md:\n` +
+    lineas.filter(l => /^\|\s*(#|Spec|Property|Element)\s*\|/.test(l.trim()))
+          .map(l => `     ${l.trim()}`).join("\n"))
   // 🔴 Desde `i`, no desde `i + 1`: el encabezado ES la primera fila de la tabla.
   // Empezar después lo descarta, la primera fila de datos pasa a hacer de
   // cabecera, y la columna `Type` deja de encontrarse — sin que nada falle.
@@ -88,7 +94,7 @@ const tablaDelMd = (encabezado) => {
     if (/^\s*\|/.test(lineas[j])) filas.push(lineas[j])
     else if (filas.length) break
   }
-  if (!filas.length) return `*No encontré la tabla de ${encabezado}.*`
+  if (!filas.length) throw new Error(`La tabla «${encabezado}» existe en button.md pero no tiene filas.`)
   // 🔴 `\|` es un dato dentro de la celda, no un separador. uSpec lo emite en
   // toda columna de valores de enum. Partir por `|` a secas hizo que 10 filas
   // de `Properties` salieran con el doble de celdas y Supernova rechazara la
@@ -113,7 +119,10 @@ const seccionDelMd = (encabezado) => {
   const md = fs.readFileSync(path.join(RAIZ, "Componentes/button.md"), "utf8")
   const lineas = md.split("\n")
   const i = lineas.findIndex(l => l.trim() === `## ${encabezado}`)
-  if (i < 0) return `*No encontré la sección ${encabezado} en el .md.*`
+  if (i < 0) throw new Error(
+    `No encontré la sección «## ${encabezado}» en button.md.\n` +
+    `   Secciones de nivel 2 que SÍ existen:\n` +
+    lineas.filter(l => /^## /.test(l)).map(l => `     ${l.trim()}`).join("\n"))
   const cuerpo = []
   for (let j = i + 1; j < lineas.length; j++) {
     if (/^## /.test(lineas[j])) break
@@ -326,7 +335,7 @@ ${tablaDelMd("| # | Type | Element | Notes |")}
 
 ${preview("Button sizes")}
 
-${tablaDelMd("| Spec | L | M | S | Notes |")}
+${tablaDelMd("| Spec | s | m | l | Notes |")}
 
 ### Por superficie
 

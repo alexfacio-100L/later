@@ -21,6 +21,26 @@ import { readFileSync, existsSync, statSync } from "node:fs"
 //   contenido / ancho = 14%  →  diminuto
 //   contenido / ancho = 71%  →  gigante
 //   contenido / ancho = 33%  →  correcto
+// 🔴 PROCEDENCIA DE ESTOS NÚMEROS — léela antes de citarlos como estándar.
+//
+// Los cuatro límites de abajo son **criterio propio de este proyecto, derivado
+// de n=1**: se calibraron mirando UN componente (el Button) en UNA plataforma
+// (Supernova, ancho de columna ~760 px) durante los días 21 y 26 de agosto de
+// 2026. **No están respaldados por ninguna disciplina** — no salen de WCAG, ni
+// de una guía de composición, ni de un estudio de legibilidad, ni del benchmark
+// de ningún otro design system.
+//
+// ⚠️ Lo que eso implica en la práctica, y es lo que hay que recordar:
+//   · Un preview que FALLA aquí no incumple nada externo. Falla nuestro gusto.
+//   · Un preview que PASA no está validado: está dentro del rango que le vimos
+//     bien a un botón.
+//   · Si el ancho de columna de Supernova cambia, o si el componente medido es
+//     mucho más ancho o más alto que un botón, **el rango deja de valer y hay
+//     que recalibrarlo**, no forzar el contenido para que entre.
+//
+// Se declaran así, y no como umbrales objetivos, porque el 26 de agosto se
+// recalibraron a 70–100% razonando sobre el margen sin mirar el resultado. Un
+// número sin procedencia invita exactamente a ese razonamiento.
 export const LIMITES = {
   // 🔴 Vuelto a 25–55% el 26 ago 2026, después de recalibrarlo mal ese mismo día.
   //
