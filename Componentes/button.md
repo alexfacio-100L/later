@@ -131,13 +131,52 @@ No existe spec de After Effects para este componente. Lo de abajo es intención 
 
 ## Responsive rules
 
-> 🔴 **Sin documentar.** Figma no contiene esta información y todavía nadie la ha escrito.
-> No implementes este componente sin resolverla — no es una omisión benigna.
+**El Button no reacciona a los breakpoints.** Ninguna medida suya cambia por ancho de viewport. Esto es el comportamiento actual declarado, no una omisión.
+
+**`size` es una prop explícita, no una función del viewport.** La elige el consumidor por colocación —un CTA de hero es `l`, uno de fila de tabla es `s`— y el componente la recibe ya resuelta. Si un producto quiere que la talla cambie con el breakpoint, lo hace en su capa de layout pasando otra `size`; el componente no lo deduce. *Atar `size` al breakpoint dentro del sistema es una pregunta abierta y pospuesta, no un hueco de esta especificación.*
+
+**Lo que sí es fluido es una sola cosa: el ancho.**
+
+| Dimension | Comportamiento |
+|---|---|
+| Ancho | `widthMode: hug` — lo fija el label. `min-width` (48 · 56 · 64) actúa de suelo, nunca de techo |
+| Alto | `min-height` (48 · 56 · 64) como suelo. Crece si el contenido lo empuja; **nunca** se convierte en altura fija |
+| `paddingInline` · `paddingBlock` · `radius` · tamaño de icono · `itemSpacing` · rampa tipográfica | Constantes en todos los breakpoints. Ninguno tiene variante por ancho |
+
+**Ancho completo.** El Button nunca se pone al 100% por su cuenta: estirarlo es decisión del contenedor —`stretch` en su fila o columna—. Al estirarse, el contenido sigue centrado y el `paddingInline` no cambia; nada se rompe y el área táctil solo crece.
+
+**Zoom y tamaño de texto del sistema.** Con `min-height` en vez de `height`, al 200% de zoom (1.4.4 Resize Text) y con el texto del sistema ampliado (1.4.12 Text Spacing) el botón **crece hacia abajo** en lugar de recortar el label. 🔴 **Nunca cambies `min-height` por `height` para cuadrar un layout responsive:** es exactamente el defecto que corrigió la escala del 27 ago.
+
+**El label no envuelve.** Una sola línea por construcción. Si el contenedor lo estrecha hasta forzar el salto, el problema es de contenido y de layout, no del componente — ver `## Content & data assumptions`.
+
+**Light / Dark no es responsive.** El modo lo resuelve la colección `semanticColors` en la capa de tema, no una media query dentro del componente.
 
 ## Content & data assumptions
 
-> 🔴 **Sin documentar.** Figma no contiene esta información y todavía nadie la ha escrito.
-> No implementes este componente sin resolverla — no es una omisión benigna.
+**El label es obligatorio y no puede venir vacío.** No existe modo solo-icono: un label vacío es un defecto, no un estado vacío.
+
+| Input | Type | Required | Lo que el componente asume |
+|---|---|---|---|
+| `label` | string | **Sí** | Texto plano, ya localizado, sin markup y sin saltos de línea. El componente no traduce, no trunca y no aplica `text-transform` |
+| `leadingIcon` · `trailingIcon` | icono Phosphor | No | Decorativos: no pueden ser el único portador de significado. Anomalía viva: las instancias embebidas traen `Weight=Fill` contra el `Regular` declarado de la librería (ver `## Known gaps`) |
+| `isDisabled` | boolean | No | Lo resuelve el consumidor. El componente no deduce cuándo un formulario es inválido |
+| `isLoading` | boolean | No | Lo gobierna el ciclo de vida de la petición del consumidor. El componente no pide, no cronometra y no reintenta |
+
+**Longitud del label. La regla es mecánica a propósito, para que se aplique sin pedir criterio:**
+
+- **De 1 a 3 palabras, en verbo de acción.** «Guardar», «Ver detalle», «Invertir ahora». Nunca «Aquí», «Click» ni «Enviar formulario de contacto».
+- **Máximo 24 caracteres con espacios**, medido sobre la cadena en español. Pasado ese número es un hallazgo de revisión, no una decisión de quien escribe.
+- **Desbordamiento: no hay.** El label no se trunca, no lleva elipsis y no envuelve — el botón crece. *Truncar una acción la vuelve ilegible, y además el nombre accesible seguiría llevando la cadena completa: lo hablado y lo visible dejarían de coincidir.* Si no cabe, **se acorta el texto**, no el botón.
+
+**El contenedor asume el ancho natural del botón.** Cualquier layout que solo encaje con la cadena exacta en español está roto antes de traducirse.
+
+**Expansión por i18n.** El idioma origen es el español. Presupuesta **+30% de ancho** al traducir, y cuenta con que las cadenas por debajo de 10 caracteres pueden **duplicarse** («Ver» → «Anzeigen»). *Fuente: tablas estándar de expansión de texto — IBM Globalization y Microsoft Localization guidelines.* En la dirección contraria, un label de un solo carácter —CJK— sigue cumpliendo el área táctil porque `min-width` iguala a `min-height` (48 · 56 · 64).
+
+**Números, moneda y fechas llegan ya formateados.** Un label como «Invertir $10,000» es responsabilidad del consumidor, separadores de locale incluidos. El componente no formatea nada.
+
+**Las mayúsculas se escriben, no se transforman.** Nada de `text-transform: uppercase` en el sistema: altera la pronunciación en algunos motores de lectura y no se puede deshacer desde el texto original.
+
+**El botón no muestra resultados.** Éxito, error o mensaje de validación viven en el contenedor que lanzó la petición, nunca dentro del control.
 
 ## Known gaps
 
