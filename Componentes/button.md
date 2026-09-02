@@ -108,8 +108,26 @@ happens under `prefers-reduced-motion`. The `create-motion` skill is a different
 a detailed timeline spec **into Figma** from an After Effects export, and neither one generates the other.
 When an AE spec exists for this component, link it here._
 
-> 🔴 **Sin documentar.** Figma no contiene esta información y todavía nadie la ha escrito.
-> No implementes este componente sin resolverla — no es una omisión benigna.
+No existe spec de After Effects para este componente. Lo de abajo es intención de movimiento escrita a mano, y es lo que hay que implementar.
+
+| # | Qué anima | Duración | Easing | Notas |
+|---|---|---|---|---|
+| M1 | `Container fill` entre `rest` y `hover` | **120 ms** | `ease-out` — `cubic-bezier(0, 0, 0.2, 1)` | Solo el relleno. Entrada y salida con la misma curva y la misma duración: un hover que tarda más en irse que en llegar se siente pegajoso |
+| M2 | `Container fill` al pasar a `active` | **0 ms** | — | Instantáneo a propósito: la respuesta al presionar no puede ir por detrás del dedo. Al soltar vuelve por M1 |
+| M3 | Aparición del borde `border/focus` | **0 ms** | — | El indicador de foco no se funde hacia dentro: quien tabula rápido lo perdería. Con `borderAlign: inside` no desplaza nada al aparecer |
+| M4 | Rotación del spinner `CircleNotch` | **800 ms por vuelta**, bucle infinito | `linear` | `linear` es la única curva correcta en un bucle continuo: cualquier ease produce un tirón visible en la costura de cada vuelta |
+| M5 | Entrada y salida del spinner, y el ensanche del botón cuando no había icono | **0 ms** | — | Sin fundido y sin animar el ancho. Animar el ancho retrasa justo la señal que el usuario está esperando y mueve el label bajo su cursor; y como el botón está bloqueado en ese instante, el salto no puede provocar un clic accidental |
+| M6 | Todo lo demás | — | — | Nada más anima. `size`, `radius`, la tipografía y los tokens de `disabled` cambian sin transición |
+
+**Bajo `prefers-reduced-motion: reduce`** (criterio B7):
+
+| # | Qué pasa |
+|---|---|
+| M1 | Pasa a **0 ms**: el cambio de color ocurre, sin transición |
+| M2 · M3 · M5 | Sin cambio — ya son instantáneos |
+| M4 | **La rotación se conserva** y se ralentiza a **1200 ms por vuelta** |
+
+🔴 **Por qué el spinner no se elimina bajo `reduce`, que es la línea discutible de esta sección.** `reduce` no significa «cero movimiento»: significa quitar el movimiento capaz de provocar malestar vestibular —desplazamientos grandes, paralaje, zoom— **sin perder información**. El spinner mide 16 · 20 · 24 px, gira sobre su propio centro, no recorre el viewport, y es **la única señal visual de que el botón está trabajando**. Suprimirlo dejaría el estado bloqueado sin representación visible, y eso sí pierde información. Por eso se ralentiza en vez de quitarse. *Si se prefiere detener el giro, primero hace falta un sustituto visible del estado bloqueado: no basta con parar la rotación.*
 
 ## Responsive rules
 
