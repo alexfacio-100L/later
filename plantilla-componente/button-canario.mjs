@@ -838,6 +838,32 @@ const verificarPreviews = async () => {
 }
 
 /**
+ * 🔴 La segunda puerta, y nació de un defecto de siete días. `verificar-previews`
+ * comprueba que cada preview traiga su `fraccionAncho`; NO comprueba que el
+ * asset que Supernova sirve sea el PNG que tenemos en disco. El 27 de agosto se
+ * re-exportaron los 23 previews con la geometría nueva, el 28 se recortaron los
+ * 23 — y solo 8 se subieron. Los otros 15 siguieron publicando el render
+ * anterior: `radius` 8 en product, 12 en marketing, 24 en las tallas m y l.
+ * Geometría que ya no existía en Figma, en la página, bajo un texto que decía
+ * «un único radius/l (16) en las 60 variantes».
+ *
+ * ⚠️ Nada de eso produjo un error. El registro tenía sus 23 entradas, la puerta
+ * de previews daba verde y el `.md` salía completo. Un método que resuelve 8 de
+ * 23 sin declarar su cobertura se lee como si hubiera resuelto los 23.
+ */
+const verificarSubidos = async () => {
+  const { execFileSync } = await import("node:child_process")
+  try {
+    const out = execFileSync("node", [path.join(RAIZ, "experimento-canario/verificar-subidos.mjs")])
+    console.log("  " + out.toString().trim().split("\n").slice(1).join("\n  "))
+  } catch (e) {
+    console.error((e.stdout?.toString() ?? "") + (e.stderr?.toString() ?? ""))
+    console.error("🔴 Hay previews publicados que ya no son los de disco. Resúbelos, o escribe con --forzar si es deliberado.")
+    process.exit(1)
+  }
+}
+
+/**
  * 🔴 Corre SIEMPRE justo después de escribir, y ese orden no se puede invertir.
  *
  * `writeMarkdownToPage` reemplaza la página entera, así que borra las Sections
@@ -891,7 +917,7 @@ const main = async () => {
   }
   if (!ok) { console.error("\n🔴 No se crea nada con errores."); process.exit(1) }
   if (!escribir) { console.log("\nValidado. Añade --escribir para volcarlo a la página."); return }
-  if (!process.argv.includes("--forzar")) await verificarPreviews()
+  if (!process.argv.includes("--forzar")) { await verificarPreviews(); await verificarSubidos() }
 
   // Si el Button ya existe, se REESCRIBE. Crear otro duplicaría la página y
   // consumiría cuatro más del presupuesto.
