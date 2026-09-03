@@ -13,6 +13,7 @@
     "tablero": "python3 '../2. Proyecto/Contexto/verificar-tablero.py'",
     "uspec:verificar": "node verificar-uspec.mjs",
     "uspec:origen": "node verificar-origen.mjs",
+    "uspec:geometria": "node verificar-geometria.mjs",
     "docs:validar": "node experimento-canario/publicar.mjs",
     "docs:publicar": "node experimento-canario/publicar.mjs --escribir",
     "docs:conexion": "node experimento-canario/verificar-conexion.mjs",

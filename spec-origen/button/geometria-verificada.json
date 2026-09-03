@@ -1,0 +1,4 @@
+{
+  "Button|cornerRadius": "🟢 VERIFICADO EN VIVO el 3 sep 2026: 60 de 60 bindeadas a radius/l (16), leídas una a una con get_design_context. El token:null del extractor es un falso negativo suyo: no lee el binding de las esquinas.",
+  "Button > content > labelBox|cornerRadius": "🟢 VERIFICADO EN VIVO el 3 sep 2026: 60 de 60 bindeadas a radius/m (12). No es un bug de binding, es geometría SOBRANTE — labelBox no tiene relleno, así que no se ve. Residuo de bajar su horizontalPadding a 0 el 27 ago. Se limpia quitando el radio, no bindeándolo."
+}
