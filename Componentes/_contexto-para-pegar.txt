@@ -1,5 +1,7 @@
-El componente se auditó y corrigió el 19 y 20 de agosto de 2026, y su escala
-dimensional se rehízo por completo el 27 de agosto (tarea 4.18). Ten en cuenta:
+El componente se auditó y corrigió el 19 y 20 de agosto de 2026, su escala
+dimensional se rehízo por completo el 27 de agosto (tarea 4.18), y su geometría
+se verificó variante a variante contra Figma en vivo el 3 de septiembre de 2026.
+Ten en cuenta:
 
 NOMBRES DE PROPIEDAD (cambiaron; la documentación anterior está caduca)
 - El eje "Type" ahora se llama "variant". Se renombró porque `type` está
@@ -40,9 +42,21 @@ EL DEFECTO DE TIPOGRAFÍA YA NO EXISTE
   27 de agosto: los tres tamaños tienen ahora su propio estilo de texto
   (12 · 14 · 16). No lo documentes como hueco.
 
-cornerRadius — RESUELTO EL 27 DE AGOSTO. NO ES UN HUECO ABIERTO.
+cornerRadius — RESUELTO EL 27 DE AGOSTO Y VERIFICADO EN VIVO EL 3 DE SEPTIEMBRE.
+NO ES UN HUECO ABIERTO, Y YA NO ES UNA INFERENCIA.
 - Las 60 variantes tienen `radius/l` (16) en las CUATRO esquinas, bindeado a
   la variable. Un solo valor, cero excepciones, cero valores crudos.
+- 🔴 MEDIDO, NO ASUMIDO: 60 de 60, leyendo cada variante en vivo desde Figma el
+  3 de septiembre de 2026. Ninguna cruda, ninguna sin radio, ninguna con otro
+  token. La pasada del 27 de agosto emitió esta fila como `inferred` porque
+  corrió sin enlace a Figma; esta ya no lo es. Emítela como medida.
+- 🔴 Y LO MÁS IMPORTANTE PARA ESTA EXTRACCIÓN, PORQUE TE VA A PASAR:
+  `_base.json` reporta `cornerRadius` con `token: null` y `display: "16"` en
+  las 60 variantes. ESO ES UN FALSO NEGATIVO DEL EXTRACTOR, no una ausencia de
+  binding. El extractor resuelve el token de `minHeight`, `minWidth` y los
+  paddings, pero NO lee el binding de las esquinas: nunca ha podido verlo.
+  NO escribas que el radio está sin tokenizar, ni marques la fila como
+  `inferred`, ni la des por no verificada. Está bindeado y está comprobado.
 - No varía por size, ni por surface, ni por variant, ni por state. Documenta
   un único radio para el componente entero.
 - Ratios contra la altura: 33,3% en s · 28,6% en m · 25% en l. Ninguno llega
@@ -63,9 +77,22 @@ cornerRadius — RESUELTO EL 27 DE AGOSTO. NO ES UN HUECO ABIERTO.
 
 RESIDUO QUE SÍ HAY QUE ANOTAR
 - Los 60 `labelBox` internos conservan un cornerRadius de 12, bindeado a
-  token. No se ve —labelBox no tiene relleno— pero existe y llega a la
+  `radius/m`. No se ve —labelBox no tiene relleno— pero existe y llega a la
   extracción. Es geometría sobrante de haber mudado su horizontalPadding a 0
   el 27 de agosto. Anótalo como residuo a limpiar, no como decisión.
+  Confirmado en vivo el 3 de septiembre: sigue ahí, en 60 de 60.
+
+GROSOR DE BORDE — GEOMETRÍA QUE NADIE HABÍA DOCUMENTADO
+- `strokeWeight` NO es constante y NO está tokenizado. Sale crudo en las 60:
+      48 variantes    1     (los cuatro estados que no son focus)
+       8 variantes    1.5   (focus en las tallas s y m)
+       4 variantes    2     (focus en la talla l)
+- O sea: el borde engorda en `state=focus`, y engorda MÁS en la talla `l`.
+  Es un patrón coherente, no un accidente, pero está sin token y sin declarar.
+- Documéntalo como lo que es: el grosor de borde varía por `state` y por
+  `size`, con valores crudos. NO escribas que toda la geometría del Button
+  está bindeada a token — es cierto de alturas, anchos, insets y radios, y
+  falso del borde.
 
 ÁREA TÁCTIL — CÓMO SE CITA, Y ES IMPORTANTE
 - NO escribas que 44 px es "WCAG 2.5.8" ni "AA en 2.2". Es falso y estuvo
