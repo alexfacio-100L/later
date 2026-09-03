@@ -6,8 +6,26 @@
 # uSpec — caché regenerable, la propia skill exige no versionarlo
 .uspec-cache/
 
-# Descargas intermedias del plugin uSpec Extract
+# Descargas intermedias del plugin uSpec Extract — se ignoran EN CUALQUIER SITIO
 *_base.json
+
+# …salvo en spec-origen/, que es el archivo de insumos y SÍ se versiona.
+#
+# Por qué, y es la razón por la que la excepción existe: un `_base.json` NO es
+# regenerable. Lo produce una persona corriendo el plugin uSpec Extract dentro
+# de Figma, contra un archivo de Figma que cambia todos los días. Borrarlo no
+# cuesta «volver a correr un comando»: cuesta perder para siempre el estado del
+# componente en esa fecha.
+#
+# Y ya demostró que vale: el 3 de septiembre de 2026 el `_base.json` del 27 de
+# agosto fue la única prueba de que la escala 48·56·64 estaba bindeada en las 60
+# variantes Y de que el extractor es CIEGO al binding del radio (reporta
+# `token: null` en las 60 sin poder leerlo). Sin ese archivo, ninguna de las dos
+# cosas era demostrable.
+#
+# Coste declarado: ~900 KB por componente, ~35 MB si llegan los 40. Git lo
+# aguanta. Si algún día molesta, la vuelta atrás es borrar estas dos líneas.
+!spec-origen/**/*_base.json
 
 node_modules/
 

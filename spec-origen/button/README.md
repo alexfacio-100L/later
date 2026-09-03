@@ -1,14 +1,21 @@
-# Contexto para la extracción del Button
+# Insumos de extracción del Button
 
-**Qué es y cómo se usa el *Optional context* que dicta la extracción del `Button`.** El texto que se pega vive en `_contexto-para-pegar.txt`.
+**Todo lo que ENTRA a la extracción del `Button` vive en esta carpeta.** Lo que sale —`Componentes/button.md` y la página de Supernova— vive fuera.
+
+| Archivo | Qué es |
+| --- | --- |
+| `_contexto-para-pegar.txt` | **El `optionalContext`.** Se pega tal cual en el plugin. Es criterio humano acumulado, no lo genera nadie |
+| `button-_base.json` | El volcado del component set que produce el plugin *uSpec Extract*. **Snapshot fechado de Figma** |
+| `ESTADO-DE-LA-EXTRACCION.md` | Dónde quedó la última pasada y con qué parámetros se retoma |
+| `README.md` | Esto |
 
 *Recoge todo lo que ha cambiado en el componente —19 y 20 de agosto, la escala del 27, `isLoading` el 31, y la verificación de geometría del 3 de septiembre— para que la especificación no repita lo ya corregido ni describa lo que ya no existe.*
 
 ---
 
-> 🔴 **El texto ya no vive aquí. Vive en [`_contexto-para-pegar.txt`](./_contexto-para-pegar.txt), y ése es el único que se pega.**
+> 🔴 **El texto vive en [`_contexto-para-pegar.txt`](./_contexto-para-pegar.txt), y ése es el único que se pega. Este archivo no guarda ninguna copia, a propósito.**
 >
-> **Por qué se vació este bloque, el 3 de septiembre de 2026:** este archivo guardaba una **copia** del contexto, y esa copia se quedó en el estado del **20 de agosto** — seguía dictando la escala vieja `37 · 45 · 53`, seguía diciendo que `size` no escala la tipografía, y seguía dando los paddings anteriores. **La versión buena se actualizó tres veces sin que ésta se enterara.**
+> **Por qué se vació, el 3 de septiembre de 2026:** este archivo guardaba una **copia** del contexto, y esa copia se quedó en el estado del **20 de agosto** — seguía dictando la escala vieja `37 · 45 · 53`, seguía diciendo que `size` no escala la tipografía, y seguía dando los paddings anteriores. **La versión buena se actualizó tres veces sin que ésta se enterara.** *Y este archivo es el que se llamaba «contexto para la extracción»: era el que alguien abriría.*
 >
 > ⚠️ **Y es el fallo más caro que puede tener este archivo**, porque *el insumo que dicta pesa más que el documento que muestra*: un contexto caduco no produce un error visible, produce **una extracción entera construida sobre una premisa falsa**, que se propaga al `.md`, a la página y a lo que lea ingeniería. Ya envenenó el brief tres veces.
 >
@@ -17,7 +24,8 @@
 ## Cómo se usa
 
 1. Abre `_contexto-para-pegar.txt` y cópialo entero.
-2. Pégalo en el campo **Optional context** del plugin *uSpec Extract*, al generar el `_base.json` del component set `Button`.
+2. Pégalo en el campo **Optional context** del plugin *uSpec Extract*, al generar el `_base.json` del component set `Button` (`3566:3197`, archivo `UGwIBzERV4vB7mk0mejZ0y`).
+   **El `_base.json` que salga se deposita aquí mismo**, sustituyendo al anterior.
 3. Si algo del componente cambió desde la última extracción, **actualiza el `.txt` ANTES de extraer** — y quita lo que dejó de ser cierto, no solo añadas lo nuevo. Un contexto que acumula capas es exactamente cómo se envenenó las tres veces anteriores.
 
 ---
