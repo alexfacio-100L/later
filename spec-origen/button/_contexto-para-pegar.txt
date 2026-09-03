@@ -82,17 +82,43 @@ RESIDUO QUE SÍ HAY QUE ANOTAR
   el 27 de agosto. Anótalo como residuo a limpiar, no como decisión.
   Confirmado en vivo el 3 de septiembre: sigue ahí, en 60 de 60.
 
-GROSOR DE BORDE — GEOMETRÍA QUE NADIE HABÍA DOCUMENTADO
-- `strokeWeight` NO es constante y NO está tokenizado. Sale crudo en las 60:
-      48 variantes    1     (los cuatro estados que no son focus)
-       8 variantes    1.5   (focus en las tallas s y m)
-       4 variantes    2     (focus en la talla l)
-- O sea: el borde engorda en `state=focus`, y engorda MÁS en la talla `l`.
-  Es un patrón coherente, no un accidente, pero está sin token y sin declarar.
-- Documéntalo como lo que es: el grosor de borde varía por `state` y por
-  `size`, con valores crudos. NO escribas que toda la geometría del Button
-  está bindeada a token — es cierto de alturas, anchos, insets y radios, y
-  falso del borde.
+GROSOR DE BORDE — ES UN DEFECTO ABIERTO, NO UNA CARACTERÍSTICA
+- 🔴 CORRECCIÓN DEL 3 DE SEPTIEMBRE, y hay que leerla antes de documentar nada
+  del borde: una versión anterior de este mismo contexto —escrita ese día—
+  decía que el grosor de borde era "geometría que nadie había documentado" y
+  pedía documentarlo como una característica del componente. ES FALSO. Los
+  valores crudos que tiene TIENEN TOKEN en el sistema, con el valor idéntico,
+  en la colección `border`:
+      width/xs = 1     width/s = 1.5     width/m = 2 (alias de unit/2)
+  No es una decisión de diseño sin declarar: es un binding que falta.
+- Medido en vivo variante a variante el 3 de septiembre, no leído del
+  _base.json:
+      24 de 60   sin borde                (primary en default/hover/pressed/disabled)
+      36 de 60   con borde
+       8 de 36   con el grosor BINDEADO a width/s   (focus en las tallas s y m)
+      28 de 36   con el grosor CRUDO
+- Las 28 crudas son dos grupos exactos:
+      24   secondary en default/hover/pressed/disabled — 1 px crudo -> width/xs
+       4   focus en la talla l                          — 2 px crudo -> width/m
+- El patrón delata lo que pasó: alguien bindeó `width/s` en los focus de `s` y
+  `m` y no siguió. Es un trabajo empezado, no un criterio.
+- ⚠️ NO lo documentes como "el grosor varía por state y por size, con valores
+  crudos". Que varíe por estado SÍ es intencional —el borde engorda al recibir
+  foco— pero que esté crudo NO. Son dos cosas distintas y hay que separarlas.
+- ⚠️ Y NO escribas que toda la geometría del Button está bindeada a token: es
+  cierto de alturas, anchos, insets y radios, y falso del borde mientras estas
+  28 sigan crudas.
+
+COLOR DE BORDE — SEGUNDO HALLAZGO DEL MISMO BARRIDO, Y NO ESTÁ RESUELTO
+- En las 24 variantes `secondary` que no están en focus, el color del borde NO
+  sale de un token `border/*`: sale de `text/secondary`. El borde de un control
+  se está pintando con el token del TEXTO.
+- Los tokens de borde existen y se usan en otras variantes: `border/focus` en
+  los focus, `border/disabled` en los disabled.
+- ⚠️ NO lo documentes como decisión ni como defecto: está SIN RESOLVER, y la
+  decisión es del Lead. Puede ser deliberado —reusar el color de texto para que
+  borde y label vayan siempre a juego— o un hueco de tokenización. Si tienes
+  que mencionarlo, dilo como pregunta abierta.
 
 ÁREA TÁCTIL — CÓMO SE CITA, Y ES IMPORTANTE
 - NO escribas que 44 px es "WCAG 2.5.8" ni "AA en 2.2". Es falso y estuvo
