@@ -19,6 +19,7 @@
     "docs:tokens": "node experimento-canario/mapa-tokens.mjs",
     "docs:previews": "node experimento-canario/verificar-previews.mjs",
     "docs:subidos": "node experimento-canario/verificar-subidos.mjs",
+    "docs:frames": "node experimento-canario/frames-vivos.mjs",
     "button:validar": "node plantilla-componente/button-canario.mjs",
     "button:volcar": "node plantilla-componente/button-canario.mjs --dump",
     "button:escribir": "node plantilla-componente/button-canario.mjs --escribir",
