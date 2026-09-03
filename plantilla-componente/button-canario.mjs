@@ -783,9 +783,31 @@ ${tablaDelMd("| # | Área | Criterio |", 2)}
 - **Color** — la colección \`semanticColors\` y sus dos modes
 - **Espaciado** — la escala \`space\`, de la que salen todos los insets`,
 
-"Estatus y cambios": `**Stable.** El componente está documentado, en uso, y con su escala dimensional ya rehecha: alturas **48 · 56 · 64**, texto **12 · 14 · 16**, iconos **16 · 20 · 24**.
-
-<SNCallout type="Info">
+/**
+ * 🔴 DOS DECISIONES EDITORIALES DEL 3 SEP 2026, las dos con su porqué.
+ *
+ * 1 · FUERA el párrafo de apertura «**Stable.** El componente está documentado,
+ *     en uso, y con su escala dimensional ya rehecha: alturas 48 · 56 · 64…».
+ *     Era el TERCER sitio de esta misma pestaña diciendo lo mismo: el metadato
+ *     del `Resumen general` ya publica `**Estado:** Stable`, la primera entrada
+ *     del changelog ya cuenta la escala, y `component-health` declara el estado
+ *     leyéndolo del componente real. **Un dato escrito a mano al lado de un
+ *     bloque que lo calcula es el dato que se queda viejo.**
+ *
+ * 2 · El changelog SE QUEDA COMO LISTA, y no pasa a `release-notes` pese a que
+ *     el nombre del bloque promete justo eso. **Verificado, no supuesto:**
+ *     `release-notes` se declara con `properties: []` —no acepta contenido— y su
+ *     descripción es *«Show formatted release notes from all previously
+ *     released versions»*: muestra el historial de versiones del DESIGN SYSTEM,
+ *     no un changelog de componente escrito a mano.
+ *
+ *     ⚠️ Y hoy ese historial está vacío: el design system tiene **una sola
+ *     versión, `Shared Draft`, con `changeLog: null`**. Sustituir la lista por
+ *     `<SNReleaseNotes />` habría borrado las seis entradas para no enseñar
+ *     nada. *El bloque es el correcto el día que se versione el sistema; el
+ *     contenido que tenemos no es el suyo.*
+ */
+"Estatus y cambios": `<SNCallout type="Info">
 **El cambio de más alcance para quien consume el componente es el defecto de \`size\`, que pasó de \`s\` a \`m\`.** Toda instancia que no especifique talla cambia de aspecto al actualizar la librería.
 </SNCallout>
 
