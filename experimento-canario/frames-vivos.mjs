@@ -76,5 +76,74 @@ if (process.argv.includes("--lista"))
 for (const m of fallidos) console.error(`  🔴 ${objetivo.get(String(m.data.sceneNodeId))}: renderState=${m.data.renderState}`)
 for (const [s, n] of ausentes) console.error(`  🔴 ${s} (${n}): sin frame. Corre con --render`)
 
-if (fallidos.length || ausentes.length) process.exit(1)
-console.log("🟢 Los 23 nodos del registro están vivos en Supernova.")
+/**
+ * 🔴 LA PUERTA QUE SUSTITUYE A LA DE ESCALA, y conviene saber qué cubre y qué no.
+ *
+ * `verificar-previews.mjs` medía `fraccionAncho`: el % del lienzo que ocupaba el
+ * contenido dibujado. Existía porque Supernova escala la imagen al ancho de la
+ * columna, así que un PNG exportado con 60% de margen salía diminuto. **Con
+ * frames vivos esa causa desaparece por construcción**: Supernova renderiza el
+ * nodo exacto, sin lienzo alrededor — los 23 miden justo lo que mide su
+ * `#preview`. No hay margen que medir.
+ *
+ * Lo que sí puede salir mal y esto vigila: un frame **más alto que ancho** se
+ * come la página al escalarse a la columna, y uno **demasiado estrecho** sale
+ * borroso. Son dos números, y son criterio propio sobre n=23, sin respaldo
+ * disciplinar: se declaran para que se puedan discutir, no porque sean canon.
+ *
+ * ⚠️ Y LO QUE NADIE VIGILA, dicho para que no se descubra tarde: que el frame
+ * esté BIEN EN FIGMA. Un frame vivo se republica solo, así que una edición a
+ * medias sale a la página sin que nada avise. **Es la contrapartida aceptada al
+ * cambiar la foto por el espejo**, y no es automatizable desde aquí: haría falta
+ * guardar una imagen de referencia, que es exactamente la foto que quitamos.
+ */
+const RATIO_MINIMO = 1.0   // más alto que ancho: se come la página
+const ANCHO_MINIMO = 200   // por debajo, el escalado a la columna lo emborrona
+const revisarForma = (lista) => {
+  const raros = []
+  for (const m of lista) {
+    const { width: w, height: h } = m.data.renderedImage ?? {}
+    const sec = objetivo.get(String(m.data.sceneNodeId))
+    if (!w || !h) { raros.push(`${sec}: el render no declara dimensiones`); continue }
+    if (w / h < RATIO_MINIMO) raros.push(`${sec}: ${w}×${h} — más alto que ancho (ratio ${(w / h).toFixed(2)})`)
+    if (w < ANCHO_MINIMO)     raros.push(`${sec}: ${w}×${h} — más estrecho que ${ANCHO_MINIMO} px`)
+  }
+  return raros
+}
+
+/**
+ * 🔴 El registro que consume el generador. Lo escribe este script y NO se edita
+ * a mano: el `entityId` y el `resourceId` los asigna Supernova al renderizar, y
+ * cambian si el nodo se vuelve a pedir. Copiarlos a mano es cómo se llega a un
+ * bloque que valida, se guarda y no pinta nada.
+ */
+if (process.argv.includes("--registro")) {
+  const salida = {}
+  for (const m of ok) {
+    const seccion = objetivo.get(String(m.data.sceneNodeId))
+    salida[seccion] = {
+      nodo: String(m.data.sceneNodeId),
+      nombreEnFigma: m.meta?.name ?? null,
+      entityId: m.persistentId,
+      resourceId: m.data.renderedImage?.resourceId ?? null,
+      url: m.data.renderedImage?.url ?? null,
+      ancho: m.data.renderedImage?.width ?? null,
+      alto: m.data.renderedImage?.height ?? null,
+    }
+  }
+  const destino = new URL("./frames-vivos.json", import.meta.url)
+  fs.writeFileSync(destino, JSON.stringify(salida, null, 2))
+  console.log(`✓ frames-vivos.json escrito con ${Object.keys(salida).length} de ${N} entradas`)
+  if (Object.keys(salida).length !== N) { console.error("🔴 El registro sale incompleto."); process.exit(1) }
+}
+
+const raros = revisarForma(ok)
+if (raros.length) {
+  console.error(`\n⚠️  ${raros.length} de ${ok.length} con forma sospechosa para una columna:`)
+  for (const r of raros) console.error(`   · ${r}`)
+} else if (ok.length) {
+  console.log(`  Forma en regla: ${ok.length} de ${ok.length} — ninguno más alto que ancho ni por debajo de ${ANCHO_MINIMO} px.`)
+}
+
+if (fallidos.length || ausentes.length || raros.length) process.exit(1)
+console.log(`🟢 Los ${N} nodos del registro están vivos en Supernova.`)

@@ -37,8 +37,30 @@ const TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/button-tokens.json
  * Figma. Supernova escala la imagen al ancho de la columna, así que sin ese dato
  * un preview sale diminuto o gigante — y valida igual de bien en los dos casos.
  */
+/**
+ * 🔴 CAMBIO DEL 3 SEP 2026 — la fuente pasa de `frames-subidos.json` (imágenes
+ * exportadas y subidas a mano) a `frames-vivos.json` (frames renderizados por
+ * Supernova desde el nodo de Figma).
+ *
+ * Por qué, y no es preferencia estética: **una imagen subida es una foto.** Se
+ * saca una vez y a partir de ahí miente en silencio en cuanto el componente
+ * cambia. El 27 de agosto se rehizo la geometría del Button, se re-exportaron
+ * los 23 previews, se recortaron los 23 — y solo 8 se subieron. Los otros 15
+ * publicaron durante siete días un radio de 8, 12 y 24 donde el componente
+ * tiene 16, bajo un texto que afirmaba «un único `radius/l` (16) en las 60
+ * variantes». Nada falló: el registro tenía sus 23 entradas y la puerta daba
+ * verde.
+ *
+ * Un frame vivo apunta al nodo y se rehace solo. Verificado midiendo el render:
+ * las tallas `l` y `m` dan 16, frente a los 24 del asset subido.
+ *
+ * ⚠️ Y la contrapartida, aceptada por el Lead el 3 sep con su razón: un frame
+ * vivo **nunca se congela**, así que una edición a medias en Figma se publica
+ * sola. Se cambia una foto que envejece por un espejo que no avisa. *El fallo
+ * del espejo es visible en el momento; el de la foto estuvo siete días fuera.*
+ */
 const FRAMES = JSON.parse(fs.readFileSync(
-  path.join(RAIZ, "experimento-canario/frames-subidos.json"), "utf8"))
+  path.join(RAIZ, "experimento-canario/frames-vivos.json"), "utf8"))
 
 /** Los iconos que sustituyen al texto en la columna Type y marcan la jerarquía. */
 const ICONOS = JSON.parse(fs.readFileSync(
@@ -53,19 +75,38 @@ const ICONOS = JSON.parse(fs.readFileSync(
  * validador comprueba la forma del valor, no que el recurso exista.
  */
 /**
- * 🔴 La imagen se referencia por URL con Markdown normal, NO con `<SNImage>`.
+ * Un preview, como bloque `figma-frames` apuntando al nodo vivo de Figma.
  *
- * `<SNImage resourceId="...">` valida, se guarda, y NO SE VE. Comprobado el 26
- * ago 2026 publicando las tres formas juntas en la misma página: solo renderiza
- * `![alt](url)`. El `resourceId` es correcto y el recurso existe — simplemente
- * ese bloque no pinta nada.
+ * 🔴 Los tres ids NO son intercambiables, y confundirlos produce un bloque que
+ * valida, se guarda y no pinta nada:
+ *   · `entityId`   — el id del FRAME en Supernova (`persistentId`). Es el que
+ *                    ata el bloque al nodo.
+ *   · `resourceId` — el id de la IMAGEN renderizada. Vive dentro de la URL.
+ *   · `nodo`       — el id en Figma. No se usa aquí; sirve para re-renderizar.
+ * Los tres los asigna Supernova al renderizar, así que salen de
+ * `frames-vivos.json` y NO se escriben a mano.
+ *
+ * 🔴 Y la forma del bloque es `<SNFigmaImages>/<SNFigmaFrame>`, NO la que
+ * documenta `MAPA-DE-BLOQUES.md` (`<SNBlock packageId=…><SNPropFigmaNode …>`
+ * con un objeto `resource` anidado). Esa forma la rechaza `validateMarkdown`
+ * con `UndeclaredValueKey … no value.0.resource`. *El mapa se escribió leyendo
+ * una página existente, y el esquema cambió por debajo.*
+ *
+ * ⚠️ `variant="plain"` a propósito: cada preview es una imagen sola, y
+ * `bordered` está pensado para rejillas de varios frames. Y sin
+ * `showFrameDetails`, que añadiría el nombre de la capa y el enlace a Figma en
+ * cada uno de los 23 — traza útil para nosotros, ruido para quien lee la
+ * página. La traza vive en `frames-vivos.json`, que sí la conserva entera.
  */
 const preview = (seccion, pie) => {
   const f = FRAMES[seccion]
-  if (!f?.url) throw new Error(
-    `No hay preview registrado para «${seccion}» en frames-subidos.json.\n` +
-    `   Registrados: ${Object.keys(FRAMES).join(" · ")}`)
-  return `![${pie ?? seccion}](${f.url})`
+  if (!f?.entityId || !f?.resourceId || !f?.url) throw new Error(
+    `«${seccion}» no está en frames-vivos.json, o le falta entityId/resourceId/url.\n` +
+    `   Registrados: ${Object.keys(FRAMES).join(" · ")}\n` +
+    `   Regenera el registro con: npm run docs:frames -- --render --registro`)
+  return `<SNFigmaImages previewSize="Centered" variant="plain" columns={1}>
+  <SNFigmaFrame id="${f.entityId}" resourceId="${f.resourceId}" src="${f.url}" />
+</SNFigmaImages>`
 }
 /**
  * Los previews que NO se colocan en la página, y por qué. Un preview registrado
@@ -851,6 +892,34 @@ const verificarPreviews = async () => {
  * de previews daba verde y el `.md` salía completo. Un método que resuelve 8 de
  * 23 sin declarar su cobertura se lee como si hubiera resuelto los 23.
  */
+/**
+ * 🔴 LA PUERTA, desde el 3 sep 2026. Sustituye a las dos anteriores, y las dos
+ * dejan de aplicar por la misma razón: **ya no hay imágenes subidas en esta
+ * página.**
+ *
+ *   · `verificarPreviews` medía `fraccionAncho`, el % del lienzo ocupado por el
+ *     contenido. Existía porque un PNG exportado con mucho margen sale diminuto
+ *     al escalarse a la columna. Un frame vivo no tiene lienzo: Supernova
+ *     renderiza el nodo exacto. **La causa desapareció, no se sustituye.**
+ *   · `verificarSubidos` comparaba el asset publicado con el PNG de disco. Sin
+ *     PNG de disco no hay nada que comparar.
+ *
+ * ⚠️ Las dos siguen en el repo y siguen sirviendo: en cuanto un componente
+ * vuelva a colocar una imagen subida, vuelven a ser la puerta de esa imagen.
+ * `npm run docs:previews` y `npm run docs:subidos`.
+ */
+const verificarFramesVivos = async () => {
+  const { execFileSync } = await import("node:child_process")
+  try {
+    const out = execFileSync("node", [path.join(RAIZ, "experimento-canario/frames-vivos.mjs")])
+    for (const l of out.toString().trim().split("\n")) console.log("  " + l.trim())
+  } catch (e) {
+    console.error((e.stdout?.toString() ?? "") + (e.stderr?.toString() ?? ""))
+    console.error("🔴 Los frames vivos no están en regla. Corre `npm run docs:frames -- --render --registro`.")
+    process.exit(1)
+  }
+}
+
 const verificarSubidos = async () => {
   const { execFileSync } = await import("node:child_process")
   try {
@@ -917,7 +986,7 @@ const main = async () => {
   }
   if (!ok) { console.error("\n🔴 No se crea nada con errores."); process.exit(1) }
   if (!escribir) { console.log("\nValidado. Añade --escribir para volcarlo a la página."); return }
-  if (!process.argv.includes("--forzar")) { await verificarPreviews(); await verificarSubidos() }
+  if (!process.argv.includes("--forzar")) await verificarFramesVivos()
 
   // Si el Button ya existe, se REESCRIBE. Crear otro duplicaría la página y
   // consumiría cuatro más del presupuesto.
