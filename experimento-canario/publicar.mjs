@@ -60,6 +60,38 @@ if (process.argv.includes("--escribir") && !process.argv.includes("--forzar")) {
     process.exit(1)
   }
   console.log("✓ previews verificados")
+
+  // ── Puerta de foundations ──
+  // El 3 sep 2026 el Lead fijó el orden: los defectos de foundations se corrigen
+  // ANTES de documentar. Documentar sobre un token roto publica el defecto — y
+  // luego hay que despublicar, que cuesta más. Nada lo imponía hasta ahora.
+  // Se salta el barrido de huérfanos (--sin-uso): son informativos y cuestan 84 llamadas.
+  const { execFileSync } = await import("node:child_process")
+  let informe
+  try {
+    informe = JSON.parse(
+      execFileSync(process.execPath, [new URL("./auditar-foundations.mjs", import.meta.url).pathname, "--json", "--sin-uso"], {
+        encoding: "utf8",
+        maxBuffer: 32 * 1024 * 1024,
+      }),
+    )
+  } catch (e) {
+    // Salida 1 = hay defectos y el JSON viene por stdout igualmente.
+    try { informe = JSON.parse(e.stdout ?? "") } catch {
+      console.log("\n🔴 La auditoría de foundations no pudo correr. NO se publica: sin auditoría no hay permiso.")
+      console.log(`   ${String(e.message).slice(0, 200)}`)
+      process.exit(1)
+    }
+  }
+  const bloqueantes = informe.defectos.filter(d => d.severidad === "crítico" || d.severidad === "alto")
+  if (bloqueantes.length) {
+    console.log(`\n🔴 ${bloqueantes.length} defectos bloqueantes en foundations. NO se documenta encima de esto.`)
+    for (const d of bloqueantes.slice(0, 8)) console.log(`   · ${d.token} — ${d.detalle.replace(/[*`]/g, "")}`)
+    if (bloqueantes.length > 8) console.log(`   … y ${bloqueantes.length - 8} más. Informe: npm run docs:foundations:md`)
+    console.log("\n   Corrígelos, o publica con --forzar si el Lead lo ha decidido explícitamente.")
+    process.exit(1)
+  }
+  console.log("✓ foundations sin defectos bloqueantes")
 }
 
 if (process.argv.includes("--escribir")) {

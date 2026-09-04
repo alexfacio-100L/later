@@ -19,6 +19,8 @@
     "docs:conexion": "node experimento-canario/verificar-conexion.mjs",
     "docs:estado": "node experimento-canario/diagnostico-supernova.mjs",
     "docs:tokens": "node experimento-canario/mapa-tokens.mjs",
+    "docs:foundations": "node experimento-canario/auditar-foundations.mjs",
+    "docs:foundations:md": "node experimento-canario/auditar-foundations.mjs --md",
     "docs:previews": "node experimento-canario/verificar-previews.mjs",
     "docs:subidos": "node experimento-canario/verificar-subidos.mjs",
     "docs:frames": "node experimento-canario/frames-vivos.mjs",
@@ -26,6 +28,8 @@
     "button:volcar": "node plantilla-componente/button-canario.mjs --dump",
     "button:escribir": "node plantilla-componente/button-canario.mjs --escribir",
     "docs:size": "node experimento-canario/verificar-size.mjs",
+    "comp:auditar": "node auditar-componente.mjs",
+    "comp:auditar:md": "node auditar-componente.mjs --md",
     "md:verificar": "node completar-md.mjs",
     "md:completar": "node completar-md.mjs",
     "plantilla": "node plantilla-componente/generar.mjs"
