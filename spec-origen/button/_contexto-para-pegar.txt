@@ -1,6 +1,9 @@
 El componente se auditó y corrigió el 19 y 20 de agosto de 2026, su escala
 dimensional se rehízo por completo el 27 de agosto (tarea 4.18), y su geometría
 se verificó variante a variante contra Figma en vivo el 3 de septiembre de 2026.
+Revisado entero el 4 de septiembre de 2026 contra el estado de ese día: el
+grosor de borde quedó tokenizado (60/60) y varios tokens de color cambiaron de
+alias. Todo lo que sigue está contrastado contra Figma a esa fecha.
 Ten en cuenta:
 
 NOMBRES DE PROPIEDAD (cambiaron; la documentación anterior está caduca)
@@ -82,32 +85,32 @@ RESIDUO QUE SÍ HAY QUE ANOTAR
   el 27 de agosto. Anótalo como residuo a limpiar, no como decisión.
   Confirmado en vivo el 3 de septiembre: sigue ahí, en 60 de 60.
 
-GROSOR DE BORDE — ES UN DEFECTO ABIERTO, NO UNA CARACTERÍSTICA
-- 🔴 CORRECCIÓN DEL 3 DE SEPTIEMBRE, y hay que leerla antes de documentar nada
-  del borde: una versión anterior de este mismo contexto —escrita ese día—
-  decía que el grosor de borde era "geometría que nadie había documentado" y
-  pedía documentarlo como una característica del componente. ES FALSO. Los
-  valores crudos que tiene TIENEN TOKEN en el sistema, con el valor idéntico,
-  en la colección `border`:
-      width/xs = 1     width/s = 1.5     width/m = 2 (alias de unit/2)
-  No es una decisión de diseño sin declarar: es un binding que falta.
-- Medido en vivo variante a variante el 3 de septiembre, no leído del
-  _base.json:
-      24 de 60   sin borde                (primary en default/hover/pressed/disabled)
-      36 de 60   con borde
-       8 de 36   con el grosor BINDEADO a width/s   (focus en las tallas s y m)
-      28 de 36   con el grosor CRUDO
-- Las 28 crudas son dos grupos exactos:
-      24   secondary en default/hover/pressed/disabled — 1 px crudo -> width/xs
-       4   focus en la talla l                          — 2 px crudo -> width/m
-- El patrón delata lo que pasó: alguien bindeó `width/s` en los focus de `s` y
-  `m` y no siguió. Es un trabajo empezado, no un criterio.
-- ⚠️ NO lo documentes como "el grosor varía por state y por size, con valores
-  crudos". Que varíe por estado SÍ es intencional —el borde engorda al recibir
-  foco— pero que esté crudo NO. Son dos cosas distintas y hay que separarlas.
-- ⚠️ Y NO escribas que toda la geometría del Button está bindeada a token: es
-  cierto de alturas, anchos, insets y radios, y falso del borde mientras estas
-  28 sigan crudas.
+GROSOR DE BORDE — RESUELTO EL 4 DE SEPTIEMBRE. YA NO ES UN DEFECTO ABIERTO.
+- 🔴 LO ANTERIOR EN ESTE MISMO ARCHIVO ES FALSO Y HAY QUE IGNORARLO. Hasta el
+  4 de septiembre esta sección decía "28 de 36 con el grosor CRUDO" y pedía
+  documentar el grosor como un binding que falta. YA NO. Si algo que leas
+  sugiere que el borde está sin tokenizar, es residuo de esa versión.
+- Estado vigente, aplicado y verificado en vivo el 4 de septiembre leyendo las
+  cuatro claves de lado de cada variante (strokeTopWeight, strokeRightWeight,
+  strokeBottomWeight, strokeLeftWeight):
+      width/xs (1)     en 48 de 60
+      width/s  (1.5)   en  8 de 60   (focus en las tallas s y m)
+      width/m  (2)     en  4 de 60   (focus en la talla l)
+  60 de 60 bindeadas. Cero valores crudos. Cero incoherencias entre lados.
+- El binding no cambió ni un píxel: el script abortaba si el token no valía
+  exactamente lo que la variante ya tenía. Es tokenización pura, no rediseño.
+- ⚠️ MATIZ QUE SIGUE SIENDO CIERTO Y HAY QUE CONSERVAR: que el grosor varíe por
+  estado ES INTENCIONAL —el borde engorda al recibir foco, y crece con la talla
+  dentro del propio foco: 1.5 en s y m, 2 en l—. Lo que estaba mal era que
+  estuviera crudo, no que variara. Son dos cosas distintas: documenta la
+  variación como decisión de diseño, y no menciones los valores crudos.
+- 🔴 Y AHORA SÍ: toda la geometría del Button está bindeada a token. Alturas,
+  anchos, insets, radios Y borde. Ya puedes escribirlo sin excepción.
+- ⚠️ OJO CON EL MISMO FALSO NEGATIVO QUE EL RADIO: si `_base.json` reporta
+  `strokeWeight` con `token: null`, NO es que falte el binding. La clave
+  `strokeWeight` no existe en boundVariables — Figma la expande a las cuatro
+  claves de lado. Leer la clave equivocada devuelve vacío y se lee igual que
+  una ausencia real. Medido el 4 de septiembre por las claves buenas.
 
 COLOR DE BORDE — SEGUNDO HALLAZGO DEL MISMO BARRIDO, Y NO ESTÁ RESUELTO
 - En las 24 variantes `secondary` que no están en focus, el color del borde NO
@@ -115,6 +118,12 @@ COLOR DE BORDE — SEGUNDO HALLAZGO DEL MISMO BARRIDO, Y NO ESTÁ RESUELTO
   se está pintando con el token del TEXTO.
 - Los tokens de borde existen y se usan en otras variantes: `border/focus` en
   los focus, `border/disabled` en los disabled.
+- 🔴 DATO NUEVO DEL 4 DE SEPTIEMBRE, y descarta el destino que parecía obvio:
+  `border/secondary` YA NO EXISTE. Se renombró a `border/inverseStatic` porque
+  valía #FFFFFF en los dos modes y sobre background/secondary en Light daba
+  1.00:1 — un borde blanco sobre fondo blanco. Su rol real era borde sobre
+  rellenos oscuros. NO lo propongas como destino del borde de `secondary`:
+  dejaría el borde invisible en Light.
 - ⚠️ NO lo documentes como decisión ni como defecto: está SIN RESOLVER, y la
   decisión es del Lead. Puede ser deliberado —reusar el color de texto para que
   borde y label vayan siempre a juego— o un hueco de tokenización. Si tienes
@@ -157,10 +166,39 @@ COLOR
   mode.
 - Sigue abierto: background/disabled apenas se distingue del lienzo en
   Light (1.30:1). Ninguno de los dos defectos depende de `size`, así que la
-  escala nueva no los toca.
-- El indicador de foco SÍ cumple: border/focus da 4.80:1 en Light y 4.07:1
-  en Dark contra el lienzo, por encima del 3:1 que exige 1.4.11 para
-  contraste no textual. El borde de secondary da 15.9 y 17.3.
+  escala nueva no los toca. (Verificado el 4 de septiembre: sigue en 1.30.)
+- icon/disabled sobre background/disabled da 1.74:1 en Light y 2.97:1 en Dark.
+  Menciónalo con su matiz o no lo menciones: WCAG 1.4.3 y 1.4.11 EXIMEN
+  explícitamente a los componentes inactivos, así que NO es incumplimiento.
+  Es visible y está declarado; no lo escribas como fallo de conformidad.
+- 🔴 TRAMPA AL DOCUMENTAR EL TEXTO DEL RELLENO PRIMARIO, y es fácil caer:
+  sobre background/brandMain el token correcto es `text/primaryInverse`
+  (16.23:1 en Light, 21:1 en Dark). NO propongas cambiarlo por
+  `text/primaryInverseStatic`: ese da 1.05:1 en Dark —blanco sobre blanco—
+  porque brandMain SÍ invierte y el Static no. El sistema tiene un precedente
+  del 21 de agosto donde el cambio inverso fue el arreglo (en
+  background/selected, que no invierte), y confundir los dos casos rompe el
+  botón en oscuro. La regla: Static va con Static, y lo que invierte con lo
+  que invierte.
+- El indicador de foco SÍ cumple, con NÚMEROS NUEVOS desde el 4 de septiembre:
+  `border/focus` recibió ancla propia en Dark (blue/200, #6C9BF2) porque el
+  valor único fallaba sobre fondos oscuros. Ahora da 4.80:1 en Light y 7.61:1
+  en Dark contra el lienzo, muy por encima del 3:1 de 1.4.11. NO uses los
+  números viejos (4.80 / 4.07): el de Dark ya no es ese.
+- El borde de secondary (text/secondary) da 15.9 en Light y 17.3 en Dark.
+- 🟢 shadow/12 — NO LO DOCUMENTES COMO DEFECTO, y un extractor tenderá a
+  hacerlo. Vale #0E1F35 en los dos modes y no lleva sufijo `Static`, que en
+  este sistema es la firma de un token mal cableado. Aquí no lo es: la
+  convención `Static` se escribió para SUPERFICIES y PRIMEROS PLANOS, y un
+  tinte de sombra no es ninguna de las dos —no se posa sobre nada, es el color
+  de un efecto—. Queda exento por categoría. Lo que sí es pregunta abierta, y
+  es de DISEÑO y del Lead, es si la elevación debe leerse en modo oscuro.
+- 🟢 background/selected — TAMPOCO es defecto, por la misma razón aparente y
+  distinta causa. Vale #315FA3 en los dos modes, pero su par de texto en el
+  Button es `text/primaryInverseStatic`, que TAMPOCO cambia: 6.05:1 en los dos
+  modes. Es el corolario ya fijado del sistema —un fondo que no cambia obliga a
+  un texto que tampoco— aplicado correctamente. Documenta el par como decisión
+  deliberada, no como token sin adaptar.
 
 EJES Y DEFECTO POR OMISIÓN
 - El eje `size` tiene default `m` desde el 27 de agosto (antes era `s`). Es
