@@ -167,17 +167,51 @@ for (const v of variantes) {
 }
 for (const [k, n] of crudas) add("B1-pintura-cruda", "alto", k, `${n} apariciones con color literal, sin variable. No llega a código como token`)
 
-/* ─────────── B2 · Geometría sin token ─────────── */
-// El extractor es ciego al binding de las esquinas: `cornerRadius` se excluye y
-// se declara, en vez de reportarse como defecto falso.
-const CIEGO = new Set(["cornerRadius"])
-const geomCrudas = new Map()
-let b2Props = 0
+/* ─────────── B2 · Geometría sin token ───────────
+ *
+ * 🔴 LA CEGUERA SE DETECTA SOLA, NO SE MANTIENE A MANO.
+ *
+ * La primera versión llevaba una lista fija con `cornerRadius` dentro y
+ * `strokeWeight` fuera. Resultado: `B2` reportó 60 de 60 crudas después de que
+ * las 60 estuvieran bindeadas — un falso positivo PERMANENTE, porque medía
+ * sobre una fuente incapaz de mostrar el dato. Yo mismo había escrito el aviso
+ * en el `optionalContext` del Button y no lo apliqué a mi propio auditor.
+ *
+ * La regla ahora es la regla 16 hecha código: **si NINGUNA variante del
+ * universo trae token para una propiedad, el extractor es ciego a ella y su
+ * `null` no prueba nada.** Si al menos una lo trae, el método puede mostrar la
+ * presencia y entonces un `null` sí es un valor crudo real.
+ *
+ * Verificado sobre la extracción del 4 sep: de 15 propiedades dimensionales,
+ * el extractor sólo emite token para 3 —`minWidth`, `minHeight`, `itemSpacing`—.
+ * `strokeWeight` y `cornerRadius` salen ciegas y se declaran como tales.
+ */
+
+// `width`/`height`/`counterAxisSpacing` son resultado del auto-layout, no una
+// decisión: no son defecto ni aunque salgan sin token.
+const DERIVADAS = /^(width|height|counterAxisSpacing)$/
+
+// Paso 1 — censar qué propiedades puede mostrar el extractor.
+const censo = {}
 for (const v of variantes) {
   for (const [prop, d] of Object.entries(v.dimensions ?? {})) {
     if (!d || typeof d !== "object" || !("token" in d)) continue
     if (typeof d.value !== "number") continue
-    if (CIEGO.has(prop)) continue
+    if (DERIVADAS.test(prop)) continue
+    ;(censo[prop] ??= { con: 0, sin: 0 })
+    d.token ? censo[prop].con++ : censo[prop].sin++
+  }
+}
+const CIEGAS = Object.entries(censo).filter(([, c]) => c.con === 0).map(([p]) => p)
+const MEDIBLES = Object.entries(censo).filter(([, c]) => c.con > 0).map(([p]) => p)
+
+// Paso 2 — sólo se juzgan las medibles.
+const geomCrudas = new Map()
+let b2Props = 0
+for (const v of variantes) {
+  for (const [prop, d] of Object.entries(v.dimensions ?? {})) {
+    if (!MEDIBLES.includes(prop)) continue
+    if (!d || typeof d.value !== "number") continue
     b2Props++
     if (d.token === null) {
       const k = `${prop} = ${d.value}`
@@ -185,12 +219,7 @@ for (const v of variantes) {
     }
   }
 }
-// `width`/`height` son el resultado del auto-layout, no una decisión: no son defecto.
-const DERIVADAS = /^(width|height|counterAxisSpacing)/
-for (const [k, n] of geomCrudas) {
-  if (DERIVADAS.test(k)) continue
-  add("B2-geometria-cruda", "alto", k, `${n} de ${N} variantes con valor crudo y sin token`)
-}
+for (const [k, n] of geomCrudas) add("B2-geometria-cruda", "alto", k, `${n} de ${N} variantes con valor crudo y sin token`)
 
 /* ─────────── B3 · Semánticos consumidos, cruzados con foundations ─────────── */
 const consumidos = new Map()
@@ -206,6 +235,27 @@ for (const v of variantes) {
     consumidos.set(n, (consumidos.get(n) ?? 0) + 1)
   }
 }
+// Los pares REALES fondo→primer plano del componente, para poder juzgar el
+// corolario Static (un fondo que no cambia obliga a un texto que tampoco).
+const paresPorFondo = new Map()
+for (const v of variantes) {
+  const paints = (v.colorWalk ?? []).filter((x) => x.property !== "drop shadow")
+  const fondo = paints.find((x) => x.property === "fill" && !x.path)
+  const tf = fondo?.boundVariableId && porVarId.get(fondo.boundVariableId)
+  if (!tf) continue
+  const nf = tf.origin?.name ?? tf.name
+  for (const x of paints) {
+    if (!x.path || !x.boundVariableId) continue
+    const tp = porVarId.get(x.boundVariableId)
+    if (tp) (paresPorFondo.get(nf) ?? paresPorFondo.set(nf, new Set()).get(nf)).add(tp.origin?.name ?? tp.name)
+  }
+}
+const invierte = (n) => {
+  const t = colores.find((x) => (x.origin?.name ?? x.name) === n)
+  const v = t && valores(t)
+  return v ? v.light !== v.dark : null
+}
+
 // Un semántico que no invierte y no lleva `Static` es el defecto C1 de foundations.
 // ⚠️ Con la MISMA excepción de categoría que `auditar-foundations.mjs`: un tinte
 // de sombra no es superficie ni primer plano, así que la convención `Static` no
@@ -219,7 +269,19 @@ for (const [n, usos] of consumidos) {
   const val = t && valores(t)
   if (!val) continue
   if (val.light === val.dark && !/Static$/.test(n)) {
-    add("B3-semantico-roto", "alto", n, `el componente lo usa ${usos}×, y no invierte (${val.light} en ambos modes) sin llevar \`Static\` — defecto C1 de \`docs:foundations\``)
+    // 🟢 EXCEPCIÓN DEL COROLARIO STATIC, ya fijada en el sistema el 17 ago 2026:
+    // «un fondo que no cambia por mode obliga a un texto que tampoco cambie».
+    // Si es un fondo que no invierte Y todo lo que el componente pone encima
+    // tampoco invierte, el par es correcto por construcción — no un token sin
+    // adaptar. Es el caso de `background/selected` + `text/primaryInverseStatic`,
+    // que ya dictaminé a mano y el auditor seguía marcando.
+    const encima = [...(paresPorFondo.get(n) ?? [])]
+    const parCoherente = /^background\//.test(n) && encima.length > 0 && encima.every((fg) => invierte(fg) === false)
+    if (parCoherente) {
+      add("B3-par-static", "informativo", n, `no invierte, y **es correcto**: todo lo que el componente pone encima tampoco invierte (${encima.join(", ")}). Corolario Static del 17 ago — el par es deliberado, no un token sin adaptar`)
+    } else {
+      add("B3-semantico-roto", "alto", n, `el componente lo usa ${usos}×, y no invierte (${val.light} en ambos modes) sin llevar \`Static\` — defecto C1 de \`docs:foundations\``)
+    }
   }
 }
 
@@ -295,14 +357,22 @@ const dias = extraido === "desconocido" ? null : Math.floor((Date.now() - Date.p
 
 const cobertura = [
   { id: "B1-pintura-cruda", que: "Pinturas (fill, stroke, text fill) con variable enlazada", n: b1Pinturas, N: b1Pinturas },
-  { id: "B2-geometria-cruda", que: "Propiedades dimensionales con token", n: b2Props, N: b2Props },
+  {
+    id: "B2-geometria-cruda",
+    que: `Propiedades dimensionales que el extractor SÍ puede mostrar (${MEDIBLES.join(", ") || "ninguna"})`,
+    n: b2Props,
+    N: b2Props,
+    nota: CIEGAS.length
+      ? `🔴 **${CIEGAS.length} propiedades NO medibles desde la extracción y excluidas: ${CIEGAS.join(", ")}.** *Ninguna de las ${N} variantes trae token para ellas, así que el extractor es ciego y su \`null\` no prueba ausencia de binding.* **Se comprueban en Figma en vivo, no aquí.** Estado verificado el 4 sep 2026: \`strokeWeight\` 60/60 (width/xs·s·m) y \`cornerRadius\` 60/60 (radius/l).`
+      : "",
+  },
   { id: "B3-semantico-roto", que: "Semánticos consumidos, cruzados con los defectos de foundations", n: consumidos.size, N: consumidos.size },
   { id: "B4-contraste-real", que: "Pares reales primer-plano/relleno del propio componente × 2 modes", n: b4Pares, N: b4Pares },
   { id: "B5-tokens-de-componente", que: "Existencia de capa de tokens de componente", n: 1, N: 1 },
 ]
 
 const noCubierto = [
-  `\`cornerRadius\` — **el extractor uSpec es ciego al binding de las esquinas**: emite \`token: null\` en las ${N} aunque estén bindeadas (verificado en vivo el 3 sep 2026, 60 de 60 a \`radius/l\`). Se excluye de B2 a propósito. **Comprobarlo exige Figma en vivo, no esta extracción.**`,
+  `**El \`_base.json\` NO exporta \`boundVariables\`**, así que ninguna propiedad cuyo binding viva ahí es medible desde la extracción. Hoy son ${CIEGAS.length}: ${CIEGAS.join(", ")}. *Se detectan solas —cero tokens en ${N} variantes— y se excluyen de B2 declarándolo.* 🔴 **Un \`null\` en una propiedad ciega no es un valor crudo: es una pregunta mal formulada.**`,
   `**Estados que no existen en Figma** — \`isLoading\` se decidió el 31 ago y no tiene variante. Un estado ausente no es medible desde la extracción.`,
   `**Motion, comportamiento y responsive** — no salen de Figma. Son los slots humanos del \`.md\`, y su done es editorial, no mecánico.`,
   `**Contraste contra la superficie de la página** — las variantes sin relleno propio (${b4NoMedibles.length}) dependen de dónde se coloque el botón. Listadas abajo, no omitidas.`,
