@@ -26,3 +26,34 @@ spec-origen/
 **El 27 de agosto la tarea 4.18 rehízo la geometría del Button.** El 3 de septiembre se descubrió que la página publicaba radios que ya no existían —8, 12 y 24 donde el componente tiene 16— y que la afirmación del `.md` sobre el radio **nunca se había verificado**: el extractor no lee el binding de las esquinas y la fila salió marcada `inferred`.
 
 **Nada de eso se vio venir porque los insumos estaban repartidos** —el contexto en `Componentes/`, el `_base.json` en `_extraccion/`, la caché en `.uspec-cache/`— *y ninguno de los tres sitios se llamaba «lo que entra».* **Esta carpeta es ese sitio.**
+
+---
+
+## Política del `_contexto-para-pegar.txt` — una sola copia, y se verifica antes de extraer
+
+**Regla:** cada componente tiene **exactamente un** `spec-origen/<slug>/_contexto-para-pegar.txt`. *El histórico vive en git, igual que se decidió para los `_base.json`.*
+
+🔴 **No se hacen copias «por si acaso».** *Una segunda copia se congela el día que se crea y nadie vuelve a ella — ya pasó con una del 20 de agosto.* **Si necesitas la versión de una fecha, `git show <commit>:<ruta>`.**
+
+**Se actualiza QUITANDO lo que dejó de ser cierto, no apilando una capa encima.** *Un contexto que acumula es exactamente cómo se envenenó cinco veces.*
+
+### Antes de pedir la extracción
+
+```bash
+npm run uspec:contexto      # sale 1 si el contexto no está listo
+```
+
+**Comprueba cuatro cosas** — una sola copia · fecha de revisión declarada · frescura contra la última auditoría · **coherencia del bloque `ESTADO-VERIFICABLE` contra `comp:auditar`**.
+
+**El bloque `ESTADO-VERIFICABLE` es obligatorio** y va en la cabecera del `.txt`:
+
+```
+ESTADO-VERIFICABLE — lo lee `npm run uspec:contexto`. Si mientes aquí, falla.
+  strokeWeight: bindeado
+  cornerRadius: bindeado
+  ...
+```
+
+🔴 **Existe porque parsear la prosa no funciona.** *Se intentó: con el contexto envenenado no detectaba nada —decía «el grosor CRUDO» y el check buscaba «strokeWeight»— y al arreglarlo empezó a disparar sobre el contexto bueno, porque «ninguna cruda» contiene la palabra que busca.* **Un check que grita en falso se ignora, igual que una puerta que bloquea siempre se salta.**
+
+🟢 **Y escribir el bloque a mano es el punto del ejercicio: es el momento en que alguien tiene que mirar el estado real.**

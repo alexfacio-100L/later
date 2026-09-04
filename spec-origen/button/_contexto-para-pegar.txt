@@ -6,6 +6,15 @@ grosor de borde quedó tokenizado (60/60) y varios tokens de color cambiaron de
 alias. Todo lo que sigue está contrastado contra Figma a esa fecha.
 Ten en cuenta:
 
+ESTADO-VERIFICABLE — lo lee `npm run uspec:contexto`. Si mientes aquí, falla.
+  strokeWeight: bindeado
+  cornerRadius: bindeado
+  minHeight: bindeado
+  minWidth: bindeado
+  paddingInline: bindeado
+  paddingBlock: bindeado
+  itemSpacing: bindeado
+
 NOMBRES DE PROPIEDAD (cambiaron; la documentación anterior está caduca)
 - El eje "Type" ahora se llama "variant". Se renombró porque `type` está
   reservado en HTML para el tipo de botón (button/submit/reset).
