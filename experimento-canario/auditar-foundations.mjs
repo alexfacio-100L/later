@@ -161,9 +161,22 @@ const add = (check, severidad, token, detalle) => defectos.push({ check, severid
  * modes lleva sufijo `Static`. La convención es, por tanto, una prueba ejecutable
  * en las dos direcciones. */
 
+// 🔴 EXCEPCIÓN DE CATEGORÍA, y arreglarla quitó 13 falsos positivos.
+// La convención `Static` se escribió para SUPERFICIES y PRIMEROS PLANOS: cosas
+// que se dibujan una sobre otra y cuyo par hay que juzgar. Un TINTE DE SOMBRA
+// no es ninguna de las dos: no se posa sobre nada, es el color de un efecto.
+// Exigirle que invierta o que lleve `Static` es aplicarle una regla de otra
+// familia — y eso marcaba los 13 `shadow/*` como defecto, incluido el que más
+// bloqueaba al Button (42 usos).
+// ⚠️ Lo que SÍ es pregunta abierta, y es de DISEÑO, no de token: si la
+// elevación debe seguir leyéndose en Dark. Un tinte #0E1F35 sobre un lienzo
+// negro no se ve. Eso lo decide el Lead; no lo decide este check.
+const TINTE = /^(shadow|shadowTint)\//
 let c1n = 0
+const c1Exentos = []
 for (const t of idx) {
   c1n++
+  if (TINTE.test(t.nombre)) { c1Exentos.push(t.nombre); continue }
   const igual = t.light.hex === t.dark.hex && t.light.alfa === t.dark.alfa
   if (igual && !t.esStatic) {
     add("C1-inversion", "alto", t.nombre, `no invierte (${t.light.hex} en ambos modes) y no lleva sufijo Static`)
@@ -403,7 +416,10 @@ const cobertura = [
     que: "Inversión por mode contra la convención Static, en las dos direcciones",
     n: c1n,
     N: N_SEM,
-    nota: noResueltos.length ? `${noResueltos.length} sin valor resoluble: ${noResueltos.join(", ")}` : "",
+    nota: [
+      noResueltos.length ? `${noResueltos.length} sin valor resoluble: ${noResueltos.join(", ")}.` : "",
+      c1Exentos.length ? `⚪ **${c1Exentos.length} tintes de sombra exentos por categoría** (\`shadow/*\`): un tinte no es superficie ni primer plano, y la convención \`Static\` se escribió para esos. **Lo que sí queda abierto, y es decisión de diseño: si la elevación debe leerse en Dark.**` : "",
+    ].filter(Boolean).join(" "),
   },
   {
     id: "C2-contraste",

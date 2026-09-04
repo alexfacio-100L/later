@@ -207,7 +207,14 @@ for (const v of variantes) {
   }
 }
 // Un semántico que no invierte y no lleva `Static` es el defecto C1 de foundations.
+// ⚠️ Con la MISMA excepción de categoría que `auditar-foundations.mjs`: un tinte
+// de sombra no es superficie ni primer plano, así que la convención `Static` no
+// le aplica. **La regla vive duplicada en los dos scripts y eso es deuda** — la
+// misma forma de deuda que el troceador de tablas. Si cambia, cambia en los dos.
+const TINTE = /^(shadow|shadowTint)\//
+const b3Exentos = []
 for (const [n, usos] of consumidos) {
+  if (TINTE.test(n)) { b3Exentos.push(`${n} (${usos}×)`); continue }
   const t = colores.find((x) => (x.origin?.name ?? x.name) === n)
   const val = t && valores(t)
   if (!val) continue
@@ -299,6 +306,7 @@ const noCubierto = [
   `**Estados que no existen en Figma** — \`isLoading\` se decidió el 31 ago y no tiene variante. Un estado ausente no es medible desde la extracción.`,
   `**Motion, comportamiento y responsive** — no salen de Figma. Son los slots humanos del \`.md\`, y su done es editorial, no mecánico.`,
   `**Contraste contra la superficie de la página** — las variantes sin relleno propio (${b4NoMedibles.length}) dependen de dónde se coloque el botón. Listadas abajo, no omitidas.`,
+  b3Exentos.length ? `**Tintes de sombra exentos de B3 por categoría** (${b3Exentos.join(", ")}): un tinte no es superficie ni primer plano. **Lo que sí queda abierto es de diseño: si la elevación debe leerse en Dark.**` : "",
   `**Accesibilidad no cromática** — foco visible real, orden de tabulación, nombre accesible. No es medible desde geometría ni color.`,
 ]
 
