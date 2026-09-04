@@ -115,6 +115,43 @@ const valores = (t) => {
 const defectos = []
 const add = (check, sev, donde, detalle) => defectos.push({ check, severidad: sev, donde, detalle })
 
+/* ─────────── B0 · Frescura de la extracción contra Supernova ───────────
+ * El 4 sep 2026 el Lead activó el sincronizado horario de Figma para
+ * COMPONENTES (no para variables). Eso hace, por primera vez, que el
+ * `updatedAt` del componente en Supernova pueda servir de señal de deriva:
+ * si el componente cambió después de la extracción, `_base.json` está viejo
+ * y nadie se entera — ni `uspec:origen`, que compara la caché contra
+ * `spec-origen/`, no la extracción contra Figma.
+ *
+ * 🔴 PERO LA SEÑAL NO ESTÁ PROBADA, y por eso esto INFORMA y no bloquea.
+ * En la primera corrida tras activar el auto-sync, el `updatedAt` del Button
+ * marcaba el 19 de agosto — más viejo que la extracción del 3 de septiembre.
+ * O el auto-sync todavía no había pasado, o no toca este campo.
+ * **Un campo que no se ha visto moverse no prueba ausencia de cambio.**
+ * Se promueve a bloqueante cuando se observe que avanza. */
+let frescura = null
+try {
+  const comps = await sdk.components.getComponents(ref)
+  const c = comps.find((x) => new RegExp(`^${SLUG}$`, "i").test(x.name ?? ""))
+  if (c?.updatedAt && base._meta?.extractedAt) {
+    const dSN = Date.parse(c.updatedAt), dEx = Date.parse(base._meta.extractedAt)
+    frescura = {
+      supernova: c.updatedAt,
+      extraccion: base._meta.extractedAt,
+      veredicto:
+        dSN > dEx
+          ? "🔴 Supernova tiene el componente MÁS NUEVO que la extracción: re-extrae antes de interpretar"
+          : "⚪ Supernova no reporta cambios posteriores — pero ver la advertencia de señal no probada",
+      senalProbada: false,
+    }
+    if (dSN > dEx) add("B0-extraccion-vieja", "alto", SLUG, `Supernova marca ${c.updatedAt} y la extracción es de ${base._meta.extractedAt}. El componente cambió después, así que la extracción describe otra cosa`)
+  } else {
+    frescura = { veredicto: "⚠️ No comparable: falta `updatedAt` en Supernova o `extractedAt` en la extracción", senalProbada: false }
+  }
+} catch (e) {
+  frescura = { veredicto: `⚠️ No se pudo consultar Supernova: ${String(e.message).slice(0, 120)}`, senalProbada: false }
+}
+
 /* ─────────── B1 · Pintura sin variable ─────────── */
 let b1Pinturas = 0
 const crudas = new Map()
@@ -270,7 +307,7 @@ defectos.sort((a, b) => orden[a.severidad] - orden[b.severidad] || a.check.local
 const bloqueantes = defectos.filter((d) => d.severidad === "crítico" || d.severidad === "alto")
 
 if (JSON_OUT) {
-  console.log(JSON.stringify({ slug: SLUG, extraido, N, cobertura, noCubierto, defectos, consumidos: [...consumidos] }, null, 2))
+  console.log(JSON.stringify({ slug: SLUG, extraido, frescura, N, cobertura, noCubierto, defectos, consumidos: [...consumidos] }, null, 2))
 } else {
   const md = []
   const p = (s = "") => (MD_OUT ? md.push(s) : console.log(s))
@@ -278,6 +315,11 @@ if (JSON_OUT) {
   p()
   p(`**Corrida:** ${new Date().toISOString().slice(0, 16).replace("T", " ")} · **Variantes:** ${N}`)
   p(`**Extracción leída:** ${extraido}${dias !== null ? ` (hace ${dias} día${dias === 1 ? "" : "s"})` : ""}`)
+  if (frescura) {
+    p(`**Frescura contra Supernova:** ${frescura.veredicto}`)
+    p(`> ⚠️ **Señal no probada.** El sincronizado horario de Figma cubre componentes, no variables. *No se ha observado que \`updatedAt\` avance con él*, así que este check **informa y no bloquea**. Se promueve a bloqueante el día que se vea moverse.`)
+    p()
+  }
   p(dias !== null && dias > 3 ? `> ⚠️ **La extracción tiene ${dias} días.** Esto audita el componente de esa fecha, no el de hoy. Re-extrae antes de declarar nada cerrado.` : `> 🟢 Extracción reciente.`)
   p()
   p(`## Cobertura declarada`)
