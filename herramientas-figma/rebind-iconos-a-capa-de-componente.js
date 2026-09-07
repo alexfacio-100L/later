@@ -1,22 +1,34 @@
 /* ============================================================================
- * rebind-iconos-consola.js — pegar en la consola del plugin de Figma
+ * rebind-iconos-a-capa-de-componente.js — pegar en Scripter (plugin de Figma)
  * ----------------------------------------------------------------------------
  * QUE HACE
- *   Liga las pinturas de los iconos del Button a los tokens de componente
- *   (button/icon/*). Es la parte que el puente MCP NO pudo hacer.
+ *   Liga las pinturas de los iconos de un componente a su capa de tokens de
+ *   componente. Es la parte que el puente MCP NO puede hacer.
  *
- * POR QUE EXISTE, y es un limite de instrumento medido el 7 sep 2026:
- *   Los iconos del Button son INSTANCIAS (iconLeft / iconRight de Phosphor).
- *   Desde `use_figma` la instancia devuelve `children: []` y `findAll()` no la
- *   atraviesa; `getMainComponentAsync()` resuelve el main pero no destraba los
- *   hijos, y el id sintetico `I<inst>;<hijo>` no resuelve con
- *   `getNodeByIdAsync`. Resultado: 63 de 120 pinturas de icono quedaron
- *   ligadas y 57 no. Dentro del plugin, en cambio, el arbol es accesible.
+ * [CRITICO] POR QUE EXISTE — es un limite de instrumento MEDIDO, no una manía:
+ *   Los iconos son INSTANCIAS. Desde `use_figma` la instancia devuelve
+ *   `children: []`, `findAll()` no la atraviesa, el id sintetico
+ *   `I<instancia>;<hijo>` no resuelve con `getNodeByIdAsync`, y cargar el main
+ *   con `getMainComponentAsync()` tampoco lo destraba. Lo unico que si lo ve es
+ *   `instancia.overrides`, que prueba que el hijo existe.
+ *   Verificado en vivo el 7 sep 2026, y RE-VERIFICADO ese mismo dia: el limite
+ *   sigue en pie. Dentro del plugin, en cambio, el arbol es accesible.
  *
- *   [CRITICO] Lo que esto ensena y por que el script se versiona: la
- *   verificacion se hizo con la MISMA traversal que el rebind, asi que no
- *   podia revelar lo que ambos se saltaban. Lo destapo el colorWalk de la
- *   extraccion, que es un instrumento independiente.
+ *   NO LO BORRES por no haberse vuelto a usar: el siguiente componente con
+ *   iconos lo va a necesitar igual.
+ *
+ * ESTADO EN EL BUTTON — ya aplicado, cerrado el 7 sep 2026
+ *   El rebind por MCP dejo 63 de 120 pinturas ligadas; las otras 57 vivian
+ *   dentro de instancias. Este script cerro las 120. *Ese 63 era el estado que
+ *   lo motivo, no su resultado.*
+ *
+ *   [OJO] Scripter NO imprime el valor devuelto por una funcion `async`, asi
+ *   que el script parece no decir nada y en realidad ya trabajo. Mira la
+ *   consola: los `console.log` si salen.
+ *
+ * COMO SE ADAPTA A OTRO COMPONENTE
+ *   Cambia SET_ID y MAPA. El resto es generico: recorre los slots de icono por
+ *   nombre de capa, aplica la guarda de valor y emite cobertura.
  *
  * ES SEGURO
  *   - Guarda de valor: solo reescribe si el token actual es EXACTAMENTE el
@@ -30,7 +42,8 @@
  *   resumen con cobertura `n de N`.
  * ========================================================================== */
 (async () => {
-  const SET_ID = '3566:3197'
+  const SET_ID = '3566:3197'                       // el component set
+  const SLOTS  = ['iconLeft', 'iconRight']         // nombres de capa de los slots de icono
   const set = await figma.getNodeByIdAsync(SET_ID)
   if (!set) throw new Error('No se encontro el component set ' + SET_ID)
 
@@ -69,7 +82,7 @@
     if (!byName[destino]) { log.saltadas.push(`falta la variable ${destino}`); continue }
 
     // Los dos slots de icono, por nombre de capa; dentro, todo lo que pinte.
-    for (const slot of variante.findAll((n) => n.name === 'iconLeft' || n.name === 'iconRight')) {
+    for (const slot of variante.findAll((n) => SLOTS.includes(n.name))) {
       const dentro = slot.findAll ? slot.findAll(() => true) : []
       for (const n of [slot, ...dentro]) {
         if (typeof n.fills === 'undefined') continue
