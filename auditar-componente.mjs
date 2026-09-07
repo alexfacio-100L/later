@@ -51,6 +51,7 @@
 import { apiKey } from "./experimento-canario/entorno.mjs"
 import sdkPkg from "@supernovaio/sdk"
 import { readFileSync, writeFileSync, existsSync } from "node:fs"
+import { selloLocal, fechaLocal, aInstante } from "./fecha.mjs"
 
 const { Supernova } = sdkPkg
 const ARGS = process.argv.slice(2)
@@ -192,10 +193,12 @@ try {
   const comps = await sdk.components.getComponents(ref)
   const c = comps.find((x) => new RegExp(`^${SLUG}$`, "i").test(x.name ?? ""))
   if (c?.updatedAt && base._meta?.extractedAt) {
-    const dSN = Date.parse(c.updatedAt), dEx = Date.parse(base._meta.extractedAt)
+    const dSN = aInstante(c.updatedAt), dEx = aInstante(base._meta.extractedAt)
     frescura = {
-      supernova: c.updatedAt,
-      extraccion: base._meta.extractedAt,
+      supernova: selloLocal(c.updatedAt),
+      extraccion: selloLocal(base._meta.extractedAt),
+      supernovaUTC: new Date(dSN).toISOString(),
+      extraccionUTC: new Date(dEx).toISOString(),
       veredicto:
         dSN > dEx
           ? "⚪ Supernova marca el componente más nuevo que la extracción — pero el sello se mueve también por pushes de variables y por el sincronizado horario, así que NO prueba deriva estructural"
@@ -207,7 +210,7 @@ try {
         "B0-extraccion-vieja",
         "informativo",
         SLUG,
-        `Supernova marca ${c.updatedAt} y la extracción es de ${base._meta.extractedAt}. **No es prueba de deriva**: el sello se mueve también con un push de variables o con el sincronizado horario, y los valores de token de este informe se leen en vivo. Si has TOCADO el componente desde entonces, re-extrae; si no, ignóralo`,
+        `Supernova marca ${selloLocal(c.updatedAt)} y la extracción es de ${selloLocal(base._meta.extractedAt)}. **No es prueba de deriva**: el sello se mueve también con un push de variables o con el sincronizado horario, y los valores de token de este informe se leen en vivo. Si has TOCADO el componente desde entonces, re-extrae; si no, ignóralo`,
       )
   } else {
     frescura = { veredicto: "⚠️ No comparable: falta `updatedAt` en Supernova o `extractedAt` en la extracción", senalProbada: false }
@@ -477,7 +480,7 @@ if (deComponente.length === 0) {
 
 /* ─────────── Informe ─────────── */
 const extraido = base._meta?.extractedAt ?? "desconocido"
-const dias = extraido === "desconocido" ? null : Math.floor((Date.now() - Date.parse(extraido)) / 86400000)
+const dias = extraido === "desconocido" ? null : Math.floor((Date.now() - aInstante(extraido)) / 86400000)
 
 const cobertura = [
   { id: "B0b-extraccion-incoherente", que: "Roles (variante × estado × capa × propiedad) con un solo token en toda la extracción", n: rolesB0b.size - incoherentes.length, N: rolesB0b.size },
@@ -518,8 +521,12 @@ if (JSON_OUT) {
   const p = (s = "") => (MD_OUT ? md.push(s) : console.log(s))
   p(`# Defectos de componente — \`${SLUG}\``)
   p()
-  p(`**Corrida:** ${new Date().toISOString().slice(0, 16).replace("T", " ")} · **Variantes:** ${N}`)
-  p(`**Extracción leída:** ${extraido}${dias !== null ? ` (hace ${dias} día${dias === 1 ? "" : "s"})` : ""}`)
+  /* 🔴 La `Corrida:` se emite en hora LOCAL con su zona, y `uspec:contexto` la
+   * relee como medianoche local. Antes se escribía en UTC y se releía como
+   * local: una auditoría de las 19:00 de México se guardaba con la fecha del
+   * día siguiente y C3 la leía como «un día después de la revisión». */
+  p(`**Corrida:** ${selloLocal(Date.now())} · **Variantes:** ${N}`)
+  p(`**Extracción leída:** ${extraido === "desconocido" ? extraido : selloLocal(extraido)}${dias !== null ? ` (hace ${dias} día${dias === 1 ? "" : "s"})` : ""}`)
   if (frescura) {
     p(`**Frescura contra Supernova:** ${frescura.veredicto}`)
     p(`> ⚠️ **Señal descartada como bloqueante, con evidencia.** El 7 sep 2026 \`updatedAt\` avanzó por un **push de variables**, no por una edición del componente, y \`B0\` marcó un falso positivo. *El sello es de componente; la extracción solo necesita estar fresca para la **estructura**, y los valores de token se leen en vivo aquí.* **Este check informa y NO bloquea, y no se va a promover:** con sincronizado horario dispararía cada hora, y una puerta que bloquea siempre se acaba saltando. **La defensa real es re-extraer después de tocar el componente.**`)

@@ -31,6 +31,7 @@ import { readFileSync, existsSync, statSync } from "node:fs"
 import { execFileSync, spawnSync } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
+import { selloLocal, fechaLocal, desdeFechaLocal, aInstante, ZONA } from "./fecha.mjs"
 
 const RAIZ = dirname(fileURLToPath(import.meta.url))
 const ARGS = process.argv.slice(2)
@@ -70,8 +71,9 @@ let fechaRevision = null
 if (!m || !(m[2].toLowerCase() in MESES)) {
   F("C2-fecha", 'El contexto no declara fecha de revisión. Añade en la cabecera: "Revisado entero el <D> de <mes> de <AAAA> contra el estado de ese día."')
 } else {
-  fechaRevision = new Date(+m[3], MESES[m[2].toLowerCase()], +m[1])
-  OK("C2-fecha", `Revisión declarada: ${fechaRevision.toISOString().slice(0, 10)}`)
+  const iso = `${m[3]}-${String(MESES[m[2].toLowerCase()] + 1).padStart(2, "0")}-${String(+m[1]).padStart(2, "0")}`
+  fechaRevision = new Date(desdeFechaLocal(iso))
+  OK("C2-fecha", `Revisión declarada: ${iso} (medianoche ${ZONA})`)
 }
 
 /* ── C3 · Frescura contra lo que sí sabemos que cambió ──────────────────
@@ -82,10 +84,10 @@ const INFORME = resolve(RAIZ, `../2. Proyecto/Diagnóstico/defectos-componente-$
 if (fechaRevision && existsSync(INFORME)) {
   const mi = readFileSync(INFORME, "utf8").match(/\*\*Corrida:\*\*\s*(\d{4}-\d{2}-\d{2})/)
   if (mi) {
-    const fInf = new Date(mi[1] + "T00:00:00")
+    const fInf = new Date(desdeFechaLocal(mi[1]))  // la `Corrida:` se escribe en hora local
     const dias = Math.round((fInf - fechaRevision) / 86400000)
-    if (dias > 0) F("C3-frescura", `El contexto se revisó el ${fechaRevision.toISOString().slice(0,10)} y la última auditoría del componente es del ${mi[1]} (${dias} día(s) después). Hubo cambios que el contexto no puede reflejar.`)
-    else OK("C3-frescura", `Revisión (${fechaRevision.toISOString().slice(0,10)}) al día con la última auditoría (${mi[1]})`)
+    if (dias > 0) F("C3-frescura", `El contexto se revisó el ${fechaLocal(fechaRevision)} y la última auditoría del componente es del ${mi[1]} (${dias} día(s) después). Hubo cambios que el contexto no puede reflejar.`)
+    else OK("C3-frescura", `Revisión (${fechaLocal(fechaRevision)}) al día con la última auditoría (${mi[1]})`)
   } else A("C3-frescura", "El informe de defectos no declara `Corrida:`; frescura NO comprobada")
 } else if (!existsSync(INFORME)) A("C3-frescura", `No hay informe de defectos para '${SLUG}'. Corre \`npm run comp:auditar:md\` primero — frescura NO comprobada`)
 
@@ -154,9 +156,9 @@ if (!informe) {
         // revisión del contexto, lo viejo es la AUDITORÍA, no el contexto — es
         // justo la señal de que toca re-extraer. Tratarlo como mentira del
         // contexto mandaría a "corregir" algo que ya está bien.
-        const extraidoAntes = informe.extraido && fechaRevision && Date.parse(informe.extraido) < fechaRevision.getTime()
+        const extraidoAntes = informe.extraido && fechaRevision && aInstante(informe.extraido) < fechaRevision.getTime()
         if (extraidoAntes) {
-          A("C4-contradiccion", `El contexto declara \`${prop}: bindeado\` y \`comp:auditar\` lo ve crudo — pero la extracción es del ${String(informe.extraido).slice(0,10)}, ANTERIOR a la revisión del contexto. No es una mentira del contexto: es la extracción que va vieja. 🔴 RE-EXTRAE ANTES DE DOCUMENTAR (lo corre el Lead con el plugin uSpec).`)
+          A("C4-contradiccion", `El contexto declara \`${prop}: bindeado\` y \`comp:auditar\` lo ve crudo — pero la extracción es del ${selloLocal(informe.extraido)}, ANTERIOR a la revisión del contexto. No es una mentira del contexto: es la extracción que va vieja. 🔴 RE-EXTRAE ANTES DE DOCUMENTAR (lo corre el Lead con el plugin uSpec).`)
         } else {
           contradicciones++
           F("C4-contradiccion", `El contexto declara \`${prop}: bindeado\` y \`comp:auditar\` SÍ lo reporta crudo, con una extracción posterior a la revisión. El contexto afirma de más.`)
@@ -193,9 +195,9 @@ if (informe) {
     } else {
       const dice = d.capaDeComponente === "si"
       const auditoriaVeCapa = !informe.defectos.some((x) => x.check === "B5-tokens-de-componente")
-      const extraidoAntes = informe.extraido && fechaRevision && Date.parse(informe.extraido) < fechaRevision.getTime()
+      const extraidoAntes = informe.extraido && fechaRevision && aInstante(informe.extraido) < fechaRevision.getTime()
       if (dice && !auditoriaVeCapa) {
-        if (extraidoAntes) A("C5-capa-componente", `El contexto declara capa de componente (${d.coleccion}, ${d.tokensDeComponente} tokens) y \`comp:auditar\` no la ve — pero la extracción es del ${String(informe.extraido).slice(0,10)}, ANTERIOR a la revisión. No es una mentira del contexto: es la extracción que va vieja. 🔴 RE-EXTRAE ANTES DE DOCUMENTAR.`)
+        if (extraidoAntes) A("C5-capa-componente", `El contexto declara capa de componente (${d.coleccion}, ${d.tokensDeComponente} tokens) y \`comp:auditar\` no la ve — pero la extracción es del ${selloLocal(informe.extraido)}, ANTERIOR a la revisión. No es una mentira del contexto: es la extracción que va vieja. 🔴 RE-EXTRAE ANTES DE DOCUMENTAR.`)
         else F("C5-capa-componente", `El contexto declara capa de componente y \`comp:auditar\` NO la ve, con una extracción posterior a la revisión. El contexto afirma de más.`)
       } else if (!dice && auditoriaVeCapa) {
         F("C5-capa-componente", `\`comp:auditar\` ve capa de tokens de componente y el contexto declara \`capaDeComponente: no\`. Pegarlo así documentaría el componente consumiendo semánticos directos. Actualiza el contexto.`)
@@ -276,7 +278,7 @@ if (fallos.length) {
  * la capa de componente entera, y el Lead se salvó porque preguntó — la segunda
  * vez que le salva la misma pregunta humana. Un verificador que no puede juzgar
  * completitud no debe imprimir una frase que se lee como si pudiera. */
-const fechaTxt = fechaRevision ? fechaRevision.toISOString().slice(0, 10) : "(sin fecha)"
+const fechaTxt = fechaRevision ? fechaLocal(fechaRevision) : "(sin fecha)"
 console.log(`\n🟢 Sin contradicciones detectables — ${oks.length} check(s) pasados.`)
 console.log(`\n⚠️  ESTO NO DICE QUE EL CONTEXTO ESTÉ COMPLETO.`)
 console.log(`   Detecta lo que sobra y lo que ha caducado; no puede ver lo que falta.`)
