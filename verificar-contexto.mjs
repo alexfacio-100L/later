@@ -28,7 +28,7 @@
  */
 
 import { readFileSync, existsSync, statSync } from "node:fs"
-import { execFileSync } from "node:child_process"
+import { execFileSync, spawnSync } from "node:child_process"
 import { fileURLToPath } from "node:url"
 import { dirname, resolve } from "node:path"
 
@@ -93,10 +93,23 @@ if (fechaRevision && existsSync(INFORME)) {
  * Es el check que habría cazado los cinco envenenamientos. Busca en el contexto
  * afirmaciones de "sigue crudo / defecto abierto" sobre una propiedad, y las
  * contrasta contra `comp:auditar`. */
+/* 🔴 `spawnSync`, NO `execFileSync`, y la razón es un fallo latente cazado el
+ * 7 sep 2026: `execFileSync` LANZA cuando el hijo sale con código distinto de
+ * cero, y en el error Node entrega el stdout TRUNCADO A 64 KB — se ignora el
+ * `maxBuffer`. El informe del auditor pesa 170 KB, así que el `JSON.parse` del
+ * catch fallaba con «Unterminated string» y C4/C5 quedaban sin comprobar.
+ *
+ * Y el detalle que lo hacía peligroso: `comp:auditar` sale con 1 EXACTAMENTE
+ * cuando hay defectos bloqueantes. **La guarda se quedaba ciega justo en el
+ * caso en que hace falta.** `spawnSync` no lanza y devuelve el stdout entero. */
 let informe = null
-try {
-  informe = JSON.parse(execFileSync(process.execPath, [resolve(RAIZ, "auditar-componente.mjs"), SLUG, "--json"], { encoding: "utf8", maxBuffer: 32 * 1024 * 1024 }))
-} catch (e) { try { informe = JSON.parse(e.stdout ?? "") } catch {} }
+{
+  const r = spawnSync(process.execPath, [resolve(RAIZ, "auditar-componente.mjs"), SLUG, "--json"], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 })
+  const salida = r.stdout ?? ""
+  try { informe = JSON.parse(salida) } catch {
+    A("C4-contradiccion", `\`comp:auditar\` corrió (código ${r.status}) pero su salida no es JSON parseable (${salida.length} bytes). La contradicción NO se comprobó.`)
+  }
+}
 
 if (!informe) {
   A("C4-contradiccion", "`comp:auditar` no pudo correr: la contradicción NO se comprobó. No es un aprobado.")

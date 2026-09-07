@@ -33,15 +33,14 @@ DEL COMPONENTE Y LO QUE MÁS CAMBIA CÓMO SE DOCUMENTA.
   rediseño. NO documentes ningún cambio de aspecto.
 - [CRITICO] LO QUE TIENES QUE DOCUMENTAR: el Button consume SU PROPIA CAPA, no los
   semánticos. La tabla de tokens del componente debe listar `button/*`.
-- [CRITICO] Y LA TRAMPA QUE TE VA A PASAR, DEL MISMO TIPO QUE LA DEL RADIO:
-  NO se ha verificado si `_base.json` reporta el token de componente o el
-  semántico final por resolución de alias. Las dos cosas son posibles y se
-  leen igual de bien.
-      · Si ves `button/background/primary` -> correcto, documenta eso.
-      · Si ves `background/brandMain` -> el extractor RESOLVIÓ EL ALIAS.
-        NO lo documentes como consumo directo: el binding real es el token de
-        componente. Dilo en la extracción para que se corrija.
-  En ninguno de los dos casos escribas que el Button consume 17 semánticos.
+- [OK] RESUELTO EL 7 DE SEPTIEMBRE, YA NO ES UNA DUDA. La version anterior de
+  este archivo avisaba de que no se sabia si `_base.json` reportaria el token de
+  componente o el semantico final por resolucion de alias. YA SE SABE:
+  REPORTA EL TOKEN DE COMPONENTE. La extraccion de las 17:58 trajo 81 menciones
+  de `button/`. La trampa del alias NO ocurre: documenta lo que veas.
+- [CRITICO] NO escribas que el Button consume 17 semanticos directos. Consume su
+  propia capa. Los unicos semanticos que toca directo son `border/focus` en los
+  12 focus (decision deliberada, ver abajo) y el tinte de sombra.
 - El mapa completo, token de componente -> semántico al que aliasa:
       button/background/primary            background/brandMain
       button/background/primaryHover       background/brandHover

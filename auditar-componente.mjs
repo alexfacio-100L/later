@@ -14,6 +14,12 @@
  *
  * QUÉ MIDE, Y POR QUÉ ESTOS CHECKS
  * --------------------------------
+ *   B0 · Frescura por timestamp       — INFORMATIVO. El sello se mueve por
+ *                                       pushes de variables y por el auto-sync,
+ *                                       así que no prueba deriva del componente
+ *   B0b· Extracción incoherente        — BLOQUEANTE. El mismo rol ligado a dos
+ *                                       tokens distintos: el árbol se capturó a
+ *                                       medio camino. Mira contenido, no relojes
  *   B1 · Pintura sin variable         — un color crudo no llega a código
  *   B2 · Geometría sin token          — lo mismo, en la capa dimensional
  *   B3 · Semánticos rotos consumidos  — cruza con `docs:foundations`: documentar
@@ -106,6 +112,39 @@ const D = resolver(themes.find((t) => t.codeName === "dark"))
 const porVarId = new Map()
 for (const t of tokens) if (t.origin?.id) porVarId.set(t.origin.id, t)
 
+/* ─────────── La cadena de alias ───────────
+ * 🔴 POR QUÉ EXISTE, y nació de un falso positivo propio el 7 sep 2026.
+ * Al abrir la capa de tokens de componente, `B3` marcó como rotos los tres
+ * `secondaryPressed` — que aliasan a `background/selected`,
+ * `text/primaryInverseStatic` e `icon/inverseStatic`, los tres dictaminados
+ * CORRECTOS dos días antes por el corolario Static.
+ *
+ * La causa: `B3` juzgaba por el NOMBRE (`/Static$/`, `/^background\//`) y el
+ * nombre cambió de sitio al nacer la capa. Una guarda que no sigue al dato
+ * cuando el dato se mueve — el mismo patrón que `B2` midiendo sobre una
+ * fuente ciega.
+ *
+ * La regla: un token de componente que aliasa a un semántico HEREDA lo que
+ * ese semántico sea. Si el semántico está exento, hereda la exención; si
+ * está roto, hereda el defecto — y se dice con la cadena entera delante. */
+const porTokenId = new Map(tokens.map((t) => [t.id, t]))
+const nombreDe = (t) => t.origin?.name ?? t.name
+const cadenaDe = (t) => {
+  const out = []
+  const vistos = new Set()
+  let cur = t
+  while (cur && !vistos.has(cur.id)) {
+    vistos.add(cur.id)
+    out.push(nombreDe(cur))
+    const sig = cur.value?.referencedTokenId
+    cur = sig ? porTokenId.get(sig) : null
+  }
+  return out
+}
+const pintaCadena = (c) => c.join(" → ")
+// ¿Algún eslabón de la cadena cumple el patrón? Es lo que hereda un alias.
+const enCadena = (t, re) => cadenaDe(t).some((n) => re.test(n))
+
 const valores = (t) => {
   const l = L.get(t.id)?.value?.color
   const d = D.get(t.id)?.value?.color
@@ -123,12 +162,31 @@ const add = (check, sev, donde, detalle) => defectos.push({ check, severidad: se
  * y nadie se entera — ni `uspec:origen`, que compara la caché contra
  * `spec-origen/`, no la extracción contra Figma.
  *
- * 🔴 PERO LA SEÑAL NO ESTÁ PROBADA, y por eso esto INFORMA y no bloquea.
- * En la primera corrida tras activar el auto-sync, el `updatedAt` del Button
- * marcaba el 19 de agosto — más viejo que la extracción del 3 de septiembre.
- * O el auto-sync todavía no había pasado, o no toca este campo.
- * **Un campo que no se ha visto moverse no prueba ausencia de cambio.**
- * Se promueve a bloqueante cuando se observe que avanza. */
+ * 🔴 LA SEÑAL YA SE VIO MOVER — Y RESULTÓ NO SERVIR. NO SE PROMUEVE.
+ * La versión anterior decía «se promueve a bloqueante cuando se observe que
+ * avanza». Avanzó el 7 sep 2026 y el resultado fue un FALSO POSITIVO: el
+ * `updatedAt` del Button saltó a las 15:39 por un PUSH DE VARIABLES, no por
+ * una edición del componente. La extracción de las 11:58 seguía describiendo
+ * la estructura correcta.
+ *
+ * La causa es de fondo y no se arregla afinando el umbral: `updatedAt` es un
+ * sello a nivel de COMPONENTE, y la extracción solo necesita estar fresca
+ * para la ESTRUCTURA. Los valores de token se leen en vivo desde Supernova en
+ * esta misma corrida, así que un push de variables no puede caducarla.
+ * **El campo se mueve por razones que no son la que el check quiere detectar.**
+ *
+ * Se descartó la salida obvia —distinguir el auto-sync por su firma de lote,
+ * varios componentes compartiendo sello— porque no es viable: Supernova tiene
+ * hoy DOS componentes, y dos sellos distintos no forman un lote.
+ *
+ * 🔴 Y LA RAZÓN DE NO DEJARLO BLOQUEANDO ES LA REGLA DE LA CASA: con
+ * sincronizado horario esto dispararía cada hora sobre cualquier componente.
+ * Una puerta que bloquea siempre se acaba saltando con `--forzar`, y entonces
+ * no protege de nada. Mejor un aviso que se lee que un rojo que se ignora.
+ *
+ * QUEDA COMO INFORMATIVO, SIEMPRE. La defensa real contra la deriva
+ * estructural es re-extraer después de tocar el componente (E6→E1 del
+ * proceso), no un sello que mide otra cosa. */
 let frescura = null
 try {
   const comps = await sdk.components.getComponents(ref)
@@ -140,16 +198,70 @@ try {
       extraccion: base._meta.extractedAt,
       veredicto:
         dSN > dEx
-          ? "🔴 Supernova tiene el componente MÁS NUEVO que la extracción: re-extrae antes de interpretar"
-          : "⚪ Supernova no reporta cambios posteriores — pero ver la advertencia de señal no probada",
+          ? "⚪ Supernova marca el componente más nuevo que la extracción — pero el sello se mueve también por pushes de variables y por el sincronizado horario, así que NO prueba deriva estructural"
+          : "⚪ Supernova no reporta cambios posteriores",
       senalProbada: false,
     }
-    if (dSN > dEx) add("B0-extraccion-vieja", "alto", SLUG, `Supernova marca ${c.updatedAt} y la extracción es de ${base._meta.extractedAt}. El componente cambió después, así que la extracción describe otra cosa`)
+    if (dSN > dEx)
+      add(
+        "B0-extraccion-vieja",
+        "informativo",
+        SLUG,
+        `Supernova marca ${c.updatedAt} y la extracción es de ${base._meta.extractedAt}. **No es prueba de deriva**: el sello se mueve también con un push de variables o con el sincronizado horario, y los valores de token de este informe se leen en vivo. Si has TOCADO el componente desde entonces, re-extrae; si no, ignóralo`,
+      )
   } else {
     frescura = { veredicto: "⚠️ No comparable: falta `updatedAt` en Supernova o `extractedAt` en la extracción", senalProbada: false }
   }
 } catch (e) {
   frescura = { veredicto: `⚠️ No se pudo consultar Supernova: ${String(e.message).slice(0, 120)}`, senalProbada: false }
+}
+
+/* ─────────── B0b · La extracción es incoherente consigo misma ───────────
+ * 🔴 ESTE ES EL CHECK QUE B0 QUERÍA SER, y nació el 7 sep 2026 de un fallo real.
+ *
+ * `B0` intentaba detectar una extracción vieja por un TIMESTAMP, y el timestamp
+ * se mueve por cosas que no son el componente. Este mira el CONTENIDO, y por eso
+ * no puede fallar en falso.
+ *
+ * La idea: `size` y `surface` NO cambian el token de color de un rol — la propia
+ * extracción lo declara en su `sectionReduction` («surface y size solo alteran el
+ * token de sombra»). Así que si el MISMO rol —misma variante, mismo estado, misma
+ * ruta de capa, misma propiedad— aparece ligado a DOS tokens distintos, no hay
+ * lectura benigna: la extracción capturó el árbol a medio camino.
+ *
+ * El caso que lo destapó: tras abrir la capa de componente, la extracción de las
+ * 17:58 mostraba `3x icon/inverse` y `3x button/icon/primary` para el mismo rol
+ * —3 y 3 son exactamente los ejes size/surface—, mientras Figma en vivo tenía las
+ * 123 pinturas ya en `button/*`. Y sus nodeIds de icono ya no existían.
+ *
+ * 🔴 Y ES BLOQUEANTE, al contrario que B0: una extracción incoherente no describe
+ * ningún estado real del componente, así que documentar desde ella publica una
+ * mezcla de dos momentos. */
+const rolesB0b = new Map()
+for (const v of variantes) {
+  const el = (v.colorWalk ?? [])[0]?.element ?? v.name ?? ""
+  const st = (el.match(/state=([a-zA-Z]+)/) ?? [])[1] ?? "?"
+  const va = (el.match(/variant=([a-zA-Z]+)/) ?? [])[1] ?? "?"
+  for (const p of v.colorWalk ?? []) {
+    if (p.property === "drop shadow" || !p.boundVariableId) continue
+    const t = porVarId.get(p.boundVariableId)
+    const n = t ? nombreDe(t) : `(desconocido ${p.boundVariableId})`
+    const suf = p.path ? p.path.split(" > ").slice(1).join(">") : "(raíz)"
+    const k = `${va} · ${st} · ${suf} · ${p.property}`
+    if (!rolesB0b.has(k)) rolesB0b.set(k, new Map())
+    const m = rolesB0b.get(k)
+    m.set(n, (m.get(n) ?? 0) + 1)
+  }
+}
+const incoherentes = [...rolesB0b].filter(([, m]) => m.size > 1)
+for (const [k, m] of incoherentes) {
+  const reparto = [...m].map(([n, c]) => `${c}× \`${n}\``).join(" y ")
+  add(
+    "B0b-extraccion-incoherente",
+    "crítico",
+    k,
+    `el mismo rol aparece con ${m.size} tokens distintos — ${reparto}. **\`size\` y \`surface\` no cambian el token de color de un rol**, así que esto no tiene lectura benigna: la extracción se capturó a medio camino y describe una mezcla de dos momentos. 🔴 **RE-EXTRAE.**`,
+  )
 }
 
 /* ─────────── B1 · Pintura sin variable ─────────── */
@@ -231,8 +343,10 @@ for (const v of variantes) {
       add("B3-token-desconocido", "alto", p.boundVariableId, `bindeado en \`${p.path || v.name}\` pero no existe en Supernova`)
       continue
     }
-    const n = t.origin?.name ?? t.name
-    consumidos.set(n, (consumidos.get(n) ?? 0) + 1)
+    const n = nombreDe(t)
+    const e = consumidos.get(n) ?? { t, usos: 0 }
+    e.usos++
+    consumidos.set(n, e)
   }
 }
 // Los pares REALES fondo→primer plano del componente, para poder juzgar el
@@ -261,14 +375,17 @@ const invierte = (n) => {
 // de sombra no es superficie ni primer plano, así que la convención `Static` no
 // le aplica. **La regla vive duplicada en los dos scripts y eso es deuda** — la
 // misma forma de deuda que el troceador de tablas. Si cambia, cambia en los dos.
-const TINTE = /^(shadow|shadowTint)\//
+const TINTE = /(^|\/)(shadow|shadowTint)\//
 const b3Exentos = []
-for (const [n, usos] of consumidos) {
-  if (TINTE.test(n)) { b3Exentos.push(`${n} (${usos}×)`); continue }
-  const t = colores.find((x) => (x.origin?.name ?? x.name) === n)
-  const val = t && valores(t)
+for (const [n, { t, usos }] of consumidos) {
+  // 🔴 Los tres patrones se prueban contra la CADENA COMPLETA, no contra el
+  // nombre del token bindeado. Un `button/icon/secondaryPressed` que aliasa a
+  // `icon/inverseStatic` ES Static aunque su propio nombre no lo diga.
+  const cad = cadenaDe(t)
+  if (enCadena(t, TINTE)) { b3Exentos.push(`${pintaCadena(cad)} (${usos}×)`); continue }
+  const val = valores(t)
   if (!val) continue
-  if (val.light === val.dark && !/Static$/.test(n)) {
+  if (val.light === val.dark && !enCadena(t, /Static$/)) {
     // 🟢 EXCEPCIÓN DEL COROLARIO STATIC, ya fijada en el sistema el 17 ago 2026:
     // «un fondo que no cambia por mode obliga a un texto que tampoco cambie».
     // Si es un fondo que no invierte Y todo lo que el componente pone encima
@@ -276,11 +393,13 @@ for (const [n, usos] of consumidos) {
     // adaptar. Es el caso de `background/selected` + `text/primaryInverseStatic`,
     // que ya dictaminé a mano y el auditor seguía marcando.
     const encima = [...(paresPorFondo.get(n) ?? [])]
-    const parCoherente = /^background\//.test(n) && encima.length > 0 && encima.every((fg) => invierte(fg) === false)
+    const esFondo = enCadena(t, /(^|\/)background\//)
+    const parCoherente = esFondo && encima.length > 0 && encima.every((fg) => invierte(fg) === false)
+    const via = cad.length > 1 ? ` (vía ${pintaCadena(cad)})` : ""
     if (parCoherente) {
-      add("B3-par-static", "informativo", n, `no invierte, y **es correcto**: todo lo que el componente pone encima tampoco invierte (${encima.join(", ")}). Corolario Static del 17 ago — el par es deliberado, no un token sin adaptar`)
+      add("B3-par-static", "informativo", n, `no invierte, y **es correcto**${via}: todo lo que el componente pone encima tampoco invierte (${encima.join(", ")}). Corolario Static del 17 ago — el par es deliberado, no un token sin adaptar`)
     } else {
-      add("B3-semantico-roto", "alto", n, `el componente lo usa ${usos}×, y no invierte (${val.light} en ambos modes) sin llevar \`Static\` — defecto C1 de \`docs:foundations\``)
+      add("B3-semantico-roto", "alto", n, `el componente lo usa ${usos}×, y no invierte (${val.light} en ambos modes) sin llevar \`Static\` en ningún eslabón de su cadena${via} — defecto C1 de \`docs:foundations\``)
     }
   }
 }
@@ -291,6 +410,7 @@ for (const [n, usos] of consumidos) {
 let b4Pares = 0
 const b4NoMedibles = []
 const b4Fallos = new Map()
+const b4Cadenas = new Map()
 for (const v of variantes) {
   const paints = (v.colorWalk ?? []).filter((p) => p.property !== "drop shadow")
   const fondo = paints.find((p) => p.property === "fill" && !p.path)
@@ -315,8 +435,9 @@ for (const v of variantes) {
       b4Pares++
       const r = ratio(aRgb(vp[modo]), aRgb(vf[modo]))
       if (r < min) {
-        const clave = `${tp.origin?.name ?? tp.name} sobre ${tf.origin?.name ?? tf.name} · ${modo === "light" ? "Light" : "Dark"} · ${r}:1 (min ${min})`
+        const clave = `${nombreDe(tp)} sobre ${nombreDe(tf)} · ${modo === "light" ? "Light" : "Dark"} · ${r}:1 (min ${min})`
         b4Fallos.set(clave, (b4Fallos.get(clave) ?? 0) + 1)
+        if (!b4Cadenas.has(clave)) b4Cadenas.set(clave, [...cadenaDe(tp), ...cadenaDe(tf)])
       }
     }
   }
@@ -328,7 +449,10 @@ for (const [k, n] of b4Fallos) {
   // el mínimo se reporta para que se vea, no para bloquear. Que un botón
   // deshabilitado sea demasiado tenue sigue siendo decisión de diseño abierta
   // (tarea 4.13, `background/disabled` a 1.30:1 contra el lienzo).
-  const exento = /disabled|placeholder/i.test(k)
+  // Se prueba sobre la CADENA, igual que B3: `button/label/primaryDisabled`
+  // hereda la exención de `text/disabled`, y seguiría heredándola aunque el
+  // token de componente se llamara de otra forma.
+  const exento = /disabled|placeholder/i.test(k) || (b4Cadenas.get(k) ?? []).some((n) => /disabled|placeholder/i.test(n))
   add(
     "B4-contraste-real",
     exento ? "informativo" : r < 3 ? "crítico" : "alto",
@@ -356,6 +480,7 @@ const extraido = base._meta?.extractedAt ?? "desconocido"
 const dias = extraido === "desconocido" ? null : Math.floor((Date.now() - Date.parse(extraido)) / 86400000)
 
 const cobertura = [
+  { id: "B0b-extraccion-incoherente", que: "Roles (variante × estado × capa × propiedad) con un solo token en toda la extracción", n: rolesB0b.size - incoherentes.length, N: rolesB0b.size },
   { id: "B1-pintura-cruda", que: "Pinturas (fill, stroke, text fill) con variable enlazada", n: b1Pinturas, N: b1Pinturas },
   {
     id: "B2-geometria-cruda",
@@ -377,6 +502,8 @@ const noCubierto = [
   `**Motion, comportamiento y responsive** — no salen de Figma. Son los slots humanos del \`.md\`, y su done es editorial, no mecánico.`,
   `**Contraste contra la superficie de la página** — las variantes sin relleno propio (${b4NoMedibles.length}) dependen de dónde se coloque el botón. Listadas abajo, no omitidas.`,
   b3Exentos.length ? `**Tintes de sombra exentos de B3 por categoría** (${b3Exentos.join(", ")}): un tinte no es superficie ni primer plano. **Lo que sí queda abierto es de diseño: si la elevación debe leerse en Dark.**` : "",
+  `**Deriva estructural entre la extracción y Figma.** \`B0b\` caza la extracción capturada a medio camino porque se contradice a sí misma, pero una extracción **coherente y vieja** —tomada limpia antes de un cambio— pasa sin detectarse. *Este script no lee Figma.* 🔴 **La defensa es re-extraer después de tocar el componente (E6→E1), no un check.**`,
+  `**Completitud de la capa de componente.** \`B5\` comprueba que EXISTA, no que esté completa: un componente con un solo token de componente y el resto en semánticos pasa. *La completitud se juzga leyendo la tabla de tokens de arriba, donde cada cadena se muestra entera.*`,
   `**Accesibilidad no cromática** — foco visible real, orden de tabulación, nombre accesible. No es medible desde geometría ni color.`,
 ]
 
@@ -395,7 +522,7 @@ if (JSON_OUT) {
   p(`**Extracción leída:** ${extraido}${dias !== null ? ` (hace ${dias} día${dias === 1 ? "" : "s"})` : ""}`)
   if (frescura) {
     p(`**Frescura contra Supernova:** ${frescura.veredicto}`)
-    p(`> ⚠️ **Señal no probada.** El sincronizado horario de Figma cubre componentes, no variables. *No se ha observado que \`updatedAt\` avance con él*, así que este check **informa y no bloquea**. Se promueve a bloqueante el día que se vea moverse.`)
+    p(`> ⚠️ **Señal descartada como bloqueante, con evidencia.** El 7 sep 2026 \`updatedAt\` avanzó por un **push de variables**, no por una edición del componente, y \`B0\` marcó un falso positivo. *El sello es de componente; la extracción solo necesita estar fresca para la **estructura**, y los valores de token se leen en vivo aquí.* **Este check informa y NO bloquea, y no se va a promover:** con sincronizado horario dispararía cada hora, y una puerta que bloquea siempre se acaba saltando. **La defensa real es re-extraer después de tocar el componente.**`)
     p()
   }
   p(dias !== null && dias > 3 ? `> ⚠️ **La extracción tiene ${dias} días.** Esto audita el componente de esa fecha, no el de hoy. Re-extrae antes de declarar nada cerrado.` : `> 🟢 Extracción reciente.`)
@@ -427,9 +554,19 @@ if (JSON_OUT) {
     p(`| ${i} | \`${d.check}\` | \`${d.donde}\` | ${d.detalle} |`)
   }
   p()
-  p(`## Semánticos que consume (${consumidos.size})`)
+  p(`## Tokens que consume (${consumidos.size})`)
   p()
-  p([...consumidos].sort((a, b) => b[1] - a[1]).map(([n, c]) => `\`${n}\` (${c})`).join(" · "))
+  p(`*Cuando el token es de componente se muestra su cadena de alias: es lo que \`B3\` juzga.*`)
+  p()
+  p(
+    [...consumidos]
+      .sort((a, b) => b[1].usos - a[1].usos)
+      .map(([n, { t, usos }]) => {
+        const c = cadenaDe(t)
+        return c.length > 1 ? `\`${pintaCadena(c)}\` (${usos})` : `\`${n}\` (${usos})`
+      })
+      .join(" · "),
+  )
   if (MD_OUT) {
     const destino = new URL(`../2. Proyecto/Diagnóstico/defectos-componente-${SLUG}.md`, import.meta.url)
     writeFileSync(destino, md.join("\n") + "\n")
@@ -439,6 +576,17 @@ if (JSON_OUT) {
 
 if (bloqueantes.length) {
   console.error(`\n🔴 ${bloqueantes.length} defectos bloqueantes en '${SLUG}'. El componente NO está cerrado: no se documenta.`)
-  process.exit(1)
+  /* 🔴 `process.exitCode`, NUNCA `process.exit(1)`. Cazado el 7 sep 2026:
+   * `process.exit()` corta las escrituras PENDIENTES a stdout cuando stdout es
+   * un pipe —a un fichero son síncronas y no se nota—. El informe `--json` pesa
+   * 170 KB, así que quien lo leía por pipe recibía 65 154 bytes y un JSON
+   * cortado por la mitad.
+   *
+   * Y lo que lo hacía grave: esto solo pasaba con `bloqueantes.length > 0`, es
+   * decir **exactamente cuando hay algo que reportar**. `uspec:contexto` perdía
+   * C4 y C5 justo en el caso en que sirven. Asignar `exitCode` conserva el
+   * código de salida y deja que Node vacíe el buffer antes de terminar. */
+  process.exitCode = 1
+} else {
+  console.log(`\n🟢 '${SLUG}' sin defectos bloqueantes de componente.`)
 }
-console.log(`\n🟢 '${SLUG}' sin defectos bloqueantes de componente.`)
