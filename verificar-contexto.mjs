@@ -154,11 +154,51 @@ if (!informe) {
   }
 }
 
+/* ── C5 · La capa de tokens de componente ───────────────────────────────
+ * POR QUÉ EXISTE, y es un hueco que costó caro el 7 de septiembre: C1–C4 solo
+ * detectan lo que SOBRA o ha CADUCADO. Un dato NUEVO que nadie escribió no
+ * tiene contra qué contrastarse, así que el verificador daba VERDE sobre un
+ * contexto al que le faltaba la capa de componente entera — y el verde se lee
+ * como "listo para pegar".
+ *
+ * No se puede detectar "falta algo" en general sin leer Figma. Lo que SÍ se
+ * puede es exigir que se declare a mano lo que `comp:auditar` sabe medir, que
+ * es el mismo truco de ESTADE-VERIFICABLE: el bloque obliga a mirar. */
+if (informe) {
+  const bloqueCapas = texto.match(/CAPAS-DE-TOKEN[^\n]*\n([\s\S]*?)(\n\s*\n|$)/)
+  if (!bloqueCapas) {
+    F("C5-capa-componente", 'El contexto no lleva bloque CAPAS-DE-TOKEN. Añádelo con `capaDeComponente: si|no`, `coleccion: <nombre>` y `tokensDeComponente: <n>`. Sin él no se puede comprobar si el contexto conoce la capa de componente.')
+  } else {
+    const d = {}
+    for (const l of bloqueCapas[1].split("\n")) {
+      const mm = l.match(/^\s*([A-Za-z]+)\s*:\s*(\S+)\s*$/)
+      if (mm) d[mm[1]] = mm[2]
+    }
+    const faltan = ["capaDeComponente", "coleccion", "tokensDeComponente"].filter((k) => !(k in d))
+    if (faltan.length) {
+      F("C5-capa-componente", `El bloque CAPAS-DE-TOKEN no declara: ${faltan.join(", ")}.`)
+    } else {
+      const dice = d.capaDeComponente === "si"
+      const auditoriaVeCapa = !informe.defectos.some((x) => x.check === "B5-tokens-de-componente")
+      const extraidoAntes = informe.extraido && fechaRevision && Date.parse(informe.extraido) < fechaRevision.getTime()
+      if (dice && !auditoriaVeCapa) {
+        if (extraidoAntes) A("C5-capa-componente", `El contexto declara capa de componente (${d.coleccion}, ${d.tokensDeComponente} tokens) y \`comp:auditar\` no la ve — pero la extracción es del ${String(informe.extraido).slice(0,10)}, ANTERIOR a la revisión. No es una mentira del contexto: es la extracción que va vieja. 🔴 RE-EXTRAE ANTES DE DOCUMENTAR.`)
+        else F("C5-capa-componente", `El contexto declara capa de componente y \`comp:auditar\` NO la ve, con una extracción posterior a la revisión. El contexto afirma de más.`)
+      } else if (!dice && auditoriaVeCapa) {
+        F("C5-capa-componente", `\`comp:auditar\` ve capa de tokens de componente y el contexto declara \`capaDeComponente: no\`. Pegarlo así documentaría el componente consumiendo semánticos directos. Actualiza el contexto.`)
+      } else {
+        OK("C5-capa-componente", `Capa de componente declarada (${d.capaDeComponente}) y coherente con \`comp:auditar\``)
+      }
+    }
+  }
+}
+
 /* ── Informe ─────────────────────────────────────────────────────────── */
 const cobertura = [
   "🔴 NO CUBIERTO — este verificador no lee Figma. Comprueba coherencia entre el contexto y lo que las auditorías ya saben; una afirmación sobre la que ninguna auditoría opina pasa sin verificarse.",
   `🔴 NO CUBIERTO — la prosa sobre COLOR no se contrasta. C4 solo vigila 7 propiedades geométricas, porque son las que \`comp:auditar\` mide como binario crudo/bindeado.`,
-  "🔴 NO CUBIERTO — que el contexto esté COMPLETO. Detecta lo que sobra y ha caducado, no lo que falta.",
+  "🔴 NO CUBIERTO — que el contexto esté COMPLETO. Detecta lo que sobra y ha caducado, y desde C5 exige declarar la capa de componente; pero un dato NUEVO de cualquier otro tipo que nadie haya escrito sigue sin tener contra qué contrastarse. Un verde NO significa completo.",
+  "🔴 NO CUBIERTO — que algo haya nacido en Figma después de la fecha de revisión. Este verificador no lee Figma, y `_base.json` no lleva fechas de nacimiento de tokens. La única defensa es la pregunta humana: ¿ha cambiado algo desde esa fecha?",
   "🔴 NO CUBIERTO — C4 es tan fresco como la extracción. `comp:auditar` lee `_base.json` de disco, no Figma: si la extracción va vieja, C4 contrasta contra el estado viejo. Por eso avisa de la caducidad en vez de dar por buena su propia comparación.",
 ]
 
@@ -176,4 +216,15 @@ if (fallos.length) {
   console.error(`\n🔴 ${fallos.length} problema(s) en el contexto. NO se extrae con esto: el contexto DICTA la interpretación, no la describe.`)
   process.exit(1)
 }
-console.log(`\n🟢 Contexto listo para pegar en el plugin uSpec.`)
+/* 🔴 EL VERDE NO PUEDE DECIR "listo para pegar".
+ * El 7 de septiembre este script dio verde sobre un contexto al que le faltaba
+ * la capa de componente entera, y el Lead se salvó porque preguntó — la segunda
+ * vez que le salva la misma pregunta humana. Un verificador que no puede juzgar
+ * completitud no debe imprimir una frase que se lee como si pudiera. */
+const fechaTxt = fechaRevision ? fechaRevision.toISOString().slice(0, 10) : "(sin fecha)"
+console.log(`\n🟢 Sin contradicciones detectables — ${oks.length} check(s) pasados.`)
+console.log(`\n⚠️  ESTO NO DICE QUE EL CONTEXTO ESTÉ COMPLETO.`)
+console.log(`   Detecta lo que sobra y lo que ha caducado; no puede ver lo que falta.`)
+console.log(`   Antes de pegar, contesta a mano: ¿ha cambiado algo en Figma desde el ${fechaTxt}?`)
+console.log(`   Si la respuesta es sí o no lo sabes, actualiza el contexto ANTES de extraer.`)
+if (avisos.length) console.log(`\n⚠️  Y hay ${avisos.length} aviso(s) arriba sin resolver. Léelos: alguno puede pedir re-extraer.`)

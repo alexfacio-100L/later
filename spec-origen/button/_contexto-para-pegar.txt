@@ -1,9 +1,12 @@
 El componente se auditó y corrigió el 19 y 20 de agosto de 2026, su escala
 dimensional se rehízo por completo el 27 de agosto (tarea 4.18), y su geometría
 se verificó variante a variante contra Figma en vivo el 3 de septiembre de 2026.
-Revisado entero el 4 de septiembre de 2026 contra el estado de ese día: el
-grosor de borde quedó tokenizado (60/60) y varios tokens de color cambiaron de
-alias. Todo lo que sigue está contrastado contra Figma a esa fecha.
+Revisado entero el 7 de septiembre de 2026 contra el estado de ese día.
+Cambio de mayor alcance desde la revisión anterior: EL BUTTON YA NO CONSUME
+TOKENS SEMÁNTICOS DIRECTOS. El 7 de septiembre se abrió la capa de tokens de
+componente y las 60 variantes se rebindearon a ella. Cualquier frase de una
+versión anterior que diga que el Button consume semánticos directos ES FALSA.
+Todo lo que sigue está contrastado contra Figma a esa fecha.
 Ten en cuenta:
 
 ESTADO-VERIFICABLE — lo lee `npm run uspec:contexto`. Si mientes aquí, falla.
@@ -14,6 +17,69 @@ ESTADO-VERIFICABLE — lo lee `npm run uspec:contexto`. Si mientes aquí, falla.
   paddingInline: bindeado
   paddingBlock: bindeado
   itemSpacing: bindeado
+
+CAPAS-DE-TOKEN — lo lee `npm run uspec:contexto`. Si mientes aquí, falla.
+  capaDeComponente: si
+  coleccion: componentColors
+  tokensDeComponente: 20
+
+CAPA DE TOKENS DE COMPONENTE — NACIÓ EL 7 DE SEPTIEMBRE. ES LO MÁS NUEVO
+DEL COMPONENTE Y LO QUE MÁS CAMBIA CÓMO SE DOCUMENTA.
+- Se creó la colección `componentColors` (la novena del sistema, UN SOLO MODO)
+  con 20 tokens de color propios del Button. Las 60 variantes están rebindeadas
+  a ella: 207 pinturas, cero saltadas.
+- CERO PÍXELES CAMBIARON. Cada token de componente aliasa al mismo semántico
+  que la variante ya usaba, con guarda de valor. Es indirección pura, no
+  rediseño. NO documentes ningún cambio de aspecto.
+- 🔴 LO QUE TIENES QUE DOCUMENTAR: el Button consume SU PROPIA CAPA, no los
+  semánticos. La tabla de tokens del componente debe listar `button/*`.
+- 🔴 Y LA TRAMPA QUE TE VA A PASAR, DEL MISMO TIPO QUE LA DEL RADIO:
+  NO se ha verificado si `_base.json` reporta el token de componente o el
+  semántico final por resolución de alias. Las dos cosas son posibles y se
+  leen igual de bien.
+      · Si ves `button/background/primary` -> correcto, documenta eso.
+      · Si ves `background/brandMain` -> el extractor RESOLVIÓ EL ALIAS.
+        NO lo documentes como consumo directo: el binding real es el token de
+        componente. Dilo en la extracción para que se corrija.
+  En ninguno de los dos casos escribas que el Button consume 17 semánticos.
+- El mapa completo, token de componente -> semántico al que aliasa:
+      button/background/primary            background/brandMain
+      button/background/primaryHover       background/brandHover
+      button/background/primaryPressed     background/brandPressed
+      button/background/primaryDisabled    background/disabled
+      button/background/secondary          background/secondary
+      button/background/secondaryHover     background/hover
+      button/background/secondaryPressed   background/selected
+      button/background/secondaryDisabled  background/disabled
+      button/label/primary                 text/primaryInverse
+      button/label/primaryDisabled         text/disabled
+      button/label/secondary               text/secondary
+      button/label/secondaryPressed        text/primaryInverseStatic
+      button/label/secondaryDisabled       text/disabled
+      button/border/secondary              text/secondary
+      button/border/secondaryDisabled      border/disabled
+      button/icon/primary                  icon/inverse
+      button/icon/primaryDisabled          icon/disabled
+      button/icon/secondary                text/secondary
+      button/icon/secondaryPressed         icon/inverseStatic
+      button/icon/secondaryDisabled        icon/disabled
+- El estado `focus` NO tiene token de fondo propio: reutiliza el de `hover` en
+  las dos variantes, a propósito. No lo documentes como hueco.
+- 17 de los 20 invierten con el tema. Los 3 que no —secondaryPressed de fondo,
+  label e icono— son los `Static`, y no invertir es su trabajo.
+
+🔴 EL ANILLO DE FOCO SE QUEDÓ FUERA DE LA CAPA A PROPÓSITO. NO ES UN OLVIDO.
+- El borde en estado `focus` sigue apuntando a `border/focus` SEMÁNTICO en las
+  12 variantes de foco. Es decisión del Lead del 7 de septiembre.
+- La razón, y hay que documentarla como decisión de diseño: un indicador de
+  foco debe ser IDÉNTICO en todo el sistema —es cómo alguien que navega con
+  teclado sabe dónde está—. Darle token de componente abriría la puerta a que
+  cada componente tuviera el suyo, que es justo el defecto que esta capa existe
+  para evitar en todo lo demás.
+- La regla general del sistema, por si la necesitas: no es «si se comparte,
+  capa»; es «si el componente necesita poder DISCREPAR, capa».
+- ⚠️ Un token de componente que no existe es una RESTRICCIÓN deliberada. No lo
+  escribas como inconsistencia ni sugieras completarlo.
 
 NOMBRES DE PROPIEDAD (cambiaron; la documentación anterior está caduca)
 - El eje "Type" ahora se llama "variant". Se renombró porque `type` está
@@ -121,10 +187,29 @@ GROSOR DE BORDE — RESUELTO EL 4 DE SEPTIEMBRE. YA NO ES UN DEFECTO ABIERTO.
   claves de lado. Leer la clave equivocada devuelve vacío y se lee igual que
   una ausencia real. Medido el 4 de septiembre por las claves buenas.
 
-COLOR DE BORDE — SEGUNDO HALLAZGO DEL MISMO BARRIDO, Y NO ESTÁ RESUELTO
-- En las 24 variantes `secondary` que no están en focus, el color del borde NO
-  sale de un token `border/*`: sale de `text/secondary`. El borde de un control
-  se está pintando con el token del TEXTO.
+COLOR DE BORDE Y DE ICONO EN `secondary` — CONGELADO A PROPÓSITO EL 7 DE
+SEPTIEMBRE, CON TAREA ABIERTA. NO ES PREGUNTA SIN DUEÑO NI DECISIÓN DE DISEÑO.
+- 🔴 ESTA SECCIÓN CAMBIÓ EL 7 DE SEPTIEMBRE. Antes decía que el asunto estaba
+  "SIN RESOLVER" y pedía documentarlo como pregunta abierta. YA NO: tiene dueño,
+  decisión y tarea. Ignora cualquier versión anterior.
+- El defecto, que sigue siendo real: en las 24 variantes `secondary` fuera de
+  focus el borde NO sale de un token `border/*`, sale de `text/secondary`. El
+  borde de un control se pinta con el token del TEXTO.
+- ⚠️ Y AFECTA TAMBIÉN A LOS ICONOS, que la versión anterior de este archivo NO
+  mencionaba: los iconos de `secondary` en default, hover y focus usan también
+  `text/secondary` como relleno.
+- Qué se hizo el 7 de septiembre al abrir la capa de componente: se aliasó AL
+  ESTADO ACTUAL a propósito. `button/border/secondary` y `button/icon/secondary`
+  apuntan hoy a `text/secondary`. Congelar el defecto cambia cero píxeles y
+  mantiene separadas las dos decisiones; arreglarlo dentro de la migración
+  habría cambiado el producto sin que nadie lo decidiera.
+- El aviso está escrito en la `description` de esos dos tokens, y viaja.
+- 🟢 Y AHORA ES BARATO: corregirlo ya no toca las 60 variantes — se cambia el
+  alias de dos tokens. Es el primer caso que demuestra para qué se abrió la capa.
+- ⚠️ CÓMO DOCUMENTARLO: como deuda conocida con tarea abierta (1.22), NO como
+  decisión de diseño y NO como pregunta sin responder. Lo que queda por decidir
+  es a qué token de `border/*` e `icon/*` debe apuntar, y eso sí cambia el
+  aspecto, así que es del Lead.
 - Los tokens de borde existen y se usan en otras variantes: `border/focus` en
   los focus, `border/disabled` en los disabled.
 - 🔴 DATO NUEVO DEL 4 DE SEPTIEMBRE, y descarta el destino que parecía obvio:
@@ -181,9 +266,10 @@ COLOR
   explícitamente a los componentes inactivos, así que NO es incumplimiento.
   Es visible y está declarado; no lo escribas como fallo de conformidad.
 - 🔴 TRAMPA AL DOCUMENTAR EL TEXTO DEL RELLENO PRIMARIO, y es fácil caer:
-  sobre background/brandMain el token correcto es `text/primaryInverse`
-  (16.23:1 en Light, 21:1 en Dark). NO propongas cambiarlo por
-  `text/primaryInverseStatic`: ese da 1.05:1 en Dark —blanco sobre blanco—
+  sobre el relleno primario el token correcto es `button/label/primary`, que
+  aliasa `text/primaryInverse` (16.23:1 en Light, 21:1 en Dark). NO propongas
+  cambiarlo por `text/primaryInverseStatic`: ese da 1.05:1 en Dark —blanco
+  sobre blanco—
   porque brandMain SÍ invierte y el Static no. El sistema tiene un precedente
   del 21 de agosto donde el cambio inverso fue el arreglo (en
   background/selected, que no invierte), y confundir los dos casos rompe el
@@ -194,7 +280,9 @@ COLOR
   valor único fallaba sobre fondos oscuros. Ahora da 4.80:1 en Light y 7.61:1
   en Dark contra el lienzo, muy por encima del 3:1 de 1.4.11. NO uses los
   números viejos (4.80 / 4.07): el de Dark ya no es ese.
-- El borde de secondary (text/secondary) da 15.9 en Light y 17.3 en Dark.
+- El borde de secondary da 15.9 en Light y 17.3 en Dark. Desde el 7 de
+  septiembre el binding es `button/border/secondary`, que aliasa `text/secondary`:
+  el ratio no cambió, el nombre sí.
 - 🟢 shadow/12 — NO LO DOCUMENTES COMO DEFECTO, y un extractor tenderá a
   hacerlo. Vale #0E1F35 en los dos modes y no lleva sufijo `Static`, que en
   este sistema es la firma de un token mal cableado. Aquí no lo es: la
