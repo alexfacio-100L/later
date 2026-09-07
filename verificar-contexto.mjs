@@ -193,6 +193,48 @@ if (informe) {
   }
 }
 
+/* ── C6 · Texto plano: nada de emojis ni caracteres invisibles ──────────
+ * POR QUÉ EXISTE, y lo pidió el Lead el 7 de septiembre: el contexto se PEGA
+ * en el plugin uSpec, y de ahí su contenido puede acabar en el `.md` y en la
+ * página publicada. El riesgo no es que el extractor no lea un emoji: es que
+ * SÍ lo reproduzca. Un emoji entrando por el insumo se salta la guarda de lo
+ * que se publica, que mira la salida.
+ *
+ * Y hay un caso peor porque no se ve: el archivo llevaba un U+00AD (guion
+ * suave) dentro de una palabra. No se ve, parte la palabra al renderizar y
+ * rompe cualquier búsqueda sin que nadie entienda por qué.
+ *
+ * 🔴 ESTE CHECK CUENTA CARACTERES, NO INTERPRETA PROSA. Los dos intentos de
+ * parsear frases fallaron en las dos direcciones posibles (ver C4). Contar
+ * puntos de código no puede fallar en falso.
+ *
+ * La jerarquía se conserva en ASCII: [CRITICO] lo que NO se debe hacer,
+ * [OJO] lo que hay que mirar con cuidado, [OK] lo que ya está resuelto. */
+{
+  // Español + tipografía deliberada. Todo lo demás fuera de ASCII es fallo.
+  const PERMITIDOS = new Set([..."áéíóúüñÁÉÍÓÚÜÑ¿¡—·«»‘’“”"])
+  const malos = new Map()
+  const lineas = texto.split("\n")
+  for (let i = 0; i < lineas.length; i++) {
+    for (const ch of lineas[i]) {
+      const cp = ch.codePointAt(0)
+      if (cp < 128 || PERMITIDOS.has(ch)) continue
+      const clave = `U+${cp.toString(16).toUpperCase().padStart(4, "0")}`
+      if (!malos.has(clave)) malos.set(clave, { n: 0, lineas: [] })
+      const e = malos.get(clave)
+      e.n++
+      if (e.lineas.length < 3) e.lineas.push(i + 1)
+    }
+  }
+  if (malos.size) {
+    const det = [...malos.entries()].map(([k, v]) => `${k} x${v.n} (línea ${v.lineas.join(", ")})`).join(" · ")
+    const total = [...malos.values()].reduce((a, b) => a + b.n, 0)
+    F("C6-texto-plano", `${total} carácter(es) no ASCII fuera del español: ${det}. El contexto se PEGA en el plugin y puede acabar publicado. Usa los marcadores en texto plano — [CRITICO] lo que NO se debe hacer, [OJO] lo que hay que mirar, [OK] lo resuelto — y borra los invisibles (U+00AD guion suave, U+200B-200D, U+FEFF, U+FE0F).`)
+  } else {
+    OK("C6-texto-plano", "Texto plano: cero emojis y cero caracteres invisibles")
+  }
+}
+
 /* ── Informe ─────────────────────────────────────────────────────────── */
 const cobertura = [
   "🔴 NO CUBIERTO — este verificador no lee Figma. Comprueba coherencia entre el contexto y lo que las auditorías ya saben; una afirmación sobre la que ninguna auditoría opina pasa sin verificarse.",

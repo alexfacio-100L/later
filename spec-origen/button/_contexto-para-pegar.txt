@@ -31,9 +31,9 @@ DEL COMPONENTE Y LO QUE MÁS CAMBIA CÓMO SE DOCUMENTA.
 - CERO PÍXELES CAMBIARON. Cada token de componente aliasa al mismo semántico
   que la variante ya usaba, con guarda de valor. Es indirección pura, no
   rediseño. NO documentes ningún cambio de aspecto.
-- 🔴 LO QUE TIENES QUE DOCUMENTAR: el Button consume SU PROPIA CAPA, no los
+- [CRITICO] LO QUE TIENES QUE DOCUMENTAR: el Button consume SU PROPIA CAPA, no los
   semánticos. La tabla de tokens del componente debe listar `button/*`.
-- 🔴 Y LA TRAMPA QUE TE VA A PASAR, DEL MISMO TIPO QUE LA DEL RADIO:
+- [CRITICO] Y LA TRAMPA QUE TE VA A PASAR, DEL MISMO TIPO QUE LA DEL RADIO:
   NO se ha verificado si `_base.json` reporta el token de componente o el
   semántico final por resolución de alias. Las dos cosas son posibles y se
   leen igual de bien.
@@ -68,7 +68,7 @@ DEL COMPONENTE Y LO QUE MÁS CAMBIA CÓMO SE DOCUMENTA.
 - 17 de los 20 invierten con el tema. Los 3 que no —secondaryPressed de fondo,
   label e icono— son los `Static`, y no invertir es su trabajo.
 
-🔴 EL ANILLO DE FOCO SE QUEDÓ FUERA DE LA CAPA A PROPÓSITO. NO ES UN OLVIDO.
+[CRITICO] EL ANILLO DE FOCO SE QUEDÓ FUERA DE LA CAPA A PROPÓSITO. NO ES UN OLVIDO.
 - El borde en estado `focus` sigue apuntando a `border/focus` SEMÁNTICO en las
   12 variantes de foco. Es decisión del Lead del 7 de septiembre.
 - La razón, y hay que documentarla como decisión de diseño: un indicador de
@@ -78,7 +78,7 @@ DEL COMPONENTE Y LO QUE MÁS CAMBIA CÓMO SE DOCUMENTA.
   para evitar en todo lo demás.
 - La regla general del sistema, por si la necesitas: no es «si se comparte,
   capa»; es «si el componente necesita poder DISCREPAR, capa».
-- ⚠️ Un token de componente que no existe es una RESTRICCIÓN deliberada. No lo
+- [OJO] Un token de componente que no existe es una RESTRICCIÓN deliberada. No lo
   escribas como inconsistencia ni sugieras completarlo.
 
 NOMBRES DE PROPIEDAD (cambiaron; la documentación anterior está caduca)
@@ -124,11 +124,11 @@ cornerRadius — RESUELTO EL 27 DE AGOSTO Y VERIFICADO EN VIVO EL 3 DE SEPTIEMBR
 NO ES UN HUECO ABIERTO, Y YA NO ES UNA INFERENCIA.
 - Las 60 variantes tienen `radius/l` (16) en las CUATRO esquinas, bindeado a
   la variable. Un solo valor, cero excepciones, cero valores crudos.
-- 🔴 MEDIDO, NO ASUMIDO: 60 de 60, leyendo cada variante en vivo desde Figma el
+- [CRITICO] MEDIDO, NO ASUMIDO: 60 de 60, leyendo cada variante en vivo desde Figma el
   3 de septiembre de 2026. Ninguna cruda, ninguna sin radio, ninguna con otro
   token. La pasada del 27 de agosto emitió esta fila como `inferred` porque
   corrió sin enlace a Figma; esta ya no lo es. Emítela como medida.
-- 🔴 Y LO MÁS IMPORTANTE PARA ESTA EXTRACCIÓN, PORQUE TE VA A PASAR:
+- [CRITICO] Y LO MÁS IMPORTANTE PARA ESTA EXTRACCIÓN, PORQUE TE VA A PASAR:
   `_base.json` reporta `cornerRadius` con `token: null` y `display: "16"` en
   las 60 variantes. ESO ES UN FALSO NEGATIVO DEL EXTRACTOR, no una ausencia de
   binding. El extractor resuelve el token de `minHeight`, `minWidth` y los
@@ -145,7 +145,7 @@ NO ES UN HUECO ABIERTO, Y YA NO ES UNA INFERENCIA.
   solo en primary y solo en `default`. Ese experimento se cerró: producía un
   salto de forma al pasar el cursor, y el criterio que lo descartó es que una
   propiedad de forma no varía por un eje cuyos valores se ven juntos.
-- ⚠️ NO escribas que cornerRadius era la única familia dimensional sin
+- [OJO] NO escribas que cornerRadius era la única familia dimensional sin
   tokenizar. Es falso: siempre estuvo bindeado. El problema era otro —cuatro
   tokens para una misma propiedad sin razón declarada— y ya está resuelto.
 - Queda declarada viva una alternativa que el Lead puede pedir: escalar
@@ -161,7 +161,7 @@ RESIDUO QUE SÍ HAY QUE ANOTAR
   Confirmado en vivo el 3 de septiembre: sigue ahí, en 60 de 60.
 
 GROSOR DE BORDE — RESUELTO EL 4 DE SEPTIEMBRE. YA NO ES UN DEFECTO ABIERTO.
-- 🔴 LO ANTERIOR EN ESTE MISMO ARCHIVO ES FALSO Y HAY QUE IGNORARLO. Hasta el
+- [CRITICO] LO ANTERIOR EN ESTE MISMO ARCHIVO ES FALSO Y HAY QUE IGNORARLO. Hasta el
   4 de septiembre esta sección decía "28 de 36 con el grosor CRUDO" y pedía
   documentar el grosor como un binding que falta. YA NO. Si algo que leas
   sugiere que el borde está sin tokenizar, es residuo de esa versión.
@@ -174,14 +174,14 @@ GROSOR DE BORDE — RESUELTO EL 4 DE SEPTIEMBRE. YA NO ES UN DEFECTO ABIERTO.
   60 de 60 bindeadas. Cero valores crudos. Cero incoherencias entre lados.
 - El binding no cambió ni un píxel: el script abortaba si el token no valía
   exactamente lo que la variante ya tenía. Es tokenización pura, no rediseño.
-- ⚠️ MATIZ QUE SIGUE SIENDO CIERTO Y HAY QUE CONSERVAR: que el grosor varíe por
+- [OJO] MATIZ QUE SIGUE SIENDO CIERTO Y HAY QUE CONSERVAR: que el grosor varíe por
   estado ES INTENCIONAL —el borde engorda al recibir foco, y crece con la talla
   dentro del propio foco: 1.5 en s y m, 2 en l—. Lo que estaba mal era que
   estuviera crudo, no que variara. Son dos cosas distintas: documenta la
   variación como decisión de diseño, y no menciones los valores crudos.
-- 🔴 Y AHORA SÍ: toda la geometría del Button está bindeada a token. Alturas,
+- [CRITICO] Y AHORA SÍ: toda la geometría del Button está bindeada a token. Alturas,
   anchos, insets, radios Y borde. Ya puedes escribirlo sin excepción.
-- ⚠️ OJO CON EL MISMO FALSO NEGATIVO QUE EL RADIO: si `_base.json` reporta
+- [OJO] OJO CON EL MISMO FALSO NEGATIVO QUE EL RADIO: si `_base.json` reporta
   `strokeWeight` con `token: null`, NO es que falte el binding. La clave
   `strokeWeight` no existe en boundVariables — Figma la expande a las cuatro
   claves de lado. Leer la clave equivocada devuelve vacío y se lee igual que
@@ -189,13 +189,13 @@ GROSOR DE BORDE — RESUELTO EL 4 DE SEPTIEMBRE. YA NO ES UN DEFECTO ABIERTO.
 
 COLOR DE BORDE Y DE ICONO EN `secondary` — CONGELADO A PROPÓSITO EL 7 DE
 SEPTIEMBRE, CON TAREA ABIERTA. NO ES PREGUNTA SIN DUEÑO NI DECISIÓN DE DISEÑO.
-- 🔴 ESTA SECCIÓN CAMBIÓ EL 7 DE SEPTIEMBRE. Antes decía que el asunto estaba
+- [CRITICO] ESTA SECCIÓN CAMBIÓ EL 7 DE SEPTIEMBRE. Antes decía que el asunto estaba
   "SIN RESOLVER" y pedía documentarlo como pregunta abierta. YA NO: tiene dueño,
   decisión y tarea. Ignora cualquier versión anterior.
 - El defecto, que sigue siendo real: en las 24 variantes `secondary` fuera de
   focus el borde NO sale de un token `border/*`, sale de `text/secondary`. El
   borde de un control se pinta con el token del TEXTO.
-- ⚠️ Y AFECTA TAMBIÉN A LOS ICONOS, que la versión anterior de este archivo NO
+- [OJO] Y AFECTA TAMBIÉN A LOS ICONOS, que la versión anterior de este archivo NO
   mencionaba: los iconos de `secondary` en default, hover y focus usan también
   `text/secondary` como relleno.
 - Qué se hizo el 7 de septiembre al abrir la capa de componente: se aliasó AL
@@ -204,21 +204,21 @@ SEPTIEMBRE, CON TAREA ABIERTA. NO ES PREGUNTA SIN DUEÑO NI DECISIÓN DE DISEÑO
   mantiene separadas las dos decisiones; arreglarlo dentro de la migración
   habría cambiado el producto sin que nadie lo decidiera.
 - El aviso está escrito en la `description` de esos dos tokens, y viaja.
-- 🟢 Y AHORA ES BARATO: corregirlo ya no toca las 60 variantes — se cambia el
+- [OK] Y AHORA ES BARATO: corregirlo ya no toca las 60 variantes — se cambia el
   alias de dos tokens. Es el primer caso que demuestra para qué se abrió la capa.
-- ⚠️ CÓMO DOCUMENTARLO: como deuda conocida con tarea abierta (1.22), NO como
+- [OJO] CÓMO DOCUMENTARLO: como deuda conocida con tarea abierta (1.22), NO como
   decisión de diseño y NO como pregunta sin responder. Lo que queda por decidir
   es a qué token de `border/*` e `icon/*` debe apuntar, y eso sí cambia el
   aspecto, así que es del Lead.
 - Los tokens de borde existen y se usan en otras variantes: `border/focus` en
   los focus, `border/disabled` en los disabled.
-- 🔴 DATO NUEVO DEL 4 DE SEPTIEMBRE, y descarta el destino que parecía obvio:
+- [CRITICO] DATO NUEVO DEL 4 DE SEPTIEMBRE, y descarta el destino que parecía obvio:
   `border/secondary` YA NO EXISTE. Se renombró a `border/inverseStatic` porque
   valía #FFFFFF en los dos modes y sobre background/secondary en Light daba
   1.00:1 — un borde blanco sobre fondo blanco. Su rol real era borde sobre
   rellenos oscuros. NO lo propongas como destino del borde de `secondary`:
   dejaría el borde invisible en Light.
-- ⚠️ NO lo documentes como decisión ni como defecto: está SIN RESOLVER, y la
+- [OJO] NO lo documentes como decisión ni como defecto: está SIN RESOLVER, y la
   decisión es del Lead. Puede ser deliberado —reusar el color de texto para que
   borde y label vayan siempre a juego— o un hueco de tokenización. Si tienes
   que mencionarlo, dilo como pregunta abierta.
@@ -247,7 +247,7 @@ TEXTO DE 12 px EN LA TALLA `s` — conformidad y usabilidad son cosas distintas
   como texto normal y exige 4.5:1, no los 3:1 del texto grande.
 - La advertencia honesta que hay que dejar escrita: conforma, pero 12 px
   queda por debajo de la práctica habitual para texto interactivo y es
-  medible­mente más difícil para baja visión y para usuarios de 65+. Se
+  mediblemente más difícil para baja visión y para usuarios de 65+. Se
   aceptó a sabiendas. Documéntalo como decisión con costo declarado, no
   como defecto ni como algo resuelto.
 
@@ -265,7 +265,7 @@ COLOR
   Menciónalo con su matiz o no lo menciones: WCAG 1.4.3 y 1.4.11 EXIMEN
   explícitamente a los componentes inactivos, así que NO es incumplimiento.
   Es visible y está declarado; no lo escribas como fallo de conformidad.
-- 🔴 TRAMPA AL DOCUMENTAR EL TEXTO DEL RELLENO PRIMARIO, y es fácil caer:
+- [CRITICO] TRAMPA AL DOCUMENTAR EL TEXTO DEL RELLENO PRIMARIO, y es fácil caer:
   sobre el relleno primario el token correcto es `button/label/primary`, que
   aliasa `text/primaryInverse` (16.23:1 en Light, 21:1 en Dark). NO propongas
   cambiarlo por `text/primaryInverseStatic`: ese da 1.05:1 en Dark —blanco
@@ -283,14 +283,14 @@ COLOR
 - El borde de secondary da 15.9 en Light y 17.3 en Dark. Desde el 7 de
   septiembre el binding es `button/border/secondary`, que aliasa `text/secondary`:
   el ratio no cambió, el nombre sí.
-- 🟢 shadow/12 — NO LO DOCUMENTES COMO DEFECTO, y un extractor tenderá a
+- [OK] shadow/12 — NO LO DOCUMENTES COMO DEFECTO, y un extractor tenderá a
   hacerlo. Vale #0E1F35 en los dos modes y no lleva sufijo `Static`, que en
   este sistema es la firma de un token mal cableado. Aquí no lo es: la
   convención `Static` se escribió para SUPERFICIES y PRIMEROS PLANOS, y un
   tinte de sombra no es ninguna de las dos —no se posa sobre nada, es el color
   de un efecto—. Queda exento por categoría. Lo que sí es pregunta abierta, y
   es de DISEÑO y del Lead, es si la elevación debe leerse en modo oscuro.
-- 🟢 background/selected — TAMPOCO es defecto, por la misma razón aparente y
+- [OK] background/selected — TAMPOCO es defecto, por la misma razón aparente y
   distinta causa. Vale #315FA3 en los dos modes, pero su par de texto en el
   Button es `text/primaryInverseStatic`, que TAMPOCO cambia: 6.05:1 en los dos
   modes. Es el corolario ya fijado del sistema —un fondo que no cambia obliga a
@@ -325,7 +325,7 @@ isLoading — ES PROPIEDAD, Y LA EXTRACCIÓN ANTERIOR LA PERDIÓ
       icono solo izquierdo-> el izquierdo se queda; el spinner va a la derecha
 - El icono del spinner es `CircleNotch` de Phosphor, elegido por ser el único
   diseñado para girar en bucle.
-- ⚠️ NO escribas que el botón se deshabilita al cargar. Bloqueado y
+- [OJO] NO escribas que el botón se deshabilita al cargar. Bloqueado y
   deshabilitado son cosas distintas: `aria-busy="true"`, NUNCA `disabled` ni
   `aria-disabled`, y el foco SE CONSERVA. Deshabilitado dice «no puedes»;
   cargando dice «espera». Además `background/disabled` da 1.30:1 y el botón
