@@ -491,7 +491,7 @@ const TABS = {
 "Resumen general": `El control de acción del sistema. Sesenta variantes sobre cuatro ejes, una sola parada de foco y label siempre visible.
 
 <SNCallout type="Info">
-**Estado:** Stable · **Categoría:** Acciones · **Dueño:** Product Design · **También llamado:** Action, CTA, Call to action
+**Categoría:** Acciones · **Dueño:** Product Design · **También llamado:** Action, CTA, Call to action
 </SNCallout>
 
 ## Qué resuelve
@@ -794,6 +794,27 @@ ${tablaDelMd("| # | Área | Criterio |", 2)}
 
 - **Color** — la colección \`semanticColors\` y sus dos modes
 - **Espaciado** — la escala \`space\`, de la que salen todos los insets`,
+
+/**
+ * 🔴 EL METADATO `Estado` SALE DEL CALLOUT — 8 sep 2026, y solo ese.
+ *
+ * El Lead lo señaló como «un tercer sitio diciendo lo mismo, a mano». Tenía
+ * razón, y se midió cuál de los cuatro datos lo era: `sdk.components`
+ * `.getComponentProperties` devuelve **`Status` como propiedad real del
+ * componente**, con valor `status-healthy` en el Button. Eso es lo que publican
+ * `component-health` y `component-checklist` en `Estatus y cambios`.
+ *
+ * ⚠️ Los otros tres NO se borran, y es una desviación deliberada de la
+ * instrucción «el callout sobra»: **`Categoría`, `Dueño` y `También llamado` no
+ * son propiedades de componente** —solo hay cinco definidas y ninguna es esas—,
+ * así que nada más en el sistema los publica. Borrar el callout entero habría
+ * tirado tres datos para quitar uno duplicado. *`También llamado` además es el
+ * anillo de sinónimos: es lo que hace que quien busca «CTA» encuentre el Button.*
+ *
+ * 🔴 Y de paso destapa una incoherencia que hay que resolver: el callout decía
+ * `Stable` y la propiedad vale `status-healthy`. **Dos vocabularios para el
+ * mismo campo.** Al quitar el texto a mano queda uno solo, que es el bueno.
+ */
 
 /**
  * 🔴 DOS DECISIONES EDITORIALES DEL 3 SEP 2026, las dos con su porqué.
