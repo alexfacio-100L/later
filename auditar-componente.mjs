@@ -594,6 +594,12 @@ if (bloqueantes.length) {
    * C4 y C5 justo en el caso en que sirven. Asignar `exitCode` conserva el
    * código de salida y deja que Node vacíe el buffer antes de terminar. */
   process.exitCode = 1
-} else {
+} else if (!JSON_OUT) {
+  /* 🔴 El `!JSON_OUT` es la mitad que faltaba, y su ausencia rompió `C4` el 7 sep.
+   * En modo `--json` este resumen se imprimía PEGADO detrás del JSON, así que
+   * `JSON.parse` moría con «Extra data». Y era invisible: solo ocurre en la rama
+   * SIN bloqueantes, es decir **justo cuando el componente pasa a verde**. La
+   * rama de arriba ya lo respetaba; ésta no. Un modo de salida se respeta en
+   * TODAS las ramas o no es un modo. */
   console.log(`\n🟢 '${SLUG}' sin defectos bloqueantes de componente.`)
 }
