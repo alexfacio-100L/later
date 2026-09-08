@@ -1,91 +1,127 @@
 {
-  "size": {
-    "nodo": "12534:2586",
+  "Secondary / Marketing / Light": {
+    "nodo": "12531:2571",
     "nombreEnFigma": "#preview",
-    "entityId": "4d7296ce-7957-4bc1-afa1-1f14f93e4702",
-    "resourceId": "86221ebf-c1e9-4212-9d12-859eec6a30c6",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/22ffc951-392e-4a85-a87d-0febbad8c74b.png",
-    "ancho": 942,
-    "alto": 290
+    "entityId": "3b2f8e22-54c3-4f08-80ae-27a7789c5792",
+    "resourceId": "e7e9be01-8adc-4ed1-b83d-2914da2b26f9",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/4db4590c-b705-4a80-9ee5-939a1b79a3c2.png",
+    "ancho": 791,
+    "alto": 147
   },
-  "surface": {
-    "nodo": "12534:2560",
+  "Deshabilitado": {
+    "nodo": "12540:2677",
     "nombreEnFigma": "#preview",
-    "entityId": "55e7fd23-4a64-45ee-b631-2ac016019b14",
-    "resourceId": "51db5c5f-e4c0-4c0e-bc80-88c83b3e6a35",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/a30e815b-1db5-413f-b337-919698effdc7.png",
-    "ancho": 576,
-    "alto": 290
+    "entityId": "246aea37-6289-4d7c-bbb7-59706c43f54f",
+    "resourceId": "7fc98d48-583c-466c-ac33-8d8a2fc2cb6e",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/dfa1b1eb-5bb2-499d-b400-7f005285d969.png",
+    "ancho": 220,
+    "alto": 120
   },
-  "Primary / Marketing / Dark": {
-    "nodo": "12529:2481",
+  "Anatomy": {
+    "nodo": "12689:2638",
+    "nombreEnFigma": "Artwork wrapper",
+    "entityId": "3130cf66-d108-4cc1-9ae4-163c15907476",
+    "resourceId": "82706185-cd25-4cd4-bbe7-df27a8c4bbf5",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/73adcaae-fd5c-402f-9494-b6f36653ecee.png",
+    "ancho": 378,
+    "alto": 259
+  },
+  "Secondary / Product / Dark": {
+    "nodo": "12531:2494",
     "nombreEnFigma": "#preview",
-    "entityId": "72ec8e18-7b94-4609-8d87-0bc7e550bec7",
-    "resourceId": "d66c7982-5673-4342-a965-f64f2edebbcf",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/32df6d43-5da3-4978-bc88-545472957901.png",
-    "ancho": 902,
-    "alto": 250
+    "entityId": "1ce01874-1673-4f74-96ce-db58402da27c",
+    "resourceId": "f07e4bc4-e946-411e-8135-a7e1eef83e92",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/32f07dcc-f544-4af1-aa35-02cdefcac5a9.png",
+    "ancho": 781,
+    "alto": 147
   },
   "showIconRight": {
     "nodo": "12534:2671",
     "nombreEnFigma": "#preview",
     "entityId": "814100be-bdc5-4f8d-b441-8a57fdb2294f",
-    "resourceId": "5e9a45dc-55c8-4cde-a1e4-e1b85a5b1824",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/d38193c1-1b09-4929-aad3-8e1320c3e379.png",
-    "ancho": 476,
-    "alto": 290
+    "resourceId": "d807e92d-3dbc-40ac-a59b-077a76232ab0",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/6a46c049-c2d7-452c-bd95-047cd27900aa.png",
+    "ancho": 250,
+    "alto": 147
+  },
+  "size": {
+    "nodo": "12534:2586",
+    "nombreEnFigma": "#preview",
+    "entityId": "4d7296ce-7957-4bc1-afa1-1f14f93e4702",
+    "resourceId": "022068db-c1ba-4f04-bd91-1cf9e07131c6",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/33215d37-44db-4a3f-a4bc-1120f8aa1b86.png",
+    "ancho": 565,
+    "alto": 163
+  },
+  "surface": {
+    "nodo": "12534:2560",
+    "nombreEnFigma": "#preview",
+    "entityId": "55e7fd23-4a64-45ee-b631-2ac016019b14",
+    "resourceId": "54ca8803-d380-4c33-9d6e-15212ce829bf",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/9baa349a-76a5-4869-b9c7-300b3f7a3a78.png",
+    "ancho": 324,
+    "alto": 147
+  },
+  "Primary / Marketing / Dark": {
+    "nodo": "12529:2481",
+    "nombreEnFigma": "#preview",
+    "entityId": "72ec8e18-7b94-4609-8d87-0bc7e550bec7",
+    "resourceId": "1d860e54-7e8f-4171-88d4-1663e8633c1c",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/3ca3984a-e3e9-49f6-8ea1-640e0420179b.png",
+    "ancho": 791,
+    "alto": 147
   },
   "Secondary / Marketing / Dark": {
     "nodo": "12531:2648",
     "nombreEnFigma": "#preview",
     "entityId": "8664f95c-8ca2-4983-a575-95bf4f796ce9",
-    "resourceId": "4acc8a1a-48c5-4d0e-8914-506e8e07f383",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/b7706495-c33a-430f-bf73-b88ebaa06205.png",
-    "ancho": 902,
-    "alto": 250
+    "resourceId": "767ebd59-bf63-44f4-91e4-15ac13493391",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/8e68ffba-7e8a-43cf-a52f-1aec7998a148.png",
+    "ancho": 791,
+    "alto": 147
   },
   "Primary / Product / Dark": {
     "nodo": "12529:2327",
     "nombreEnFigma": "#preview",
     "entityId": "8d87084f-76fa-4835-b1aa-f78354385d1a",
-    "resourceId": "8b332e0b-c189-4798-9196-66cb3be2142c",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/0b8f53fd-ee7a-415d-9ef0-3b4b464b12a4.png",
-    "ancho": 890,
-    "alto": 250
+    "resourceId": "f8cadf1f-f726-4de9-bc41-2f70f90af8a2",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/4e3f6dd8-1e68-46e8-b8b6-9d3327e3ccdd.png",
+    "ancho": 781,
+    "alto": 147
   },
   "State: rest / hover / active / focus-visible": {
     "nodo": "12691:2682",
     "nombreEnFigma": "Artwork wrapper",
     "entityId": "8d92f004-56ea-467e-b596-87a3c0fe09ac",
-    "resourceId": "2ca3787a-0d42-4209-900f-39aa7d6e18df",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/9c7cb586-0562-47ff-bfb0-c21b6555cf09.png",
-    "ancho": 442,
+    "resourceId": "1feee742-c58d-41a9-a0fb-454485321554",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/23ffd417-fe62-4d11-8d6f-5f6194a86fba.png",
+    "ancho": 202,
     "alto": 128
   },
   "showIconLeft": {
     "nodo": "12534:2648",
     "nombreEnFigma": "#preview",
     "entityId": "cdcc74d9-3edb-4cfa-a2ab-7f551432b90f",
-    "resourceId": "9bbfe063-2bea-4442-ba43-107b6089e10f",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/432774c2-4d9f-40a2-8bea-572c20b67697.png",
-    "ancho": 476,
-    "alto": 290
+    "resourceId": "a6d456d2-465f-4265-9197-b15242d502b5",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/7652faa3-bce4-458d-a56b-d71804054349.png",
+    "ancho": 250,
+    "alto": 147
   },
   "Button states": {
     "nodo": "12518:13665",
     "nombreEnFigma": "#Preview",
     "entityId": "d1e15be3-c2e7-4608-81a4-db25727c8b19",
-    "resourceId": "05f24ffd-0dfd-4db5-b15e-75c410aeb553",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/e1fd72fd-156e-4446-b9e0-198f1838c358.png",
-    "ancho": 890,
-    "alto": 290
+    "resourceId": "bbbc4a1e-34e8-4b4c-bd63-4d8317f52f3a",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/7adbcf46-7c28-4cfe-b131-664e9ebb04bf.png",
+    "ancho": 781,
+    "alto": 147
   },
   "Accion principal": {
     "nodo": "12540:2619",
     "nombreEnFigma": "#preview",
     "entityId": "d999793f-024c-42ed-a2c0-d7581dca46f4",
-    "resourceId": "7cafb3d8-0306-4d34-a66b-82dd983fa9e6",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/d7a2a554-c267-42e5-ad66-1e376e04f3b5.png",
+    "resourceId": "fd0865da-8e99-438b-bc41-3c828afa95e5",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/d56e5188-0206-4540-a1a8-4d036cabbb69.png",
     "ancho": 244,
     "alto": 120
   },
@@ -93,117 +129,81 @@
     "nodo": "12531:2417",
     "nombreEnFigma": "#preview",
     "entityId": "e34cbdbc-bf66-404f-93ed-775c5462f875",
-    "resourceId": "c2ebb848-bd5c-4c8c-8d4a-1325928aa073",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/6f66742c-ac39-458f-8864-91374e91553b.png",
-    "ancho": 890,
-    "alto": 250
+    "resourceId": "d1686552-1166-4121-b6e5-0c65fe20cf5b",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/103ffda7-d942-46c2-ac46-c545400223b4.png",
+    "ancho": 781,
+    "alto": 147
   },
   "Button surface": {
     "nodo": "12518:13640",
     "nombreEnFigma": "#Preview",
     "entityId": "ed5a81c0-c90f-437d-9643-74667ac6fd85",
-    "resourceId": "dacaf960-24d7-438e-a32b-cbb2d2b644ae",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/faaaf06f-a584-45e9-8ff3-1ec9ea3813c5.png",
-    "ancho": 576,
-    "alto": 290
-  },
-  "Secondary / Marketing / Light": {
-    "nodo": "12531:2571",
-    "nombreEnFigma": "#preview",
-    "entityId": "3b2f8e22-54c3-4f08-80ae-27a7789c5792",
-    "resourceId": "c993a9fb-3151-4365-8851-2a91e2e7f159",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/f6dee26a-3dc2-44dd-bcf4-d2c285020a80.png",
-    "ancho": 902,
-    "alto": 250
-  },
-  "Primary / Marketing / Light": {
-    "nodo": "12529:2404",
-    "nombreEnFigma": "#preview",
-    "entityId": "490b3df7-21f6-4ea8-b6f6-47d29ccd609d",
-    "resourceId": "1db3bdbc-a9cb-4d5f-b433-70a40361a6c5",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/10984248-2ea4-46f9-8e55-b30060783bdb.png",
-    "ancho": 902,
-    "alto": 250
-  },
-  "State: isDisabled === true": {
-    "nodo": "12691:3081",
-    "nombreEnFigma": "Artwork wrapper",
-    "entityId": "4911a5ea-7712-4cad-936a-e079607ebd3c",
-    "resourceId": "29849b4e-940e-4359-b0d9-2a96894920aa",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/5cafceb6-91f9-4abd-ab78-e3ed2f5f3243.png",
-    "ancho": 221,
-    "alto": 128
+    "resourceId": "ef91b7aa-a786-47e9-80eb-e6edba8d1818",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/adb5f256-4827-43a5-8623-383ab7bde444.png",
+    "ancho": 324,
+    "alto": 147
   },
   "isDisabled": {
     "nodo": "12534:2622",
     "nombreEnFigma": "#preview",
     "entityId": "102192de-023a-4751-9a69-e85aed0d43a0",
-    "resourceId": "36b3a21d-475c-46c8-a8ff-0f66e6f13102",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/f60d6306-db24-44c8-9bf9-82a7507f37c9.png",
-    "ancho": 572,
-    "alto": 290
-  },
-  "Secondary / Product / Dark": {
-    "nodo": "12531:2494",
-    "nombreEnFigma": "#preview",
-    "entityId": "1ce01874-1673-4f74-96ce-db58402da27c",
-    "resourceId": "e050504f-06f9-43b7-bca1-7a86ed537302",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/aaacbc10-4843-472a-86e6-6badb61bf873.png",
-    "ancho": 890,
-    "alto": 250
+    "resourceId": "2c32703a-5426-43b3-a9c8-7c9f034caadd",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/dc603f5c-8fc6-42d4-90dd-e2b004a4c482.png",
+    "ancho": 322,
+    "alto": 147
   },
   "variant": {
     "nodo": "12534:2534",
     "nombreEnFigma": "#preview",
     "entityId": "1e9df347-691a-4610-bb1f-ba2867186963",
-    "resourceId": "9875d206-3393-4a1b-958a-1a99eb27f87f",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/8137463a-6234-400d-b121-d5136603f655.png",
-    "ancho": 572,
-    "alto": 290
+    "resourceId": "5730af12-cc66-464b-ab10-7f1095998783",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/938737b4-4cfa-47c2-a48b-f5cd7aa58328.png",
+    "ancho": 322,
+    "alto": 147
   },
   "Secundario con icono final": {
     "nodo": "12540:2648",
     "nombreEnFigma": "#preview",
     "entityId": "1f20ee23-6314-4e0f-9923-ed5382174932",
-    "resourceId": "b89aab4d-fbf0-415c-87a8-600becff4c8b",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/e7eae7f3-f711-4b31-86f8-581a1f8bc405.png",
+    "resourceId": "353f09ed-78b0-44bc-8c9e-09764dca381c",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/68f8fa06-8a87-4e65-82a4-9d5a13d1e66d.png",
     "ancho": 266,
-    "alto": 120
-  },
-  "Deshabilitado": {
-    "nodo": "12540:2677",
-    "nombreEnFigma": "#preview",
-    "entityId": "246aea37-6289-4d7c-bbb7-59706c43f54f",
-    "resourceId": "5908ba9e-bdd9-4896-8161-2edbc574a4b6",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/e8979ed4-870b-480e-b56f-a8bdd26ffd71.png",
-    "ancho": 220,
     "alto": 120
   },
   "Button sizes": {
     "nodo": "12518:13615",
     "nombreEnFigma": "#Preview",
     "entityId": "33f33526-8570-42dc-9fda-0cbe7867350b",
-    "resourceId": "a371dabb-fe06-405b-a601-5fd897c0b763",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/a0a08ca1-9061-4076-86ab-9185b6c43ce8.png",
-    "ancho": 938,
-    "alto": 290
+    "resourceId": "b08f2ee3-2d8b-40ca-a397-8ea3390cf9e3",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/cd7531e9-0433-44a4-b084-7f09e8b3d8b6.png",
+    "ancho": 565,
+    "alto": 163
+  },
+  "Primary / Marketing / Light": {
+    "nodo": "12529:2404",
+    "nombreEnFigma": "#preview",
+    "entityId": "490b3df7-21f6-4ea8-b6f6-47d29ccd609d",
+    "resourceId": "da48b40f-c273-4fcb-9843-1a5df7b6fdc9",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/4225d7fa-6835-4e14-9509-053ecad0e24f.png",
+    "ancho": 791,
+    "alto": 147
+  },
+  "State: isDisabled === true": {
+    "nodo": "12691:3081",
+    "nombreEnFigma": "Artwork wrapper",
+    "entityId": "4911a5ea-7712-4cad-936a-e079607ebd3c",
+    "resourceId": "8cb97f4b-4ed5-4cec-943d-e615ce8f5ea2",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/e6c444c5-1d92-4aa1-b1df-4a626f15b2a5.png",
+    "ancho": 133,
+    "alto": 128
   },
   "Primary / Product / Light": {
     "nodo": "12529:2250",
     "nombreEnFigma": "#preview",
     "entityId": "4b82322f-7f91-488b-b0ec-07b2b1d7b541",
-    "resourceId": "fe6590bb-acee-4956-8ba6-5b26908cf3d8",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/291c3b03-fc3f-4535-8935-c6784dac3c82.png",
-    "ancho": 890,
-    "alto": 250
-  },
-  "Anatomy": {
-    "nodo": "12689:2638",
-    "nombreEnFigma": "Artwork wrapper",
-    "entityId": "3130cf66-d108-4cc1-9ae4-163c15907476",
-    "resourceId": "d0f76e5b-49a7-4f52-9255-a05be5174a57",
-    "url": "https://studio-assets.supernova.io/design-systems/825551/159930b3-bb68-4423-a775-e51ee7120ed0.png",
-    "ancho": 588,
-    "alto": 259
+    "resourceId": "f210c4d0-8f48-448f-9da7-42fd17015b6e",
+    "url": "https://studio-assets.supernova.io/design-systems/825551/02aac209-6b1d-4134-a5b1-2cf6f52511d5.png",
+    "ancho": 781,
+    "alto": 147
   }
 }
