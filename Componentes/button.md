@@ -371,7 +371,7 @@ Escala dimensional completa del Button a lo largo del eje size. Todo valor dimen
 | └ verticalAlignment | center | center | center | Alinea icono y texto por su centro optico |
 | Label box | – | – | – | Envoltorio del texto; sin relleno ni borde propios |
 | ├ padding | 0 | 0 | 0 | Desbindeado a 0 el 27 ago: antes anadia 8 por lado incluso sin icono, así que el padding declarado no era el real |
-| ├ cornerRadius | 12 | 12 | 12 | Residuo a limpiar, no decision: geometría sobrante de mudar su horizontalPadding a 0; no se ve porque labelBox no tiene relleno, pero llega a la extraccion en las 60 variantes |
+| ├ cornerRadius | 12 | 12 | 12 | Residuo a limpiar, no decision: geometría sobrante de mudar su horizontalPadding a 0; no se ve porque labelBox no tiene relleno, pero sigue en el archivo en las 60 variantes |
 | ├ widthMode | hug | hug | hug | – |
 | └ heightMode | hug | hug | hug | – |
 | Label | – | – | – | Texto del botón; propiedad label, valor por defecto Button |

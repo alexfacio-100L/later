@@ -15,6 +15,7 @@
  */
 import pkg from "@supernovaio/sdk"
 const { Supernova } = pkg
+import { exigirAgnostico } from "../filtro-agnostico.mjs"
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -698,7 +699,7 @@ ${tablaDelMd("| Dimension | Comportamiento |")}
 
 ## Color
 
-El contraste lo calcula Supernova sobre los tokens vivos. **Ningún ratio escrito a mano puede caducar aquí.**
+El contraste se calcula sobre los tokens vivos, así que **ningún ratio escrito a mano puede caducar aquí.**
 
 <SNBlock packageId="io.supernova.block.color-accessibility-grid">
   <SNItem>
@@ -867,7 +868,7 @@ Cuatro, y ninguno impide usar el componente. Se publican porque afectan a quien 
 ${tabla(["Qué", "A quién afecta", "Estado"], [
   ["\`background/disabled\` apenas se distingue del lienzo en Light — **1.30:1**", "A quien mira la pantalla. Quien la escucha sí recibe el estado: el atributo nativo lo declara", "Abierto"],
   ["Las instancias de icono embebidas traen \`Weight=Fill\`; el defecto declarado de la librería Phosphor es \`Weight=Regular\`", "Al aspecto del icono en las dos ranuras", "Abierto"],
-  ["Los 60 \`labelBox\` conservan un \`cornerRadius\` de 12 que no se ve —no tienen relleno— pero llega a la extracción", "A nadie visualmente. Es residuo de bajar su inset a 0", "A limpiar"],
+  ["Los 60 \`labelBox\` conservan un \`cornerRadius\` de 12 que no se ve —no tienen relleno— pero sigue en el archivo", "A nadie visualmente. Es residuo de bajar su inset a 0", "A limpiar"],
   ["El anuncio asistivo de \`isLoading\` está dibujado en Figma y no transcrito: esta página documenta 2 de las 4 paradas de foco", "A quien implemente el estado de carga en iOS o Android", "Abierto"],
 ], [330, 300, 130])}
 
@@ -1031,6 +1032,13 @@ const main = async () => {
     console.log("volcado en salida/button-tabs/")
     return
   }
+
+  /* 🔴 Antes que la validación de sintaxis: que la prosa no hable del mecanismo.
+   * Va aquí y no en doctrina porque como doctrina no se ejecutó — se publicaron
+   * tres fugas. Y corre sobre TABS, o sea sobre lo que sale a la página: el `.md`
+   * de uSpec sí puede hablar del extractor, la página no. Una de las tres venía
+   * literalmente de una celda del `.md`. */
+  exigirAgnostico(TABS)
 
   // Validar TODO antes de crear nada.
   let ok = true
