@@ -16,12 +16,16 @@
 import pkg from "@supernovaio/sdk"
 const { Supernova } = pkg
 import { exigirAgnostico } from "../filtro-agnostico.mjs"
+import { anchosDe, firmaDeTabla, informeDeAnchos } from "../anchos-de-tabla.mjs"
+
+/** Qué tabla salió del ajuste del Lead y cuál de un cálculo. Se informa al final. */
+const REGISTRO_ANCHOS = []
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { aplicarPestanas } from "./pestanas-plataforma.mjs"
 import { reagruparCitas } from "../experimento-canario/citas.mjs"
-import { traducirCabecera } from "../experimento-canario/conversor.mjs"
+import { traducirCabecera, anchosDeColumna } from "../experimento-canario/conversor.mjs"
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url))
 const RAIZ = path.dirname(AQUI)
@@ -338,7 +342,11 @@ const tablasDeEstado = (estado) => {
     const ROTULOS = { "Announcement": "Anuncio", "`Do NOT`": "**No hagas**" }
     const es = seguro.map((cs, f) => f === 0 ? cs.map(traducirCabecera)
                                              : cs.map((c, k) => k === 0 ? (ROTULOS[c] ?? c) : c))
-    if (es.length) salida.push(tabla(es[0], es.slice(1), [200, 220, 340]))
+    /* Sin anchos incrustados: `[200, 220, 340]` sumaba 760 y era la tabla que el
+     * Lead señaló como «la única por encima de la banda y probablemente la que
+     * produce scroll». El reparto por defecto la deja bajo el techo y manda el
+     * sobrante a `Notas`, que es lo que su patrón prescribe para estas seis. */
+    if (es.length) salida.push(tabla(es[0], es.slice(1)))
   }
   // 🔴 Cobertura, no confianza: las tres plataformas o nada. Si uSpec deja de
   // emitir una, la página saldría con dos y sin hueco visible.
@@ -368,8 +376,20 @@ const idDelRecurso = (registro) => registro?.assetId
  */
 export const tabla = (cabecera, filas, anchos) => {
   const colTipo = cabecera.findIndex(c => /^type$/i.test(c.trim()))
-  const anchoBase = Math.floor(760 / cabecera.length)
-  const anchoDe = (c) => anchos?.[c] ?? anchoBase
+  /* 🔴 PRIORIDAD, y este orden es la regla: lo que el Lead ajustó a mano gana
+   * SIEMPRE. Un ajuste suyo es una decisión; el reparto del generador es un
+   * default, y un default no pisa una decisión.
+   *
+   * Antes esto era `Math.floor(760 / columnas)` — reparto igual y por encima de
+   * la banda 754-757, o sea el scroll que él quita a mano y luego el generador
+   * volvía a poner en cada escritura. */
+  const { anchos: delRegistro, origen } = anchosDe(cabecera, null)
+  REGISTRO_ANCHOS.push({ firma: firmaDeTabla(cabecera), origen })
+  /* El default para una tabla sin ancho suyo NO es reparto igual: es su misma
+   * regla —la columna de dato se comprime, la descriptiva absorbe—, para que una
+   * tabla nueva nazca ya con la forma que él le daría. */
+  const calculados = anchosDeColumna([cabecera, ...filas], cabecera.length)
+  const anchoDe = (c) => delRegistro?.[c] ?? anchos?.[c] ?? Math.floor(calculados[c] ?? 756 / cabecera.length)
 
   /**
    * ⚠️ Dentro de una celda, la imagen va en su PROPIO párrafo: texto, línea en
@@ -1039,6 +1059,7 @@ const main = async () => {
    * de uSpec sí puede hablar del extractor, la página no. Una de las tres venía
    * literalmente de una celda del `.md`. */
   exigirAgnostico(TABS)
+  informeDeAnchos(REGISTRO_ANCHOS)
 
   // Validar TODO antes de crear nada.
   let ok = true

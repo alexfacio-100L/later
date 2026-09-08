@@ -116,7 +116,7 @@ const ANCHO_MINIMO = 72
  * tabla cruce el techo, y que la columna descriptiva sea la que absorbe.
  * El ajuste fino por tabla sigue siendo suyo.
  */
-function anchosDeColumna(filas, columnas) {
+export function anchosDeColumna(filas, columnas) {
   const UMBRAL_PROSA = 28          // celda más larga a partir de la cual es prosa
   const PADDING = 44               // margen de celda observado en las medidas
   const PX_POR_CARACTER = 6.2
