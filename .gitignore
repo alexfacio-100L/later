@@ -64,3 +64,9 @@ tokens.json
 # Entorno de Python para recortar.py — Pillow no está en el Python del sistema.
 # Se recrea con: python3 -m venv experimento-canario/.venv && experimento-canario/.venv/bin/pip install Pillow
 experimento-canario/.venv/
+
+# Respaldos de páginas de Supernova: derivados y regenerables con
+# `npm run docs:respaldo`. Son ~600 KB de JSON que cambia entero en cada toma,
+# y su valor es local — sirven para comparar ANTES y DESPUÉS de una escritura
+# de la misma sesión, no como historia.
+experimento-canario/respaldos/

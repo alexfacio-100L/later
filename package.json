@@ -34,7 +34,9 @@
     "comp:auditar:md": "node auditar-componente.mjs --md",
     "md:verificar": "node completar-md.mjs",
     "md:completar": "node completar-md.mjs",
-    "plantilla": "node plantilla-componente/generar.mjs"
+    "plantilla": "node plantilla-componente/generar.mjs",
+    "docs:anchos": "node experimento-canario/capturar-anchos.mjs",
+    "docs:respaldo": "node experimento-canario/respaldo-pagina.mjs"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",

@@ -356,7 +356,44 @@ const tablasDeEstado = (estado) => {
 }
 
 const token = (ruta) => ({ entityId: TK[ruta], entityType: "Token" })
+
+/**
+ * Los temas del sistema, por nombre. Leídos de Supernova el 8 sep 2026.
+ * 🔴 Son ids, no nombres: si alguien renombra «Dark» el id sigue valiendo, pero
+ * si BORRA el tema esto apunta a nada. `md:verificar` lo comprueba.
+ */
+const TEMA = {
+  light: "bbea853c-ddd6-405d-8a2b-3908c2656805",
+  dark:  "10b101be-fad3-40dc-88c3-02cd375ed3db",
+}
+
+/**
+ * Un bloque de tokens, con un swatch POR CADA MODE que la sección representa.
+ *
+ * POR QUÉ ES PARÁMETRO Y NO CONSTANTE — petición del Lead, 8 sep 2026:
+ * *«que se activen los swatches dependiendo del mode que queremos representar»*.
+ * Una sección que solo habla de Light no debe mostrar una columna Dark vacía de
+ * sentido; una que compara los dos las necesita ambas. **Lo decide la sección, no
+ * el generador.**
+ *
+ * ⚠️ Y esto existe porque el ajuste era MANUAL: el Lead activó los swatches a
+ * mano en Supernova y la siguiente escritura se los habría llevado, igual que se
+ * llevó 16 anchos de tabla el 8 sep. Un ajuste que solo vive donde escribimos no
+ * está guardado.
+ *
+ * @param modes - Nombres de mode a mostrar, en orden. Sin ellos, sin swatches.
+ */
 const tokens = (...rutas) => JSON.stringify(rutas.map(token))
+
+const swatches = (...modes) => {
+  const desconocidos = modes.filter(m => !TEMA[m])
+  if (desconocidos.length) throw new Error(
+    `Mode(s) sin tema en Supernova: ${desconocidos.join(", ")}. Conocidos: ${Object.keys(TEMA).join(", ")}.`)
+  return JSON.stringify(modes.map((m, i) => ({
+    id: i === 0 ? "swatch-0" : `swatch-${m}`,
+    selectedThemeIds: [TEMA[m]],
+  })))
+}
 
 /**
  * El id del recurso ES el `assetId` del registro.
@@ -383,8 +420,13 @@ export const tabla = (cabecera, filas, anchos) => {
    * Antes esto era `Math.floor(760 / columnas)` — reparto igual y por encima de
    * la banda 754-757, o sea el scroll que él quita a mano y luego el generador
    * volvía a poner en cada escritura. */
-  const { anchos: delRegistro, origen } = anchosDe(cabecera, null)
-  REGISTRO_ANCHOS.push({ firma: firmaDeTabla(cabecera), origen })
+  /* 🔴 La primera columna entra en la firma, y no es un detalle: el Button tiene
+   * 24 tablas pero solo 17 combinaciones distintas de encabezados —`Propiedad |
+   * Valor | Notas` se repite seis veces con seis anchos distintos—. Emparejar
+   * solo por encabezados preservaba 17 y recalculaba 7 sin decir nada. */
+  const col0 = filas.map(f => String(f?.[0] ?? ""))
+  const { anchos: delRegistro, origen } = anchosDe(cabecera, null, col0)
+  REGISTRO_ANCHOS.push({ firma: firmaDeTabla(cabecera, col0), origen })
   /* El default para una tabla sin ancho suyo NO es reparto igual: es su misma
    * regla —la columna de dato se comprime, la descriptiva absorbe—, para que una
    * tabla nueva nazca ya con la forma que él le daría. */
@@ -510,6 +552,13 @@ const TABS = {
 // pinta el título y la descripción arriba —«Ejecuta una acción. Lo que navega
 // es un Link.»— y volver a escribirla la deja dos veces seguidas en pantalla.
 "Resumen general": `El control de acción del sistema. Sesenta variantes sobre cuatro ejes, una sola parada de foco y label siempre visible.
+
+${/* 🟡 DECISIÓN EDITORIAL, 8 sep 2026 — portada del componente, a petición del Lead.
+    * Es el MISMO frame que ilustra «Cuál variante» en Usos, reutilizado a propósito:
+    * un lector que baja de la portada a la guía reconoce la imagen y no tiene que
+    * releerla. Y reusarlo no descuadra la cobertura — `verificarCobertura` busca la
+    * URL en el texto de TODAS las pestañas juntas, así que sigue contando uno. */
+  preview("variant", "primary y secondary")}
 
 <SNCallout type="Info">
 **Categoría:** Acciones · **Dueño:** Product Design · **También llamado:** Action, CTA, Call to action
@@ -737,9 +786,9 @@ Las ocho combinaciones —\`variant\` × \`surface\` × mode— están en la esp
 
 ### Los tokens del componente
 
-<SNBlock packageId="io.supernova.block.design-tokens">
+<SNBlock packageId="io.supernova.block.design-tokens" variantId="table">
   <SNItem>
-    <SNProp name="tokens" value={${tokens("background/brandMain","background/brandHover","background/brandPressed","background/hover","background/selected","background/secondary","background/disabled","text/primaryInverse","text/primaryInverseStatic","text/secondary","text/disabled","icon/inverse","icon/inverseStatic","icon/disabled","border/focus","border/disabled")}} />
+    <SNProp name="tokens" value={${tokens("background/brandMain","background/brandHover","background/brandPressed","background/hover","background/selected","background/secondary","background/disabled","text/primaryInverse","text/primaryInverseStatic","text/secondary","text/disabled","icon/inverse","icon/inverseStatic","icon/disabled","border/focus","border/disabled")}} swatches={${swatches("light","dark")}} />
   </SNItem>
 </SNBlock>
 
