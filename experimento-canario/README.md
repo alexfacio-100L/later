@@ -17,11 +17,13 @@ cp .env.example .env        # desde la raíz de "later-brand-system"
 **Después, los scripts la leen solos:**
 
 ```bash
-cd "2. Proyecto/uSpec/experimento-canario"
+cd later-brand-system            # la raíz del repo, NO "2. Proyecto/uSpec/…"
 npm install
-node escribir-en-supernova.mjs --validar    # NO toca la página
-node escribir-en-supernova.mjs --escribir   # reemplaza su contenido
+npm run docs:validar             # NO toca la página: convierte e informa
+npm run docs:publicar            # escribe el contenido en Supernova
 ```
+
+> 🔴 **Corregido el 7 sep 2026, y eran dos defectos en cuatro líneas.** *El `cd` apuntaba a `2. Proyecto/uSpec/experimento-canario`, una ruta que dejó de existir en una mudanza y que nadie volvió a pisar.* **Y los comandos llamaban a `escribir-en-supernova.mjs`, el canario original**, que respondió su pregunta —*¿`writeMarkdownToPage` conserva la estructura?*— y fue sustituido por `publicar.mjs`. **El canario se borró ese día; su resultado vive en el publicador vigente.**
 
 *En un pipeline de CI no hace falta `.env`: si `SUPERNOVA_API_KEY` ya existe como variable de entorno, tiene prioridad.*
 

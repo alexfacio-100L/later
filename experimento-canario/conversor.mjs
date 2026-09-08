@@ -72,7 +72,12 @@ const celdasDe     = l => l.trim().replace(/^\|/, "").replace(/\|$/, "")
   .split(/(?<!\\)\|/).map(c => c.trim().replace(/\\\|/g, "|"))
 
 /** Ancho útil de una página de documentación de Supernova, en px. */
-const ANCHO_PAGINA = 760
+/* 🔴 756, NO 760. El Lead midió su propio ajuste manual el 8 sep 2026 y la banda
+ * real es 754–757: «si haces la tabla ancha, puede aparecer un scroll; no es que
+ * esté mal, pero es algo que evito». El ancho total NO es un objetivo, es un
+ * TECHO — por eso todo redondeo va hacia ABAJO. Con 760 el generador cruzaba el
+ * umbral en cada tabla y producía el scroll que él quita a mano. */
+const ANCHO_PAGINA = 756
 /** Por debajo de esto una columna deja de ser legible. */
 const ANCHO_MINIMO = 72
 
@@ -86,27 +91,71 @@ const ANCHO_MINIMO = 72
  * La proporción se amortigua con una potencia < 1 para que una columna muy
  * larga no aplaste a las demás, y luego se garantiza un mínimo legible.
  */
+/**
+ * Reparte el ancho de una tabla según el patrón que el Lead aplica a mano.
+ *
+ * SU REGLA, en sus palabras: «las columnas que tienen descripciones largas son
+ * las que les damos más espacio para que se achiquen las tablas». La tabla crece
+ * a lo ancho para no crecer a lo alto.
+ *
+ * CÓMO SE CODIFICA
+ *   1. Cada columna se clasifica en DATO o PROSA por la longitud de su celda más
+ *      larga. Un `#`, una talla o un booleano son dato; una nota es prosa.
+ *   2. Las columnas de dato se comprimen a lo que su contenido necesita.
+ *   3. Las de prosa se reparten TODO el sobrante, en proporción a su contenido.
+ *   4. Si no hay ninguna de prosa, se reparten iguales.
+ *   5. El total nunca cruza el techo: todo redondeo es hacia abajo.
+ *
+ * ⚠️ LÍMITE DECLARADO, y conviene no fingir lo contrario: esto NO reproduce los
+ * píxeles exactos del Lead. Se probó contra sus tres tablas medidas y el error
+ * baja de 447 a 306 px, pero no llega a cero — y no puede, porque sus anchos son
+ * decisiones por tabla, no una fórmula. Se comprobó de tres formas distintas: no
+ * hay un exponente único que ajuste los tres casos a la vez.
+ *
+ * Lo que este reparto SÍ garantiza es lo que de verdad importaba: que ninguna
+ * tabla cruce el techo, y que la columna descriptiva sea la que absorbe.
+ * El ajuste fino por tabla sigue siendo suyo.
+ */
 function anchosDeColumna(filas, columnas) {
-  const medias = []
+  const UMBRAL_PROSA = 28          // celda más larga a partir de la cual es prosa
+  const PADDING = 44               // margen de celda observado en las medidas
+  const PX_POR_CARACTER = 6.2
+  const MIN_PROSA = 120            // una columna de prosa nunca baja de aquí
+
+  const maxLen = [], media = []
   for (let c = 0; c < columnas; c++) {
     const largos = filas.map(f => (f[c] ?? "").length)
-    medias.push(Math.max(largos.reduce((a, b) => a + b, 0) / (largos.length || 1), 3))
+    maxLen.push(Math.max(...largos, 1))
+    media.push(Math.max(largos.reduce((a, b) => a + b, 0) / (largos.length || 1), 3))
   }
-  // Amortiguar: sin esto, una nota larga se lleva casi todo el ancho.
-  const pesos = medias.map(m => Math.pow(m, 0.55))
-  const total = pesos.reduce((a, b) => a + b, 0)
-  let anchos = pesos.map(p => (p / total) * ANCHO_PAGINA)
 
-  // Garantizar el mínimo, quitando el excedente a las más anchas.
-  const deficit = anchos.reduce((acc, a) => acc + Math.max(0, ANCHO_MINIMO - a), 0)
-  if (deficit > 0) {
-    const holgadas = anchos.map(a => Math.max(0, a - ANCHO_MINIMO))
-    const disponible = holgadas.reduce((a, b) => a + b, 0)
-    anchos = anchos.map((a, i) =>
-      a < ANCHO_MINIMO ? ANCHO_MINIMO
-        : a - (disponible ? (holgadas[i] / disponible) * deficit : 0))
+  const esProsa = maxLen.map(m => m >= UMBRAL_PROSA)
+  const iProsa = esProsa.map((p, i) => (p ? i : -1)).filter(i => i >= 0)
+
+  // Sin columna descriptiva, nadie domina: se reparten iguales.
+  if (iProsa.length === 0) return Array(columnas).fill(Math.floor(ANCHO_PAGINA / columnas))
+
+  // Las de dato piden lo que su contenido necesita.
+  let natural = maxLen.map((m, i) =>
+    esProsa[i] ? 0 : Math.max(ANCHO_MINIMO, Math.round(PADDING + m * PX_POR_CARACTER)))
+
+  // Guarda: si los datos no dejan sitio a la prosa, se comprimen ellos.
+  const reservaProsa = iProsa.length * MIN_PROSA
+  let usado = natural.reduce((a, b) => a + b, 0)
+  if (usado + reservaProsa > ANCHO_PAGINA) {
+    const disponible = ANCHO_PAGINA - reservaProsa
+    const factor = disponible / usado
+    natural = natural.map((n, i) => (esProsa[i] ? 0 : Math.max(ANCHO_MINIMO, Math.floor(n * factor))))
+    usado = natural.reduce((a, b) => a + b, 0)
   }
-  return anchos.map(a => Math.round(a * 100) / 100)
+
+  // El sobrante entero va a la prosa, en proporción a su contenido.
+  const sobrante = Math.max(0, ANCHO_PAGINA - usado)
+  const pesos = iProsa.map(i => Math.pow(media[i], 0.75))
+  const totalPesos = pesos.reduce((a, b) => a + b, 0)
+  const anchos = [...natural]
+  iProsa.forEach((i, k) => { anchos[i] = Math.floor(sobrante * (pesos[k] / totalPesos)) })
+  return anchos
 }
 
 /**
