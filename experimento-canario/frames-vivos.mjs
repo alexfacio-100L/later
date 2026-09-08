@@ -98,7 +98,32 @@ for (const [s, n] of ausentes) console.error(`  🔴 ${s} (${n}): sin frame. Cor
  * guardar una imagen de referencia, que es exactamente la foto que quitamos.
  */
 const RATIO_MINIMO = 1.0   // más alto que ancho: se come la página
-const ANCHO_MINIMO = 200   // por debajo, el escalado a la columna lo emborrona
+
+/* 🔴 UMBRAL REESCRITO EL 8 SEP 2026, y lo que cambió es el PORQUÉ, no el número.
+ *
+ * Decía 200 «porque por debajo el escalado a la columna lo emborrona». Esa razón
+ * CADUCÓ: el generador emite ahora `previewSize="NaturalHeight"` —el «fit to
+ * image size» que el Lead ponía a mano—, así que la imagen se dibuja a su tamaño
+ * natural y NO se estira. Sin escalado no hay emborronado, a ningún ancho.
+ *
+ * Y lo destapó un cambio del Lead en otro sitio: al quitar el fondo de las
+ * plantillas de preview, el frame pasó a ajustarse a su contenido y 20 de los 23
+ * encogieron. Uno cayó a 133 px y este guard bloqueó la publicación de una página
+ * cuyo render estaba BIEN — verificado con captura, no con el árbol de capas.
+ *
+ * EL RIESGO REAL, que es el que este número vigila ahora:
+ *   No es la nitidez. Es la CONSISTENCIA VISUAL entre previews de una misma
+ *   página. Un preview mucho más pequeño que sus vecinos se lee como un error de
+ *   maquetación aunque esté perfecto, porque flota en una columna ancha.
+ *
+ * Por eso baja a 120 y no desaparece: sigue habiendo un suelo por debajo del cual
+ * un preview deja de leerse como parte de la serie. 120 admite el botón suelto
+ * más pequeño del sistema (133 px) y sigue atrapando un frame recortado por error.
+ *
+ * ⚠️ Si alguien vuelve a subirlo, que sea por consistencia visual medida en la
+ * página, no por nitidez: la nitidez ya no depende de esto.
+ */
+const ANCHO_MINIMO = 120
 const revisarForma = (lista) => {
   const raros = []
   for (const m of lista) {
