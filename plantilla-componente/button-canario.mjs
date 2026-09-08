@@ -92,6 +92,18 @@ const ICONOS = JSON.parse(fs.readFileSync(
  * con `UndeclaredValueKey … no value.0.resource`. *El mapa se escribió leyendo
  * una página existente, y el esquema cambió por debajo.*
  *
+ * 🔴 `previewSize="NaturalHeight"`, y esto se escribe desde aquí a propósito.
+ * Es el «fit to image size» que el Lead ponía A MANO en el panel de Supernova,
+ * bloque por bloque, en los 11 de la página. Medido el 8 sep 2026 al leer su
+ * ajuste manual. Antes se emitía `"Centered"`, así que él tenía que repetir el
+ * mismo gesto en cada preview de cada componente. *Si el generador puede
+ * escribirlo, el Lead no debería tener que acordarse.*
+ *
+ * ⚠️ Dos variaciones suyas que NO se codifican porque no está confirmado que
+ * sean deliberadas: `showFrameDetails={false}` en un bloque y
+ * `itemBackgroundColor={{ value: "#080808" }}` en otro —presumiblemente el
+ * preview de modo oscuro—. **Se le preguntan antes de generalizarlas.**
+ *
  * ⚠️ `variant="plain"` a propósito: cada preview es una imagen sola, y
  * `bordered` está pensado para rejillas de varios frames. Y sin
  * `showFrameDetails`, que añadiría el nombre de la capa y el enlace a Figma en
@@ -104,7 +116,7 @@ const preview = (seccion, pie) => {
     `«${seccion}» no está en frames-vivos.json, o le falta entityId/resourceId/url.\n` +
     `   Registrados: ${Object.keys(FRAMES).join(" · ")}\n` +
     `   Regenera el registro con: npm run docs:frames -- --render --registro`)
-  return `<SNFigmaImages previewSize="Centered" variant="plain" columns={1}>
+  return `<SNFigmaImages previewSize="NaturalHeight" variant="plain" columns={1}>
   <SNFigmaFrame id="${f.entityId}" resourceId="${f.resourceId}" src="${f.url}" />
 </SNFigmaImages>`
 }
