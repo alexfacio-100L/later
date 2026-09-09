@@ -1,0 +1,11 @@
+{
+  "_porQue": "El changelog del arreglo de la familia brand en Dark no se publica hasta que el arreglo esté de verdad en Supernova. Publicar la nota antes que el hecho es un falso vigente en el sitio donde más se cree.",
+  "_comoSeActualiza": "npm run docs:brand-dark — lee los overrides del tema Dark y comprueba a qué primitivo apunta cada token.",
+  "corregido": false,
+  "fecha": null,
+  "_esperado": {
+    "background/brandMain": "neutralDarkBlue/100",
+    "background/brandHover": "neutralDarkBlue/400",
+    "background/brandPressed": "neutralDarkBlue/300"
+  }
+}

@@ -38,7 +38,8 @@
     "docs:anchos": "node experimento-canario/capturar-anchos.mjs",
     "docs:respaldo": "node experimento-canario/respaldo-pagina.mjs",
     "docs:componentes": "node experimento-canario/publicar-componentes.mjs",
-    "docs:contraste": "node contraste-real.mjs"
+    "docs:contraste": "node contraste-real.mjs",
+    "docs:brand-dark": "node experimento-canario/verificar-brand-dark.mjs"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",

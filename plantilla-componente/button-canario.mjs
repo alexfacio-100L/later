@@ -41,6 +41,23 @@ const TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/button-tokens.json
 const MD_BUTTON = fs.readFileSync(path.join(AQUI, "../Componentes/button.md"), "utf8")
 const TOKENS_POR_VARIANTE = tokensPorVariante(MD_BUTTON)
 const TABLA_CONTRASTE = tablaMarkdown(paresDe(MD_BUTTON))
+/**
+ * La entrada de changelog del arreglo de la familia `brand` en Dark.
+ *
+ * 🔴 SE EMITE SOLO SI EL ARREGLO YA ESTÁ EN SUPERNOVA, y ésa es toda la gracia.
+ * El Lead corrige en Figma y el plugin de variables sincroniza; entre una cosa y
+ * otra hay una ventana en la que la página diría «ya es azul» mientras el token
+ * sigue valiendo blanco. **Publicar el changelog antes que el hecho es fabricar
+ * un falso vigente en el sitio donde más se cree.**
+ *
+ * El dato se mide en `config/estado-brand-dark.json`, que actualiza
+ * `npm run docs:brand-dark`. Mientras diga `pendiente`, esta entrada no sale.
+ */
+const ESTADO_BRAND = JSON.parse(fs.readFileSync(path.join(AQUI, "config/estado-brand-dark.json"), "utf8"))
+const ENTRADA_BRAND_DARK = ESTADO_BRAND.corregido
+  ? `- **${ESTADO_BRAND.fecha}** — la familia \`brand\` recupera el color de marca en Dark. \`background/brandMain\`, \`brandHover\` y \`brandPressed\` apuntaban a la escala **neutra** —blanco y grises, sin una gota de azul— mientras en Light apuntan a la de marca. Ahora usan \`neutralDarkBlue\` en su tramo claro, espejo del patrón de Light: reposo en el extremo de la escala, \`hover\` tres pasos hacia el centro y \`pressed\` entre los dos. **El contraste del label sigue por encima de AA en los tres estados.**\n`
+  : ""
+
 const COBERTURA_TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/cobertura-propiedades-token.json"), "utf8"))
 
 /**
@@ -1068,7 +1085,7 @@ ${tabla(["Qué", "A quién afecta", "Estado"], [
 
 ## Changelog
 
-- **1 sep 2026** — \`isLoading\` queda especificado: spinner \`CircleNotch\` en la ranura derecha, **sin una sola variante nueva en Figma**. Con él entran el movimiento, las reglas responsive, los supuestos de contenido y quince criterios de aceptación propios.
+${ENTRADA_BRAND_DARK}- **1 sep 2026** — \`isLoading\` queda especificado: spinner \`CircleNotch\` en la ranura derecha, **sin una sola variante nueva en Figma**. Con él entran el movimiento, las reglas responsive, los supuestos de contenido y quince criterios de aceptación propios.
 - **27 ago 2026** — escala dimensional rehecha: alturas **48 · 56 · 64**, radio único \`radius/l\` (16) en las 60 variantes, y el defecto de \`size\` pasa de \`s\` a \`m\`.
 - **21 ago 2026** — corregidas las seis variantes \`secondary\` + \`pressed\`: el texto y el icono pasan a las variantes **Static**. En Dark el texto caía a 3.29:1.
 - **20 ago 2026** — \`text/disabled\` pasa a \`neutral/600\` en Light y \`neutral/700\` en Dark. El contraste sobre \`background/disabled\` sube de 1.74:1 a **4.50** y **4.89**.
