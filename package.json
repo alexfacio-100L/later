@@ -37,7 +37,8 @@
     "plantilla": "node plantilla-componente/generar.mjs",
     "docs:anchos": "node experimento-canario/capturar-anchos.mjs",
     "docs:respaldo": "node experimento-canario/respaldo-pagina.mjs",
-    "docs:componentes": "node experimento-canario/publicar-componentes.mjs"
+    "docs:componentes": "node experimento-canario/publicar-componentes.mjs",
+    "docs:contraste": "node contraste-real.mjs"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",

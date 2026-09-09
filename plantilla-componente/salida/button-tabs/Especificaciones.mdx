@@ -1282,13 +1282,57 @@ El umbral son **44 px, estándar propio de 100 Ladrillos**, alineado a WCAG 2.5.
 
 ## Color
 
-El contraste se calcula sobre los tokens vivos, así que **ningún ratio escrito a mano puede caducar aquí.**
+
+El contraste se calcula sobre los valores vivos de cada token, así que **ningún ratio escrito a mano puede caducar aquí.**
+
+### Qué combinaciones son seguras
+
+Cada pestaña cruza los colores de una variante entre sí. Sirve para decidir: si una combinación no está en la tabla de abajo pero la necesitas, aquí ves si es segura antes de usarla.
+
+#### primary
 
 <SNBlock packageId="io.supernova.block.color-accessibility-grid">
   <SNItem>
-    <SNProp name="tokens" value={[{"entityId":"1bac692a-a1db-4d29-83b0-2aa1baf91a90","entityType":"Token"},{"entityId":"acaeb789-8a31-4905-bd7b-ecf941fa503e","entityType":"Token"},{"entityId":"90bbc464-5d3d-40cf-b249-91855080b3f2","entityType":"Token"},{"entityId":"26470139-ca4c-46b3-b43b-2470dd46150e","entityType":"Token"},{"entityId":"31522e29-17dc-4834-8907-bcbd636f8b37","entityType":"Token"},{"entityId":"f78cfabe-4395-4449-872d-178b218e4e5f","entityType":"Token"},{"entityId":"99e42f9d-dff8-4e08-8821-5826555187c0","entityType":"Token"},{"entityId":"f599268b-9b7d-4a71-81c0-87d356b0a135","entityType":"Token"},{"entityId":"2b398217-d7bf-4003-b58d-e62ecfcea85c","entityType":"Token"},{"entityId":"0a5bbb04-57c6-47c0-8d34-51d11032852a","entityType":"Token"},{"entityId":"4fb6c585-e162-4a7c-81df-9e9c752e49a4","entityType":"Token"},{"entityId":"59790516-5bfd-413f-9a1f-e3f87cb7d50d","entityType":"Token"},{"entityId":"178b347a-c917-46e2-9f6d-4635ddcb7237","entityType":"Token"},{"entityId":"1f292c74-b27d-4d6e-a890-1a090c0d7d67","entityType":"Token"}]} />
+    <SNProp name="tokens" value={[{"entityId":"1bac692a-a1db-4d29-83b0-2aa1baf91a90","entityType":"Token"},{"entityId":"f599268b-9b7d-4a71-81c0-87d356b0a135","entityType":"Token"},{"entityId":"59790516-5bfd-413f-9a1f-e3f87cb7d50d","entityType":"Token"},{"entityId":"acaeb789-8a31-4905-bd7b-ecf941fa503e","entityType":"Token"},{"entityId":"90bbc464-5d3d-40cf-b249-91855080b3f2","entityType":"Token"},{"entityId":"99e42f9d-dff8-4e08-8821-5826555187c0","entityType":"Token"},{"entityId":"4fb6c585-e162-4a7c-81df-9e9c752e49a4","entityType":"Token"},{"entityId":"1f292c74-b27d-4d6e-a890-1a090c0d7d67","entityType":"Token"}]} />
   </SNItem>
 </SNBlock>
+
+#### secondary
+
+<SNBlock packageId="io.supernova.block.color-accessibility-grid">
+  <SNItem>
+    <SNProp name="tokens" value={[{"entityId":"f78cfabe-4395-4449-872d-178b218e4e5f","entityType":"Token"},{"entityId":"0a5bbb04-57c6-47c0-8d34-51d11032852a","entityType":"Token"},{"entityId":"26470139-ca4c-46b3-b43b-2470dd46150e","entityType":"Token"},{"entityId":"31522e29-17dc-4834-8907-bcbd636f8b37","entityType":"Token"},{"entityId":"2b398217-d7bf-4003-b58d-e62ecfcea85c","entityType":"Token"},{"entityId":"178b347a-c917-46e2-9f6d-4635ddcb7237","entityType":"Token"},{"entityId":"99e42f9d-dff8-4e08-8821-5826555187c0","entityType":"Token"},{"entityId":"4fb6c585-e162-4a7c-81df-9e9c752e49a4","entityType":"Token"},{"entityId":"1f292c74-b27d-4d6e-a890-1a090c0d7d67","entityType":"Token"}]} />
+  </SNItem>
+</SNBlock>
+
+### Las que este botón usa
+
+Un par por estado, con el contraste de lo que va encima del relleno. **El label exige 4.5:1** (texto normal) y **los iconos 3:1** (WCAG 1.4.11, no textual).
+
+| Combinación | Estado | Fondo | Label | Iconos |
+|---|---|---|---|---|
+| primary / Light | `rest` | `background/brandMain` | **16.22:1** | 17.08:1 |
+| primary / Light | `hover` | `background/brandHover` | **8.51:1** | 8.96:1 |
+| primary / Light | `active` | `background/brandPressed` | **10.79:1** | 11.37:1 |
+| primary / Light | `focus-visible` | `background/brandHover` | **8.51:1** | 8.96:1 |
+| primary / Light | `isDisabled === true` | `background/disabled` | 4.49:1 * | 1.74:1 * |
+| primary / Dark | `rest` | `background/brandMain` | **21.00:1** | 21.00:1 |
+| primary / Dark | `hover` | `background/brandHover` | **11.41:1** | 11.41:1 |
+| primary / Dark | `active` | `background/brandPressed` | **15.75:1** | 15.75:1 |
+| primary / Dark | `focus-visible` | `background/brandHover` | **11.41:1** | 11.41:1 |
+| primary / Dark | `isDisabled === true` | `background/disabled` | 4.88:1 * | 2.96:1 * |
+| secondary / Light | `rest` | `background/secondary` | **17.08:1** | 17.08:1 |
+| secondary / Light | `hover` | `background/hover` | **15.89:1** | 15.89:1 |
+| secondary / Light | `active` | `background/selected` | **6.05:1** | 6.05:1 |
+| secondary / Light | `focus-visible` | `background/hover` | **15.89:1** | 15.89:1 |
+| secondary / Light | `isDisabled === true` | `background/disabled` | 4.49:1 * | 1.74:1 * |
+| secondary / Dark | `rest` | `background/secondary` | **13.42:1** | 13.42:1 |
+| secondary / Dark | `hover` | `background/hover` | **8.54:1** | 8.54:1 |
+| secondary / Dark | `active` | `background/selected` | **6.05:1** | 6.05:1 |
+| secondary / Dark | `focus-visible` | `background/hover` | **8.54:1** | 8.54:1 |
+| secondary / Dark | `isDisabled === true` | `background/disabled` | 4.88:1 * | 2.96:1 * |
+
+Los valores marcados con \* son del estado deshabilitado, **exento de requisito de contraste** por WCAG 1.4.3: un control inactivo no tiene umbral que cumplir. Se muestran igualmente porque exento no es lo mismo que legible — el icono deshabilitado da 1.74:1 en Light, y ése es el argumento de la sección «Cuándo no deshabilitar».
 
 ### Cómo resuelve en cada mode
 

@@ -23,7 +23,8 @@ const REGISTRO_ANCHOS = []
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
-import { aplicarPestanas } from "./pestanas-plataforma.mjs"
+import { aplicarPestanas, VARIANTES_DE_COLOR as VARIANTES_COLOR } from "./pestanas-plataforma.mjs"
+import { tokensPorVariante, tablaMarkdown, paresDe } from "../contraste-real.mjs"
 import { reagruparCitas } from "../experimento-canario/citas.mjs"
 import { traducirCabecera, anchosDeColumna } from "../experimento-canario/conversor.mjs"
 
@@ -35,6 +36,11 @@ const GRUPO_COMPONENTES = "074cc38b-fbf2-40b8-8802-d519fff8c76e"
 const TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/button-tokens.json"), "utf8"))
 /* Cobertura de las propiedades de token, medida contra Supernova. Decide qué
  * columnas puede emitir la tabla — ver `columnasDeToken`. */
+/* Derivados del .md, no escritos: los tokens que usa cada variante y la tabla de
+ * contraste de las combinaciones reales. Se recalculan en cada corrida. */
+const MD_BUTTON = fs.readFileSync(path.join(AQUI, "../Componentes/button.md"), "utf8")
+const TOKENS_POR_VARIANTE = tokensPorVariante(MD_BUTTON)
+const TABLA_CONTRASTE = tablaMarkdown(paresDe(MD_BUTTON))
 const COBERTURA_TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/cobertura-propiedades-token.json"), "utf8"))
 
 /**
@@ -819,45 +825,46 @@ ${tablaDelMd("| Dimension | Comportamiento |")}
 
 ## Color
 
-El contraste se calcula sobre los tokens vivos, así que **ningún ratio escrito a mano puede caducar aquí.**
+${/* 🔴 REESTRUCTURADO el 9 sep 2026, y la forma la propuso el Lead.
+    *
+    * Antes: UNA grilla con los 14 tokens del componente, cruzados todos contra
+    * todos. 196 celdas, scroll horizontal, y ~28 correspondientes a una
+    * combinación real. Diseñadores que la vieron «no supieron qué estaban
+    * mirando»; el veredicto fue «nada útil».
+    *
+    * Su propuesta —dejar de mirarlo global y hacerlo por parte— con la corrección
+    * de que la partición útil es por VARIANTE y no por tipo de color (partir en
+    * fondos/textos/iconos suma 221 celdas: cada mitad recruza los 7 fondos), más
+    * las pestañas embebidas que él mismo montó para el lector de pantalla.
+    *
+    * Ahora son dos preguntas distintas, separadas a propósito:
+    *   · la GRILLA responde «qué combinaciones son seguras» — explorador
+    *   · la TABLA responde «qué combinaciones usa este botón» — especificación
+    *
+    * Los tokens de cada pestaña se DERIVAN de las tablas del .md
+    * (`tokensPorVariante`), no se listan aquí: si una variante deja de usar un
+    * token, esto lo refleja solo. */ ""}
+El contraste se calcula sobre los valores vivos de cada token, así que **ningún ratio escrito a mano puede caducar aquí.**
+
+### Qué combinaciones son seguras
+
+Cada pestaña cruza los colores de una variante entre sí. Sirve para decidir: si una combinación no está en la tabla de abajo pero la necesitas, aquí ves si es segura antes de usarla.
+
+${VARIANTES_COLOR.map(v => `#### ${v}
 
 <SNBlock packageId="io.supernova.block.color-accessibility-grid">
   <SNItem>
-    ${/* 🔴 CORREGIDO el 9 sep 2026. Hasta hoy esta grilla recibía SEIS tokens y
-        * los seis eran `background/*`: ni un solo color de texto ni de icono.
-        *
-        * El contraste es una relación entre DOS colores. Con solo fondos, la
-        * grilla no podía mostrar el contraste de ninguna combinación real del
-        * componente — medía fondos contra fondos, que no ocurre nunca.
-        *
-        * ⚠️ Y es la clase de defecto más cara de las tres de la regla 16: el
-        * FALSO COMPLETO. La grilla salía con la forma correcta, con ratios de
-        * verdad, sin error y sin hueco visible. Nadie lo detectó leyendo el
-        * código; se detectó porque **diseñadores que la vieron no supieron qué
-        * estaban mirando** (reporte del Lead, 9 sep). *No había nada que
-        * entender: lo que mostraba no correspondía a ninguna decisión de diseño.*
-        *
-        * Con el agravante de que la página AFIRMA dos veces que el contraste se
-        * verificó sobre las combinaciones reales —el callout de
-        * `background/selected` y los tokens Static es exactamente eso— y la
-        * grilla no lo demostraba.
-        *
-        * Ahora entran los 14 que forman pares reales: 7 fondos, 4 textos y 3
-        * iconos. Los 2 de borde quedan fuera a propósito: su requisito de
-        * contraste es otro (3:1 no textual) y meterlos solo añade celdas.
-        *
-        * 🟡 PENDIENTE DE JUICIO VISUAL: no está verificado cómo cruza el bloque.
-        * Si cruza todo contra todo, son 196 celdas de las que ~28 importan. Se
-        * revisa en Preview —el render solo se ve ahí— y si sigue sin leerse, el
-        * instrumento es el equivocado y toca una tabla de los pares reales,
-        * generada, no escrita a mano. */
-      ""}<SNProp name="tokens" value={${tokens(
-        "background/brandMain","background/brandHover","background/brandPressed",
-        "background/hover","background/selected","background/secondary","background/disabled",
-        "text/primaryInverse","text/primaryInverseStatic","text/secondary","text/disabled",
-        "icon/inverse","icon/inverseStatic","icon/disabled")}} />
+    <SNProp name="tokens" value={${tokens(...TOKENS_POR_VARIANTE[v])}} />
   </SNItem>
-</SNBlock>
+</SNBlock>`).join("\n\n")}
+
+### Las que este botón usa
+
+Un par por estado, con el contraste de lo que va encima del relleno. **El label exige 4.5:1** (texto normal) y **los iconos 3:1** (WCAG 1.4.11, no textual).
+
+${TABLA_CONTRASTE}
+
+Los valores marcados con \\* son del estado deshabilitado, **exento de requisito de contraste** por WCAG 1.4.3: un control inactivo no tiene umbral que cumplir. Se muestran igualmente porque exento no es lo mismo que legible — el icono deshabilitado da 1.74:1 en Light, y ése es el argumento de la sección «Cuándo no deshabilitar».
 
 ### Cómo resuelve en cada mode
 

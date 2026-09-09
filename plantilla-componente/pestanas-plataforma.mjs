@@ -46,6 +46,35 @@
 /** Los rótulos exactos que uSpec emite como `#### `. El orden de la página manda. */
 export const PLATAFORMAS = ["VoiceOver (iOS)", "TalkBack (Android)", "ARIA (Web)"]
 
+/**
+ * Los rótulos de la sección de Color, añadidos el 9 sep 2026.
+ *
+ * POR QUÉ, y viene de una sugerencia del Lead que resultó ser la buena:
+ * la grilla de accesibilidad recibía los 14 tokens del componente y los cruzaba
+ * TODOS CONTRA TODOS — 196 celdas, con scroll horizontal, de las que ~28
+ * correspondían a una combinación real. Diseñadores que la vieron *«no supieron
+ * qué estaban mirando»*, y el veredicto del Lead fue **«nada útil»**.
+ *
+ * Su propuesta: dejar de mirarlo global y hacerlo **por parte del componente**.
+ * 🔴 Partir por tipo de color (fondos / textos / iconos) NO sirve —está medido:
+ * las dos mitades vuelven a cruzar los mismos 7 fondos entre sí y suman 221
+ * celdas, más que la grilla única—. **Lo que sí sirve es partir por VARIANTE**,
+ * porque cada variante usa su propio juego de fondos, y meterlas en pestañas,
+ * que era la segunda mitad de su idea.
+ *
+ * Dentro de una pestaña todas las celdas pertenecen a la misma decisión: el
+ * cruce fondo-contra-fondo deja de ser ruido y pasa a significar «los fondos de
+ * primary comparados entre sí».
+ *
+ * ⚠️ NO se parte además por mode. El bloque declara `allowThemeSelection: false`
+ * —no acepta elegir tema—, así que una pestaña «Light» y otra «Dark» mostrarían
+ * lo mismo. *Está pendiente de comprobar en Preview qué tema resuelve.*
+ */
+export const VARIANTES_DE_COLOR = ["primary", "secondary"]
+
+/** Todo rótulo que agrupa en pestañas, venga de donde venga. */
+const ROTULOS = [...PLATAFORMAS, ...VARIANTES_DE_COLOR]
+
 const TITULOS = new Set([
   "io.supernova.block.title1", "io.supernova.block.title2",
   "io.supernova.block.title3", "io.supernova.block.title4",
@@ -63,7 +92,7 @@ const textoDe = (item) => {
 }
 
 const esTituloDePlataforma = (item) =>
-  paqueteDe(item) === "io.supernova.block.title4" && PLATAFORMAS.includes(textoDe(item))
+  paqueteDe(item) === "io.supernova.block.title4" && ROTULOS.includes(textoDe(item))
 
 /**
  * Reagrupa `items` en pestañas. Función pura: no toca la red, así que se puede
