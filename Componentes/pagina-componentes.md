@@ -33,4 +33,4 @@ Un componente marcado **Healthy** cumple las seis. Es lo que se puede dar por ci
 
 **Necesitas un componente que no existe.** Antes de crearlo, pregunta. La mayoría de las piezas nuevas resultan ser una variante de algo que ya está aquí, y una variante cuesta una fracción de lo que cuesta un componente nuevo — que, una vez dentro, hay que mantener para siempre.
 
-Para cualquiera de los tres, escríbenos en Slack a **#frontend-design**.
+Para cualquiera de los tres, escríbenos en Slack a **#frontend-and-design**.
