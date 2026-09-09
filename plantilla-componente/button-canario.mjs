@@ -750,6 +750,17 @@ ${preview("showIconRight", "con y sin icono final")}
 
 "Especificaciones": `Todo lo de abajo sale del componente real y se regenera con él.
 
+${/* 🔴 Encabezado contenedor de las tres pestañas, añadido el 9 sep 2026.
+    * Lo creó el Lead a mano en Supernova: agrupó «Anatomía», «Propiedades» y
+    * «Estados» —que eran tres secciones hermanas apiladas— en una sola con tres
+    * pestañas. Se reproduce aquí porque `writeMarkdownToPage` borra las Sections
+    * y la reorganización se habría perdido en la siguiente publicación.
+    *
+    * ⚠️ El agrupador necesita que este título EXISTA y que los tres que agrupa
+    * vayan justo detrás: convierte una tirada de títulos del mismo grupo en
+    * pestañas, y este de arriba es el que queda fuera rotulándolas. */ ""}
+## Anatomía, Propiedades y Estados
+
 ## Anatomía
 
 ${preview("Anatomy", "Los cuatro elementos, numerados")}

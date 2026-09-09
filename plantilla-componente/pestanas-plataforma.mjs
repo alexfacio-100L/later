@@ -72,8 +72,47 @@ export const PLATAFORMAS = ["VoiceOver (iOS)", "TalkBack (Android)", "ARIA (Web)
  */
 export const VARIANTES_DE_COLOR = ["primary", "secondary"]
 
-/** Todo rótulo que agrupa en pestañas, venga de donde venga. */
-const ROTULOS = [...PLATAFORMAS, ...VARIANTES_DE_COLOR]
+/**
+ * LOS GRUPOS QUE SE CONVIERTEN EN PESTAÑAS.
+ *
+ * Los dos primeros los montó el Lead a mano en Supernova el 9 sep 2026, y este
+ * módulo los reproduce porque `writeMarkdownToPage` los borraría en la siguiente
+ * publicación. **Su criterio, que es el mismo que ya justificaba las pestañas de
+ * plataforma, generalizado:** cuando varias secciones hermanas son facetas
+ * comparables del mismo tema, apiladas obligan a subir y bajar para compararlas;
+ * en pestañas la comparación es un clic.
+ *
+ * `nivel` es el del título que rotula cada pestaña. Importa por dos motivos: es
+ * lo que distingue un grupo de otro, y **marca dónde termina cada pestaña** — su
+ * contenido llega hasta el siguiente título de nivel IGUAL O SUPERIOR, de modo
+ * que los subtítulos de dentro viajan con ella. *La pestaña «Estados» lleva un
+ * `### Cómo se declara isLoading` dentro; cortar en «cualquier título» lo habría
+ * dejado fuera.*
+ *
+ * `conservarTitulo` distingue las dos convenciones que hoy conviven en la página:
+ * en las de plataforma el título se CONSUME para nombrar la pestaña y dentro solo
+ * queda la tabla; en las que montó el Lead el título se queda también dentro.
+ * ⚠️ Se reproduce lo que él hizo, no se normaliza: unificarlas es decisión suya.
+ */
+export const GRUPOS = [
+  { nivel: 2, titulos: ["Anatomía", "Propiedades", "Estados"], conservarTitulo: true },
+  { nivel: 3, titulos: ["Por talla", "Por superficie", "Por variante", "En foco"], conservarTitulo: true },
+  { nivel: 4, titulos: PLATAFORMAS, conservarTitulo: false },
+  { nivel: 4, titulos: VARIANTES_DE_COLOR, conservarTitulo: false },
+]
+
+const NIVEL = {
+  "io.supernova.block.title1": 1, "io.supernova.block.title2": 2,
+  "io.supernova.block.title3": 3, "io.supernova.block.title4": 4,
+}
+
+/** El grupo al que pertenece un título, o null si no agrupa. */
+const grupoDe = (item) => {
+  const n = NIVEL[paqueteDe(item)]
+  if (!n) return null
+  const t = textoDe(item)
+  return GRUPOS.find(g => g.nivel === n && g.titulos.includes(t)) ?? null
+}
 
 const TITULOS = new Set([
   "io.supernova.block.title1", "io.supernova.block.title2",
@@ -91,8 +130,7 @@ const textoDe = (item) => {
   return spans.map(s => s?.text ?? "").join("").trim()
 }
 
-const esTituloDePlataforma = (item) =>
-  paqueteDe(item) === "io.supernova.block.title4" && ROTULOS.includes(textoDe(item))
+const esTituloDePlataforma = (item) => grupoDe(item) !== null
 
 /**
  * Reagrupa `items` en pestañas. Función pura: no toca la red, así que se puede
@@ -105,17 +143,19 @@ export const agruparEnPestanas = (items) => {
   const secciones = []
 
   for (let i = 0; i < items.length;) {
-    if (!esTituloDePlataforma(items[i])) { salida.push(items[i++]); continue }
+    const grupo = grupoDe(items[i])
+    if (!grupo) { salida.push(items[i++]); continue }
 
-    // Una tirada: título de plataforma + todo lo que cuelga de él hasta el
-    // siguiente título de cualquier nivel (o el fin de la página).
+    /* Una tirada: títulos DEL MISMO GRUPO, cada uno con lo que cuelga de él hasta
+     * el siguiente título de nivel igual o superior. */
     const pestanas = []
     let j = i
-    while (j < items.length && esTituloDePlataforma(items[j])) {
+    while (j < items.length && grupoDe(items[j]) === grupo) {
       const titulo = textoDe(items[j])
-      const bloques = []
+      const bloques = grupo.conservarTitulo ? [items[j]] : []
       j++
-      while (j < items.length && !TITULOS.has(paqueteDe(items[j])) && items[j]?.type !== "Section") {
+      while (j < items.length && items[j]?.type !== "Section" &&
+             !(NIVEL[paqueteDe(items[j])] && NIVEL[paqueteDe(items[j])] <= grupo.nivel)) {
         bloques.push(items[j++])
       }
       // Un separador `---` al final de la sección no pertenece a la pestaña:
