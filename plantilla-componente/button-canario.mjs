@@ -33,6 +33,9 @@ const RAIZ = path.dirname(AQUI)
 const GRUPO_COMPONENTES = "074cc38b-fbf2-40b8-8802-d519fff8c76e"
 
 const TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/button-tokens.json"), "utf8"))
+/* Cobertura de las propiedades de token, medida contra Supernova. Decide qué
+ * columnas puede emitir la tabla — ver `columnasDeToken`. */
+const COBERTURA_TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/cobertura-propiedades-token.json"), "utf8"))
 
 /**
  * Los 21 previews que ya se subieron a Supernova el 21 de agosto. NO se vuelven
@@ -384,6 +387,54 @@ const TEMA = {
  * @param modes - Nombres de mode a mostrar, en orden. Sin ellos, sin swatches.
  */
 const tokens = (...rutas) => JSON.stringify(rutas.map(token))
+
+/**
+ * Título de un bloque que lo admite (`component-checklist`, y cualquiera con la
+ * prop `title`). Sin él, el bloque publica su `defaultValue` en inglés.
+ */
+const titulo = (texto) => `<SNProp name="title" value={${JSON.stringify(texto)}} />`
+
+/**
+ * Propiedades de token que la tabla muestra como COLUMNAS.
+ *
+ * 🔴 Se emiten SOLO si los tokens tienen valor, y el motivo lo dio el Lead el
+ * 9 sep 2026: *«cuando las activé, todas estaban vacías y no sabía qué era lo que
+ * debía mostrarse»*. Una columna vacía no informa de nada y además esconde el
+ * hueco detrás de un guion.
+ *
+ * Medido ese día sobre los 16 tokens del Button:
+ *   · `collection`      → los 16 son `semanticColors`. Columna CONSTANTE, no informa
+ *   · `tokenSet`        → redundante con la anterior
+ *   · `code-syntax-web` → 0 de 16 con valor. Publicaría 16 guiones
+ *
+ * ⚠️ `code-syntax-web` es la que de verdad importa a futuro: es el puente entre
+ * el nombre en Figma y el nombre en código, que es lo que un desarrollador
+ * necesita. Está vacía porque nadie la ha rellenado, no porque no sirva.
+ * **Aparecerá sola el día que los tokens la tengan** — sin que nadie se acuerde.
+ */
+const PROPIEDADES_DE_TOKEN = {
+  "code-syntax-web": "cf941a6d-02a1-4d2c-b273-68d09210494c",
+}
+
+/**
+ * Devuelve la prop `selectedPropertyIds` con las columnas que HOY tienen valor.
+ * @param cobertura - `{ propiedad: nDeTokensConValor }`, medido contra Supernova.
+ * @param total     - Cuántos tokens lleva la tabla.
+ */
+const columnasDeToken = (cobertura, total) => {
+  const vivas = Object.entries(PROPIEDADES_DE_TOKEN)
+    .filter(([code]) => (cobertura[code] ?? 0) === total)
+  const parciales = Object.entries(PROPIEDADES_DE_TOKEN)
+    .filter(([code]) => { const n = cobertura[code] ?? 0; return n > 0 && n < total })
+  /* Cobertura declarada (regla 16): una columna a medias es peor que ninguna,
+   * porque los huecos salen como guiones indistinguibles de un valor ausente. */
+  for (const [code] of parciales)
+    console.log(`  ⚠️  columna '${code}': ${cobertura[code]} de ${total} tokens con valor — NO se emite`)
+  console.log(`  ✓ columnas de token: ${vivas.length} de ${Object.keys(PROPIEDADES_DE_TOKEN).length} con cobertura total`)
+  return vivas.length
+    ? `<SNProp name="selectedPropertyIds" value={${JSON.stringify(vivas.map(([, id]) => id))}} />`
+    : ""
+}
 
 const swatches = (...modes) => {
   const desconocidos = modes.filter(m => !TEMA[m])
@@ -789,6 +840,7 @@ Las ocho combinaciones —\`variant\` × \`surface\` × mode— están en la esp
 <SNBlock packageId="io.supernova.block.design-tokens" variantId="table">
   <SNItem>
     <SNProp name="tokens" value={${tokens("background/brandMain","background/brandHover","background/brandPressed","background/hover","background/selected","background/secondary","background/disabled","text/primaryInverse","text/primaryInverseStatic","text/secondary","text/disabled","icon/inverse","icon/inverseStatic","icon/disabled","border/focus","border/disabled")}} swatches={${swatches("light","dark")}} />
+    ${columnasDeToken(COBERTURA_TK.cobertura, COBERTURA_TK._totalDeTokens)}
   </SNItem>
 </SNBlock>
 
@@ -927,6 +979,26 @@ ${tablaDelMd("| # | Área | Criterio |", 2)}
 <SNBlock packageId="io.supernova.block.component-checklist">
   <SNItem>
     <SNProp name="components" value={[{ entityId: "${COMPONENTE_CANONICO}", entityType: "Component" }]} />
+    ${/* 🔴 El título es PARÁMETRO, no constante, y la razón la puso el Lead el
+        * 9 sep 2026: «tengo la sensación de que si existe este campo es porque
+        * puede variar la comunicación del componente». Tiene razón — Supernova lo
+        * hizo editable a propósito. Se fija un default en español y cada
+        * componente puede apartarse.
+        *
+        * ⚠️ Y esto se publicaba en INGLÉS sin que nadie lo hubiera decidido: sin
+        * la prop, el bloque usa su `defaultValue`, que es «Component checklist».
+        * No era una decisión, era el default de la herramienta saliendo a una
+        * documentación en español. Es la clase de defecto que no produce error ni
+        * hueco visible — solo se ve mirando la página publicada.
+        *
+        * No repite el encabezado «Definition of done» que lleva encima: dice qué
+        * contiene la lista, no vuelve a nombrar la sección. */
+      titulo("Lo que el sistema tiene registrado")}
+    ${/* Confirmado por el Lead el 9 sep 2026: la descripción se queda. Se emite
+        * EXPLÍCITO aunque coincida con el default del bloque — un valor heredado
+        * y uno decidido se ven igual en la página, y solo el segundo sobrevive a
+        * que Supernova cambie su default. */
+      ""}<SNProp name="showDescription" value={true} />
   </SNItem>
 </SNBlock>
 

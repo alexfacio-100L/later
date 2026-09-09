@@ -1,0 +1,9 @@
+{
+  "_porQue": "Cuántos de los tokens del bloque tienen valor en cada propiedad. El generador emite una columna SOLO si la cobertura es total: una columna a medias publica guiones que no distinguen 'no existe' de 'nadie lo rellenó'.",
+  "_comoSeRefresca": "Consultar sn_get_token_property_list o sdk.tokens.getTokenProperties y contar cuántos de los tokens del componente tienen valor en cada codeName.",
+  "_medidoEl": "2026-09-09",
+  "_totalDeTokens": 16,
+  "cobertura": {
+    "code-syntax-web": 0
+  }
+}
