@@ -158,6 +158,17 @@ const FUERA_A_PROPOSITO = {
   "Secondary / Product / Dark":    "cubierto por color-accessibility-grid, que resuelve sobre tokens vivos",
   "Secondary / Marketing / Light": "cubierto por color-accessibility-grid, que resuelve sobre tokens vivos",
   "Secondary / Marketing / Dark":  "cubierto por color-accessibility-grid, que resuelve sobre tokens vivos",
+
+  /* 🟡 DECISIÓN EDITORIAL del Lead, 9 sep 2026 — se retira la sección «Ejemplos».
+   * Textual: *«no veo necesario y no aporta nada»*. Eran tres imágenes sueltas
+   * sin una línea de texto: un botón principal, uno secundario con icono y uno
+   * deshabilitado. **Los tres casos ya están mostrados donde significan algo**
+   * —variante, ranuras de icono y estados tienen su propia sección con su
+   * explicación—, así que la galería solo repetía sin decir nada nuevo.
+   * No se borran de Supernova: cuestan cero y sirven si la decisión cambia. */
+  "Accion principal":              "la sección «Ejemplos» se retiró: repetía casos ya explicados en su sección",
+  "Secundario con icono final":    "la sección «Ejemplos» se retiró: repetía casos ya explicados en su sección",
+  "Deshabilitado":                 "la sección «Ejemplos» se retiró: repetía casos ya explicados en su sección",
 }
 
 /**
@@ -941,14 +952,6 @@ ${tablasDeEstado("State: isDisabled === true")}
 <SNCallout type="Info">
 El anuncio de \`isLoading\` está especificado en Figma y todavía no transcrito aquí: esta página documenta **2 de las 4** paradas de foco de la anotación. Lo que falta está registrado en Defectos abiertos.
 </SNCallout>
-
-## Ejemplos
-
-${preview("Accion principal", "Acción principal")}
-
-${preview("Secundario con icono final", "Secundario con icono final")}
-
-${preview("Deshabilitado", "Deshabilitado")}
 
 ## Criterios de aceptación
 
