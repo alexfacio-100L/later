@@ -823,7 +823,39 @@ El contraste se calcula sobre los tokens vivos, así que **ningún ratio escrito
 
 <SNBlock packageId="io.supernova.block.color-accessibility-grid">
   <SNItem>
-    <SNProp name="tokens" value={${tokens("background/brandMain","background/brandHover","background/brandPressed","background/selected","background/secondary","background/disabled")}} />
+    ${/* 🔴 CORREGIDO el 9 sep 2026. Hasta hoy esta grilla recibía SEIS tokens y
+        * los seis eran `background/*`: ni un solo color de texto ni de icono.
+        *
+        * El contraste es una relación entre DOS colores. Con solo fondos, la
+        * grilla no podía mostrar el contraste de ninguna combinación real del
+        * componente — medía fondos contra fondos, que no ocurre nunca.
+        *
+        * ⚠️ Y es la clase de defecto más cara de las tres de la regla 16: el
+        * FALSO COMPLETO. La grilla salía con la forma correcta, con ratios de
+        * verdad, sin error y sin hueco visible. Nadie lo detectó leyendo el
+        * código; se detectó porque **diseñadores que la vieron no supieron qué
+        * estaban mirando** (reporte del Lead, 9 sep). *No había nada que
+        * entender: lo que mostraba no correspondía a ninguna decisión de diseño.*
+        *
+        * Con el agravante de que la página AFIRMA dos veces que el contraste se
+        * verificó sobre las combinaciones reales —el callout de
+        * `background/selected` y los tokens Static es exactamente eso— y la
+        * grilla no lo demostraba.
+        *
+        * Ahora entran los 14 que forman pares reales: 7 fondos, 4 textos y 3
+        * iconos. Los 2 de borde quedan fuera a propósito: su requisito de
+        * contraste es otro (3:1 no textual) y meterlos solo añade celdas.
+        *
+        * 🟡 PENDIENTE DE JUICIO VISUAL: no está verificado cómo cruza el bloque.
+        * Si cruza todo contra todo, son 196 celdas de las que ~28 importan. Se
+        * revisa en Preview —el render solo se ve ahí— y si sigue sin leerse, el
+        * instrumento es el equivocado y toca una tabla de los pares reales,
+        * generada, no escrita a mano. */
+      ""}<SNProp name="tokens" value={${tokens(
+        "background/brandMain","background/brandHover","background/brandPressed",
+        "background/hover","background/selected","background/secondary","background/disabled",
+        "text/primaryInverse","text/primaryInverseStatic","text/secondary","text/disabled",
+        "icon/inverse","icon/inverseStatic","icon/disabled")}} />
   </SNItem>
 </SNBlock>
 
