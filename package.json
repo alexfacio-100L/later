@@ -40,7 +40,8 @@
     "docs:componentes": "node experimento-canario/publicar-componentes.mjs",
     "docs:contraste": "node contraste-real.mjs",
     "docs:brand-dark": "node experimento-canario/verificar-brand-dark.mjs",
-    "docs:hex": "node experimento-canario/sincronizar-hex-md.mjs"
+    "docs:hex": "node experimento-canario/sincronizar-hex-md.mjs",
+    "docs:frescura": "node experimento-canario/verificar-frescura-frames.mjs"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",
