@@ -869,6 +869,30 @@ El umbral son **44 px, estándar propio de 100 Ladrillos**, alineado a WCAG 2.5.
 
 ### Por talla
 
+${/* 🟡 DECISIÓN EDITORIAL DEL LEAD, 10 sep 2026 — las cotas del frame NO se
+    * arreglan, y conviene saber por qué antes de reabrirlo.
+    *
+    * El frame que uSpec renderiza para este preview lleva cotas de padding
+    * dibujadas —`space/xl`, `space/l`, `space/m`— que CONTRADICEN la
+    * especificación: dicen que el padding vertical escala por talla, y desde el
+    * 27 ago es constante en `space/s`. *Las cotas son de antes: las skills de
+    * render de uSpec dejaron de invocarse el 19 ago, ocho días antes de que se
+    * rehiciera la escala.*
+    *
+    * 🟢 Y NO llegan a la página, por un accidente que juega a favor: lo que se
+    * renderiza es la capa marcada `#Preview` y las cotas están FUERA de ella.
+    * Así que el preview sale limpio. **Se publica una imagen incompleta, no una
+    * falsa**, que es mucho menos grave.
+    *
+    * Veredicto del Lead: «es estético, para Figma se ve bien, pero en Supernova
+    * ya se documenta en las tablas… no vale la pena invertir tiempo». **Y el
+    * argumento es el correcto: la tabla ya dice el padding con su token, y una
+    * cota dibujada sería una segunda fuente de verdad sobre el mismo dato — la
+    * que caduca sin avisar.**
+    *
+    * ⚠️ Re-correr el render de uSpec cuesta ~100k tokens. Si algún día se hace
+    * por otro motivo, REVISAR estas cotas antes de publicar: entonces sí
+    * entrarían en la página, y entonces sí mentirían. */ ""}
 ${preview("Button sizes", "Las tres tallas",
   "`s`, `m` y `l` en proporción, una al lado de otra. Las medidas exactas están en la tabla de abajo.")}
 
