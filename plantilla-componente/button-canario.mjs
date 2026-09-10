@@ -141,14 +141,43 @@ const ICONOS = JSON.parse(fs.readFileSync(
  * cada uno de los 23 — traza útil para nosotros, ruido para quien lee la
  * página. La traza vive en `frames-vivos.json`, que sí la conserva entera.
  */
-const preview = (seccion, pie) => {
+/**
+ * Un preview de Figma, con su título y su descripción.
+ *
+ * 🔴 Hasta el 10 sep 2026 esta función recibía un segundo parámetro `pie` y **lo
+ * descartaba en silencio**. Catorce pies de foto escritos con cuidado —«primary
+ * y secondary», «s, m y l con sus medidas»— nunca llegaron a la página. Nadie lo
+ * notó porque no producía error ni hueco: el preview salía, solo que mudo.
+ *
+ * Lo destapó el Lead al descubrir en el editor que el bloque acepta título y
+ * descripción, ponerlos a mano en dos previews y pedir el resto.
+ *
+ * ⚠️ La sintaxis no está documentada y se averiguó probando contra
+ * `validateMarkdown`: van como **atributos directos** de `<SNFigmaFrame>`.
+ * `entityMeta={{...}}` y `caption=` se rechazan, pese a que `entityMeta` es
+ * justo como lo devuelve la API al leer.
+ *
+ * @param seccion  clave en el registro de frames vivos
+ * @param titulo   qué se está viendo. Corto: es la etiqueta, no la explicación
+ * @param desc     qué aporta esa imagen que no aporte el texto de al lado
+ */
+const preview = (seccion, titulo, desc) => {
   const f = FRAMES[seccion]
   if (!f?.entityId || !f?.resourceId || !f?.url) throw new Error(
     `«${seccion}» no está en frames-vivos.json, o le falta entityId/resourceId/url.\n` +
     `   Registrados: ${Object.keys(FRAMES).join(" · ")}\n` +
     `   Regenera el registro con: npm run docs:frames -- --render --registro`)
+
+  /* 🔴 Un preview sin título es un preview mudo, y es el estado del que venimos.
+   * Se exige aquí para que no se pueda volver a él por olvido. */
+  if (!titulo) throw new Error(
+    `El preview «${seccion}» no tiene título. Todo preview lleva título y descripción:\n` +
+    `   preview("${seccion}", "Qué se ve", "Qué aporta")`)
+
+  const esc = (t) => String(t).replace(/"/g, "&quot;")
+  const attr = desc ? ` title="${esc(titulo)}" description="${esc(desc)}"` : ` title="${esc(titulo)}"`
   return `<SNFigmaImages previewSize="NaturalHeight" variant="plain" columns={1}>
-  <SNFigmaFrame id="${f.entityId}" resourceId="${f.resourceId}" src="${f.url}" />
+  <SNFigmaFrame id="${f.entityId}" resourceId="${f.resourceId}" src="${f.url}"${attr} />
 </SNFigmaImages>`
 }
 /**
@@ -643,7 +672,8 @@ ${/* 🟡 DECISIÓN EDITORIAL, 8 sep 2026 — portada del componente, a petició
     * un lector que baja de la portada a la guía reconoce la imagen y no tiene que
     * releerla. Y reusarlo no descuadra la cobertura — `verificarCobertura` busca la
     * URL en el texto de TODAS las pestañas juntas, así que sigue contando uno. */
-  preview("variant", "primary y secondary")}
+  preview("variant", "Las dos variantes",
+    "`primary` para la acción principal de la vista; `secondary` para las de apoyo.")}
 
 <SNCallout type="Info">
 **Categoría:** Acciones · **Dueño:** Product Design · **También llamado:** Action, CTA, Call to action
@@ -696,7 +726,8 @@ ${par(
   "No pongas **dos \`primary\` compitiendo** en la misma vista. Si todo destaca, nada destaca."
 )}
 
-${preview("variant", "primary y secondary, enfrentados")}
+${preview("variant", "primary y secondary",
+  "El peso visual es lo que jerarquiza: el relleno sólido reclama la acción principal y el contorno acompaña.")}
 
 ## Cuál superficie
 
@@ -705,13 +736,15 @@ ${par(
   "No uses \`marketing\` **para dar más peso** dentro del producto. No es un escalón de jerarquía: solo cambia el peso tipográfico del label y su escalón de sombra."
 )}
 
-${preview("surface", "product y marketing: cambia el peso tipográfico y el escalón de sombra")}
+${preview("surface", "product y marketing",
+  "Cambia el peso del label y el escalón de sombra. La geometría, el radio y el color son los mismos.")}
 
 ## Cuál talla
 
 **La talla la eliges tú, por dónde vive el botón.** Un CTA de hero es \`l\`; uno de fila de tabla es \`s\`. El componente no la deduce del ancho de la pantalla.
 
-${preview("size", "s, m y l")}
+${preview("size", "s, m y l",
+  "Las tres comparten radio. Lo que cambia es la altura y el espacio interior.")}
 
 <SNCallout type="Warning">
 **El defecto es \`m\` desde el 27 de agosto de 2026** — antes era \`s\`. Toda instancia que no especifique talla cambia de aspecto al actualizar la librería.
@@ -741,7 +774,8 @@ ${par(
   "No te apoyes en \`isDisabled\` **como forma de guiar**. En Light el fondo deshabilitado da **1.30:1** contra el lienzo: no se percibe como control, así que ni siquiera comunica que existe."
 )}
 
-${preview("isDisabled", "habilitado y deshabilitado, en las dos variantes")}
+${preview("isDisabled", "Habilitado y deshabilitado",
+  "El deshabilitado pierde contraste a propósito: no debe invitar a pulsar. Por eso conviene evitarlo cuando se puede explicar el motivo.")}
 
 ${cuidado("El estado deshabilitado se distingue **solo por color** —ni forma, ni borde, ni texto—. La tecnología asistiva sí lo recibe, porque el atributo nativo lo declara; el problema es de quien mira la pantalla, no de quien la escucha.")}
 
@@ -759,9 +793,11 @@ El componente **no lanza la petición, no cronometra y no reintenta**. Si la pet
 
 Son independientes: ninguna, una, la otra, o las dos. Y son **decorativas** — un icono nunca puede ser el único portador del significado.
 
-${preview("showIconLeft", "con y sin icono inicial")}
+${preview("showIconLeft", "Con y sin icono inicial",
+  "La ranura es opcional y no depende de la otra: se puede usar una, las dos o ninguna.")}
 
-${preview("showIconRight", "con y sin icono final")}
+${preview("showIconRight", "Con y sin icono final",
+  "El icono acompaña al label, nunca lo sustituye: no existe un botón solo de icono.")}
 
 ## Lo que este componente no hace
 
@@ -791,7 +827,8 @@ ${/* 🔴 Encabezado contenedor de las tres pestañas, añadido el 9 sep 2026.
 
 ## Anatomía
 
-${preview("Anatomy", "Los cuatro elementos, numerados")}
+${preview("Anatomy", "Los cuatro elementos",
+  "Los marcadores numerados corresponden, en el mismo orden, a las filas de la tabla de abajo.")}
 
 Los marcadores del dibujo y las filas de la tabla son la misma lista, en el mismo orden.
 
@@ -832,13 +869,15 @@ El umbral son **44 px, estándar propio de 100 Ladrillos**, alineado a WCAG 2.5.
 
 ### Por talla
 
-${preview("Button sizes", "s, m y l con sus medidas")}
+${preview("Button sizes", "Las tres tallas, cotadas",
+  "Altura mínima, espacio interior y separación entre elementos, medidos sobre el componente real.")}
 
 ${tablaDelMd("| Spec | s | m | l | Notes |")}
 
 ### Por superficie
 
-${preview("Button surface", "product y marketing")}
+${preview("Button surface", "Las dos superficies, cotadas",
+  "Mismas medidas en ambas: la superficie cambia el peso tipográfico y la sombra, no el espacio.")}
 
 ${tablaDelMd("| Spec | product | marketing | Notes |")}
 
@@ -848,7 +887,8 @@ ${tablaDelMd("| Spec | primary | secondary | Notes |")}
 
 ### En foco
 
-${preview("Button states", "default, hover, pressed, focus y disabled")}
+${preview("Button states", "Los cinco estados",
+  "Reposo, puntero encima, presionado, con foco y deshabilitado. Solo cambia el relleno; la caja no se mueve.")}
 
 ${tablaDelMd("| Spec | s | m | l | Notes |", 2)}
 
@@ -907,9 +947,11 @@ Los valores marcados con \\* son del estado deshabilitado, **exento de requisito
 
 ### Cómo resuelve en cada mode
 
-${preview("Primary / Product / Light", "Primary · Product · Light")}
+${preview("Primary / Product / Light", "Light Mode",
+  "El relleno toma la escala de marca y el label resuelve a su inverso claro.")}
 
-${preview("Primary / Product / Dark", "Primary · Product · Dark")}
+${preview("Primary / Product / Dark", "Dark Mode",
+  "Los mismos tokens sobre lienzo oscuro: el relleno aclara dentro de la escala de marca y el label invierte a oscuro.")}
 
 Las ocho combinaciones —\`variant\` × \`surface\` × mode— están en la especificación del repositorio.
 
@@ -950,9 +992,11 @@ Qué anuncia cada plataforma, estado por estado. **Es una decisión de diseño, 
 
 Las tablas dicen **qué se anuncia**; estas dos imágenes dicen **dónde para el foco**, que es lo único que el texto no puede enseñar.
 
-${preview("State: rest / hover / active / focus-visible", "Una sola parada de foco, la misma en los cuatro estados")}
+${preview("State: rest / hover / active / focus-visible", "Una sola parada de foco",
+  "El anillo rodea el control entero, no sus partes: label e iconos se anuncian como un único elemento.")}
 
-${preview("State: isDisabled === true", "Cero paradas de foco: el control sale del orden de tabulación")}
+${preview("State: isDisabled === true", "Deshabilitado, fuera del tabulador",
+  "Cero paradas de foco: el control sale del orden de tabulación y el teclado no puede alcanzarlo.")}
 
 ### En reposo, con el puntero encima, presionado y con foco
 
