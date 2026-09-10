@@ -176,9 +176,39 @@ const preview = (seccion, titulo, desc) => {
 
   const esc = (t) => String(t).replace(/"/g, "&quot;")
   const attr = desc ? ` title="${esc(titulo)}" description="${esc(desc)}"` : ` title="${esc(titulo)}"`
-  return `<SNFigmaImages previewSize="NaturalHeight" variant="plain" columns={1}>
+
+  /* 🔴 El fondo del preview va en el BLOQUE, no en el frame, y la clave no es la
+   * evidente: `itemBackgroundColor={{"value":"#hex"}}` en `<SNFigmaImages>`.
+   * `backgroundColor` —el nombre natural— se rechaza en el contenedor, y en el
+   * frame existe pero con otro esquema. Se averiguó leyendo un preview que el
+   * Lead configuró a mano, después de diez intentos fallidos a ciegas.
+   *
+   * ⚠️ Y solo acepta HEX: no admite un token. Así que este valor es una COPIA y
+   * puede desincronizarse igual que se desincronizó `border/focus` en el `.md`.
+   * Por eso el fondo se declara con su procedencia en `FONDOS`, no suelto aquí. */
+  const bg = FONDOS[seccion]
+  const fondo = bg ? ` itemBackgroundColor={{"value":"${bg.hex}"}}` : ""
+  return `<SNFigmaImages previewSize="NaturalHeight" variant="plain" columns={1}${fondo}>
   <SNFigmaFrame id="${f.entityId}" resourceId="${f.resourceId}" src="${f.url}"${attr} />
 </SNFigmaImages>`
+}
+
+/**
+ * Previews que se ven sobre un fondo distinto del lienzo por defecto.
+ *
+ * Lo pidió el Lead el 10 sep 2026: *«en el preview de dark mode no se ve el fondo
+ * negro»*. Un botón de modo oscuro sobre lienzo blanco no enseña lo que hay que
+ * ver — el contraste real del componente contra su superficie.
+ *
+ * 🔴 `porque` no es decoración: el bloque **solo acepta HEX**, así que el valor
+ * queda desconectado del token del que salió. Sin esta anotación, dentro de tres
+ * meses nadie sabrá de dónde vino el número ni cuándo dejó de ser cierto.
+ */
+const FONDOS = {
+  "Primary / Product / Dark": {
+    hex: "#0F0F0F",
+    porque: "lienzo oscuro. `background/primary` resuelve a #000000 en Dark; el Lead eligió #0F0F0F, un negro apenas levantado que deja ver el borde del botón",
+  },
 }
 /**
  * Los previews que NO se colocan en la página, y por qué. Un preview registrado
