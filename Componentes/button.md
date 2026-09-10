@@ -442,8 +442,8 @@ _Las columnas usan la condición de runtime en lugar del valor bruto del eje Fig
 
 | Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
 |---|---|---|---|---|---|---|
-| Container fill | `background/brandMain` (#FFFFFF) | `background/brandHover` (#BFBFBF) | `background/brandPressed` (#DFDFDF) | `background/brandHover` (#BFBFBF) | `background/disabled` (#B2B2B2) | Superficie del botón |
-| Container stroke | none | none | none | `border/focus` (#1C64EB) | none | Anillo de foco visible |
+| Container fill | `background/brandMain` (#B2D1FF) | `background/brandHover` (#4B79BD) | `background/brandPressed` (#6B96D6) | `background/brandHover` (#4B79BD) | `background/disabled` (#B2B2B2) | Superficie del botón |
+| Container stroke | none | none | none | `border/focus` (#6C9BF2) | none | Anillo de foco visible |
 | Label | `text/primaryInverse` (#000000) | `text/primaryInverse` (#000000) | `text/primaryInverse` (#000000) | `text/primaryInverse` (#000000) | `text/disabled` (#404040) | Texto de la acción |
 | Leading icon — ArrowRight | `icon/inverse` (#000000) | `icon/inverse` (#000000) | `icon/inverse` (#000000) | `icon/inverse` (#000000) | `icon/disabled` (#606060) | Icono inicial, relleno decidido por el botón |
 | Trailing icon — ArrowRight | `icon/inverse` (#000000) | `icon/inverse` (#000000) | `icon/inverse` (#000000) | `icon/inverse` (#000000) | `icon/disabled` (#606060) | Icono final, relleno decidido por el botón |
@@ -471,7 +471,7 @@ _Las columnas usan la condición de runtime en lugar del valor bruto del eje Fig
 | Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
 |---|---|---|---|---|---|---|
 | Container fill | `background/secondary` (#202020) | `background/hover` (#404040) | `background/selected` (#315FA3) | `background/hover` (#404040) | `background/disabled` (#B2B2B2) | Superficie del botón |
-| Container stroke | `text/secondary` (#E9E9E9) | `text/secondary` (#E9E9E9) | `text/secondary` (#E9E9E9) | `border/focus` (#1C64EB) | `border/disabled` (#606060) | Borde del botón y anillo de foco |
+| Container stroke | `text/secondary` (#E9E9E9) | `text/secondary` (#E9E9E9) | `text/secondary` (#E9E9E9) | `border/focus` (#6C9BF2) | `border/disabled` (#606060) | Borde del botón y anillo de foco |
 | Label | `text/secondary` (#E9E9E9) | `text/secondary` (#E9E9E9) | `text/primaryInverseStatic` (#F9F9F9) | `text/secondary` (#E9E9E9) | `text/disabled` (#404040) | Texto de la acción |
 | Leading icon — ArrowRight | `text/secondary` (#E9E9E9) | `text/secondary` (#E9E9E9) | `icon/inverseStatic` (#F9F9F9) | `text/secondary` (#E9E9E9) | `icon/disabled` (#606060) | Icono inicial, relleno decidido por el botón |
 | Trailing icon — ArrowRight | `text/secondary` (#E9E9E9) | `text/secondary` (#E9E9E9) | `icon/inverseStatic` (#F9F9F9) | `text/secondary` (#E9E9E9) | `icon/disabled` (#606060) | Icono final, relleno decidido por el botón |

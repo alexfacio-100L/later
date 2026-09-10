@@ -84,6 +84,7 @@ Cuatro, y ninguno impide usar el componente. Se publican porque afectan a quien 
 
 ## Changelog
 
+- **10 sep 2026** — la familia `brand` recupera el color de marca en Dark. `background/brandMain`, `brandHover` y `brandPressed` apuntaban a la escala **neutra** —blanco y grises, sin una gota de azul— mientras en Light apuntan a la de marca. Ahora usan `neutralDarkBlue` en su tramo claro, espejo del patrón de Light: reposo en el extremo de la escala, `hover` tres pasos hacia el centro y `pressed` entre los dos. **El contraste del label sigue por encima de AA en los tres estados.**
 - **1 sep 2026** — `isLoading` queda especificado: spinner `CircleNotch` en la ranura derecha, **sin una sola variante nueva en Figma**. Con él entran el movimiento, las reglas responsive, los supuestos de contenido y quince criterios de aceptación propios.
 - **27 ago 2026** — escala dimensional rehecha: alturas **48 · 56 · 64**, radio único `radius/l` (16) en las 60 variantes, y el defecto de `size` pasa de `s` a `m`.
 - **21 ago 2026** — corregidas las seis variantes `secondary` + `pressed`: el texto y el icono pasan a las variantes **Static**. En Dark el texto caía a 3.29:1.
