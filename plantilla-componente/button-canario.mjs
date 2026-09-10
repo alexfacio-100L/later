@@ -869,15 +869,15 @@ El umbral son **44 px, estándar propio de 100 Ladrillos**, alineado a WCAG 2.5.
 
 ### Por talla
 
-${preview("Button sizes", "Las tres tallas, cotadas",
-  "Altura mínima, espacio interior y separación entre elementos, medidos sobre el componente real.")}
+${preview("Button sizes", "Las tres tallas",
+  "`s`, `m` y `l` en proporción, una al lado de otra. Las medidas exactas están en la tabla de abajo.")}
 
 ${tablaDelMd("| Spec | s | m | l | Notes |")}
 
 ### Por superficie
 
-${preview("Button surface", "Las dos superficies, cotadas",
-  "Mismas medidas en ambas: la superficie cambia el peso tipográfico y la sombra, no el espacio.")}
+${preview("Button surface", "Las dos superficies",
+  "Mismas medidas en ambas: lo que cambia es el peso del label y el escalón de sombra, no la geometría.")}
 
 ${tablaDelMd("| Spec | product | marketing | Notes |")}
 
