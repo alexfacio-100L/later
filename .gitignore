@@ -70,3 +70,7 @@ experimento-canario/.venv/
 # y su valor es local — sirven para comparar ANTES y DESPUÉS de una escritura
 # de la misma sesión, no como historia.
 experimento-canario/respaldos/
+
+# Sondas temporales: se escriben en experimento-canario porque necesitan sus
+# dependencias, pero no son parte del proyecto. El 10 sep una se coló en un commit.
+experimento-canario/_*.mjs
