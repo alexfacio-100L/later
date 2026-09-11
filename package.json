@@ -43,7 +43,8 @@
     "docs:hex": "node experimento-canario/sincronizar-hex-md.mjs",
     "docs:frescura": "node experimento-canario/verificar-frescura-frames.mjs",
     "docs:crear-componentes": "node experimento-canario/crear-componentes.mjs",
-    "docs:aplicaciones": "node experimento-canario/publicar-aplicaciones.mjs"
+    "docs:aplicaciones": "node experimento-canario/publicar-aplicaciones.mjs",
+    "docs:crear-aplicaciones": "node experimento-canario/crear-aplicaciones.mjs"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",

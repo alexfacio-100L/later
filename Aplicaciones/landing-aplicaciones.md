@@ -14,9 +14,21 @@ Cada página de aplicación responde una sola pregunta: **cómo se construye cor
 
 **Aplicaciones no documenta producto digital.** Los componentes de interfaz y sus patrones de interacción viven en `Componentes` y `Comportamientos`, que pertenecen al sistema de construcción de producto.
 
-## Aplicaciones documentadas
+## Qué falta por documentar
 
-[Agregar accesos a las aplicaciones documentadas conforme estén disponibles]
+**Ninguna aplicación está documentada todavía.** La estructura existe —cada una tiene su página— y **lo que falta es escribirlas**. *A diferencia de los componentes, aquí no hay nada que construir: las piezas ya se producen todos los días sin guía.*
+
+| Categoría | Aplicaciones | Estado |
+|---|---|---|
+| **Documentos** | Presentaciones · Papelería · Informes y propuestas | Pendiente |
+| **Digital y social** | Redes sociales · Campañas · Correo | Pendiente |
+| **Audiovisual** | Video · Fotografía · Motion | Pendiente |
+| **Impresos** | Material promocional · Editorial | Pendiente |
+| **Espacios y objetos** | Señalización · Espacios físicos · Merchandising | Pendiente |
+
+**Conforme una aplicación se documenta, deja de estar pendiente y su página pasa a ser la guía.** *Esta tabla se vacía a medida que eso ocurre.*
+
+⚠️ **La categorización es provisional.** *Nace de las aplicaciones que el equipo reconoce hoy, no de un inventario de piezas reales.* **Se revisa cuando exista ese inventario** — puede que falten categorías, o que alguna sobre.
 
 ## Recursos generales
 
