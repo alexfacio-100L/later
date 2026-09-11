@@ -46,7 +46,9 @@ Un componente no se documenta hasta que está cerrado. **Healthy quiere decir qu
 | **8** | **Text field** | ⚠️ **`inputText`** | No es documentar, es **reconstruir**: caja de 40 px fuera de la escala | Cuatro defectos simultáneos |
 | **9** | El resto del catálogo — **44 componentes** | varios | Piezas no medidas todavía: `Accordion`, `Card`, `Modal`, `Tooltip`, `Pagination`, las de navegación y las de datos | **No hay medición de esfuerzo.** Entran por lotes tras los ocho de arriba |
 
-🔴 **Los nombres del sidebar y los de Figma no siempre coinciden**, y la columna «En Figma» lo declara con ⚠️. *Un componente que en la documentación se llama `Text field` y en la librería `inputText` es el mismo, pero nadie lo sabe sin este mapa.* **Unificarlos es trabajo aparte, y conviene hacerlo antes de documentar cada pieza.**
+🟢 **El nombre oficial es el de esta documentación.** *Decidido el 11 sep 2026.* Donde Figma use otro —marcado con ⚠️ en la columna «En Figma»— **se renombra en Figma para que coincida**, no al revés.
+
+**Por qué manda la documentación y no la librería:** es el nombre que ve quien consume el sistema —producto, desarrollo, marketing— y el que acaba en la conversación y en el código. *La librería es el taller; esta página es el contrato.*
 
 ⚠️ **El segundo criterio acordado, «mayor a menor uso», no está aplicado, y conviene decirlo:** hoy **no existe instrumento para medir cuánto se usa cada componente** en producto. Donde hay indicio real —como las 174 instancias de `Tag`— va anotado. *El día que haya medición, este orden se revisa.*
 
