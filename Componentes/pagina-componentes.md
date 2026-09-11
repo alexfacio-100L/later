@@ -32,21 +32,23 @@ Un componente no se documenta hasta que está cerrado. **Healthy quiere decir qu
 
 **Esta tabla es la cola de producción.** Conforme un componente se documenta, **sale de aquí y aparece arriba en la lista**, con su estado. *La tabla se vacía hacia la lista.*
 
-| # | Componente | Por qué está en ese lugar | Qué hay que resolver antes |
-|---|---|---|---|
-| **1** | **Link** | Recién separado del Button: hereda su tipografía y su color, y su razón de existir ya está escrita | — |
-| **2** | **Divider** | Geometría trivial: un token de color y uno de grosor | Su página de Figma se declaró vacía el 19 ago y no se ha reverificado |
-| **3** | **Avatar** | Matriz limpia y cerrada — 6 tallas × 2 tipos, sin defectos | — |
-| **4** | **Tag** | Ya migrado a Phosphor, con 174 instancias en uso | Sus variantes no están medidas |
-| **5** | **Toggle** | Matriz completa y coherente | Depende del token `size/indicator`, que todavía no existe |
-| **6** | **Checkbox** y **RadioButton** | Van juntos: comparten el indicador y el patrón «con Label» | El mismo token `size/indicator`. Quien los reconstruya lo crea |
-| **7** | **Alerts** | 30 variantes y 13 propiedades — el doble que el Button | Arrastra un componente residual, `Alerta` |
-| **8** | **inputText** | No es documentar, es **reconstruir**: geometría, eje de talla de un solo valor y estados mezclados | Cuatro defectos simultáneos |
-| **9** | **Organismos** — Navigation, Filter, Widgets, Dialog Box, Empty state, File upload, Banners, Biometrics, App Icon | Piezas compuestas: dependen de que los de arriba estén cerrados | No están en el archivo de trabajo; hay que traerlos |
-
 **El orden es por esfuerzo, de menor a mayor** — lo barato primero, para que el sistema empiece a servir antes.
 
-⚠️ **El segundo criterio acordado, «mayor a menor uso», no está aplicado aquí, y conviene decirlo:** hoy **no existe instrumento para medir cuánto se usa cada componente** en producto. Donde hay indicio de uso real —como las 174 instancias de `Tag`— está anotado en la columna de por qué. *El día que haya medición, este orden se revisa.*
+| # | Componente | En Figma | Por qué está ahí | Qué resolver antes |
+|---|---|---|---|---|
+| **1** | **Link** | `Link` | Recién separado del Button: hereda tipografía y color, y su razón de existir ya está escrita | — |
+| **2** | **Divider** | `Divider` | Geometría trivial: un token de color y uno de grosor | Su página se declaró vacía el 19 ago y no se ha reverificado |
+| **3** | **Avatar** | `Avatar` | Matriz limpia y cerrada: 6 tallas × 2 tipos, sin defectos | — |
+| **4** | **Tag** | `Tag` | Ya migrado a Phosphor, con **174 instancias** en uso | Sus variantes no están medidas |
+| **5** | **Switch** | ⚠️ **`Toggle`** | Matriz completa y coherente — 20 variantes | Depende del token `size/indicator`, que no existe |
+| **6** | **Check** y **Radio** | ⚠️ **`Checkbox`** y **`RadioButton`** | Van juntos: comparten indicador y el patrón «con Label» | El mismo token `size/indicator`. Quien los reconstruya lo crea |
+| **7** | **Banner** · **System banner** · **Snackbar** · **Toast** | ⚠️ **`Alerts`** — una sola pieza de 30 variantes | El sidebar los separa en cuatro; en Figma son uno | **Decidir si son cuatro componentes o uno.** Arrastra el residuo `Alerta` |
+| **8** | **Text field** | ⚠️ **`inputText`** | No es documentar, es **reconstruir**: caja de 40 px fuera de la escala | Cuatro defectos simultáneos |
+| **9** | El resto del catálogo — **44 componentes** | varios | Piezas no medidas todavía: `Accordion`, `Card`, `Modal`, `Tooltip`, `Pagination`, las de navegación y las de datos | **No hay medición de esfuerzo.** Entran por lotes tras los ocho de arriba |
+
+🔴 **Los nombres del sidebar y los de Figma no siempre coinciden**, y la columna «En Figma» lo declara con ⚠️. *Un componente que en la documentación se llama `Text field` y en la librería `inputText` es el mismo, pero nadie lo sabe sin este mapa.* **Unificarlos es trabajo aparte, y conviene hacerlo antes de documentar cada pieza.**
+
+⚠️ **El segundo criterio acordado, «mayor a menor uso», no está aplicado, y conviene decirlo:** hoy **no existe instrumento para medir cuánto se usa cada componente** en producto. Donde hay indicio real —como las 174 instancias de `Tag`— va anotado. *El día que haya medición, este orden se revisa.*
 
 ## Si el componente que buscas no está, o su estado no te sirve
 
