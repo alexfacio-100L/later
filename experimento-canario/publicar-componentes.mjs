@@ -45,6 +45,42 @@ const ESCRIBIR = process.argv.includes("--escribir")
  *
  * `convertir()` ya resuelve esto — es lo que usa el Button — y su propio comentario
  * documenta el mismo fallo, ocurrido el 19 ago. */
+/**
+ * Las columnas del listado de componentes.
+ *
+ * 🔴 ESTO SE CABLEA PORQUE SE PERDIÓ. El Lead las activó a mano en el editor y
+ * **una republicación las devolvió a su valor por defecto** — el 11 sep 2026, y
+ * no era la primera vez. *Un ajuste hecho en la interfaz vive solo en la página,
+ * que es justo lo que `writeMarkdownToPage` reemplaza entero.*
+ *
+ * Es la doctrina que este proyecto subió al área el 10 sep: **colocar un bloque
+ * no es configurarlo, y heredar un valor por defecto es una decisión que nadie
+ * tomó.** Aquí cada columna lleva por qué está.
+ */
+const COLUMNAS = [
+  { id: "99b630a0-b8b6-4908-b508-94204759319e", nombre: "Documented",
+    porque: "distingue de un vistazo lo que tiene guía de lo que solo existe" },
+  { id: "a0f04855-5c1e-4cd1-87d3-475a12f3c4a9", nombre: "Status",
+    porque: "es la pregunta que trae el lector: ¿puedo confiar en esto?" },
+  { id: "a65cbe03-7713-42ac-8767-0aa1d586577b", nombre: "Documentation link",
+    porque: "desde el listado se salta a la página del componente sin buscarla" },
+]
+
+/**
+ * ⚠️ DECISIÓN DEL LEAD, 11 sep 2026 — la columna de última edición se ENCIENDE.
+ *
+ * *Sustituye a la del 10 sep, que la apagaba.* El argumento de entonces sigue en
+ * pie y conviene no perderlo: **desde el 4 sep hay sync horario de Figma**, así
+ * que si la columna refleja el sync y no una revisión humana, **mostrará fechas
+ * frescas de componentes que nadie ha mirado** — el peor error posible, porque
+ * aparenta garantía. *No está verificado qué dato la alimenta.*
+ *
+ * **Se enciende porque el Lead lo decidió con el widget delante.** Si al mirarla
+ * en Preview las fechas no corresponden a revisiones reales, la decisión vuelve
+ * a estar abierta.
+ */
+const ULTIMA_EDICION = true
+
 const md = readFileSync(path.join(AQUI, "../Componentes/pagina-componentes.md"), "utf8").trim()
 const { mdx: prosa, informe } = convertir(md)
 
@@ -57,7 +93,8 @@ const mdx = `${prosa}
 
 <SNBlock packageId="io.supernova.block.component-checklist-all">
   <SNItem>
-    <SNProp name="showLastUpdatedColumn" value={false} />
+    <SNProp name="components" value={[]} selectedPropertyIds={${JSON.stringify(COLUMNAS.map(c => c.id))}} />
+    <SNProp name="showLastUpdatedColumn" value={${ULTIMA_EDICION}} />
   </SNItem>
 </SNBlock>`
 
@@ -115,6 +152,22 @@ let tablas = 0
   for (const q of Object.values(o)) w(q)
 })(arbol)
 console.log(`\n  tablas en la página publicada: ${tablas} de ${informe.tablas} emitidas`)
+
+/* 🔴 Y las columnas del listado, que son lo que se perdió dos veces. */
+let cols = []
+;(function w(o) {
+  if (!o || typeof o !== "object") return
+  if (Array.isArray(o)) return o.forEach(w)
+  if (o.packageId === "io.supernova.block.component-checklist-all")
+    for (const it of o.items ?? []) cols = it.props?.components?.selectedPropertyIds ?? cols
+  for (const q of Object.values(o)) w(q)
+})(arbol)
+const faltan = COLUMNAS.filter(c => !cols.includes(c.id))
+console.log(`  columnas del listado: ${cols.length} de ${COLUMNAS.length} — ${COLUMNAS.filter(c => cols.includes(c.id)).map(c => c.nombre).join(", ") || "ninguna"}`)
+if (faltan.length) {
+  console.log(`  🔴 No llegaron: ${faltan.map(c => c.nombre).join(", ")}`)
+  process.exitCode = 1
+}
 if (tablas < informe.tablas) {
   console.log(`  🔴 Faltan ${informe.tablas - tablas}. Salieron como texto plano.`)
   process.exitCode = 1
