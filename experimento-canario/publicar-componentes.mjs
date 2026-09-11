@@ -22,6 +22,7 @@
 import sdkPkg from "@supernovaio/sdk"
 import { apiKey } from "./entorno.mjs"
 import { readFileSync } from "node:fs"
+import { convertir } from "./conversor.mjs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -30,7 +31,22 @@ const AQUI = path.dirname(fileURLToPath(import.meta.url))
 const PAGINA = "40870425"   // Componentes
 const ESCRIBIR = process.argv.includes("--escribir")
 
-const prosa = readFileSync(path.join(AQUI, "../Componentes/pagina-componentes.md"), "utf8").trim()
+/* 🔴 El markdown NO se pasa crudo. Supernova ACEPTA las pipe tables sin error y
+ * las publica como TEXTO PLANO: `validateMarkdown` dice «válido», la página sale
+ * con la forma correcta y las tablas no son tablas.
+ *
+ * Medido el 11 sep 2026 en esta misma página: cinco tablas escritas, y al releer
+ * la página publicada había `rich-text × 12` y **cero bloques `table`**.
+ *
+ * ⚠️ Y el primer check que se escribió para detectarlo daba VERDE: buscaba pipes
+ * sin convertir, y al volverse texto los pipes desaparecen. *El método no podía
+ * mostrar la presencia del defecto que buscaba.* El check bueno cuenta bloques
+ * `table` en la página releída, y está abajo.
+ *
+ * `convertir()` ya resuelve esto — es lo que usa el Button — y su propio comentario
+ * documenta el mismo fallo, ocurrido el 19 ago. */
+const md = readFileSync(path.join(AQUI, "../Componentes/pagina-componentes.md"), "utf8").trim()
+const { mdx: prosa, informe } = convertir(md)
 
 /* La tabla va DEBAJO de la explicación: primero se dice qué se está mirando y
  * qué significa cada estado, y luego se mira. Al revés, el lector interpreta las
@@ -58,6 +74,11 @@ if (!val.isValid) {
   process.exit(1)
 }
 console.log(`✓ válido — ${val.blockCount} bloques · ${mdx.split("\n").length} líneas`)
+console.log(`  tablas convertidas a <SNTable>: ${informe.tablas}`)
+if (!informe.tablas && /\|\s*---/.test(md)) {
+  console.log(`  🔴 El .md tiene pipe tables y el conversor no emitió ninguna.`)
+  process.exit(1)
+}
 
 /* Cobertura, no confianza (regla 16): los estados que la página EXPLICA tienen
  * que ser los que el sistema puede producir. Si alguien añade un estado en
@@ -82,3 +103,19 @@ await sdk.import.writeMarkdownToPage(from, PAGINA, mdx)
 console.log(`\n✓ escrito en «Componentes».`)
 console.log("  ⚠️  Esto ESCRIBIÓ la página; NO la publicó al sitio público.")
 console.log("      Revísala en Preview. La publicación a Live la hace el Lead.")
+
+/* 🔴 Verificación que SÍ ve el defecto: contar bloques `table` en la página
+ * releída. Una tabla que salió como texto no deja pipes que buscar. */
+const arbol = await sdk.documentation.getDocumentationContentRaw(from, PAGINA)
+let tablas = 0
+;(function w(o) {
+  if (!o || typeof o !== "object") return
+  if (Array.isArray(o)) return o.forEach(w)
+  if (o.packageId === "io.supernova.block.table") tablas++
+  for (const q of Object.values(o)) w(q)
+})(arbol)
+console.log(`\n  tablas en la página publicada: ${tablas} de ${informe.tablas} emitidas`)
+if (tablas < informe.tablas) {
+  console.log(`  🔴 Faltan ${informe.tablas - tablas}. Salieron como texto plano.`)
+  process.exitCode = 1
+}
