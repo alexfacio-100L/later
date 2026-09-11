@@ -2,6 +2,12 @@ Esta lista reúne todos los componentes del sistema Later con el estado en que s
 
 **La lista no es el catálogo de lo que está listo para usar.** Es el catálogo completo, con la verdad de cada pieza puesta al lado. La columna de estado dice cuál es cuál, para que la decisión de usarlo o no se tome con el dato delante y no por el hecho de que aparezca en una tabla.
 
+**Un componente aquí es una pieza con contrato**, no un dibujo reutilizable: tiene un comportamiento decidido, unos estados que alguien pensó, un nombre que significa lo mismo en diseño y en código, y un dueño que responde cuando falla. *Mientras no tenga eso, es una forma que se parece a otras formas.*
+
+<SNCallout type="Info">
+**Antes de crear una pieza nueva, busca aquí.** La mayoría de las necesidades nuevas resultan ser una variante de algo que ya existe — y una variante cuesta una fracción de lo que cuesta un componente, que hay que mantener para siempre.
+</SNCallout>
+
 ## Qué dice cada estado
 
 | Estado | Qué significa | Qué puedes hacer |
@@ -28,29 +34,37 @@ Un componente no se documenta hasta que está cerrado. **Healthy quiere decir qu
 | **5** | **La accesibilidad está resuelta más allá del color:** foco visible, orden de tabulación y nombre accesible |
 | **6** | **Se validó en uso**, montado junto a otros componentes, no solo medido pieza por pieza |
 
-## En qué orden llegan los que faltan
+## Qué hay construido y qué no
 
-**Esta tabla es la cola de producción.** Conforme un componente se documenta, **sale de aquí y aparece arriba en la lista**, con su estado. *La tabla se vacía hacia la lista.*
+**La lista de arriba dice tres cosas a la vez**, y conviene leerlas por separado:
 
-**El orden es por esfuerzo, de menor a mayor** — lo barato primero, para que el sistema empiece a servir antes.
+| | Cuántos | Qué significa |
+|---|---|---|
+| **Construidos en Figma** | **16** | Existen como pieza. Lo que falta es revisarlos y documentarlos |
+| **Sin construir** | **41** | No existen todavía. Documentarlos no es documentar: es construirlos primero |
+| **Documentados** | **1** | Han pasado la revisión completa y se pueden dar por ciertos |
+
+**Un componente que aparece en la lista sin estado y sin pieza en Figma es una intención, no un activo.** *Está aquí porque el sistema lo necesita, no porque exista.*
+
+## En qué orden llegan
+
+**Primero los que ya existen**, porque revisar cuesta menos que construir y el sistema empieza a servir antes.
 
 | # | Componente | En Figma | Por qué está ahí | Qué resolver antes |
 |---|---|---|---|---|
-| **1** | **Link** | `Link` | Recién separado del Button: hereda tipografía y color, y su razón de existir ya está escrita | — |
-| **2** | **Divider** | `Divider` | Geometría trivial: un token de color y uno de grosor | Su página se declaró vacía el 19 ago y no se ha reverificado |
-| **3** | **Avatar** | `Avatar` | Matriz limpia y cerrada: 6 tallas × 2 tipos, sin defectos | — |
-| **4** | **Tag** | `Tag` | Ya migrado a Phosphor, con **174 instancias** en uso | Sus variantes no están medidas |
-| **5** | **Switch** | ⚠️ **`Toggle`** | Matriz completa y coherente — 20 variantes | Depende del token `size/indicator`, que no existe |
-| **6** | **Check** y **Radio** | ⚠️ **`Checkbox`** y **`RadioButton`** | Van juntos: comparten indicador y el patrón «con Label» | El mismo token `size/indicator`. Quien los reconstruya lo crea |
-| **7** | **Banner** · **System banner** · **Snackbar** · **Toast** | ⚠️ **`Alerts`** — una sola pieza de 30 variantes | El sidebar los separa en cuatro; en Figma son uno | **Decidir si son cuatro componentes o uno.** Arrastra el residuo `Alerta` |
-| **8** | **Text field** | ⚠️ **`inputText`** | No es documentar, es **reconstruir**: caja de 40 px fuera de la escala | Cuatro defectos simultáneos |
-| **9** | El resto del catálogo — **44 componentes** | varios | Piezas no medidas todavía: `Accordion`, `Card`, `Modal`, `Tooltip`, `Pagination`, las de navegación y las de datos | **No hay medición de esfuerzo.** Entran por lotes tras los ocho de arriba |
+| **1** | **Link** | `Link` | Recién separado del Button: hereda tipografía y color | — |
+| **2** | **Tag** | `Tag` | Migrado a Phosphor, con **174 instancias** en uso | Sus variantes no están medidas |
+| **3** | **Switch** | ⚠️ `Toggle` | Matriz completa y coherente — 20 variantes | Depende del token `size/indicator`, que no existe |
+| **4** | **Check** y **Radio** | ⚠️ `Checkbox` · `RadioButton` | Comparten indicador y el patrón «con Label» | El mismo token `size/indicator` |
+| **5** | **Select** · **Tabs** · **Card** · **Tooltip** · **Segment control** | varios | Construidos y sin medir | **Sin auditar.** Entran tras una revisión de su matriz |
+| **6** | **Side navigation** · **Top navigation** | varios | Construidos; son compuestos, no átomos | Dependen de que los átomos estén cerrados |
+| **7** | **Banner** · **Toast** | ⚠️ `Alerts` — **una pieza de 30 variantes** | El sidebar los separa; Figma los tiene juntos | 🔴 **Decidir si son piezas distintas o una sola** |
+| **8** | **Text field** | ⚠️ `inputText` | No es documentar, es **reconstruir**: caja de 40 px fuera de la escala | Cuatro defectos simultáneos |
+| **9** | Los **41 sin construir** | — | Desde `Divider` y `Avatar` hasta `Data table` y `Charts` | **Construirlos.** El orden se define cuando se audite lo de arriba |
 
-🟢 **El nombre oficial es el de esta documentación.** *Decidido el 11 sep 2026.* Donde Figma use otro —marcado con ⚠️ en la columna «En Figma»— **se renombra en Figma para que coincida**, no al revés.
+⚠️ **Y hay una tercera categoría que no es ni «mejorar» ni «construir»: piezas cuya construcción hay que cuestionar antes de tocarlas.** *`Text field` es el caso claro —reconstruir sale más barato que corregir—, y `Banner`/`Toast` es una decisión de arquitectura, no de dibujo.* **Documentar una pieza mal construida la convierte en norma.**
 
-**Por qué manda la documentación y no la librería:** es el nombre que ve quien consume el sistema —producto, desarrollo, marketing— y el que acaba en la conversación y en el código. *La librería es el taller; esta página es el contrato.*
-
-⚠️ **El segundo criterio acordado, «mayor a menor uso», no está aplicado, y conviene decirlo:** hoy **no existe instrumento para medir cuánto se usa cada componente** en producto. Donde hay indicio real —como las 174 instancias de `Tag`— va anotado. *El día que haya medición, este orden se revisa.*
+⚠️ **El criterio acordado de «mayor a menor uso» sigue sin aplicarse:** hoy **no existe instrumento para medir cuánto se usa cada componente** en producto. Donde hay indicio real —las 174 instancias de `Tag`— va anotado. *El día que haya medición, este orden se revisa.*
 
 ## Si el componente que buscas no está, o su estado no te sirve
 
