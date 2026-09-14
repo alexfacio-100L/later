@@ -23,7 +23,7 @@ Esta lista reúne todos los componentes del sistema Later con el estado en que s
 
 ## Qué se garantiza cuando un componente está listo
 
-Un componente no se documenta hasta que está cerrado. **Healthy quiere decir que cumple las seis:**
+Un componente no se documenta hasta que está cerrado. **Healthy quiere decir que cumple las siete:**
 
 | | Garantía |
 |---|---|
@@ -33,6 +33,15 @@ Un componente no se documenta hasta que está cerrado. **Healthy quiere decir qu
 | **4** | **Lo que Figma no puede dibujar está escrito.** Carga, foco, deshabilitado, comportamiento al pulsar |
 | **5** | **La accesibilidad está resuelta más allá del color:** foco visible, orden de tabulación y nombre accesible |
 | **6** | **Se validó en uso**, montado junto a otros componentes, no solo medido pieza por pieza |
+| **7** | **La documentación está fresca y completa.** Ninguna imagen publicada corresponde a una versión vieja del componente, ningún par de color incumple, y ningún bloque quedó colocado sin configurar |
+
+**La séptima es de otra naturaleza que las seis primeras**, y por eso se dice aparte: las seis certifican **el componente**; la séptima certifica **que su página dice la verdad**. *Una página puede estar publicada, validar limpia y estar sirviendo imágenes de una versión anterior — no da error, y se ve bien.*
+
+### 🔴 Y lo que estar «listo» todavía NO significa
+
+**Que un componente esté Healthy y documentado no significa que exista en código.** *Lo produce Ingeniería en Bricks UI, y hasta entonces la documentación describe una intención, no algo que puedas instalar.*
+
+**Por eso cada componente lleva su tabla «Dónde está disponible»** — seis plataformas fijas, con su estado real. **Un componente no está disponible en una plataforma hasta que está producido ahí**, y lo que no se ha comprobado dice *«Pendiente de verificar»*, no se deja en blanco.
 
 ## Qué hay construido y qué no
 

@@ -852,13 +852,17 @@ La propiedad de jerarquía se llama \`variant\`, no \`type\`. En HTML \`type\` y
 ## Dónde está disponible
 
 ${tabla(["Plataforma", "Estado", "Qué hay hoy"], [
-  ["Bricks UI", "En curso", "Storybook conectado"],
-  ["Web · Next", "Sin implementar", "Consume esta especificación"],
-  ["Web · Astro", "Sin implementar", "Consume esta especificación"],
-  ["Mobile · Expo", "Sin implementar", "Consume esta especificación"],
+  ["Design System · Bricks UI", "Solo canario", "El Storybook conectado es `bricks-ui-canario`, con las 8 stories de fábrica. **No elegible**"],
+  ["Web · WebApp", "Pendiente de verificar", "No se ha comprobado si el componente existe ahí"],
+  ["Web · 100 Ladrillos", "Pendiente de verificar", "El sitio público"],
+  ["Mobile · 100 Ladrillos App", "Pendiente de verificar", "—"],
+  ["CMS · HubSpot Templates", "Experimental", "Declarado por el Lead"],
+  ["Email · Templates", "No iniciado", "Registrado para no perderlo de vista"],
 ])}
 
-**Bricks UI es la única implementación en curso.** Las demás plataformas todavía trabajan contra esta especificación, no contra un componente existente.`,
+🔴 **Hoy el componente no está producido en ninguna plataforma.** *La fila de Bricks UI decía «En curso» y eso sobreestimaba el estado: lo que está conectado es el canario con las stories de andamiaje.*
+
+**Estas seis son los canales donde el componente DEBE estar construido**, fijados por el Lead el 14 sep 2026 — no donde está. **Un componente no está «disponible» en una plataforma hasta que está producido ahí**, y eso es lo que cierra la DoD completa, que no la cierra Diseño sino Ingeniería.`,
 
 "Usos": `Esta pestaña responde una sola pregunta: **¿cuál elijo?**
 
