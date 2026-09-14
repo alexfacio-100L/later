@@ -79,7 +79,24 @@ export function combinaciones(md) {
   for (const s of secciones) {
     const cab = s.split("\n")[0].trim()
     const m = cab.match(/^(\w+)\s*\/\s*(Light|Dark)$/)
-    if (!m) continue
+    /* 🔴 Un encabezado que este parser no entiende se saltaba EN SILENCIO, y la
+     * corrida seguía informando una cobertura que no incluía esa sección.
+     * Ocurrió el 11 sep 2026: la sección del primario de marketing se tituló
+     * `### cta — familia de tokens…` y la salida dijo «48 de 48 pares pasan»
+     * mientras tres pares fallaban dentro. *Forma «falso completo» de la regla 16:
+     * forma correcta, sin error, sin hueco visible.*
+     * Ahora una sección con tabla de color que no case ABORTA. */
+    if (!m) {
+      const pareceColor = s.split("\n").filter(l => l.startsWith("|")).length >= 3
+        && /^\|\s*Container fill\s*\|/m.test(s)   // marca inequívoca de tabla de color
+      if (pareceColor) {
+        console.error(`\n🔴 Encabezado de color no reconocido: «### ${cab}»`)
+        console.error(`   Se esperaba \`### <variante> / Light|Dark\` con la variante en UNA palabra.`)
+        console.error(`   Saltarla informaría una cobertura falsa. Corrige el encabezado.`)
+        process.exit(1)
+      }
+      continue
+    }
     const [, variante, mode] = m
     const filas = s.split("\n").filter(l => l.startsWith("|"))
     if (filas.length < 3) continue

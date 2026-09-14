@@ -40,7 +40,125 @@ const TK = JSON.parse(fs.readFileSync(path.join(AQUI, "config/button-tokens.json
  * contraste de las combinaciones reales. Se recalculan en cada corrida. */
 const MD_BUTTON = fs.readFileSync(path.join(AQUI, "../Componentes/button.md"), "utf8")
 const TOKENS_POR_VARIANTE = tokensPorVariante(MD_BUTTON)
-const TABLA_CONTRASTE = tablaMarkdown(paresDe(MD_BUTTON))
+/**
+ * CUÁNDO UNA SECCIÓN SE PARTE EN PESTAÑAS — y cuándo no.
+ *
+ * Lo pidió el Lead el 14 sep 2026 con el diagnóstico ya hecho: *«cuando solo era un
+ * botón que aplicaba para surface marketing y producto, podía quedarse tal cual;
+ * con el cambio se tuvo esta necesidad»*. **El disparador no es el gusto: es que un
+ * eje EMPIECE A DIVERGIR.**
+ *
+ * Dos magnitudes, las dos medibles:
+ *   D — DIVERGENCIA: filas que cambian con el eje ÷ filas totales
+ *   V — VOLUMEN: filas totales de la sección
+ *
+ * Y tres casos, con el precedente de esta casa en cada uno:
+ *
+ *   D = 0            → NO se parte. El eje se documenta como NOTA o como fila.
+ *                      *Precedente: mientras `surface` solo cambiaba la sombra vivía
+ *                      en cuatro filas de Drop shadow; multiplicar 4 secciones hasta
+ *                      24 para eso ya se descartó por escrito.*
+ *   D > 0 y V <= 10  → NO se parte: las facetas van en COLUMNAS.
+ *                      *Precedente: la tabla `Especificación | product | marketing`.*
+ *                      En una tabla corta comparar ES el objetivo, y las pestañas lo
+ *                      impiden. Además duplicarían las filas compartidas.
+ *   D > 0 y V > 10   → SE PARTE en pestañas.
+ *                      A partir de ~10 filas nadie compara visualmente de un vistazo,
+ *                      así que perder el lado-a-lado no cuesta nada y el scroll sí.
+ *
+ * ⚠️ La duplicación es el precio, y hay que declararlo: con D baja, las pestañas
+ * repiten (1-D) de las filas. En `Los tokens del componente` eso es 13 de 16 — 81 %.
+ * Se acepta porque V lo justifica, no porque salga gratis.
+ *
+ * 🔴 Y por eso esto NO es un comentario: se calcula y se compara con lo que el
+ * generador emite de verdad. Una regla que exige criterio para ejecutarse no se
+ * ejecuta — E3 del FODA del área.
+ */
+const criterioDePestanas = (seccion, facetas, seParte) => {
+  const nombres = Object.keys(facetas)
+  const V = Math.max(...nombres.map(n => facetas[n].length))
+  const union = new Set(nombres.flatMap(n => facetas[n]))
+  const comunes = [...union].filter(x => nombres.every(n => facetas[n].includes(x)))
+  const D = union.size === 0 ? 0 : 1 - comunes.length / union.size
+  const recomienda = D === 0 ? false : V > 10
+  const pct = (D * 100).toFixed(0)
+  console.log(`  · «${seccion}»  V=${V} filas · D=${pct}% divergencia → ${recomienda ? "PESTAÑAS" : D === 0 ? "sin partir (el eje no cambia nada)" : "sin partir (columnas: V<=10)"}`)
+  if (recomienda !== seParte) {
+    console.error(`\n🔴 «${seccion}» contradice el criterio de pestañas.`)
+    console.error(`   V=${V} · D=${pct}% → el criterio dice ${recomienda ? "PARTIR" : "NO partir"}, y el generador ${seParte ? "parte" : "no parte"}.`)
+    console.error(`   Cambia la emisión, o el criterio y su porqué. No lo dejes en desacuerdo silencioso.`)
+    process.exit(1)
+  }
+  if (recomienda && D < 0.5) console.log(`      ⚠️ duplica ${(100 - +pct).toFixed(0)}% de las filas en cada pestaña — precio aceptado por volumen`)
+  return recomienda
+}
+
+const PARES_CONTRASTE = paresDe(MD_BUTTON)
+/* Partida por SURFACE, que es lo que el Lead pidió el 14 sep 2026 para acortar el scroll.
+ *
+ * 🔴 Y al partirla salió por qué él no supo «qué separa»: la primera columna de esta tabla
+ * MEZCLA DOS EJES. `primary` y `secondary` son valores de `variant`; `marketingPrimary` es
+ * una etiqueta compuesta —surface + variant— que se introdujo el 11 sep porque el parser de
+ * `contraste-real.mjs` exige la variante en UNA palabra. *El defecto editorial lo metimos
+ * nosotros y lo pagó él leyéndolo.* Partir por surface deshace la mezcla: dentro de cada
+ * pestaña las filas vuelven a ser variant × mode, un solo eje. */
+const ES_MARKETING = p => /^marketing/i.test(p.variante)
+const TABLA_CONTRASTE_PRODUCT = tablaMarkdown(PARES_CONTRASTE.filter(p => !ES_MARKETING(p)))
+const TABLA_CONTRASTE_MARKETING = tablaMarkdown(PARES_CONTRASTE.filter(ES_MARKETING))
+/* El criterio, aplicado a las tres secciones de Color que hoy se parten por surface.
+ * No es decorativo: si la emisión y el criterio se separan, la corrida FALLA. */
+console.log("\n  criterio de pestañas — V = filas · D = divergencia entre facetas:")
+criterioDePestanas("Las que este botón usa",
+  { product: PARES_CONTRASTE.filter(p => !ES_MARKETING(p)).map(p => `${p.variante}/${p.mode}/${p.estado}/${p.sobre}`),
+    marketing: PARES_CONTRASTE.filter(ES_MARKETING).map(p => `${p.variante}/${p.mode}/${p.estado}/${p.sobre}`) }, true)
+{
+  const n = PARES_CONTRASTE.length, a = PARES_CONTRASTE.filter(p => !ES_MARKETING(p)).length, b = PARES_CONTRASTE.filter(ES_MARKETING).length
+  if (a + b !== n) { console.error(`\n🔴 La partición por surface pierde pares: ${a} + ${b} != ${n}`); process.exit(1) }
+  console.log(`  ✓ tabla de contraste partida: ${a} product + ${b} marketing = ${n} de ${n} pares`)
+}
+/* Los trece tokens que NO cambian con `surface`. Se nombran una sola vez a proposito:
+ * asi el codigo enseña la diferencia — cada pestaña es «sus tres del relleno» + estos. */
+const TK_COMPARTIDOS = ["background/hover","background/selected","background/secondary","background/disabled","text/primaryInverse","text/primaryInverseStatic","text/secondary","text/disabled","icon/inverse","icon/inverseStatic","icon/disabled","border/focus","border/disabled"]
+criterioDePestanas("Los tokens del componente",
+  { product: ["background/brandMain","background/brandHover","background/brandPressed", ...TK_COMPARTIDOS],
+    marketing: ["background/marketingMain","background/marketingHover","background/marketingPressed", ...TK_COMPARTIDOS] }, true)
+/**
+ * El aviso de los pares que NO pasan su umbral, EMITIDO POR CÁLCULO.
+ *
+ * 🔴 Existe porque la tabla de contraste marca los fallos en negrita y nada más:
+ * un lector que no conozca el umbral lee «3.60:1» como un dato, no como un defecto.
+ * El 11 sep 2026 el primario de marketing entró con tres pares por debajo de AA y
+ * la página los habría publicado sin decir que lo son.
+ *
+ * ⚠️ No se escribe a mano y no lleva veredicto de diseño: **enuncia el hecho medido
+ * y nombra las salidas, sin elegir ninguna.** La elección es del Lead.
+ * Si algún día no falla nada, este bloque NO se emite — no hay aviso que mantener.
+ */
+const FALLAN = paresDe(MD_BUTTON).filter(p => p.pasa === false)
+const AVISO_CONTRASTE = FALLAN.length === 0 ? "" : `<SNCallout type="Warning">
+**${FALLAN.length} ${FALLAN.length === 1 ? "combinación no cumple" : "combinaciones no cumplen"} el contraste mínimo, y ${FALLAN.length === 1 ? "está" : "están"} publicada${FALLAN.length === 1 ? "" : "s"} así a propósito mientras se decide.**
+
+${FALLAN.map(p => `· \`${p.variante} / ${p.mode}\` · \`${p.estado}\` · ${p.sobre}: **${p.ratio.toFixed(2)}:1** sobre un mínimo de ${p.minimo}:1 — \`${p.color}\` sobre \`${p.fondo}\``).join("\n")}
+
+Es un defecto abierto del color, no de la construcción del componente. **No uses esta combinación para texto pequeño hasta que se resuelva.**
+</SNCallout>
+
+`
+
+/* Toda variante de color que el .md declare tiene que tener pestaña, o la página
+ * sale completa en apariencia y sin las combinaciones seguras de esa variante.
+ * Falla ruidosamente en vez de publicar un hueco invisible — regla 16. */
+{
+  const declaradas = Object.keys(TOKENS_POR_VARIANTE)
+  const huerfanas = declaradas.filter(v => !VARIANTES_COLOR.includes(v))
+  if (huerfanas.length) {
+    console.error(`\n🔴 El .md declara ${declaradas.length} variantes de color y VARIANTES_DE_COLOR cubre ${VARIANTES_COLOR.length}.`)
+    console.error(`   Sin pestaña: ${huerfanas.join(", ")}`)
+    console.error(`   Añádelas en plantilla-componente/pestanas-plataforma.mjs o se publican sin su grilla.`)
+    process.exit(1)
+  }
+  console.log(`  ✓ variantes de color: ${declaradas.length} de ${declaradas.length} con pestaña (${declaradas.join(", ")})`)
+}
 /**
  * La entrada de changelog del arreglo de la familia `brand` en Dark.
  *
@@ -208,6 +326,10 @@ const FONDOS = {
   "Primary / Product / Dark": {
     hex: "#0F0F0F",
     porque: "lienzo oscuro. `background/primary` resuelve a #000000 en Dark; el Lead eligió #0F0F0F, un negro apenas levantado que deja ver el borde del botón",
+  },
+  "Primary / Marketing / Dark": {
+    hex: "#0F0F0F",
+    porque: "mismo lienzo oscuro que el preview de product, puesto a mano por el Lead el 14 sep 2026 y capturado aquí para que la siguiente escritura no lo borre. ⚠️ Lo dictó como «f0f0f0» de memoria; el valor REAL leído de la página es #0F0F0F. Son colores opuestos —casi blanco frente a casi negro— y sobre un preview de Dark el claro sería el defecto. Se verificó antes de replicarlo",
   },
 }
 /**
@@ -763,7 +885,7 @@ ${preview("variant", "primary y secondary",
 
 ${par(
   "Elige \`surface\` por **dónde vive el botón**: \`product\` en app, login y modales; \`marketing\` en landings y campañas.",
-  "No uses \`marketing\` **para dar más peso** dentro del producto. No es un escalón de jerarquía: solo cambia el peso tipográfico del label y su escalón de sombra."
+  "No uses \`marketing\` **para dar más peso** dentro del producto. No es un escalón de jerarquía: es otra superficie. Cambia el peso del label, su escalón de sombra y —desde el 11 sep 2026, en \`variant = primary\`— el color del relleno, que pasa al rojo de 100 Ladrillos. En producto el primario sigue siendo azul."
 )}
 
 ${preview("surface", "product y marketing",
@@ -995,11 +1117,22 @@ ${VARIANTES_COLOR.map(v => `#### ${v}
 
 Un par por estado, con el contraste de lo que va encima del relleno. **El label exige 4.5:1** (texto normal) y **los iconos 3:1** (WCAG 1.4.11, no textual).
 
-${TABLA_CONTRASTE}
+> **Qué separa estas dos pestañas:** la **superficie**. \`product\` reúne las variantes \`primary\` y \`secondary\` del producto; \`marketing\` es el CTA, que es la única que cambia de color con la superficie. Dentro de cada pestaña las filas son \`variante × mode\`.
+
+${AVISO_CONTRASTE}
+#### product
+
+${TABLA_CONTRASTE_PRODUCT}
+
+#### marketing
+
+${TABLA_CONTRASTE_MARKETING}
 
 Los valores marcados con \\* son del estado deshabilitado, **exento de requisito de contraste** por WCAG 1.4.3: un control inactivo no tiene umbral que cumplir. Se muestran igualmente porque exento no es lo mismo que legible — el icono deshabilitado da 1.74:1 en Light, y ése es el argumento de la sección «Cuándo no deshabilitar».
 
 ### Cómo resuelve en cada mode
+
+#### product
 
 ${preview("Primary / Product / Light", "Light Mode",
   "El relleno toma la escala de marca y el label resuelve a su inverso claro.")}
@@ -1007,13 +1140,34 @@ ${preview("Primary / Product / Light", "Light Mode",
 ${preview("Primary / Product / Dark", "Dark Mode",
   "Los mismos tokens sobre lienzo oscuro: el relleno aclara dentro de la escala de marca y el label invierte a oscuro.")}
 
+#### marketing
+
+${preview("Primary / Marketing / Light", "Light Mode",
+  "El relleno es el rojo del CTA. No cambia con el mode: el mismo alias en Light y en Dark.")}
+
+${preview("Primary / Marketing / Dark", "Dark Mode",
+  "El mismo relleno sobre lienzo oscuro. El label es Static: tampoco invierte, porque el fondo sobre el que se posa no depende del tema.")}
+
 Las ocho combinaciones —\`variant\` × \`surface\` × mode— están en la especificación del repositorio.
 
 ### Los tokens del componente
 
+> **Qué separa estas dos pestañas, que es lo único que cambia con \`surface\`:** los **tres tokens del relleno primario**. \`product\` usa la escala de marca —azul— y \`marketing\` usa la del CTA —rojo—. **Los otros trece son idénticos en las dos**: el label, los iconos, los bordes y los fondos de \`secondary\` no dependen de la superficie.
+
+#### product
+
 <SNBlock packageId="io.supernova.block.design-tokens" variantId="table">
   <SNItem>
-    <SNProp name="tokens" value={${tokens("background/brandMain","background/brandHover","background/brandPressed","background/hover","background/selected","background/secondary","background/disabled","text/primaryInverse","text/primaryInverseStatic","text/secondary","text/disabled","icon/inverse","icon/inverseStatic","icon/disabled","border/focus","border/disabled")}} swatches={${swatches("light","dark")}} />
+    <SNProp name="tokens" value={${tokens("background/brandMain","background/brandHover","background/brandPressed", ...TK_COMPARTIDOS)}} swatches={${swatches("light","dark")}} />
+    ${columnasDeToken(COBERTURA_TK.cobertura, COBERTURA_TK._totalDeTokens)}
+  </SNItem>
+</SNBlock>
+
+#### marketing
+
+<SNBlock packageId="io.supernova.block.design-tokens" variantId="table">
+  <SNItem>
+    <SNProp name="tokens" value={${tokens("background/marketingMain","background/marketingHover","background/marketingPressed", ...TK_COMPARTIDOS)}} swatches={${swatches("light","dark")}} />
     ${columnasDeToken(COBERTURA_TK.cobertura, COBERTURA_TK._totalDeTokens)}
   </SNItem>
 </SNBlock>
@@ -1044,13 +1198,10 @@ Qué anuncia cada plataforma, estado por estado. **Es una decisión de diseño, 
 
 ### Dónde cae el foco
 
-Las tablas dicen **qué se anuncia**; estas dos imágenes dicen **dónde para el foco**, que es lo único que el texto no puede enseñar.
+Las tablas dicen **qué se anuncia**; la imagen dice **dónde para el foco**, que es lo único que el texto no puede enseñar. *La del estado deshabilitado vive en su propia sección, más abajo.*
 
 ${preview("State: rest / hover / active / focus-visible", "Una sola parada de foco",
   "El anillo rodea el control entero, no sus partes: label e iconos se anuncian como un único elemento.")}
-
-${preview("State: isDisabled === true", "Deshabilitado, fuera del tabulador",
-  "Cero paradas de foco: el control sale del orden de tabulación y el teclado no puede alcanzarlo.")}
 
 ### En reposo, con el puntero encima, presionado y con foco
 
@@ -1061,6 +1212,9 @@ ${tablasDeEstado("State: rest / hover / active / focus-visible")}
 ### Deshabilitado
 
 Cero paradas de foco: el control sale por completo del orden de tabulación.
+
+${preview("State: isDisabled === true", "Deshabilitado, fuera del tabulador",
+  "Cero paradas de foco: el control sale del orden de tabulación y el teclado no puede alcanzarlo.")}
 
 ${tablasDeEstado("State: isDisabled === true")}
 

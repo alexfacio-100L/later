@@ -13,7 +13,39 @@ const { Supernova } = sdkPkg
 exigirDestino("supernova")
 console.log(`destino: ${destino.nombre} (${destino.estado})\n`)
 
-const PAGE = "44285c3c-dbe6-4504-a485-2ab58a6fa8ba"   // Componentes / Button Canario
+/* 🔴 CORREGIDO EL 11 SEP 2026. Esta constante apuntaba a
+ * `44285c3c-dbe6-4504-a485-2ab58a6fa8ba` — «Componentes / Button Canario», una página
+ * que YA NO EXISTE en el árbol. El censo de páginas del 11 sep no la devuelve.
+ *
+ * ⚠️ Y el guion no lo decía: `--escribir` habría llamado a `writeMarkdownToPage`
+ * contra un id muerto. *Forma «falso vigente» de la regla 16: el comentario probaba
+ * que la página se llamó así, no que siguiera existiendo.*
+ *
+ * Ahora el destino se pasa por argumento y SE COMPRUEBA contra el árbol antes de
+ * escribir. Sin comprobación, el fallo vuelve a ser silencioso. */
+/* 🔴 SIN DESTINO POR DEFECTO, Y ES LA LECCIÓN CARA DEL 11 SEP 2026.
+ *
+ * Este guion apuntaba a una página BORRADA. Al descubrirlo se le repuntó a la
+ * página real del Button… y se sobrescribió con su salida, que es el volcado
+ * plano del `.md`: **8 bloques `figma-frames`, el `design-tokens` con sus
+ * swatches y 8 `previewContainerSize` se reemplazaron por prosa.** El Lead lo vio
+ * en vivo: *«todo lo que habíamos elaborado anteriormente está atropellado»*.
+ *
+ * ⚠️ El error no fue el id muerto: fue **repuntar un publicador superado a una
+ * página viva**. Para el Button el generador vigente es
+ * `plantilla-componente/button-canario.mjs` (`npm run button:escribir`), que
+ * COLOCA el contenido en secciones y usa bloques vivos. *El `.md` es INSUMO, no
+ * la página.*
+ *
+ * Por eso ya no hay destino por defecto: hay que nombrarlo, y eso obliga a
+ * preguntarse si este es el publicador correcto para esa página. */
+const PAGE = process.argv.find(a => a.startsWith("--pagina="))?.slice("--pagina=".length)
+if (!PAGE) {
+  console.error(`\n🔴 Falta el destino. Pásalo con --pagina=<id>.`)
+  console.error(`   Y antes de pasarlo, comprueba que ESTE es el publicador de esa página:`)
+  console.error(`   el Button se publica con \`npm run button:escribir\`, no con este guion.`)
+  process.exit(1)
+}
 const MD   = new URL("../Componentes/button.md", import.meta.url)
 
 const tokens = existsSync(new URL("./tokens.json", import.meta.url))
@@ -101,7 +133,21 @@ if (process.argv.includes("--escribir") && !process.argv.includes("--forzar")) {
   console.log(`     Publicar esto NO significa que el sistema esté sano. Informe: npm run docs:foundations:md`)
 }
 
+/* La página destino existe, o no se escribe. Se comprueba SIEMPRE —también en modo
+ * validación— para que el defecto salga antes de que alguien confíe en el guion. */
+const estructura = await sdk.documentation.getDocumentationStructure(from)
+const aplanar = (n, acc = []) => { acc.push(n); for (const h of (n.children ?? n.pages ?? [])) aplanar(h, acc); return acc }
+const nodos = Array.isArray(estructura) ? estructura.flatMap(n => aplanar(n)) : aplanar(estructura)
+const paginas = nodos.filter(n => n && (n.id || n.persistentId))
+const destinoPagina = paginas.find(p => p.persistentId === PAGE || p.id === PAGE)
+if (!destinoPagina) {
+  console.log(`\n🔴 La página destino NO EXISTE en el árbol: ${PAGE}`)
+  console.log(`   ${paginas.length} nodos censados. Pásala con --pagina=<id>.`)
+  process.exit(1)
+}
+console.log(`\n✓ página destino verificada: «${destinoPagina.title ?? destinoPagina.name}» (${PAGE})`)
+
 if (process.argv.includes("--escribir")) {
   const r = await sdk.import.writeMarkdownToPage(from, PAGE, mdx)
-  console.log(`✓ escrito — ${r.blockCount} bloques`)
+  console.log(`✓ escrito — ${r.blockCount} bloques — QUEDA EN PREVIEW. Publicar a Live lo hace el Lead.`)
 }

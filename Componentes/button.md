@@ -226,7 +226,7 @@ _Confidence: high._
 |---|---|---|---|---|
 | `variant` | variant | `primary` \| `secondary` | `primary` | Jerarquía visual del botón. El eje se llamaba "Type" en Figma y se renombró porque `type` está reservado en HTML para el tipo de botón (button/submit/reset). Los valores tertiary y quaternary ya no existen: tertiary pasó al componente Link (un enlace navega, un botón actúa) y quaternary se eliminó. |
 | `size` | variant | `s` \| `m` \| `l` | `m` | Escala dimensional bindeada a token: min-height `size/control/s\|m\|l` (48 · 56 · 64), paddingInline `space/l\|xl\|2xl` (16 · 24 · 32), paddingBlock constante `space/s` (8), icono `size/icon/s\|m\|l` (16 · 20 · 24) y texto Text/S · Text/M · Text/L (12 · 14 · 16). La razón de la terna es altura/tamaño de texto = 4 en las tres tallas. El default pasó de `s` a `m` el 27 ago 2026: toda instancia que no especifique talla cambia de aspecto al actualizar la librería. |
-| `surface` | variant | `product` \| `marketing` | `product` | Superficie de uso. Solo cambia el peso tipográfico del label: Regular en `product`, Semi Bold en `marketing`. |
+| `surface` | variant | `product` \| `marketing` | `product` | Superficie de uso. Cambia tres cosas: el peso del label (Regular en `product`, Semi Bold en `marketing`), el escalón de sombra, y **desde el 11 sep 2026 el color del relleno cuando `variant = primary`** — `marketing` pinta el rojo de 100 Ladrillos y `product` conserva el azul de marca. |
 | `isDisabled` | boolean | true \| false | `false` | Estado persistente extraído del eje Figma `state`. Render: aplica los tokens de fondo y texto deshabilitados. Accesibilidad: expone `aria-disabled=true` y el elemento sale del orden de foco. Anuncio: el lector de pantalla lee el estado después del label. El contraste del texto deshabilitado quedó corregido (4.50:1 en Light, 4.89:1 en Dark); sigue abierto que `background/disabled` apenas se distingue del lienzo en Light (1.30:1). |
 | `label` | text | (string) | – | Texto de la acción. Propiedad TEXT del componente (`label#3566:7`), con "Button" como marcador de posición en Figma. Siempre presente: el componente no tiene modo icon-only. |
 | `leadingIcon` | variant | `none` \| `icon` | `none` | Icono a la izquierda del label. Fusiona el par Figma `showIconLeft` (visibilidad) + `iconLeft` (instance swap): `false` = `none`. Admite cualquier icono de la librería Phosphor; el filler por defecto es ArrowRight con Format=Outline. El gap icono/label es `content.itemSpacing` = `space/s`. |
@@ -394,7 +394,7 @@ El eje surface no cambia hijos ni ninguna medida declarada: lo único que cambia
 | Spec | product | marketing | Notes |
 |---|---|---|---|
 | Label | – | – | Único elemento que cambia a lo largo del eje surface |
-| └ textStyle | Text/M - Poppins/Regular | Text/M - Poppins/Semi Bold | Valores a talla m. El peldano S/M/L lo fija size; surface solo cambia el peso: Regular en product, Semi Bold en marketing |
+| └ textStyle | Text/M - Poppins/Regular | Text/M - Poppins/Semi Bold | Valores a talla m. El peldano S/M/L lo fija size. En tipografia surface solo cambia el peso: Regular en product, Semi Bold en marketing. El color del relleno tambien cambia con surface desde el 11 sep 2026 — ver marketingPrimary en Color |
 
 ### Button — Secondary border
 
@@ -452,6 +452,46 @@ _Las columnas usan la condición de runtime en lugar del valor bruto del eje Fig
 | Drop shadow (surface marketing, size s / m) | `Shadows/Single/Small/sm-2` (#0E1F35) | `Shadows/Single/Small/sm-2` (#0E1F35) | `Shadows/Single/Small/sm-2` (#0E1F35) | `Shadows/Single/Small/sm-2` (#0E1F35) | `Shadows/Single/Small/sm-2` (#0E1F35) | Marketing sube un peldaño y no se apaga |
 | Drop shadow (surface marketing, size l) | `Shadows/Single/Small/sm-3` (#0E1F35) | `Shadows/Single/Small/sm-3` (#0E1F35) | `Shadows/Single/Small/sm-3` (#0E1F35) | `Shadows/Single/Small/sm-3` (#0E1F35) | `Shadows/Single/Small/sm-3` (#0E1F35) | Elevación máxima del componente |
 
+### marketingPrimary / Light
+
+> El eje `surface` **ya no cambia solo la sombra**. Desde el 11 sep 2026, las **15 variantes** con `surface = marketing` y `variant = primary` —3 tallas × 5 estados— pintan el **rojo de 100 Ladrillos** en lugar del azul de marca. `surface = product` no se movió: sigue en `button/background/primary` y sus estados, y por eso **la App no cambia**. Las secciones `primary / Light` y `primary / Dark` de arriba describen ahora **solo `surface = product`**.
+
+| Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
+|---|---|---|---|---|---|---|
+| Container fill | `background/marketingMain` (#E10A3D) | `background/marketingHover` (#B90832) | `background/marketingPressed` (#A9072E) | `background/marketingHover` (#B90832) | `background/disabled` (#DADADA) | **Un solo rojo en los dos modos.** `supportColors/brandRed/500` es el rojo de marca ajustado para que el label blanco cumpla AA: los dos rojos de marca no lo permiten. Vive en `supportColors` y no en `brandColors`, que se reserva a los tres colores de marca. Los estados **oscurecen**, porque el label es claro |
+| Container stroke | none | none | none | `border/focus` (#1C64EB) | none | Anillo de foco, igual que en product |
+| Label | `text/primaryInverseStatic` (#F9F9F9) | `text/primaryInverseStatic` (#F9F9F9) | `text/primaryInverseStatic` (#F9F9F9) | `text/primaryInverseStatic` (#F9F9F9) | `text/disabled` (#606060) | ✅ **Pasa AA en los cuatro estados activos.** Es token `Static`: no invierte con el tema, porque el relleno tampoco |
+| Leading icon — ArrowRight | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/disabled` (#A6A6A6) | 3,79:1 sobre el relleno: los iconos **sí** pasan los cinco estados, porque su umbral es 3:1 por 1.4.11 |
+| Trailing icon — ArrowRight | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/disabled` (#A6A6A6) | Mismo umbral |
+
+### marketingPrimary / Dark
+
+| Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
+|---|---|---|---|---|---|---|
+| Container fill | `background/marketingMain` (#E10A3D) | `background/marketingHover` (#B90832) | `background/marketingPressed` (#A9072E) | `background/marketingHover` (#B90832) | `background/disabled` (#B2B2B2) | **El mismo rojo que en Light.** Con label blanco la asimetría de dos rojos deja de tener sentido: el rojo web se eligió para separarse de fondos oscuros, y ese criterio no gobierna cuando lo que manda es la legibilidad del texto encima |
+| Container stroke | none | none | none | `border/focus` (#6C9BF2) | none | Anillo de foco |
+| Label | `text/primaryInverseStatic` (#F9F9F9) | `text/primaryInverseStatic` (#F9F9F9) | `text/primaryInverseStatic` (#F9F9F9) | `text/primaryInverseStatic` (#F9F9F9) | `text/disabled` (#404040) | ✅ **Pasa AA en los cuatro estados activos**, con los mismos valores que en Light: el relleno no cambia con el tema |
+| Leading icon — ArrowRight | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/disabled` (#606060) | Pasa con holgura |
+| Trailing icon — ArrowRight | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/inverseStatic` (#F9F9F9) | `icon/disabled` (#606060) | Pasa con holgura |
+
+**De dónde salen los pasos, porque el rojo web no tenía escala.** Ninguno se eligió a ojo, y ninguno vino de `supportColors/red`, cuyo hue es 0 y habría desplazado el matiz de marca. Los tres de **Light** conservan hue (348,4°) y saturación (93,5%) y aplican los deltas de luminosidad medidos en `negative`, la única familia roja del sistema con estados: −8,24 pp (`red/500`→`700`) para hover y −11,57 pp (`red/500`→`800`) para pressed. Los tres de **Dark** aplican el delta medido en `background/accent`, el único par rojo Light/Dark que existe (#F20544 L 48,4% → #F82F56 L 57,8%, **+9,41 pp**), a cada uno de los tres pasos de Light. *La separación entre estados se conserva idéntica en los dos modos.*
+
+#### 🔴 Defecto abierto — en Light, el label claro no pasa AA sobre el rojo
+
+`npm run docs:contraste` juzga **60 pares y falla 3**, los tres el label del primario de marketing **en Light**: **3,60:1** en reposo, **4,01:1** en hover y en focus-visible. El azul de product da 16,23:1 — la caída es de 16,23 a 3,60. Los iconos pasan los cinco estados.
+
+**En Dark no hay defecto:** el label invierte a negro y los tres pasos dan 6,92 · 5,65 · 5,33. *El problema es exclusivo de Light, y lo causa el label claro, no el rojo.*
+
+| Salida | Qué implica | Contraste |
+|---|---|---|
+| Label oscuro en Light | `#041B3D` sobre `#F82F56` — el rojo de marca se conserva intacto, y es lo que Dark ya hace | **4,50:1** · pasa AA justo en el umbral, sin margen |
+| Oscurecer el relleno en Light | Bajar el rojo a L 46,5% (`#E50833`) para que el label claro pase | 4,52:1 · **pero ya no es el rojo de marca** |
+| Aceptarlo como excepción | Solo conforme si el label es texto grande (≥24 px, o ≥18,66 px en bold) | 3,60:1 contra un umbral de 3:1 |
+
+**Ninguna se aplica hasta que el Lead elija.** *Hoy las 15 variantes quedan con el label claro y este aviso encima.*
+
+⚠️ **Y este defecto estuvo invisible durante la propia sesión que lo introdujo:** la sección se tituló al principio `### cta — familia de tokens…` y `docs:contraste` la saltó en silencio, informando **48 de 48 pares pasan**. *El verificador solo reconoce encabezados `### variante / modo`.* **Un método que no puede ver la sección informa de una cobertura que no tiene** — regla 16 de `CLAUDE.md`, forma «falso completo».
+
 ### secondary / Light
 
 | Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
@@ -496,6 +536,9 @@ component happened to be extracted in, so the other mode was not implementable f
 | `background/brandHover` | `#1C488A` | `#BFBFBF` | `background/brandHover` |
 | `background/brandMain` | `#041B3D` | `#FFFFFF` | `background/brandMain` |
 | `background/brandPressed` | `#133970` | `#DFDFDF` | `background/brandPressed` |
+| `background/marketingHover` | `#B90832` | `#B90832` | `background/marketingHover` |
+| `background/marketingMain` | `#E10A3D` | `#E10A3D` | `background/marketingMain` |
+| `background/marketingPressed` | `#A9072E` | `#A9072E` | `background/marketingPressed` |
 | `background/disabled` | `#DADADA` | `#B2B2B2` | `background/disabled` |
 | `background/hover` | `#F4F7FB` | `#404040` | `background/hover` |
 | `background/secondary` | `#FFFFFF` | `#202020` | `background/secondary` |

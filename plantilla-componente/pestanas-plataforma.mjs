@@ -70,7 +70,13 @@ export const PLATAFORMAS = ["VoiceOver (iOS)", "TalkBack (Android)", "ARIA (Web)
  * —no acepta elegir tema—, así que una pestaña «Light» y otra «Dark» mostrarían
  * lo mismo. *Está pendiente de comprobar en Preview qué tema resuelve.*
  */
-export const VARIANTES_DE_COLOR = ["primary", "secondary"]
+/* 🔴 AMPLIADO EL 11 SEP 2026 con `marketingPrimary`, y la lección está en cómo se
+ * detectó. Esta lista estaba cableada a dos valores; el `.md` declaró una tercera
+ * variante de color —el primario de la superficie marketing, en rojo— y la página
+ * la habría publicado SIN su pestaña de combinaciones seguras, sin error y sin
+ * hueco visible. *Forma «falso completo» de la regla 16 de `CLAUDE.md`.*
+ * `button-canario.mjs` ahora ABORTA si el .md declara una variante que no esté aquí. */
+export const VARIANTES_DE_COLOR = ["primary", "secondary", "marketingPrimary"]
 
 /**
  * LOS GRUPOS QUE SE CONVIERTEN EN PESTAÑAS.
@@ -99,6 +105,11 @@ export const GRUPOS = [
   { nivel: 3, titulos: ["Por talla", "Por superficie", "Por variante", "En foco"], conservarTitulo: true },
   { nivel: 4, titulos: PLATAFORMAS, conservarTitulo: false },
   { nivel: 4, titulos: VARIANTES_DE_COLOR, conservarTitulo: false },
+  /* 🔴 Las montó el LEAD A MANO en la página el 14 sep 2026, para acortar el scroll
+   * de la sección de color separando por `surface`. Se reproducen aquí porque
+   * `writeMarkdownToPage` reemplaza la página entera y la siguiente escritura las
+   * borraría — es el mismo motivo por el que ya viven aquí las de plataforma. */
+  { nivel: 4, titulos: ["product", "marketing"], conservarTitulo: false },
 ]
 
 const NIVEL = {
