@@ -29,7 +29,14 @@ import path from "node:path"
 
 const { Supernova } = sdkPkg
 const DIFF = process.argv.includes("--diff")
-const GRUPO = "836f5e48-77f0-4499-b344-51779236a6d6"   // Button
+/* Parametrizado el 14 sep 2026 para que `doc:done` sirva al primer lote y no solo
+ * al canario. Sin argumento se comporta como siempre: el Button.
+ *   node respaldo-pagina.mjs [--diff] [--componente=<slug>] [--grupo=<persistentId>]
+ * El grupo se resuelve por NOMBRE contra el árbol si no se pasa su id. */
+const ARG = (n) => process.argv.find(a => a.startsWith(`--${n}=`))?.split("=").slice(1).join("=")
+const COMPONENTE = ARG("componente") ?? "button"
+const GRUPO_EXPLICITO = ARG("grupo")
+const GRUPO = GRUPO_EXPLICITO ?? "836f5e48-77f0-4499-b344-51779236a6d6"   // Button, por defecto
 const DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "respaldos")
 
 const sdk = new Supernova(apiKey)
@@ -40,7 +47,9 @@ const v = await sdk.versions.getActiveVersion(ds.id)
 const from = { designSystemId: ds.id, versionId: v.id, workspaceId: ws[0].id }
 
 const st = await sdk.documentation.getDocumentationStructure(from)
+/* Por id si se dio, y si no por nombre: un slug es más fácil de pasar que un uuid. */
 const grupo = st.find(e => e.persistentId === GRUPO)
+  ?? (GRUPO_EXPLICITO ? null : st.find(e => (e.title ?? e.name ?? "").toLowerCase() === COMPONENTE.toLowerCase()))
 if (!grupo) { console.error(`🔴 No se encontró el grupo ${GRUPO}`); process.exit(1) }
 
 const actual = {}
@@ -104,7 +113,7 @@ const prosa = (arbol) => {
 
 const censoActual = Object.fromEntries(Object.entries(actual).map(([k, a]) => [k, censo(a)]))
 const prosaActual = Object.fromEntries(Object.entries(actual).map(([k, a]) => [k, prosa(a)]))
-const RUTA = path.join(DIR, "button.json")
+const RUTA = path.join(DIR, `${COMPONENTE}.json`)
 
 if (!DIFF) {
   mkdirSync(DIR, { recursive: true })

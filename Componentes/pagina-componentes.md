@@ -1,11 +1,11 @@
-Esta lista reúne todos los componentes del sistema Later con el estado en que se encuentra cada uno. Es el punto de entrada: desde aquí se llega a la documentación de un componente, a su archivo en Figma y, cuando exista, a su implementación en código.
+Later tiene estos componentes, cada uno con su estado. Desde cada fila llegas a su documentación, a su archivo de Figma y, cuando exista, a su código.
 
-**La lista no es el catálogo de lo que está listo para usar.** Es el catálogo completo, con la verdad de cada pieza puesta al lado. La columna de estado dice cuál es cuál, para que la decisión de usarlo o no se tome con el dato delante y no por el hecho de que aparezca en una tabla.
+La lista incluye todo, no solo lo que está listo. Mira la columna **Estado** antes de usar un componente. Aparecer en la lista no garantiza nada.
 
-**Un componente aquí es una pieza con contrato**, no un dibujo reutilizable: tiene un comportamiento decidido, unos estados que alguien pensó, un nombre que significa lo mismo en diseño y en código, y un dueño que responde cuando falla. *Mientras no tenga eso, es una forma que se parece a otras formas.*
+Un **componente** es una pieza con contrato, no un dibujo reutilizable. Tiene comportamiento decidido, estados pensados, un nombre igual en diseño y en código, y un dueño que responde cuando falla. Sin eso es solo una forma.
 
 <SNCallout type="Info">
-**Antes de crear una pieza nueva, busca aquí.** La mayoría de las necesidades nuevas resultan ser una variante de algo que ya existe — y una variante cuesta una fracción de lo que cuesta un componente, que hay que mantener para siempre.
+Busca en la lista antes de crear una pieza nueva. La mayoría de las necesidades resultan ser una variante de algo que ya existe. Una variante cuesta mucho menos que un **componente**, que hay que mantener para siempre.
 </SNCallout>
 
 ## Qué dice cada estado
@@ -17,13 +17,13 @@ Esta lista reúne todos los componentes del sistema Later con el estado en que s
 | **Deprecated** | No usar en trabajo nuevo | Su página indica qué lo sustituye |
 | **Sin estado** | Existe en Figma, no ha pasado la revisión | Mirarlo, no darlo por garantizado |
 
-**Sin estado no es descartado ni abandonado:** es un componente al que aún no le ha llegado su turno. El orden en que llegan está más abajo.
+**Sin estado** no significa descartado. Significa que aún no le ha llegado su turno. Consulta «En qué orden llegan».
 
-**Deprecated sigue publicado** porque hay producto que lo usa, no porque siga siendo la respuesta.
+**Deprecated** sigue publicado porque hay producto que lo usa. No porque siga siendo la respuesta.
 
 ## Qué se garantiza cuando un componente está listo
 
-Un componente no se documenta hasta que está cerrado. **Healthy quiere decir que cumple las siete:**
+No documentamos un componente antes de cerrarlo. **Healthy** significa que cumple las siete.
 
 | | Garantía |
 |---|---|
@@ -35,17 +35,17 @@ Un componente no se documenta hasta que está cerrado. **Healthy quiere decir qu
 | **6** | **Se validó en uso**, montado junto a otros componentes, no solo medido pieza por pieza |
 | **7** | **La documentación está fresca y completa.** Ninguna imagen publicada corresponde a una versión vieja del componente, ningún par de color incumple, y ningún bloque quedó colocado sin configurar |
 
-**La séptima es de otra naturaleza que las seis primeras**, y por eso se dice aparte: las seis certifican **el componente**; la séptima certifica **que su página dice la verdad**. *Una página puede estar publicada, validar limpia y estar sirviendo imágenes de una versión anterior — no da error, y se ve bien.*
+Las seis primeras certifican el **componente**. La séptima certifica su documentación. Una página puede estar publicada y servir imágenes de una versión anterior. No da error y se ve bien.
 
-### 🔴 Y lo que estar «listo» todavía NO significa
+### Healthy no significa que exista en código
 
-**Que un componente esté Healthy y documentado no significa que exista en código.** *Lo produce Ingeniería en Bricks UI, y hasta entonces la documentación describe una intención, no algo que puedas instalar.*
+Lo produce **Ingeniería** en Bricks UI. Hasta entonces la documentación describe una intención, no algo que puedas instalar.
 
-**Por eso cada componente lleva su tabla «Dónde está disponible»** — seis plataformas fijas, con su estado real. **Un componente no está disponible en una plataforma hasta que está producido ahí**, y lo que no se ha comprobado dice *«Pendiente de verificar»*, no se deja en blanco.
+Consulta la tabla **Dónde está disponible** de cada componente. Son seis plataformas fijas con su estado real. Un componente no está disponible en una plataforma hasta que está producido ahí. Si dice «Pendiente de verificar», nadie lo ha comprobado todavía.
 
 ## Qué hay construido y qué no
 
-**La lista de arriba dice tres cosas a la vez**, y conviene leerlas por separado:
+La lista mezcla tres cosas. **Léelas por separado:**
 
 | | Cuántos | Qué significa |
 |---|---|---|
@@ -53,34 +53,34 @@ Un componente no se documenta hasta que está cerrado. **Healthy quiere decir qu
 | **Sin construir** | **41** | No existen todavía. Documentarlos no es documentar: es construirlos primero |
 | **Documentados** | **1** | Han pasado la revisión completa y se pueden dar por ciertos |
 
-**Un componente que aparece en la lista sin estado y sin pieza en Figma es una intención, no un activo.** *Está aquí porque el sistema lo necesita, no porque exista.*
+Un componente sin estado y sin pieza en Figma es una **intención**, no un activo. Está en la lista porque el sistema lo necesita, no porque exista.
 
 ## En qué orden llegan
 
-**Primero los que ya existen**, porque revisar cuesta menos que construir y el sistema empieza a servir antes.
+Primero van los que **ya existen**. Revisar cuesta menos que construir. El sistema empieza a servir antes.
 
 | # | Componente | En Figma | Por qué está ahí | Qué resolver antes |
 |---|---|---|---|---|
 | **1** | **Link** | `Link` | Recién separado del Button: hereda tipografía y color | — |
 | **2** | **Tag** | `Tag` | Migrado a Phosphor, con **174 instancias** en uso | Sus variantes no están medidas |
-| **3** | **Switch** | ⚠️ `Toggle` | Matriz completa y coherente — 20 variantes | Depende del token `size/indicator`, que no existe |
+| **3** | **Switch** | ⚠️ `Toggle` | Matriz completa y coherente: 20 variantes | Depende del token `size/indicator`, que no existe |
 | **4** | **Check** y **Radio** | ⚠️ `Checkbox` · `RadioButton` | Comparten indicador y el patrón «con Label» | El mismo token `size/indicator` |
 | **5** | **Select** · **Tabs** · **Card** · **Tooltip** · **Segment control** | varios | Construidos y sin medir | **Sin auditar.** Entran tras una revisión de su matriz |
 | **6** | **Side navigation** · **Top navigation** | varios | Construidos; son compuestos, no átomos | Dependen de que los átomos estén cerrados |
-| **7** | **Banner** · **Toast** | ⚠️ `Alerts` — **una pieza de 30 variantes** | El sidebar los separa; Figma los tiene juntos | 🔴 **Decidir si son piezas distintas o una sola** |
+| **7** | **Banner** · **Toast** | ⚠️ `Alerts`, **una pieza de 30 variantes** | El sidebar los separa; Figma los tiene juntos | 🔴 **Decidir si son piezas distintas o una sola** |
 | **8** | **Text field** | ⚠️ `inputText` | No es documentar, es **reconstruir**: caja de 40 px fuera de la escala | Cuatro defectos simultáneos |
 | **9** | Los **41 sin construir** | — | Desde `Divider` y `Avatar` hasta `Data table` y `Charts` | **Construirlos.** El orden se define cuando se audite lo de arriba |
 
-⚠️ **Y hay una tercera categoría que no es ni «mejorar» ni «construir»: piezas cuya construcción hay que cuestionar antes de tocarlas.** *`Text field` es el caso claro —reconstruir sale más barato que corregir—, y `Banner`/`Toast` es una decisión de arquitectura, no de dibujo.* **Documentar una pieza mal construida la convierte en norma.**
+Hay una tercera categoría: piezas que hay que **cuestionar** antes de tocarlas. En `Text field` reconstruir sale más barato que corregir. En `Banner` y `Toast` la decisión es de arquitectura, no de dibujo. Documentar una pieza mal construida la convierte en norma.
 
-⚠️ **El criterio acordado de «mayor a menor uso» sigue sin aplicarse:** hoy **no existe instrumento para medir cuánto se usa cada componente** en producto. Donde hay indicio real —las 174 instancias de `Tag`— va anotado. *El día que haya medición, este orden se revisa.*
+El criterio de «mayor a menor uso» sigue **sin aplicarse**. No existe instrumento para medir el uso real en producto. Donde hay indicio, como las 174 instancias de `Tag`, va anotado. El orden se revisa cuando haya medición.
 
 ## Si el componente que buscas no está, o su estado no te sirve
 
 | Situación | Qué hacer |
 |---|---|
-| **No está, o está sin estado** | Úsalo desde Figma sabiendo que su comportamiento no está garantizado por escrito — y **avísanos: lo que se pide se adelanta** |
-| **Está en Known issues y el defecto te bloquea** | Dilo antes de resolverlo por tu cuenta. Un arreglo local se vuelve una diferencia permanente; el mismo arreglo en el componente lo hereda todo el producto |
-| **Necesitas uno que no existe** | Pregunta antes de crearlo. La mayoría de las piezas nuevas resultan ser una variante de algo que ya está aquí — y una variante cuesta una fracción de lo que cuesta un componente nuevo, que hay que mantener para siempre |
+| **No está, o está sin estado** | Úsalo desde Figma. Su comportamiento no está garantizado por escrito. **Avísanos:** lo que se pide se adelanta |
+| **Está en Known issues y el defecto te bloquea** | Dilo antes de resolverlo por tu cuenta. Un arreglo local se vuelve una diferencia permanente. El mismo arreglo en el componente lo hereda todo el producto |
+| **Necesitas uno que no existe** | Pregunta antes de crearlo. La mayoría resultan ser una variante de algo que ya existe. Una variante cuesta mucho menos que un componente nuevo |
 
 Para cualquiera de los tres, escríbenos en Slack a **#frontend-and-design**.

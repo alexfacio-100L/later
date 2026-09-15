@@ -37,6 +37,22 @@ const TABS = {
 
 [Definición breve del componente]
 
+<SNCallout variant="Info">
+**Escribe directo y concreto.** Las reglas están debajo y se comprueban con \`npm run doc:registro -- <ruta.md>\`.
+</SNCallout>
+
+Usa frases de 25 palabras como máximo, 18 de media. Una idea por frase.
+
+No uses incisos con raya. Si merece decirse, es otra frase.
+
+Marca un solo **énfasis** por párrafo, y sobre un término. Nunca sobre una frase entera.
+
+Empieza cada párrafo por el verbo o por el sujeto. Nunca por un conector.
+
+Habla de tú y en voz activa. No menciones la página dentro de la página.
+
+Pon el porqué después de la instrucción, y solo si cambia lo que alguien hace.
+
 ## Propósito
 
 [Qué necesidad de interfaz o interacción resuelve]
@@ -51,12 +67,30 @@ ${OPCIONAL}
 
 [Agregar Figma component cuando se documente el componente]
 
+## Dónde está disponible
+
+| Plataforma | Estado | Qué hay hoy |
+| --- | --- | --- |
+| Design System · Bricks UI | [Estado] | [Qué hay hoy] |
+| Web · WebApp | [Estado] | [Qué hay hoy] |
+| Web · 100 Ladrillos | [Estado] | [Qué hay hoy] |
+| Mobile · 100 Ladrillos App | [Estado] | [Qué hay hoy] |
+| CMS · HubSpot Templates | [Estado] | [Qué hay hoy] |
+| Email · Templates | [Estado] | [Qué hay hoy] |
+
+Las seis plataformas son fijas para todo componente. Solo cambia el estado. No añadas ni quites filas sin decisión del Lead.
+
+Un componente no está disponible en una plataforma hasta que está **producido** ahí. Si no lo has comprobado, escribe «Pendiente de verificar». No lo dejes en blanco.
+
 ## Información general
 
 - [Categoría]
 - [Owner]
-- [Plataformas]
 - [Componentes relacionados]
+
+## Recursos
+
+[Agregar Shortcut links a Figma, Storybook, uSpec, Foundations o repositorio cuando existan]
 
 ## Recursos
 
@@ -64,7 +98,7 @@ ${OPCIONAL}
 
   "Usos": `# Uso
 
-[Explicación general sobre cómo utilizar correctamente el componente]
+[Cómo se usa el componente. Empieza por el verbo]
 
 ## Cuándo usar
 
@@ -80,7 +114,7 @@ ${OPCIONAL}
 
 ## Variantes y jerarquía
 
-[Explicar cuándo utilizar cada variante, únicamente si aplica]
+[Cuándo usar cada variante. Solo si aplica]
 
 ${OPCIONAL}
 
@@ -114,7 +148,7 @@ ${OPCIONAL}`,
 
   "Especificaciones": `# Especificaciones
 
-La especificación técnica detallada del componente se mantiene en uSpec para evitar duplicidad de información.
+La especificación técnica vive en uSpec. Aquí no se duplica.
 
 ## Especificación técnica
 
@@ -139,6 +173,20 @@ ${OPCIONAL}
 - [Reduced motion, cuando aplique]
 - [Otras consideraciones relevantes]
 
+<SNCallout variant="Info">
+Parte una sección en pestañas solo si el eje **diverge**. El criterio está debajo.
+</SNCallout>
+
+Mide dos cosas. **D** es cuántas filas cambian con el eje sobre el total. **V** es cuántas filas tiene la sección.
+
+Si D vale cero, no la partas. Documenta el eje como nota o como fila.
+
+Si D pasa de cero y V no llega a 10, no la partas. Pon las facetas en columnas. En una tabla corta comparar es el objetivo, y las pestañas lo impiden.
+
+Si D pasa de cero y V pasa de 10, pártela en pestañas. Pasadas diez filas nadie compara de un vistazo, así que el lado a lado no cuesta nada y el scroll sí.
+
+Escribe en la página qué separa las pestañas. Quien las lea tiene que saberlo sin abrirlas.
+
 ## Foundations relacionadas
 
 [Agregar Shortcut links a Foundations relacionadas]`,
@@ -155,6 +203,20 @@ ${OPCIONAL}
 
 [Agregar bloque Component checklist y seleccionar el componente correspondiente]
 
+<SNCallout variant="Info">
+**Son tres puertas, no una.** Un verde de \`doc:done\` cierra la documentación de diseño, no el componente.
+</SNCallout>
+
+La primera puerta certifica el componente en Figma. La segunda certifica su documentación. La tercera la cierra **Ingeniería** al producirlo en Bricks UI.
+
+Corre \`npm run doc:done -- <slug>\` para la segunda. Encadena nueve condiciones y falla en la primera que no pase.
+
+Tres condiciones no las comprueba ningún comando. Las firma una persona:
+
+- Lo verificaste en Preview, no en el editor.
+- Miraste el render, no solo el árbol de tokens.
+- Cada bloque vivo está configurado, no solo colocado.
+
 ## Changelog
 
 [Agregar historial real de cambios cuando exista]
@@ -168,6 +230,56 @@ ${OPCIONAL}`,
 
 const leerKey = () => fs.readFileSync(path.join(RAIZ, ".env"), "utf8")
   .split("\n").find(l => l.startsWith("SUPERNOVA_API_KEY=")).split("=").slice(1).join("=").trim()
+
+/* 🔴 MODO ACTUALIZAR, añadido el 14 sep 2026.
+ *
+ * Este guion nació para CREAR el molde. Correrlo otra vez crearía un SEGUNDO molde
+ * en vez de actualizar el que existe. Con `--actualizar` escribe sobre las cuatro
+ * pestañas ya creadas, cuyos ids viven en `maestra.ids.json`.
+ *
+ * ⚠️ El molde está OCULTO a propósito. `writeMarkdownToPage` escribe CONTENIDO y no
+ * toca los ajustes de la página, así que no debería revelarla. No se puede comprobar:
+ * ni `getDocumentationStructure` del SDK ni el listado del MCP devuelven la
+ * visibilidad. Lo confirma una persona mirando. */
+const actualizar = async () => {
+  const sn = new Supernova(leerKey())
+  const version = await sn.versions.getActiveVersion(DESIGN_SYSTEM_ID)
+  const ref  = { designSystemId: DESIGN_SYSTEM_ID, versionId: version.id, workspaceId: WORKSPACE_ID }
+  const refW = { designSystemId: DESIGN_SYSTEM_ID, versionId: version.id }
+  const ids = JSON.parse(fs.readFileSync(path.join(AQUI, "maestra.ids.json"), "utf8"))
+  const nombres = Object.keys(TABS)
+
+  for (const nombre of nombres) {
+    const r = await sn.import.validateMarkdown(refW, TABS[nombre])
+    if (!r?.isValid) { console.error(`🔴 ${nombre}: ${r?.error?.code} — ${r?.error?.message}`); process.exit(1) }
+  }
+  console.log(`✓ ${nombres.length} de ${nombres.length} pestañas válidas`)
+
+  const items = await sn.documentation.getDocumentationStructure(ref)
+  const numerico = new Map(items.map(i => [i.persistentId, String(i.id)]))
+
+  /* Respaldo antes de escribir: writeMarkdownToPage reemplaza la página entera. */
+  const dir = path.join(AQUI, "../experimento-canario/respaldos")
+  fs.mkdirSync(dir, { recursive: true })
+  const previo = {}
+  for (const nombre of nombres) {
+    if (!numerico.get(ids.pestanas[nombre])) {
+      console.error(`🔴 «${nombre}» no está en el árbol. Aborta antes de escribir nada.`); process.exit(1)
+    }
+    previo[nombre] = await sn.documentation.getDocumentationContentRaw(ref, ids.pestanas[nombre])
+  }
+  fs.writeFileSync(path.join(dir, "molde.json"), JSON.stringify(previo, null, 1))
+  console.log(`✓ respaldo de las ${nombres.length} pestañas → respaldos/molde.json`)
+
+  let n = 0
+  for (const nombre of nombres) {
+    const r = await sn.import.writeMarkdownToPage(refW, numerico.get(ids.pestanas[nombre]), TABS[nombre])
+    console.log(`  ✓ ${nombre} → ${r?.blockCount ?? "?"} bloques`)
+    n++
+  }
+  console.log(`\n✓ ${n} de ${nombres.length} pestañas actualizadas — EN PREVIEW`)
+  console.log(`⚠️ El molde está oculto y la API no expone visibilidad. Confírmalo mirando.`)
+}
 
 const main = async () => {
   const sn = new Supernova(leerKey())
@@ -222,4 +334,5 @@ const main = async () => {
   console.log(`\n✓ ids guardados en maestra.ids.json`)
 }
 
-main().catch(e => { console.error("🔴 " + (e?.message ?? e)); process.exit(1) })
+const arrancar = process.argv.includes("--actualizar") ? actualizar : main
+arrancar().catch(e => { console.error("🔴 " + (e?.message ?? e)); process.exit(1) })

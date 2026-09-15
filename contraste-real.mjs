@@ -37,6 +37,11 @@ import { fileURLToPath } from "node:url"
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url))
 
+/* Parametrizado el 14 sep 2026 para que `doc:done` pueda correrlo por componente.
+ * Sin argumento se comporta como siempre: el Button. */
+const SLUG = process.argv.slice(2).find(a => !a.startsWith("--")) ?? "button"
+const MD_COMPONENTE = path.join(AQUI, "Componentes", `${SLUG}.md`)
+
 /** Luminancia relativa WCAG 2.1. */
 const luminancia = (hex) => {
   const c = hex.replace("#", "")
@@ -166,7 +171,7 @@ export function paresDe(md) {
 
 // ── CLI ──
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const md = fs.readFileSync(path.join(AQUI, "Componentes/button.md"), "utf8")
+  const md = fs.readFileSync(MD_COMPONENTE, "utf8")
   const pares = paresDe(md)
   const fallan = pares.filter(p => p.pasa === false)
   const exentos = pares.filter(p => p.exento)
@@ -234,7 +239,7 @@ export function tablaMarkdown(pares) {
 }
 
 if (process.argv.includes("--md")) {
-  const md = fs.readFileSync(path.join(AQUI, "Componentes/button.md"), "utf8")
+  const md = fs.readFileSync(MD_COMPONENTE, "utf8")
   console.log(tablaMarkdown(paresDe(md)))
 }
 

@@ -28,7 +28,11 @@ import { apiKey } from "./entorno.mjs"
 import fs from "node:fs"
 
 const { Supernova } = sdkPkg
-const RUTA = new URL("./frames-vivos.json", import.meta.url)
+/* Parametrizado el 14 sep 2026. Sin argumento, el registro del Button —
+ * `frames-vivos.json`—; con `--componente=<slug>`, `frames-vivos-<slug>.json`. */
+const COMPONENTE = process.argv.find(a => a.startsWith("--componente="))?.split("=")[1] ?? "button"
+const NOMBRE_REGISTRO = COMPONENTE === "button" ? "frames-vivos.json" : `frames-vivos-${COMPONENTE}.json`
+const RUTA = new URL(`./${NOMBRE_REGISTRO}`, import.meta.url)
 const reg = JSON.parse(fs.readFileSync(RUTA, "utf8"))
 
 const sdk = new Supernova(apiKey)
@@ -85,7 +89,7 @@ console.log(`\ncobertura: ${frescos} de ${N} previews al día` +
 if (frescos === N) { console.log(`🟢 Todos los previews publican la imagen vigente.`); process.exit(0) }
 
 console.log(`\n   Para traer los renders vigentes:  npm run docs:frames -- --render --registro`)
-console.log(`   Y despues republicar:             npm run button:escribir`)
+console.log(`   Y despues republicar:             ${COMPONENTE === "button" ? "npm run button:escribir" : "el generador del componente"}`)
 console.log(`\n⚠️  Antes de regenerar, MIRA la imagen. Un render fresco de un nodo`)
 console.log(`   equivocado se ve igual de bien y sigue sin decir lo que debe.`)
 process.exitCode = 1

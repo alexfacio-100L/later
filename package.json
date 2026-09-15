@@ -44,7 +44,10 @@
     "docs:frescura": "node experimento-canario/verificar-frescura-frames.mjs",
     "docs:crear-componentes": "node experimento-canario/crear-componentes.mjs",
     "docs:aplicaciones": "node experimento-canario/publicar-aplicaciones.mjs",
-    "docs:crear-aplicaciones": "node experimento-canario/crear-aplicaciones.mjs"
+    "docs:crear-aplicaciones": "node experimento-canario/crear-aplicaciones.mjs",
+    "doc:done": "node doc-done.mjs",
+    "doc:registro": "node doc-registro.mjs",
+    "molde:actualizar": "node plantilla-componente/maestra.mjs --actualizar"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",
