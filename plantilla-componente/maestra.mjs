@@ -334,5 +334,36 @@ const main = async () => {
   console.log(`\n✓ ids guardados en maestra.ids.json`)
 }
 
-const arrancar = process.argv.includes("--actualizar") ? actualizar : main
-arrancar().catch(e => { console.error("🔴 " + (e?.message ?? e)); process.exit(1) })
+/* 🔴 GUARDA CONTRA LA CREACIÓN ACCIDENTAL. Añadida el 17 sep 2026, y la pagó este
+ * archivo: el 15 de septiembre se importó el módulo SOLO PARA LEER sus `TABS` y
+ * medirles el registro. Importar lo ejecutó, el modo por defecto era CREAR, y el
+ * resultado fue un molde DUPLICADO —un grupo y cuatro páginas— más
+ * `maestra.ids.json` sobrescrito con los ids nuevos.
+ *
+ * Dos capas, porque una sola se salta:
+ *   1. No corre nada salvo invocación DIRECTA. Un `import()` ya no ejecuta.
+ *   2. Crear exige `--crear` explícito. Sin bandera no hace nada y lo dice.
+ *
+ * ⚠️ La corrección no es acordarse de la bandera: es que el módulo NO PUEDA crear
+ * por accidente. Un guion cuyo modo por defecto es destructivo o creador es una
+ * trampa cargada para el siguiente que lo abra. */
+const invocadoDirectamente = process.argv[1] &&
+  fileURLToPath(import.meta.url) === path.resolve(process.argv[1])
+
+if (invocadoDirectamente) {
+  const CREAR = process.argv.includes("--crear")
+  const ACTUALIZAR = process.argv.includes("--actualizar")
+  if (ACTUALIZAR) {
+    actualizar().catch(e => { console.error("🔴 " + (e?.message ?? e)); process.exit(1) })
+  } else if (CREAR) {
+    console.log("⚠️ Vas a CREAR un molde nuevo. Si ya existe uno, esto lo DUPLICA.")
+    main().catch(e => { console.error("🔴 " + (e?.message ?? e)); process.exit(1) })
+  } else {
+    console.error(`🔴 Este guion no hace nada sin bandera, a propósito.`)
+    console.error(`   --actualizar   escribe sobre el molde que ya existe (lo normal)`)
+    console.error(`   --crear        crea un molde NUEVO. Duplica si ya hay uno`)
+    process.exit(1)
+  }
+}
+
+export { TABS }
