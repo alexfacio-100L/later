@@ -53,7 +53,7 @@ const CONDICIONES = [
   { id: "D4", que: "Ninguna imagen publicada está caducada",
     cmd: ["node", ["experimento-canario/verificar-frescura-frames.mjs", `--componente=${SLUG}`]] },
   { id: "D5", que: "Todo preview registrado está colocado o declarado fuera",
-    cmd: ["node", [`plantilla-componente/${SLUG}-canario.mjs`]], grupo: "generador" },
+    cmd: ["node", [`plantilla-componente/${SLUG}.mjs`]], grupo: "generador" },
   { id: "D6", que: "Escribir no perdió nada",
     cmd: ["node", ["experimento-canario/respaldo-pagina.mjs", "--diff", `--componente=${SLUG}`]] },
   { id: "D7", que: "Los anchos ajustados por el Lead se conservan",
@@ -101,14 +101,14 @@ for (const c of CONDICIONES) {
   // Las tres del generador salen de UNA sola corrida: no se llama tres veces.
   if (c.grupo === "generador") {
     if (generadorYaCorrido === null) {
-      if (!existsSync(path.join(AQUI, `plantilla-componente/${SLUG}-canario.mjs`))) {
+      if (!existsSync(path.join(AQUI, `plantilla-componente/${SLUG}.mjs`))) {
         console.log(`  ⏭️  ${c.id}  ${c.que}`)
         console.log(`        SALTADA: no hay generador para «${SLUG}». Las tres del generador (D5, D7, D8) quedan sin comprobar.`)
         generadorYaCorrido = { saltado: true }
         saltadas++
         continue
       }
-      generadorYaCorrido = correr("node", [`plantilla-componente/${SLUG}-canario.mjs`])
+      generadorYaCorrido = correr("node", [`plantilla-componente/${SLUG}.mjs`])
     }
     if (generadorYaCorrido.saltado) { saltadas++; continue }
     const g = generadorYaCorrido

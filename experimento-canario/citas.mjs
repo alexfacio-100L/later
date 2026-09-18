@@ -7,7 +7,7 @@
  * párrafos de criterio.
  *
  * Los dos consumidores fallaban de forma distinta y las dos formas son malas:
- *   · `plantilla-componente/button-canario.mjs` los UNÍA TODOS en una sola cita
+ *   · `plantilla-componente/button.mjs` los UNÍA TODOS en una sola cita
  *     para que validara. Validaba perfecto y publicaba un muro citado de 900
  *     palabras, ilegible.
  *   · `experimento-canario/conversor.mjs` no los trataba, y `docs:validar`

@@ -33,7 +33,7 @@ console.log(`destino: ${destino.nombre} (${destino.estado})\n`)
  *
  * ⚠️ El error no fue el id muerto: fue **repuntar un publicador superado a una
  * página viva**. Para el Button el generador vigente es
- * `plantilla-componente/button-canario.mjs` (`npm run button:escribir`), que
+ * `plantilla-componente/button.mjs` (`npm run button:escribir`), que
  * COLOCA el contenido en secciones y usa bloques vivos. *El `.md` es INSUMO, no
  * la página.*
  *

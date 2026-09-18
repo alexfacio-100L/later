@@ -75,7 +75,7 @@ export const PLATAFORMAS = ["VoiceOver (iOS)", "TalkBack (Android)", "ARIA (Web)
  * variante de color —el primario de la superficie marketing, en rojo— y la página
  * la habría publicado SIN su pestaña de combinaciones seguras, sin error y sin
  * hueco visible. *Forma «falso completo» de la regla 16 de `CLAUDE.md`.*
- * `button-canario.mjs` ahora ABORTA si el .md declara una variante que no esté aquí. */
+ * `button.mjs` ahora ABORTA si el .md declara una variante que no esté aquí. */
 export const VARIANTES_DE_COLOR = ["primary", "secondary", "marketingPrimary"]
 
 /**
