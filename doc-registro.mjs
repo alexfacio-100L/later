@@ -80,7 +80,17 @@ const enfasis = negritas.length + cursivas.length
 const densidad = parrafos.length ? enfasis / parrafos.length : 0
 /* Un énfasis sobre una CLÁUSULA —más de 6 palabras— destaca una frase entera, que es
  * justo lo que anula el énfasis. Se cuenta aparte porque es el defecto, no el volumen. */
-const clausulas = [...negritas, ...cursivas].filter(e => pal(e) > 6)
+/* 🔴 Una CITA en cursiva no es un énfasis, y contarla como tal es un falso
+ * positivo de esta misma regla. Pasó el 18 sep 2026 con
+ * «Sin extracción no hay universo…»: once palabras en cursiva que son la frase
+ * literal de un verificador, no una cláusula destacada. La cursiva es la
+ * convención correcta para citar.
+ *
+ * Se excluyen las marcas cuyo contenido va entre « », y se DECLARA cuántas:
+ * un universo recortado en silencio es un número que miente. */
+const esCita = (e) => /«[\s\S]+»/.test(e)
+const citas = [...negritas, ...cursivas].filter(esCita)
+const clausulas = [...negritas, ...cursivas].filter(e => !esCita(e) && pal(e) > 6)
 
 const incisos = (prosa.match(/—/g) ?? []).length
 const META = /\b(esta página|este documento|esta sección|lo de abajo|la tabla de abajo|de arriba|aquí abajo|más abajo)\b/gi
@@ -112,6 +122,7 @@ const v3 = densidad <= 1 && clausulas.length === 0
 console.log(` ${ok(v3)} V3  énfasis`)
 console.log(`       ${enfasis} marcas · ${N(densidad, 2)} por párrafo (permitido 1)`)
 console.log(`       ${clausulas.length} sobre cláusulas de más de 6 palabras (permitido 0)`)
+if (citas.length) console.log(`       ${citas.length} excluidas por ser cita entre « »: una cita no es un énfasis`)
 
 const v6 = metaprosa.length === 0
 console.log(` ${ok(v6)} V6  metaprosa`)
