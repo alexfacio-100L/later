@@ -47,7 +47,8 @@
     "docs:crear-aplicaciones": "node experimento-canario/crear-aplicaciones.mjs",
     "doc:done": "node doc-done.mjs",
     "doc:registro": "node doc-registro.mjs",
-    "molde:actualizar": "node plantilla-componente/maestra.mjs --actualizar"
+    "molde:actualizar": "node plantilla-componente/maestra.mjs --actualizar",
+    "tokens:lint": "node tokens-lint.mjs"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",
