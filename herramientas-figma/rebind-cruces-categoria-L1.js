@@ -33,6 +33,17 @@
  *   [OJO] Este script sale con la cobertura `n de N` de SU lote. No afirma
  *   haber cerrado L1: `npm run tokens:lint` debe seguir reportando 6.
  *
+ * [CRITICO] CERRAR L1 NO DEJA EL SLIDER COHERENTE — medido el 24 sep 2026
+ *   `Slider-point` tiene 10 variantes. Solo 4 tienen el radio de `slider main`
+ *   BINDEADO (al token cruzado que este script arregla); LAS OTRAS 6 LO TIENEN
+ *   CRUDO, con el mismo 4 px. Lo mismo en `slider-bg`: 4 con la altura
+ *   bindeada, 6 crudas a 8 px.
+ *   *L1 no las ve, y no es un fallo suyo: mide BINDINGS, y un valor crudo no
+ *   tiene binding.* Quien las ve es L2.
+ *   NO LEER «L1 en cero» COMO «el Slider esta bien». Son dos preguntas
+ *   distintas, y esta es la forma «falso completo» de la regla 16: el lote sale
+ *   con la forma correcta, sin error y sin hueco visible.
+ *
  * ES SEGURO
  *   - GUARDA DE VALOR: solo reescribe si el binding actual es EXACTAMENTE el
  *     token esperado. Si encuentra otra cosa, lo salta y lo reporta.
