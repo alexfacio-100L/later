@@ -29,9 +29,15 @@
  *   Los otros 6 bindings (4 `slider-bg` y 2 `progress bar` Nano, todos
  *   `size.y` = ALTURA ligada a un token de `spacing`) NO ENTRAN AQUI: la
  *   coleccion `sizing` no tiene peldaño de 8 ni de 2, asi que no existe token
- *   destino. Necesitan una decision de arquitectura del Lead, no un rebind.
- *   [OJO] Este script sale con la cobertura `n de N` de SU lote. No afirma
- *   haber cerrado L1: `npm run tokens:lint` debe seguir reportando 6.
+ *   destino. Los cierra el SEGUNDO script.
+ *
+ * ORDEN DE PEGADO — son dos, y este es el PRIMERO
+ *   1º este                                    (16 bindings)
+ *   2º `crear-y-bindear-slider-progress.js`    (4 tokens nuevos + 16 nodos)
+ *   No hay dependencia tecnica: el orden es para leer `tokens:lint` una sola
+ *   vez, al final.
+ *   [OJO] Este script solo NO cierra L1: deja 6. Con los DOS aplicados,
+ *   `npm run tokens:lint` debe reportar 0 cruzados en masters.
  *
  * [CRITICO] CERRAR L1 NO DEJA EL SLIDER COHERENTE — medido el 24 sep 2026
  *   `Slider-point` tiene 10 variantes. Solo 4 tienen el radio de `slider main`
