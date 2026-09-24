@@ -23,10 +23,20 @@ const ds = (await sdk.designSystems.designSystems(ws[0].id)).find(d => /later/i.
 const v  = await sdk.versions.getActiveVersion(ds.id)
 const ref = { designSystemId: ds.id, versionId: v.id, workspaceId: ws[0].id }
 
+/* 🔴 CORREGIDO EL 24 SEP 2026 — la lectura anterior no podía ver lo que escribe.
+ * `getDocumentationStructure` NO devuelve `configuration`: `isHidden` llega como
+ * `undefined` SIEMPRE, esté oculto o no. Con esa lectura el script informaba
+ * «isHidden actual: undefined», contaba 0 páginas dentro (el campo `parent` no
+ * existe en ese modelo; los hijos están en `childrenIds`) y, tras escribir, la
+ * verificación final habría fallado con la escritura hecha.
+ * `getFullDocumentationLegacyRepresentation` SÍ trae `configuration.isHidden`.
+ * Es la regla 16 —un método que no puede mostrar la presencia no prueba la
+ * ausencia— aplicada al verificador mismo. */
 const leer = async () => {
-  const items = await sdk.documentation.getDocumentationStructure(ref)
-  const grupo = items.find(i => i.persistentId === GRUPO)
-  const hijos = items.filter(i => i.parent?.persistentId === GRUPO || i.parentGroupId === GRUPO)
+  const full = await sdk.documentation.getFullDocumentationLegacyRepresentation(ref)
+  const todo = [...full.allGroups, ...full.allPages]
+  const grupo = full.allGroups.find(i => i.persistentId === GRUPO)
+  const hijos = (grupo?.childrenIds ?? []).map(id => todo.find(i => i.persistentId === id)).filter(Boolean)
   return { grupo, hijos }
 }
 

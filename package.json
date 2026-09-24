@@ -49,6 +49,9 @@
     "doc:registro": "node doc-registro.mjs",
     "molde:actualizar": "node plantilla-componente/maestra.mjs --actualizar",
     "rebindeo:verificar": "node verificar-rebindeo.mjs",
+    "docs:ocultar-plantilla": "node experimento-canario/ocultar-plantilla.mjs",
+    "docs:erratas": "node experimento-canario/corregir-erratas.mjs",
+    "docs:publicado": "node experimento-canario/estado-publicacion.mjs",
     "tokens:lint": "node tokens-lint.mjs",
     "tokens:lint:cache": "node tokens-lint.mjs --cache"
   },
