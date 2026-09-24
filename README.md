@@ -51,6 +51,8 @@ npm run docs:conexion
 | `npm run docs:publicar` | Convierte y **publica** en Supernova |
 | `npm run docs:tokens` | Regenera el mapa de tokens que usan los bloques vivos |
 | `npm run uspec:verificar` | Compara la instalación de uSpec con lo publicado. **Antes de actualizar** |
+| `npm run tokens:lint` | Cinco checks de integridad de tokens. **L1 mide bindings, así que es ciego a los valores crudos — ésos los ve L2** |
+| `npm run rebindeo:verificar` | Tras un rebindeo: ¿quedó cada nodo en el token que decía el plan? **Emite `n de N` y sale con código 1 si no es total.** Lee Figma fresco; con `--cache` avisa de que puede medir el pasado |
 
 ---
 

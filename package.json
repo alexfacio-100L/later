@@ -48,6 +48,7 @@
     "doc:done": "node doc-done.mjs",
     "doc:registro": "node doc-registro.mjs",
     "molde:actualizar": "node plantilla-componente/maestra.mjs --actualizar",
+    "rebindeo:verificar": "node verificar-rebindeo.mjs",
     "tokens:lint": "node tokens-lint.mjs",
     "tokens:lint:cache": "node tokens-lint.mjs --cache"
   },

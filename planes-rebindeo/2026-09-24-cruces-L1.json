@@ -1,0 +1,64 @@
+{
+  "nombre": "Los 22 cruces de categoría de tokens:lint L1",
+  "fecha": "2026-09-24",
+  "nota": "Aplicado con dos scripts de Scripter: rebind-cruces-categoria-L1.js (16 bindings) y crear-y-bindear-slider-progress.js (4 tokens nuevos + 16 nodos). Son 22 nodos y 32 bindings: los 20 del alcance de (a1) —Slider y Progress— más Chip y .Slot, que no pertenecen a esos componentes.",
+  "fuera": "6 variantes de `slider main` sin radio (0, no 4). Bindearlas movería píxeles — tablero 2.7, decisión del Lead.",
+  "grupos": [
+    {
+      "grupo": "script1 · Chip focus",
+      "destino": "width/m",
+      "coleccion": "border",
+      "prop": "individualStrokeWeights",
+      "claves": ["BORDER_TOP_WEIGHT", "BORDER_BOTTOM_WEIGHT", "BORDER_LEFT_WEIGHT", "BORDER_RIGHT_WEIGHT"],
+      "nodos": ["4057:7642"]
+    },
+    {
+      "grupo": "script1 · .Slot/Col",
+      "destino": "radius/xl",
+      "coleccion": "border",
+      "prop": "rectangleCornerRadii",
+      "claves": ["RECTANGLE_TOP_LEFT_CORNER_RADIUS", "RECTANGLE_TOP_RIGHT_CORNER_RADIUS", "RECTANGLE_BOTTOM_LEFT_CORNER_RADIUS", "RECTANGLE_BOTTOM_RIGHT_CORNER_RADIUS"],
+      "nodos": ["9034:5014"]
+    },
+    {
+      "grupo": "script1 · slider main",
+      "destino": "radius/xs",
+      "coleccion": "border",
+      "prop": "rectangleCornerRadii",
+      "claves": ["RECTANGLE_TOP_LEFT_CORNER_RADIUS", "RECTANGLE_BOTTOM_LEFT_CORNER_RADIUS"],
+      "nodos": ["9853:370", "9853:356", "9853:342", "5960:124"]
+    },
+    {
+      "grupo": "script2 · slider-bg",
+      "destino": "slider/size/track",
+      "coleccion": "componentDimension",
+      "prop": "size",
+      "eje": "y",
+      "nodos": ["5979:288", "5979:300", "5979:312", "5960:94", "5960:101", "5960:108", "9853:368", "9853:354", "9853:340", "5960:122"]
+    },
+    {
+      "grupo": "script2 · progress Small",
+      "destino": "progress/size/small",
+      "coleccion": "componentDimension",
+      "prop": "size",
+      "eje": "y",
+      "nodos": ["8270:285", "3449:207"]
+    },
+    {
+      "grupo": "script2 · progress Micro",
+      "destino": "progress/size/micro",
+      "coleccion": "componentDimension",
+      "prop": "size",
+      "eje": "y",
+      "nodos": ["8270:291", "3449:213"]
+    },
+    {
+      "grupo": "script2 · progress Nano",
+      "destino": "progress/size/nano",
+      "coleccion": "componentDimension",
+      "prop": "size",
+      "eje": "y",
+      "nodos": ["8632:1630", "8632:1632"]
+    }
+  ]
+}
