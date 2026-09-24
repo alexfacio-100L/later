@@ -48,7 +48,8 @@
     "doc:done": "node doc-done.mjs",
     "doc:registro": "node doc-registro.mjs",
     "molde:actualizar": "node plantilla-componente/maestra.mjs --actualizar",
-    "tokens:lint": "node tokens-lint.mjs"
+    "tokens:lint": "node tokens-lint.mjs",
+    "tokens:lint:cache": "node tokens-lint.mjs --cache"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",

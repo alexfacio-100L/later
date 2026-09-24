@@ -74,3 +74,4 @@ experimento-canario/respaldos/
 # Sondas temporales: se escriben en experimento-canario porque necesitan sus
 # dependencias, pero no son parte del proyecto. El 10 sep una se coló en un commit.
 experimento-canario/_*.mjs
+.cache-figma/

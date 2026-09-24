@@ -26,6 +26,7 @@
  */
 import sdkPkg from "@supernovaio/sdk"
 import { apiKey } from "./experimento-canario/entorno.mjs"
+import { traerArbol, barrer, CATEGORIA_DE_PROPIEDAD } from "./lint-figma.mjs"
 const { Supernova } = sdkPkg
 
 const dormir = ms => new Promise(r => setTimeout(r, ms))
@@ -112,25 +113,115 @@ console.log(`   cobertura: ${revisadosL5} tokens con regla aplicable, de ${varia
 console.log(`   incoherentes: ${malL5} de ${revisadosL5}`)
 if (malL5) fallos++
 
-/* ─────────────────────────────────────────────────────────────────────────────
- * Lo que este lint NO comprueba. Se imprime SIEMPRE.
- * Un verificador que no puede juzgar completitud no debe imprimir una frase que
- * se lea como si pudiera — la lección de `uspec:contexto`, 7 sep 2026.
- * ──────────────────────────────────────────────────────────────────────────── */
-seccion("⚠️", "Lo que este lint NO comprueba todavía")
-console.log(`   L1 · categoría cruzada (grosor usado como radio)  — NO IMPLEMENTADO`)
-console.log(`   L2 · valor crudo donde existe token exacto        — NO IMPLEMENTADO`)
-console.log(`   L4 · token sin consumo                            — NO IMPLEMENTADO`)
-console.log(``)
-console.log(`   Los tres necesitan leer BINDINGS de Figma, y hay un bloqueo medido el 22 sep 2026:`)
-console.log(`   · \`/v1/files/:key/nodes\` SÍ devuelve \`boundVariables\` con el token actual.`)
-console.log(`   · Pero los VariableID que devuelve NO empalman con ningún token de Supernova`)
-console.log(`     ni por \`origin.key\` ni por \`origin.id\` — 0 de 2 en la prueba. El Playground`)
-console.log(`     consume una librería REMOTA que Supernova no tiene.`)
-console.log(`   · \`/v1/files/:key/variables/local\` responde 403: falta el scope \`file_variables:read\`.`)
-console.log(``)
-console.log(`   🔴 Sin resolver el nombre de la variable, L1/L2/L4 darían VERDE sin haber mirado.`)
-console.log(`      Por eso no se implementan a medias: un verde falso es peor que un hueco declarado.`)
+/* ═════════════════════════════════════════════════════════════════════════════
+ * L1 · L2 · L4 — los tres que necesitan BINDINGS de Figma
+ *
+ * 🔴 CONTROL DE MÉTODO PRIMERO. Si el barrido no ve presencia, estos checks no
+ *    informan «sin hallazgos»: FALLAN. Es la diferencia entre «no hay defectos»
+ *    y «mi método está roto», y esta semana esa diferencia costó cuatro hallazgos.
+ * ════════════════════════════════════════════════════════════════════════════ */
+const USAR_CACHE = process.argv.includes("--cache")
+seccion("🔍", "Leyendo bindings de Figma" + (USAR_CACHE ? " (caché)" : ""))
+let figma = null, errFigma = null
+try {
+  const ficheros = await traerArbol({ usarCache: USAR_CACHE })
+  figma = barrer(ficheros)
+  console.log(`   nodos recorridos: ${figma.nodos} · bindings: ${figma.bindings.length} · valores crudos: ${figma.crudos.length}`)
+} catch (e) { errFigma = e.message; console.log(`   🔴 ${e.message}`) }
+
+if (errFigma) {
+  console.log(`\n🔴 L1, L2 y L4 NO SE EJECUTARON: sin lectura de Figma no hay nada que medir.`)
+  console.log(`   NO se interpretan como «sin hallazgos».`)
+  fallos++
+} else if (figma.bindings.length === 0) {
+  console.log(`\n🔴 CONTROL DE MÉTODO FALLIDO: 0 bindings en ${figma.nodos} nodos.`)
+  console.log(`   Eso no significa que no haya defectos: significa que el barrido no ve lo que busca.`)
+  console.log(`   Revisa las claves de boundVariables antes de fiarte de ningún conteo.`)
+  fallos++
+} else {
+  /* Empalme Figma→Supernova por origin.id, NUNCA por nombre. */
+  const porOrigen = new Map()
+  for (const t of tokens) if (t.origin?.id) porOrigen.set(t.origin.id, t)
+  const empalmados = figma.bindings.filter(b => porOrigen.has(b.variableId))
+  const cobertura = ((empalmados.length / figma.bindings.length) * 100).toFixed(0)
+  console.log(`   empalme con Supernova: ${empalmados.length} de ${figma.bindings.length} = ${cobertura}%`)
+  console.log(`   ⚠️  El resto son variables de una librería remota que Supernova no tiene.`)
+  console.log(`      Todo lo que sigue vale para ese ${cobertura}%, no para el sistema entero.`)
+
+  /* ── L1 · CATEGORÍA CRUZADA ─────────────────────────────────────────────
+   * Por colección y tokenType, NUNCA por nombre: `width/l` y `radius/xs` valen
+   * los dos 4 y aliasan el mismo `unit/4`. Solo la categoría los distingue. */
+  seccion("L1", "Categoría cruzada — un token de un tipo aplicado a otra propiedad")
+  const cruzados = []
+  for (const b of empalmados) {
+    if (!b.categoriaEsperada) continue
+    const t = porOrigen.get(b.variableId)
+    const esperado = b.categoriaEsperada
+    const real = t.tokenType
+    const compatible = real === esperado
+      || (esperado === "Size" && ["Dimension", "Size"].includes(real))
+      || (esperado === "Space" && real === "Space")
+      || (esperado === "Color" && real === "Color")
+    if (!compatible) cruzados.push({ ...b, token: nom(t), tipoReal: real, tipoEsperado: esperado, col: col(t) })
+  }
+  const porTokenCruzado = {}
+  for (const c of cruzados) (porTokenCruzado[`${c.token} → ${c.prop}`] ??= []).push(c)
+  const cruzadosMaster = cruzados.filter(c => !c.esInstancia)
+  console.log(`   cobertura: ${empalmados.filter(b => b.categoriaEsperada).length} bindings con categoría conocida, de ${empalmados.length} empalmados`)
+  console.log(`   cruzados: ${cruzados.length}`)
+  for (const [k, arr] of Object.entries(porTokenCruzado).sort((a, b) => b[1].length - a[1].length)) {
+    const masters = arr.filter(x => !x.esInstancia)
+    console.log(`   🔴 ${k}  — ${arr.length} nodos (${masters.length} masters)`)
+    console.log(`      el token es ${arr[0].tipoReal} y la propiedad pide ${arr[0].tipoEsperado}`)
+    if (masters.length) console.log(`      arréglalo en: ${[...new Set(masters.map(m => m.master || m.name))].slice(0, 4).join(", ")}`)
+  }
+  console.log(`   ⇒ ${cruzadosMaster.length} en MASTERS (lo accionable) · ${cruzados.length - cruzadosMaster.length} heredados por instancias`)
+  if (cruzadosMaster.length) fallos++
+
+  /* ── L2 · VALOR CRUDO DONDE EXISTE TOKEN EXACTO ─────────────────────────── */
+  seccion("L2", "Valor crudo donde existe un token exacto")
+  const porTipoYValor = {}
+  for (const t of tokens) {
+    const m = t.value?.measure
+    if (typeof m !== "number") continue
+    ;(porTipoYValor[`${t.tokenType}|${m}`] ??= []).push(nom(t))
+  }
+  const evitables = figma.crudos.filter(c => porTipoYValor[`${c.categoria}|${c.valor}`])
+  const sinToken = figma.crudos.filter(c => !porTipoYValor[`${c.categoria}|${c.valor}`])
+  console.log(`   cobertura: ${figma.crudos.length} valores crudos hallados (solo masters, fuera de instancia)`)
+  console.log(`   con token exacto disponible: ${evitables.length}  ·  sin peldaño que los cubra: ${sinToken.length}`)
+  const agr = {}
+  for (const e of evitables) (agr[`${e.categoria} ${e.valor}`] ??= []).push(e)
+  for (const [k, arr] of Object.entries(agr).sort((a, b) => b[1].length - a[1].length).slice(0, 8)) {
+    const tok = porTipoYValor[`${arr[0].categoria}|${arr[0].valor}`]
+    console.log(`   🔴 ${k}px crudo en ${arr.length} nodos → existe ${tok.join(" / ")}`)
+    console.log(`      en: ${[...new Set(arr.map(a => a.master || a.name))].slice(0, 4).join(", ")}`)
+  }
+  if (sinToken.length) {
+    const h = {}
+    for (const s of sinToken) h[`${s.categoria} ${s.valor}`] = (h[`${s.categoria} ${s.valor}`] ?? 0) + 1
+    console.log(`   ⚠️  sin peldaño (no es defecto de binding, es decisión de escala): ${Object.entries(h).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k,v])=>`${k}×${v}`).join(" · ")}`)
+  }
+  if (evitables.length) fallos++
+
+  /* ── L4 · TOKEN SIN CONSUMO, con su límite DENTRO de la salida ──────────── */
+  seccion("L4", "Tokens sin consumo encontrado")
+  const usados = new Set(empalmados.map(b => b.variableId))
+  const candidatos = tokens.filter(t => t.origin?.id && !ESTILOS.has(t.tokenType))
+  const sinUso = candidatos.filter(t => !usados.has(t.origin.id))
+  console.log(`   cobertura: ${candidatos.length} tokens con origen en Figma · ${figma.nodos} nodos barridos · 32 de 32 páginas`)
+  console.log(`   sin consumo encontrado: ${sinUso.length} de ${candidatos.length}`)
+  console.log(`\n   🔴 ESTE CHECK NO DICE «NADIE LO USA». Dice «NO ENCONTRADO EN LA SUPERFICIE MEDIDA».`)
+  console.log(`      Tres límites que lo acotan, y los tres han producido falsos esta semana:`)
+  console.log(`        · el empalme cubre el ${cobertura}% de los bindings — el resto es librería remota`)
+  console.log(`        · el archivo de PRODUCTO no es éste: un token sin uso aquí puede tenerlo allá`)
+  console.log(`        · un token puede consumirse desde otro token, no desde un nodo`)
+  const porCol = {}
+  for (const t of sinUso) (porCol[col(t) ?? "(sin colección)"] ??= []).push(nom(t))
+  for (const [c, arr] of Object.entries(porCol).sort((a, b) => b[1].length - a[1].length))
+    console.log(`     ${c.padEnd(18)} ${String(arr.length).padStart(3)}  ${arr.slice(0, 5).join(", ")}${arr.length > 5 ? "…" : ""}`)
+  console.log(`   ⚠️  No se sale con código 1: un candidato no es un defecto.`)
+}
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * La guarda de la credencial. El token de Figma caduca ~21 dic 2026.
