@@ -34,7 +34,6 @@
     "comp:auditar:md": "node auditar-componente.mjs --md",
     "md:verificar": "node completar-md.mjs",
     "md:completar": "node completar-md.mjs",
-    "plantilla": "node plantilla-componente/generar.mjs",
     "docs:anchos": "node experimento-canario/capturar-anchos.mjs",
     "docs:respaldo": "node experimento-canario/respaldo-pagina.mjs",
     "docs:componentes": "node experimento-canario/publicar-componentes.mjs",

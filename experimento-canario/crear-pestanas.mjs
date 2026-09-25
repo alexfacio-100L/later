@@ -107,19 +107,26 @@ if (!ds) { console.error("🔴 No encontré un design system «Later»."); proce
 const v   = await sdk.versions.getActiveVersion(ds.id)
 const ref = { designSystemId: ds.id, versionId: v.id, workspaceId: ws[0].id }
 
-/** Lectura autoritativa: la única que trae `groupBehavior` e `isHidden`. */
+/** Lectura autoritativa: la única que trae `groupBehavior` e `isHidden`.
+ *
+ * Devuelve también `padreDe`, que el modelo NO trae: los grupos declaran
+ * `childrenIds`, pero una página no sabe quién la contiene. Hace falta para la
+ * idempotencia — ver `LA TRAMPA` abajo. */
 const leer = async () => {
   const full = await sdk.documentation.getFullDocumentationLegacyRepresentation(ref)
   const grupos = new Set(full.allGroups.map(g => g.persistentId))
   const todo = [...full.allGroups, ...full.allPages]
+  const padreDe = new Map()
+  for (const g of full.allGroups) for (const c of g.childrenIds ?? []) padreDe.set(c, g)
   return {
     porPid: new Map(todo.map(i => [i.persistentId, i])),
     esGrupo: i => grupos.has(i.persistentId),
+    padreDe,
     todo,
   }
 }
 
-let { porPid, esGrupo, todo } = await leer()
+let { porPid, esGrupo, padreDe, todo } = await leer()
 
 /* ── Resolver el destino ───────────────────────────────────────────────── */
 let pid = PAGINA
@@ -137,17 +144,43 @@ if (!pid) {
   pid = hits[0].persistentId
 }
 
-const destino = porPid.get(pid)
+let destino = porPid.get(pid)
 if (!destino) { console.error(`🔴 El persistentId ${pid} no está en el árbol.`); process.exit(1) }
+const limpio = t => t.replace(/^_/, "")
+
+console.log(`\nPedido: «${destino.title}»  ·  pid ${destino.persistentId}  ·  id ${destino.id}`)
+
+/* 🔴 LA TRAMPA, y costó una corrida sucia el 25 sep 2026.
+ *
+ * Convertir una hoja en grupo de pestañas NO consume su persistentId: la hoja
+ * original SOBREVIVE como la PRIMERA PESTAÑA del grupo nuevo. Así que el mismo
+ * pid significa dos cosas distintas antes y después.
+ *
+ * Y volver a correr el guion con ese pid es lo natural —es el que uno tiene
+ * apuntado—. La primera versión miraba solo «¿el destino es un grupo Tabs?»,
+ * veía una página, la daba por hoja suelta y la volvía a convertir: el grupo
+ * acabó con OCHO pestañas, las cuatro duplicadas.
+ *
+ * ⚠️ Y el segundo `createDocumentationTab` sobre una página que YA es pestaña
+ * no devuelve el id de un grupo: devuelve el de la PESTAÑA NUEVA. La relectura
+ * lo buscaba como grupo, no encontraba hijos y reportaba `0 de 4` con código 1.
+ * *La cobertura hizo su trabajo y falló ruidosamente — pero después de escribir.*
+ *
+ * La corrección: si el destino es una PÁGINA que cuelga de un grupo `Tabs`,
+ * el destino real es ESE GRUPO. Se redirige y se avisa. */
+const padre = padreDe.get(destino.persistentId)
+if (!esGrupo(destino) && padre?.groupBehavior === "Tabs") {
+  console.log(`  ↳ ya es una pestaña del grupo «${padre.title}». El destino real es el GRUPO.`)
+  destino = padre
+}
 
 /* ── Diagnóstico: qué hay hoy ──────────────────────────────────────────── */
 const yaEsTabs = esGrupo(destino) && destino.groupBehavior === "Tabs"
-const limpio = t => t.replace(/^_/, "")
 const existentes = yaEsTabs
   ? (destino.childrenIds ?? []).map(id => porPid.get(id)).filter(Boolean)
   : []
 
-console.log(`\nDestino: «${destino.title}»  ·  pid ${destino.persistentId}  ·  id ${destino.id}`)
+console.log(`Destino: «${destino.title}»  ·  pid ${destino.persistentId}  ·  id ${destino.id}`)
 console.log(`  tipo: ${esGrupo(destino) ? `grupo (groupBehavior=${destino.groupBehavior})` : "página"}  ·  isHidden=${destino.isHidden}`)
 
 if (esGrupo(destino) && !yaEsTabs) {
@@ -160,6 +193,17 @@ if (esGrupo(destino) && !yaEsTabs) {
 console.log(`\nPestañas pedidas (${NOMBRES.length}): ${NOMBRES.join(" · ")}`)
 if (yaEsTabs) {
   console.log(`Pestañas que ya tiene (${existentes.length}): ${existentes.map(e => e.title).join(" · ")}`)
+  /* Un grupo con dos pestañas del mismo nombre es siempre una corrida sucia:
+   * el guion nunca crea una que ya existe. Se avisa y no se arregla — borrar
+   * páginas solo lo decreta el Lead. */
+  const cuenta = new Map()
+  for (const e of existentes) cuenta.set(limpio(e.title), (cuenta.get(limpio(e.title)) ?? 0) + 1)
+  const dup = [...cuenta].filter(([, n]) => n > 1)
+  if (dup.length) {
+    console.log(`\n  ⚠️ PESTAÑAS DUPLICADAS: ${dup.map(([t, n]) => `«${t}» ×${n}`).join(" · ")}`)
+    console.log(`     Este guion nunca crea una que ya existe, así que vienen de otra parte.`)
+    console.log(`     No se tocan: borrar páginas lo decide el Lead.`)
+  }
 } else {
   console.log(`Pestañas que ya tiene: ninguna — es una hoja suelta.`)
   console.log(`  ⚠️ La primera llamada RENOMBRA esta página a «${NOMBRES[0]}» y crea el grupo «${destino.title}» encima.`)

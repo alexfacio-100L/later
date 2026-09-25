@@ -152,6 +152,24 @@ npm run docs:estado
 >
 > **Es idempotente y declara cobertura `n de N`**: lee el árbol antes, crea solo lo que falta, relee después con `getFullDocumentationLegacyRepresentation` y sale con código 1 si la cobertura no es total.
 
+**2.7 · Repartir el `.md` entre las pestañas** — qué sección va a cuál.
+
+> *Rescatado el 25 sep 2026 de `generar.mjs` antes de retirarlo. Era el único sitio donde estaba escrito.*
+>
+> **Una página de componente la leen tres personas distintas, y hay que repartirla, no plegarla.** *Del `button.md`, la narrativa que necesita un diseñador —qué es, cuándo, cuál elijo— era el **8% de las líneas publicables**, debajo del **62% de especificación**.* **Y Supernova no tiene acordeón ni «leer más»: la pestaña es su único mecanismo de plegado.**
+>
+> | La pestaña responde | Secciones del `.md` de uSpec |
+> | --- | --- |
+> | **¿Cuál elijo?** | `Overview` · `Anatomy` · `Cross-references` |
+> | **¿Cuánto mide?** | `Known gaps` · `Structure` · `Color` · `Voice / Screen reader` |
+> | **¿Cómo lo implemento?** | `API` |
+>
+> **Nunca se publican:** `Follow-ups` —gestión de trabajo— y `Provenance` —metadato del repo—.
+>
+> 🔴 **Cuántas pestañas se CUENTA, no se juzga:** menos de **120 líneas publicables** → una sola página; 120 o más → se reparte. ⚠️ **Nunca dos.** *Con dos, o el diseñador atraviesa 225 líneas de tabla, o la especificación se esconde donde el front-end no la busca.*
+>
+> 🔴 **HUECO ABIERTO, y hay que decirlo: este reparto está escrito contra la estructura de TRES pestañas, que está muerta.** *La viva son **cuatro** —`Resumen general`, `Usos`, `Especificaciones`, `Estatus y cambios`— y su reparto **nunca se escribió**: vive implícito en el contenido a mano de `button.mjs`.* **Antes de documentar el segundo componente hay que expresar el mapa contra las cuatro.** *Lo que sí se traslada intacto es el principio, el umbral y el «nunca dos».*
+
 **3 · Publicar** — `npm run docs:validar` primero, `npm run docs:publicar` después.
 
 **4 · Los previews** — las imágenes de Figma se suben aparte. Ver `experimento-canario/PREVIEWS-DE-FIGMA.md`.
