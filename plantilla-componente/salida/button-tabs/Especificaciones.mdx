@@ -2304,8 +2304,438 @@ Cero paradas de foco: el control sale por completo del orden de tabulación.
   </SNTableRow>
 </SNTable>
 
+### Cargando
+
+**Una parada de foco, igual que en reposo.** A diferencia de deshabilitado, `isLoading` **no saca el control del orden de tabulación**: bloquea la activación y anuncia que está ocupado. Ninguna de las tres plataformas usa el mecanismo nativo de deshabilitado para esto.
+
+#### VoiceOver (iOS)
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      Propiedad
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      Valor
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      Notas
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      Anuncio
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      "Button, loading, button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      `Element`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      SwiftUI Button (action blocked)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      isLoading blocks the tap without removing the control from the focus order.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      `accessibilityLabel`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      "Button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      Sin cambios — el label nunca pasa a ser "Cargando".
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      `accessibilityValue`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      "Loading"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      Busy is a value, not a name. VoiceOver order is Label → Value → Traits → Hint.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      `accessibilityTraits`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      [.isButton, .updatesFrequently]
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      Keeps the role and reduces repeated announcements while the operation runs.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      `Focus behaviour`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      Do not move VoiceOver focus
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      isLoading must not steal focus — the user stays where they were.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      `Announcement on completion`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      AccessibilityNotification.Announcement("Done").post()
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      Post the result instead of forcing focus onto a new element.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      `Spinner glyph`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      accessibilityHidden = true
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      ⚠️ *Nota con premisa caducada — ver el aviso bajo las tres tablas.* El glifo de carga es provisional: reutiliza Arrow PathSolid porque la librería no tiene spinner, y ese dibujo se lee como recargar, no como cargando. Nunca derivar el anuncio del glifo.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      Do not expose the Label frame as its own element
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      No leer el label dos veces. El label se funde en el nombre de la parada; la plataforma no debe exponer el nodo del label como elemento enfocable aparte.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      Do not announce the spinner glyph as a standalone element
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      Fold the indicator into this stop's state via accessibilityValue — do not expose the icon node.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={117}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={192}>
+      Do not say "reload" or "refresh"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={445}>
+      ⚠️ *Premisa caducada, la regla NO.* The provisional Arrow PathSolid glyph communicates "recargar"; the semantics are "loading" and must not follow the placeholder art.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+#### TalkBack (Android)
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      Propiedad
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      Valor
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      Notas
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      Anuncio
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      "Button, button, loading"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `Element`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      Compose Button (onClick blocked)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      isLoading blocks the click without removing the control from the traversal order.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `contentDescription`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      "Button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      Sin cambios — el label nunca pasa a ser "Cargando".
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `stateDescription`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      "Loading"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      Busy is state, not content. TalkBack announces it after the role.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `role`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      Role.Button
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      Role stays stable across every state.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `liveRegion`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      LiveRegionMode.Polite
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      Announces the transition into and out of loading without interrupting.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `Focus behaviour`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      Do not call requestFocus()
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      isLoading must not steal focus.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `Spinner glyph`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      contentDescription = null
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      ⚠️ *Nota con premisa caducada — ver el aviso bajo las tres tablas.* El glifo de carga es provisional: reutiliza Arrow PathSolid porque la librería no tiene spinner, y ese dibujo se lee como recargar, no como cargando. Nunca derivar el anuncio del glifo.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      Do not leave the Label Text node individually focusable
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      No leer el label dos veces. El label se funde en el nombre de la parada; la plataforma no debe exponer el nodo del label como elemento enfocable aparte.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      Do not announce the spinner glyph as a standalone element
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      Fold the indicator into stateDescription — do not expose the icon node.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={188}>
+      Do not list the live region as a focus stop
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={399}>
+      It is announced via liveRegion, not by focus.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
+#### ARIA (Web)
+
+<SNTable showBorder highlightHeaderRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      Propiedad
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Valor
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      Notas
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      Anuncio
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      "Button, button, busy"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `Element`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      `<button type="button" aria-busy="true">`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      The button stays in the tab order; the click handler returns early while loading.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `aria-busy`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      true
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      The canonical loading signal. Set it on the button itself, not on an ancestor.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `Accessible name`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Text content: "Button"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      Unchanged — do not swap the label for "Loading…" as the accessible name.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `aria-disabled`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      true (optional)
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      Use it if activation must be refused explicitly; keep the button focusable either way.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `Status live region`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      `<span role="status" class="sr-only">`Loading`</span>`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      Announces the busy transition politely without moving focus.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `Focus behaviour`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Never call .focus()
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      isLoading must not steal focus — keyboard users stay put.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      `Spinner glyph`
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      aria-hidden="true"
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      ⚠️ *Nota con premisa caducada — ver el aviso bajo las tres tablas.* El glifo de carga es provisional: reutiliza Arrow PathSolid porque la librería no tiene spinner, y ese dibujo se lee como recargar, no como cargando. Nunca derivar el anuncio del glifo.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Do not add aria-label duplicating the visible text
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      No leer el label dos veces. El texto visible ya es el nombre accesible; un aria-label lo sobrescribiría y lo desincronizaría.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Do not use the native disabled attribute for loading
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      disabled removes the button from the tab order, so the focus point vanishes mid-operation — exactly what "must not steal focus" forbids.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Do not announce the spinner glyph as a standalone element
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      Fold the indicator into aria-busy — do not expose the icon node.
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={168}>
+      **No hagas**
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={190}>
+      Do not list the live region as a focus stop
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={397}>
+      It is announced via aria-live/role=status, not by focus.
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
+
 <SNCallout type="Info">
-El anuncio de `isLoading` está especificado en Figma y todavía no transcrito aquí: esta página documenta **2 de las 4** paradas de foco de la anotación. Lo que falta está registrado en Defectos abiertos.
+Esta página documenta **4 de las 4** paradas de foco de la anotación `Screen reader`. La transcripción de `isLoading` cubre **31 de 31 filas** — VoiceOver 10, TalkBack 10, ARIA 11 — sin celdas vacías. Es el único estado sin imagen de foco: `isLoading` no tiene variante en Figma, así que no hay frame que previsualizar.
+</SNCallout>
+
+<SNCallout type="Warning">
+Cuatro filas sobre el glifo del spinner se transcribieron **verbatim y con una premisa falsa**: dicen que se reutiliza `Arrow PathSolid` «porque la librería no tiene spinner». La librería **sí** tiene spinner —`CircleNotch`, verificado el 25 sep 2026— y la especificación lo usa desde el 1 sep. **Las reglas siguen siendo correctas** —un indicador de progreso nunca se anuncia por su dibujo— **pero su justificación es de otra época.** No se corrigieron en silencio porque son contenido de accesibilidad.
 </SNCallout>
 
 ## Criterios de aceptación

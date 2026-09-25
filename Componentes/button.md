@@ -117,9 +117,9 @@ Al pulsar, un **spinner ocupa el slot de icono derecho** y el botón deja de ace
 - **No es un toggle.** No mantiene estado presionado; `aria-pressed` no se usa nunca. Si hace falta, es otro componente.
 - **No decide el resultado.** Modal, navegación o recarga los resuelve el consumidor.
 
-### Cobertura del anuncio asistivo — 2 de 4
+### Cobertura del anuncio asistivo — 4 de 4
 
-La anotación `Screen reader` de Figma documenta **cuatro** paradas de foco: `Button enabled`, `Button focused`, `Button isDisabled === true` y `Button isLoading === true`. La sección `## Voice / Screen reader` de este documento transcribe **2 de 4** — el grupo `default / hover / active / focus-visible` y `isDisabled === true`. Las tablas de VoiceOver, TalkBack y ARIA de `isLoading` existen dibujadas en Figma y todavía no están transcritas aquí; que el `.md` crezca a cuatro encabezados de estado es una decisión editorial abierta. **Nada de lo escrito arriba las contradice, pero tampoco las sustituye.**
+La anotación `Screen reader` de Figma documenta **cuatro** paradas de foco: `Button enabled`, `Button focused`, `Button isDisabled === true` y `Button isLoading === true`. 🟢 **La sección `## Voice / Screen reader` de este documento las transcribe las cuatro desde el 25 sep 2026** — `Button enabled` y `Button focused` agrupadas bajo `default / hover / active / focus-visible`, más `isDisabled === true` e `isLoading === true`. **La transcripción de `isLoading` declara su propia cobertura: 31 de 31 filas (VoiceOver 10, TalkBack 10, ARIA 11), cero celdas vacías y cero marcadores de plantilla sin resolver.** ⚠️ *Cuatro de esas filas traen una premisa caducada sobre el glifo del spinner; se transcribieron verbatim y el hueco queda declarado bajo las tablas, no corregido en silencio.*
 
 ## Motion
 
@@ -691,6 +691,69 @@ Corresponde a `state=disabled` en Figma y a `isDisabled: true` en la API. El com
 | `focus stops` | 0 | Con el atributo nativo el botón no recibe foco de teclado. |
 | `Do NOT` | No dejarlo enfocable al estar deshabilitado | Con el atributo nativo `disabled` ya sale del orden de foco; no anadas `tabindex="0"` encima. |
 | `Do NOT` | No confiar solo en el color para comunicar el estado | `background/disabled` apenas se distingue del lienzo en Light (1.30:1). Es un defecto abierto de color, y el estado debe llegar también por semántica. |
+
+### State: isLoading === true
+
+Corresponde a `isLoading: true` en la API. **No tiene variante en Figma y no debe tenerla** (§3 de la convención: `loading` está fuera del eje `state`). A diferencia de `isDisabled`, **el componente conserva su parada de foco: 1 focus stop.** Lo que se bloquea es la activación, no la navegación — por eso ninguna de las tres plataformas usa el mecanismo nativo de deshabilitado.
+
+> **Transcripción de la anotación `Screen reader` de Figma. Cobertura: 31 de 31 filas — VoiceOver 10 de 10 · TalkBack 10 de 10 · ARIA 11 de 11.** *Cero celdas vacías y cero marcadores de plantilla sin resolver. `#optional-description` estaba sin rellenar en Figma (`{optional-descriptions}`) y por eso el párrafo de arriba es del `.md`, no de la anotación.*
+
+#### VoiceOver (iOS)
+
+| Property | Value | Notes |
+|---|---|---|
+| Announcement | "Button, loading, button" | — |
+| `Element` | SwiftUI Button (action blocked) | isLoading blocks the tap without removing the control from the focus order. |
+| `accessibilityLabel` | "Button" | Sin cambios — el label nunca pasa a ser "Cargando". |
+| `accessibilityValue` | "Loading" | Busy is a value, not a name. VoiceOver order is Label → Value → Traits → Hint. |
+| `accessibilityTraits` | [.isButton, .updatesFrequently] | Keeps the role and reduces repeated announcements while the operation runs. |
+| `Focus behaviour` | Do not move VoiceOver focus | isLoading must not steal focus — the user stays where they were. |
+| `Announcement on completion` | AccessibilityNotification.Announcement("Done").post() | Post the result instead of forcing focus onto a new element. |
+| `Spinner glyph` | accessibilityHidden = true | ⚠️ *Nota con premisa caducada — ver el aviso bajo las tres tablas.* El glifo de carga es provisional: reutiliza Arrow PathSolid porque la librería no tiene spinner, y ese dibujo se lee como recargar, no como cargando. Nunca derivar el anuncio del glifo. |
+| `Do NOT` | Do not expose the Label frame as its own element | No leer el label dos veces. El label se funde en el nombre de la parada; la plataforma no debe exponer el nodo del label como elemento enfocable aparte. |
+| `Do NOT` | Do not announce the spinner glyph as a standalone element | Fold the indicator into this stop's state via accessibilityValue — do not expose the icon node. |
+| `Do NOT` | Do not say "reload" or "refresh" | ⚠️ *Premisa caducada, la regla NO.* The provisional Arrow PathSolid glyph communicates "recargar"; the semantics are "loading" and must not follow the placeholder art. |
+
+#### TalkBack (Android)
+
+| Property | Value | Notes |
+|---|---|---|
+| Announcement | "Button, button, loading" | — |
+| `Element` | Compose Button (onClick blocked) | isLoading blocks the click without removing the control from the traversal order. |
+| `contentDescription` | "Button" | Sin cambios — el label nunca pasa a ser "Cargando". |
+| `stateDescription` | "Loading" | Busy is state, not content. TalkBack announces it after the role. |
+| `role` | Role.Button | Role stays stable across every state. |
+| `liveRegion` | LiveRegionMode.Polite | Announces the transition into and out of loading without interrupting. |
+| `Focus behaviour` | Do not call requestFocus() | isLoading must not steal focus. |
+| `Spinner glyph` | contentDescription = null | ⚠️ *Nota con premisa caducada — ver el aviso bajo las tres tablas.* El glifo de carga es provisional: reutiliza Arrow PathSolid porque la librería no tiene spinner, y ese dibujo se lee como recargar, no como cargando. Nunca derivar el anuncio del glifo. |
+| `Do NOT` | Do not leave the Label Text node individually focusable | No leer el label dos veces. El label se funde en el nombre de la parada; la plataforma no debe exponer el nodo del label como elemento enfocable aparte. |
+| `Do NOT` | Do not announce the spinner glyph as a standalone element | Fold the indicator into stateDescription — do not expose the icon node. |
+| `Do NOT` | Do not list the live region as a focus stop | It is announced via liveRegion, not by focus. |
+
+#### ARIA (Web)
+
+| Property | Value | Notes |
+|---|---|---|
+| Announcement | "Button, button, busy" | — |
+| `Element` | <button type="button" aria-busy="true"> | The button stays in the tab order; the click handler returns early while loading. |
+| `aria-busy` | true | The canonical loading signal. Set it on the button itself, not on an ancestor. |
+| `Accessible name` | Text content: "Button" | Unchanged — do not swap the label for "Loading…" as the accessible name. |
+| `aria-disabled` | true (optional) | Use it if activation must be refused explicitly; keep the button focusable either way. |
+| `Status live region` | <span role="status" class="sr-only">Loading</span> | Announces the busy transition politely without moving focus. |
+| `Focus behaviour` | Never call .focus() | isLoading must not steal focus — keyboard users stay put. |
+| `Spinner glyph` | aria-hidden="true" | ⚠️ *Nota con premisa caducada — ver el aviso bajo las tres tablas.* El glifo de carga es provisional: reutiliza Arrow PathSolid porque la librería no tiene spinner, y ese dibujo se lee como recargar, no como cargando. Nunca derivar el anuncio del glifo. |
+| `Do NOT` | Do not add aria-label duplicating the visible text | No leer el label dos veces. El texto visible ya es el nombre accesible; un aria-label lo sobrescribiría y lo desincronizaría. |
+| `Do NOT` | Do not use the native disabled attribute for loading | disabled removes the button from the tab order, so the focus point vanishes mid-operation — exactly what "must not steal focus" forbids. |
+| `Do NOT` | Do not announce the spinner glyph as a standalone element | Fold the indicator into aria-busy — do not expose the icon node. |
+| `Do NOT` | Do not list the live region as a focus stop | It is announced via aria-live/role=status, not by focus. |
+
+> 🔴 **Las cuatro notas sobre el glifo se transcriben verbatim y su PREMISA es falsa. Se declara en vez de corregirse en silencio.**
+>
+> *Dicen que el spinner «reutiliza `Arrow PathSolid` porque la librería no tiene spinner».* **La librería SÍ tiene spinner** —verificado el 25 sep 2026: `CircleNotch`, `Spinner`, `SpinnerGap` y `SpinnerBall`, 12 variantes cada uno— **y `button.md` especifica desde el 1 sep que el glifo es `CircleNotch`.** *La premisa cayó el 14 ago 2026, cuando se descubrió que el componente existía escrito como `Spiner`, con una sola `n`, y el typo lo había escondido de las búsquedas.*
+>
+> 🟢 **Y aun así las cuatro reglas siguen siendo correctas, por una razón mejor que la que dan:** *no anunciar el glifo, ocultarlo a la tecnología asistiva y no decir «recargar» **no dependen de qué icono se use**.* **Un indicador de progreso nunca se anuncia por su dibujo: el estado se comunica por `accessibilityValue`, `stateDescription` o `aria-busy`.** *La regla es buena; su justificación es de otra época.*
+>
+> **Qué hay que hacer con esto, y no se hizo aquí:** *la anotación de Figma es salida generada del `.md`, así que la corrección empieza en el `.md` y se rehace el frame.* ⚠️ **Pero las seis anotaciones del Button ya no existen en Figma** (ver `99-pendientes.md` D2.16), **así que no hay frame que rehacer hasta que se decida regenerarlas.** *Decisión del Lead.*
 
 <!-- voice-render-meta v=1
 {"focusStops":[{"name":"Button","focusOrderIndex":1,"layerName":"Button","slotIndex":null,"preferRoot":true},{"name":"Button (fuera del orden de foco)","focusOrderIndex":1,"layerName":"Button","slotIndex":null,"preferRoot":true}]}

@@ -1222,8 +1222,18 @@ ${preview("State: isDisabled === true", "Deshabilitado, fuera del tabulador",
 
 ${tablasDeEstado("State: isDisabled === true")}
 
+### Cargando
+
+**Una parada de foco, igual que en reposo.** A diferencia de deshabilitado, \`isLoading\` **no saca el control del orden de tabulación**: bloquea la activación y anuncia que está ocupado. Ninguna de las tres plataformas usa el mecanismo nativo de deshabilitado para esto.
+
+${tablasDeEstado("State: isLoading === true")}
+
 <SNCallout type="Info">
-El anuncio de \`isLoading\` está especificado en Figma y todavía no transcrito aquí: esta página documenta **2 de las 4** paradas de foco de la anotación. Lo que falta está registrado en Defectos abiertos.
+Esta página documenta **4 de las 4** paradas de foco de la anotación \`Screen reader\`. La transcripción de \`isLoading\` cubre **31 de 31 filas** — VoiceOver 10, TalkBack 10, ARIA 11 — sin celdas vacías. Es el único estado sin imagen de foco: \`isLoading\` no tiene variante en Figma, así que no hay frame que previsualizar.
+</SNCallout>
+
+<SNCallout type="Warning">
+Cuatro filas sobre el glifo del spinner se transcribieron **verbatim y con una premisa falsa**: dicen que se reutiliza \`Arrow PathSolid\` «porque la librería no tiene spinner». La librería **sí** tiene spinner —\`CircleNotch\`, verificado el 25 sep 2026— y la especificación lo usa desde el 1 sep. **Las reglas siguen siendo correctas** —un indicador de progreso nunca se anuncia por su dibujo— **pero su justificación es de otra época.** No se corrigieron en silencio porque son contenido de accesibilidad.
 </SNCallout>
 
 ## Criterios de aceptación
