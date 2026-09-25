@@ -1204,14 +1204,14 @@ Qué anuncia cada plataforma, estado por estado. **Es una decisión de diseño, 
 
 Las tablas dicen **qué se anuncia**; la imagen dice **dónde para el foco**, que es lo único que el texto no puede enseñar. *La del estado deshabilitado vive en su propia sección, más abajo.*
 
-${preview("State: rest / hover / active / focus-visible", "Una sola parada de foco",
+${preview("State: default / hover / active / focus-visible", "Una sola parada de foco",
   "El anillo rodea el control entero, no sus partes: label e iconos se anuncian como un único elemento.")}
 
 ### En reposo, con el puntero encima, presionado y con foco
 
 Una sola parada de foco y el mismo anuncio en los cuatro. Solo cambian relleno, borde y sombra.
 
-${tablasDeEstado("State: rest / hover / active / focus-visible")}
+${tablasDeEstado("State: default / hover / active / focus-visible")}
 
 ### Deshabilitado
 

@@ -157,6 +157,18 @@ Ask these diagnostic questions:
     - `apiAssignments` — map of decomposed-prop → value (e.g., `{ "validationState": "none", "isDisabled": false, "isReadOnly": false }`).
     - `runtimeCondition` — short engineer-readable prose describing when this row applies (e.g., `"focused"`, `"has value && not focused"`, `"validationState='error'"`).
 
+      **Normative-name rule (100 Ladrillos, 25 Sep 2026 — D3).** When the state has a normative name in **CSS Selectors Level 4** or **WAI-ARIA**, `runtimeCondition` MUST use that normative name. When it has none, use the Figma axis value verbatim. **Never invent a third word.**
+
+      | Figma axis value | `runtimeCondition` | Why |
+      | --- | --- | --- |
+      | `default` | `default` | ✅ **No `:rest` exists in any spec.** `rest` and `enabled` are both forbidden here — the convention already legislated that the resting state is `default` |
+      | `hover` | `hover` | Same name in both layers |
+      | `pressed` | `active` | ✅ CSS `:active`. The axis says `pressed` (WAI-ARIA `aria-pressed`); the runtime condition says `active` (CSS). **Both are normative — that is the whole point of this field** |
+      | `focus` | `focus-visible` | ✅ CSS `:focus-visible`. The system draws the ring on keyboard focus only |
+      | `disabled` | `isDisabled === true` | The API prop governs; `:disabled` / `aria-disabled` are the render |
+
+      *Rationale: this field exists to hand an engineer a name they can act on. A name that appears in neither the design axis nor any specification forces them to guess which one it maps to.* **Emitting `rest` for `default` was a real defect, found 25 Sep 2026 and corrected in `button.md` and its cache.** Full reference table: `100Ladrillos/contexto/13-convencion-naming.md` §3b.
+
     Downstream interpretation skills (Color, Voice) read this mapping to relabel Figma-named state columns (`active`, `filled`, …) as the runtime conditions an engineer actually controls. Without the mapping they leak the Figma names through. Skip only when no decomposition occurred (every Figma axis option maps 1:1 to the same API prop value).
 
     When running under the `extract-api` skill, emit the mapping as `_extractionArtifacts.stateAxisMapping[]` on the cache JSON. When running as the standalone `create-api` skill, surface the mapping in the annotated frame's property callouts (one callout per Figma option with its runtime condition), then discard — no JSON file is written.

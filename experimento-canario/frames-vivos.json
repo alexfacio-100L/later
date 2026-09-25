@@ -197,7 +197,7 @@
     "ancho": 781,
     "alto": 147
   },
-  "State: rest / hover / active / focus-visible": {
+  "State: default / hover / active / focus-visible": {
     "nodo": "12691:2682",
     "nombreEnFigma": "Artwork wrapper",
     "entityId": "8d92f004-56ea-467e-b596-87a3c0fe09ac",

@@ -188,7 +188,7 @@
     "url": "https://studio-assets.supernova.io/design-systems/825551/abfaea95-2bcf-4dd4-946c-611cfa24c715.png",
     "recortado": true
   },
-  "State: rest / hover / active / focus-visible": {
+  "State: default / hover / active / focus-visible": {
     "nodo": "12691:2682",
     "nombre": "Screen reader · Button enabled",
     "archivo": "frames/button-voice-enabled.png",

@@ -1,7 +1,7 @@
 El control de acción del sistema. Sesenta variantes sobre cuatro ejes, una sola parada de foco y label siempre visible.
 
 <SNFigmaImages previewSize="NaturalHeight" variant="plain" columns={1}>
-  <SNFigmaFrame id="1e9df347-691a-4610-bb1f-ba2867186963" resourceId="028b2752-f71b-4a3f-9ad7-61f9c184946b" src="https://studio-assets.supernova.io/design-systems/825551/5167f6fc-bcdd-4c53-9715-13344f907d99.png" title="Las dos variantes" description="`primary` para la acción principal de la vista; `secondary` para las de apoyo." />
+  <SNFigmaFrame id="1e9df347-691a-4610-bb1f-ba2867186963" resourceId="e81155d0-04ce-4ac7-ba05-055f52606b44" src="https://studio-assets.supernova.io/design-systems/825551/6dd4f9c9-1d45-4c73-b9ca-ce31c79e1c52.png" title="Las dos variantes" description="`primary` para la acción principal de la vista; `secondary` para las de apoyo." />
 </SNFigmaImages>
 
 <SNCallout type="Info">
@@ -30,60 +30,84 @@ La propiedad de jerarquía se llama `variant`, no `type`. En HTML `type` ya sign
 
 <SNTable showBorder highlightHeaderRow>
   <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={252}>
+    <SNTableCell alignment="Left" columnWidth={205}>
       Plataforma
     </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
+    <SNTableCell alignment="Left" columnWidth={180}>
       Estado
     </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
+    <SNTableCell alignment="Left" columnWidth={371}>
       Qué hay hoy
     </SNTableCell>
   </SNTableRow>
   <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Bricks UI
+    <SNTableCell alignment="Left" columnWidth={205}>
+      Design System · Bricks UI
     </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      En curso
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Solo canario
     </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Storybook conectado
-    </SNTableCell>
-  </SNTableRow>
-  <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Web · Next
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Sin implementar
-    </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Consume esta especificación
+    <SNTableCell alignment="Left" columnWidth={371}>
+      El Storybook conectado es `bricks-ui-canario`, con las 8 stories de fábrica. **No elegible**
     </SNTableCell>
   </SNTableRow>
   <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Web · Astro
+    <SNTableCell alignment="Left" columnWidth={205}>
+      Web · WebApp
     </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Sin implementar
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Pendiente de verificar
     </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Consume esta especificación
+    <SNTableCell alignment="Left" columnWidth={371}>
+      No se ha comprobado si el componente existe ahí
     </SNTableCell>
   </SNTableRow>
   <SNTableRow>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Mobile · Expo
+    <SNTableCell alignment="Left" columnWidth={205}>
+      Web · 100 Ladrillos
     </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Sin implementar
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Pendiente de verificar
     </SNTableCell>
-    <SNTableCell alignment="Left" columnWidth={252}>
-      Consume esta especificación
+    <SNTableCell alignment="Left" columnWidth={371}>
+      El sitio público
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={205}>
+      Mobile · 100 Ladrillos App
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Pendiente de verificar
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={371}>
+      —
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={205}>
+      CMS · HubSpot Templates
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      Experimental
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={371}>
+      Declarado por el Lead
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={205}>
+      Email · Templates
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={180}>
+      No iniciado
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={371}>
+      Registrado para no perderlo de vista
     </SNTableCell>
   </SNTableRow>
 </SNTable>
 
-**Bricks UI es la única implementación en curso.** Las demás plataformas todavía trabajan contra esta especificación, no contra un componente existente.
+🔴 **Hoy el componente no está producido en ninguna plataforma.** *La fila de Bricks UI decía «En curso» y eso sobreestimaba el estado: lo que está conectado es el canario con las stories de andamiaje.*
+
+**Estas seis son los canales donde el componente DEBE estar construido**, fijados por el Lead el 14 sep 2026 — no donde está. **Un componente no está «disponible» en una plataforma hasta que está producido ahí**, y eso es lo que cierra la DoD completa, que no la cierra Diseño sino Ingeniería.

@@ -51,7 +51,7 @@ Un solo focus stop y una sola acción. El puntero activa al **soltar dentro del 
 
 | Condition | Qué la dispara | Qué cambia | Focus stops |
 |---|---|---|---|
-| `rest` | Estado base | Tokens de reposo | 1 |
+| `default` | Estado base | Tokens de reposo | 1 |
 | `hover` | Puntero encima | Solo `Container fill` → `background/brandHover` | 1 |
 | `active` | Puntero abajo, o Espacio mantenido | `Container fill` → `background/brandPressed` | 1 |
 | `focus-visible` | Foco por teclado | Borde `border/focus`; 1.5 px en `s` y `m`, 2 px en `l`, `borderAlign: inside` | 1 |
@@ -60,6 +60,26 @@ Un solo focus stop y una sola acción. El puntero activa al **soltar dentro del 
 
 ⚠️ Es `focus-visible`, no `focus`: el anillo aparece para el teclado, no tras un clic. Y no se suprime nunca — es lo que satisface 2.4.7.
 ⚠️ `hover` no puede ser el único portador de información: en táctil no existe.
+
+### Equivalencias: el eje de Figma, CSS y ARIA
+
+**El eje `state` del component set y la condición de runtime NO usan siempre la misma palabra, y las dos son correctas.** *Esta tabla es el puente. Sin ella el handoff traduce a ojo.*
+
+| Eje `state` en Figma | Condición de runtime | CSS | ARIA |
+| --- | --- | --- | --- |
+| `default` | `default` | *(ninguna)* | — |
+| `hover` | `hover` | `:hover` | — |
+| `pressed` | `active` | `:active` | `aria-pressed` *(solo alternadores; Button no lo es)* |
+| `focus` | `focus-visible` | `:focus-visible` | — |
+| `disabled` | `isDisabled === true` | `:disabled` | `aria-disabled` |
+
+🔴 **Las dos filas que cuestan si no están escritas:** *`pressed` se rinde como `:active`* y *`focus` se rinde como `:focus-visible`*. **Ninguna de las dos es adivinable desde el nombre del eje.**
+
+**Por qué el eje dice `pressed` y no `active`:** *`pressed` es vocabulario normativo de **WAI-ARIA** (`aria-pressed`) y `active` lo es de **CSS** (`:active`) — son dos estándares con dos nombres para lo mismo.* **El eje se alinea con ARIA porque `active` en producto se lee como «el elemento activo», que es selección y no presión.** *La condición de runtime se alinea con CSS, porque es la capa donde se implementa.*
+
+⚠️ **Y el estado base se llama `default` en las dos columnas.** *No `rest` —`:rest` no existe en ninguna norma— ni `enabled`.* **Este documento emitió `rest` hasta el 25 sep 2026; era un tercer nombre para algo que ya tenía dos.**
+
+*Regla del área: `100Ladrillos/contexto/13-convencion-naming.md` §3b.*
 
 ### `isLoading` — bloqueado, no deshabilitado
 
@@ -99,7 +119,7 @@ Al pulsar, un **spinner ocupa el slot de icono derecho** y el botón deja de ace
 
 ### Cobertura del anuncio asistivo — 2 de 4
 
-La anotación `Screen reader` de Figma documenta **cuatro** paradas de foco: `Button enabled`, `Button focused`, `Button isDisabled === true` y `Button isLoading === true`. La sección `## Voice / Screen reader` de este documento transcribe **2 de 4** — el grupo `rest / hover / active / focus-visible` y `isDisabled === true`. Las tablas de VoiceOver, TalkBack y ARIA de `isLoading` existen dibujadas en Figma y todavía no están transcritas aquí; que el `.md` crezca a cuatro encabezados de estado es una decisión editorial abierta. **Nada de lo escrito arriba las contradice, pero tampoco las sustituye.**
+La anotación `Screen reader` de Figma documenta **cuatro** paradas de foco: `Button enabled`, `Button focused`, `Button isDisabled === true` y `Button isLoading === true`. La sección `## Voice / Screen reader` de este documento transcribe **2 de 4** — el grupo `default / hover / active / focus-visible` y `isDisabled === true`. Las tablas de VoiceOver, TalkBack y ARIA de `isLoading` existen dibujadas en Figma y todavía no están transcritas aquí; que el `.md` crezca a cuatro encabezados de estado es una decisión editorial abierta. **Nada de lo escrito arriba las contradice, pero tampoco las sustituye.**
 
 ## Motion
 
@@ -112,7 +132,7 @@ No existe spec de After Effects para este componente. Lo de abajo es intención 
 
 | # | Qué anima | Duración | Easing | Notas |
 |---|---|---|---|---|
-| M1 | `Container fill` entre `rest` y `hover` | **120 ms** | `ease-out` — `cubic-bezier(0, 0, 0.2, 1)` | Solo el relleno. Entrada y salida con la misma curva y la misma duración: un hover que tarda más en irse que en llegar se siente pegajoso |
+| M1 | `Container fill` entre `default` y `hover` | **120 ms** | `ease-out` — `cubic-bezier(0, 0, 0.2, 1)` | Solo el relleno. Entrada y salida con la misma curva y la misma duración: un hover que tarda más en irse que en llegar se siente pegajoso |
 | M2 | `Container fill` al pasar a `active` | **0 ms** | — | Instantáneo a propósito: la respuesta al presionar no puede ir por detrás del dedo. Al soltar vuelve por M1 |
 | M3 | Aparición del borde `border/focus` | **0 ms** | — | El indicador de foco no se funde hacia dentro: quien tabula rápido lo perdería. Con `borderAlign: inside` no desplaza nada al aparecer |
 | M4 | Rotación del spinner `CircleNotch` | **800 ms por vuelta**, bucle infinito | `linear` | `linear` es la única curva correcta en un bucle continuo: cualquier ease produce un tirón visible en la costura de cada vuelta |
@@ -426,7 +446,7 @@ _Las columnas usan la condición de runtime en lugar del valor bruto del eje Fig
 
 ### primary / Light
 
-| Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
+| Element | default | hover | active | focus-visible | isDisabled === true | Notes |
 |---|---|---|---|---|---|---|
 | Container fill | `background/brandMain` (#041B3D) | `background/brandHover` (#1C488A) | `background/brandPressed` (#133970) | `background/brandHover` (#1C488A) | `background/disabled` (#DADADA) | Superficie del botón |
 | Container stroke | none | none | none | `border/focus` (#1C64EB) | none | Anillo de foco visible |
@@ -440,7 +460,7 @@ _Las columnas usan la condición de runtime en lugar del valor bruto del eje Fig
 
 ### primary / Dark
 
-| Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
+| Element | default | hover | active | focus-visible | isDisabled === true | Notes |
 |---|---|---|---|---|---|---|
 | Container fill | `background/brandMain` (#B2D1FF) | `background/brandHover` (#4B79BD) | `background/brandPressed` (#6B96D6) | `background/brandHover` (#4B79BD) | `background/disabled` (#B2B2B2) | Superficie del botón |
 | Container stroke | none | none | none | `border/focus` (#6C9BF2) | none | Anillo de foco visible |
@@ -456,7 +476,7 @@ _Las columnas usan la condición de runtime en lugar del valor bruto del eje Fig
 
 > El eje `surface` **ya no cambia solo la sombra**. Desde el 11 sep 2026, las **15 variantes** con `surface = marketing` y `variant = primary` —3 tallas × 5 estados— pintan el **rojo de 100 Ladrillos** en lugar del azul de marca. `surface = product` no se movió: sigue en `button/background/primary` y sus estados, y por eso **la App no cambia**. Las secciones `primary / Light` y `primary / Dark` de arriba describen ahora **solo `surface = product`**.
 
-| Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
+| Element | default | hover | active | focus-visible | isDisabled === true | Notes |
 |---|---|---|---|---|---|---|
 | Container fill | `background/marketingMain` (#E10A3D) | `background/marketingHover` (#B90832) | `background/marketingPressed` (#A9072E) | `background/marketingHover` (#B90832) | `background/disabled` (#DADADA) | **Un solo rojo en los dos modos.** `supportColors/brandRed/500` es el rojo de marca ajustado para que el label blanco cumpla AA: los dos rojos de marca no lo permiten. Vive en `supportColors` y no en `brandColors`, que se reserva a los tres colores de marca. Los estados **oscurecen**, porque el label es claro |
 | Container stroke | none | none | none | `border/focus` (#1C64EB) | none | Anillo de foco, igual que en product |
@@ -466,7 +486,7 @@ _Las columnas usan la condición de runtime en lugar del valor bruto del eje Fig
 
 ### marketingPrimary / Dark
 
-| Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
+| Element | default | hover | active | focus-visible | isDisabled === true | Notes |
 |---|---|---|---|---|---|---|
 | Container fill | `background/marketingMain` (#E10A3D) | `background/marketingHover` (#B90832) | `background/marketingPressed` (#A9072E) | `background/marketingHover` (#B90832) | `background/disabled` (#B2B2B2) | **El mismo rojo que en Light.** Con label blanco la asimetría de dos rojos deja de tener sentido: el rojo web se eligió para separarse de fondos oscuros, y ese criterio no gobierna cuando lo que manda es la legibilidad del texto encima |
 | Container stroke | none | none | none | `border/focus` (#6C9BF2) | none | Anillo de foco |
@@ -494,7 +514,7 @@ _Las columnas usan la condición de runtime en lugar del valor bruto del eje Fig
 
 ### secondary / Light
 
-| Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
+| Element | default | hover | active | focus-visible | isDisabled === true | Notes |
 |---|---|---|---|---|---|---|
 | Container fill | `background/secondary` (#FFFFFF) | `background/hover` (#F4F7FB) | `background/selected` (#315FA3) | `background/hover` (#F4F7FB) | `background/disabled` (#DADADA) | Superficie del botón |
 | Container stroke | `text/secondary` (#041B3D) | `text/secondary` (#041B3D) | `text/secondary` (#041B3D) | `border/focus` (#1C64EB) | `border/disabled` (#B2B2B2) | Borde del botón y anillo de foco |
@@ -508,7 +528,7 @@ _Las columnas usan la condición de runtime en lugar del valor bruto del eje Fig
 
 ### secondary / Dark
 
-| Element | rest | hover | active | focus-visible | isDisabled === true | Notes |
+| Element | default | hover | active | focus-visible | isDisabled === true | Notes |
 |---|---|---|---|---|---|---|
 | Container fill | `background/secondary` (#202020) | `background/hover` (#404040) | `background/selected` (#315FA3) | `background/hover` (#404040) | `background/disabled` (#B2B2B2) | Superficie del botón |
 | Container stroke | `text/secondary` (#E9E9E9) | `text/secondary` (#E9E9E9) | `text/secondary` (#E9E9E9) | `border/focus` (#6C9BF2) | `border/disabled` (#606060) | Borde del botón y anillo de foco |
@@ -566,7 +586,7 @@ this column becomes the exporter's output and every `.md` is regenerated.
 
 _Confidence: high._ _Reconciliation: 1 auto-fixed, 0 retried, 0 unresolved._
 
-> Button es un componente simple: un único focus stop. El texto de `labelBox` (label) se fusiona en el nombre accesible del botón y NO es un focus stop propio; `iconLeft` e `iconRight` son decorativos y se ocultan a la tecnologia asistiva. Ningun eje visual —`size`, `surface`, `variant`— altera la semántica de lector de pantalla: solo el eje `state` lo hace, y dentro de el unicamente `disabled`. Por eso los estados `rest`, `hover`, `active` y `focus-visible` están agrupados en una sola entrada: mismo focus stop, mismos roles y mismas propiedades; solo cambian relleno, borde y sombra.
+> Button es un componente simple: un único focus stop. El texto de `labelBox` (label) se fusiona en el nombre accesible del botón y NO es un focus stop propio; `iconLeft` e `iconRight` son decorativos y se ocultan a la tecnologia asistiva. Ningun eje visual —`size`, `surface`, `variant`— altera la semántica de lector de pantalla: solo el eje `state` lo hace, y dentro de el unicamente `disabled`. Por eso los estados `default`, `hover`, `active` y `focus-visible` están agrupados en una sola entrada: mismo focus stop, mismos roles y mismas propiedades; solo cambian relleno, borde y sombra.
 >
 > **Merge analysis.** Focus stop: el nodo raíz `Button` (COMPONENT). Fusionados: `labelBox` (aporta el nombre accesible). Decorativos: `iconLeft`, `iconRight` (instancias de ArrowRight de Phosphor, ocultas por defecto — `showIconLeft` y `showIconRight` en `false`). Live regions: ninguna. Cuando el consumidor active `leadingIcon` o `trailingIcon`, el conteo de focus stops NO cambia: el icono acompana al label, no es una acción independiente. Si algun día un icono necesita acción propia, deja de ser Button y pasa a ser un compuesto con dos stops.
 >
@@ -584,11 +604,11 @@ _Confidence: high._ _Reconciliation: 1 auto-fixed, 0 retried, 0 unresolved._
 >
 > **Contraste y foco.** El indicador de foco cumple 1.4.11 Non-text Contrast: `border/focus` da 4.80:1 en Light y 4.07:1 en Dark contra el lienzo, por encima del 3:1 exigido; el borde de `secondary` da 15.9 y 17.3. El texto deshabilitado se corrigio y ahora da 4.50:1 en Light y 4.89:1 en Dark. Queda abierto un punto que no depende de esta especificacion de voz: `background/disabled` apenas se distingue del lienzo en Light (1.30:1) — no afecta al lector de pantalla, pero si a quien ve la pantalla.
 >
-> **Nunca elimines el indicador de foco visible.** El estado `focus` del component set representa `:focus-visible`; su semántica de lector de pantalla es identica a `rest`, pero su funcion visual es la que satisface 2.4.7 Focus Visible.
+> **Nunca elimines el indicador de foco visible.** El estado `focus` del component set representa `:focus-visible`; su semántica de lector de pantalla es identica a `default`, pero su funcion visual es la que satisface 2.4.7 Focus Visible.
 
-### State: rest / hover / active / focus-visible
+### State: default / hover / active / focus-visible
 
-Estados agrupados: idénticos en conteo de focus stops (1), en propiedades semánticas y en patrón de anuncio. Solo difieren en relleno, borde y sombra. Se documenta `rest` como representante; `variantProps` usa el variant por defecto (`state=default`).
+Estados agrupados: idénticos en conteo de focus stops (1), en propiedades semánticas y en patrón de anuncio. Solo difieren en relleno, borde y sombra. Se documenta `default` como representante; `variantProps` usa el variant por defecto (`state=default`).
 
 #### VoiceOver (iOS)
 
@@ -714,9 +734,9 @@ Quince criterios propios del Button, por encima de la batería base. Cada uno lo
 | C8 | Loading | Sin ningún icono, `isLoading = true` ensancha el botón en exactamente `size/icon/*` + `space/s` = **24 · 28 · 32 px** según la talla. |
 | C9 | Loading | Con solo `leadingIcon`, el icono izquierdo permanece visible y el spinner aparece a la derecha del label. |
 | C10 | Loading | El label visible y el nombre accesible son **idénticos** antes, durante y después de la carga. |
-| C11 | Loading | Los tokens de color del botón durante la carga son los de `rest`. `background/disabled` no aparece en ningún momento. |
+| C11 | Loading | Los tokens de color del botón durante la carga son los de `default`. `background/disabled` no aparece en ningún momento. |
 | C12 | Motion | El spinner completa una vuelta en **800 ms** con `linear`; bajo `prefers-reduced-motion: reduce` pasa a **1200 ms** y **no se detiene**. |
-| C13 | Motion | El paso `rest` → `hover` tarda **120 ms**; `active` y el borde de foco aparecen **sin transición**. |
+| C13 | Motion | El paso `default` → `hover` tarda **120 ms**; `active` y el borde de foco aparecen **sin transición**. |
 | C14 | Content | Un label de 24 caracteres en talla `l` se renderiza completo en **una sola línea**, sin elipsis y sin salto: el botón crece. |
 | C15 | Responsive | Al 200% de zoom del navegador y con el texto del sistema al máximo, ningún label se recorta y el botón crece en vertical. Ninguna medida cambia al cruzar un breakpoint. |
 
