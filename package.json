@@ -49,6 +49,7 @@
     "doc:registro": "node doc-registro.mjs",
     "molde:actualizar": "node plantilla-componente/maestra.mjs --actualizar",
     "rebindeo:verificar": "node verificar-rebindeo.mjs",
+    "docs:pestanas": "node experimento-canario/crear-pestanas.mjs",
     "docs:ocultar-plantilla": "node experimento-canario/ocultar-plantilla.mjs",
     "docs:erratas": "node experimento-canario/corregir-erratas.mjs",
     "docs:publicado": "node experimento-canario/estado-publicacion.mjs",

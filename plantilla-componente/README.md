@@ -1,5 +1,9 @@
 # La plantilla de página de componente
 
+> 🔴 **`generar.mjs` está muerto. Medido el 25 sep 2026.** Propone **tres** pestañas; la estructura viva en Supernova es la de **cuatro** de `button.mjs` (`Resumen general` · `Usos` · `Especificaciones` · `Estatus y cambios`), y **los cuatro ids de `config/button.json` con los que escribiría no existen en el árbol**. *Se conserva sin borrar, a la espera de decisión del Lead: lo que aún vale es su criterio de reparto.*
+>
+> **Para colgarle pestañas a una hoja que ya existe** —el caso de `Link`, `Tag` y las 65 hojas de `Componentes`— el guion es **`npm run docs:pestanas`**, en `experimento-canario/crear-pestanas.mjs`.
+
 **Genera las tres pestañas de un componente para Supernova, desde el `.md` que produce uSpec.**
 
 ```bash

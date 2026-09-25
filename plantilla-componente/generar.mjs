@@ -1,4 +1,28 @@
 /**
+ * 🔴 ESTÁ MUERTO. NO LO CORRAS CON `--publicar`. Medido el 25 sep 2026.
+ * ─────────────────────────────────────────────────────────────────────
+ * Este guion propone una estructura de TRES pestañas —`1-uso`,
+ * `2-especificacion`, `3-codigo`—. **La estructura VIVA en Supernova es la de
+ * CUATRO de `button.mjs`**: `Resumen general`, `Usos`, `Especificaciones`,
+ * `Estatus y cambios`. Verificado leyendo el árbol: el grupo `Button`
+ * (836f5e48-…) tiene `groupBehavior: "Tabs"` y esas cuatro hojas debajo.
+ *
+ * Y no es solo que diverja: **los cuatro ids de `config/button.json` que este
+ * guion usaría para escribir NO EXISTEN en el árbol** — `40847088`, `40750051`,
+ * `40847087` y el grupo `561d3e6e-…`. *Se quedaron apuntando a la estructura de
+ * tres pestañas del canario, que se rehízo.* **Correrlo con `--publicar` escribe
+ * contra ids fantasma.**
+ *
+ * 🟡 **Se conserva a propósito, sin borrar, a la espera de decisión del Lead.**
+ * Lo que sigue teniendo valor y no está en ningún otro sitio es **el criterio
+ * del reparto** —qué sección del `.md` va a qué pestaña, y la regla de cuántas
+ * pestañas, que se cuenta y no se juzga—. *Si se retira, ese criterio se
+ * traslada antes; si se alinea, se le cambian el `REPARTO` y los ids.*
+ *
+ * La creación de pestañas sobre una hoja existente ya NO se busca aquí:
+ * está en `experimento-canario/crear-pestanas.mjs` (`npm run docs:pestanas`).
+ *
+ * ─────────────────────────────────────────────────────────────────────
  * Genera las tres pestañas de una página de componente para Supernova.
  *
  * Por qué existe

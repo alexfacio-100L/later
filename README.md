@@ -136,6 +136,22 @@ npm run docs:estado
 
 **2 · Generar el `.md`** — `create-component-md` con `baseJsonPath`. Usar `--output` para que aterrice en `Componentes/`.
 
+**2.5 · Darle pestañas a la hoja, si aún no las tiene** — `npm run docs:pestanas -- --buscar="Link"`.
+
+> 🔴 **Las hojas vacías del árbol son el índice declarado de lo que se va a documentar, no huecos.** Cuando a una le toca el turno hay que convertirla en grupo de pestañas, y **eso no lo hacía ningún guion hasta el 25 sep 2026**: `button.mjs` y `maestra.mjs` sabían crear una página NUEVA con pestañas, con el destino hardcodeado, y `generar.mjs` exigía que le pasaran un pageId por pestaña ya hecho.
+>
+> **La plataforma siempre pudo** — `createDocumentationTab` toma `fromItemPersistentId`, el id de un ítem existente cualquiera (tipos de `@supernova-studio/client`, verificados el 25 sep 2026). *No era un límite de Supernova: era un guion que no existía.*
+>
+> ```bash
+> npm run docs:pestanas -- --buscar="Link"              # informa, no toca nada
+> npm run docs:pestanas -- --pagina=<pid> --aplicar     # crea las que falten
+> npm run docs:pestanas -- --pagina=<pid> --pestanas="Uso,Especificación"
+> ```
+>
+> ⚠️ **Renombra la página original.** La hoja `Link` pasa a llamarse `Resumen general` y el grupo que la envuelve se queda con `Link`. Es lo que se quiere; conviene saberlo antes.
+>
+> **Es idempotente y declara cobertura `n de N`**: lee el árbol antes, crea solo lo que falta, relee después con `getFullDocumentationLegacyRepresentation` y sale con código 1 si la cobertura no es total.
+
 **3 · Publicar** — `npm run docs:validar` primero, `npm run docs:publicar` después.
 
 **4 · Los previews** — las imágenes de Figma se suben aparte. Ver `experimento-canario/PREVIEWS-DE-FIGMA.md`.
@@ -216,6 +232,12 @@ later-brand-system/
 **El modo oscuro no sale solo.** `create-component-md` emite **un único conjunto de tokens** por combinación. En el Button, **10 de 14 tokens cambiaban entre modos** — sin esa columna la especificación describe menos de un tercio del color real.
 
 **Supernova no admite comentarios de ninguna clase** —ni `<!-- -->` ni `{/* */}`— **ni tablas Markdown con pipes.** El conversor lo resuelve, pero conviene saberlo. *Especificación completa en `experimento-canario/SINTAXIS-MDX-LITE.md`.*
+
+🔴 **El MCP Consumer sirve una foto vieja del árbol. No lo uses para verificar una escritura.** *Medido el 25 sep 2026: `sn_get_documentation_page_list` devolvía todavía `Emojins`, `Acronimos`, `Breadcrums`, `Illustraciones`, `Tipográfia` y `Audiencia ` —los seis títulos con errata **corregidos el 24 sep**— mientras `getFullDocumentationLegacyRepresentation` ya devolvía los seis bien escritos.* **Y en la misma lectura mostraba las 4 pestañas del `_Component Documentation Template`, ocultas el 24 sep, sin su `_`.**
+
+> ⚠️ **Es la forma «falso vigente» de la regla 16 metida en una herramienta de lectura, y es traicionera porque el listado se lee igual de bien estando caduco.** *Casi hace concluir que «el MCP también lista lo oculto», que es falso: lo que pasa es que su foto es anterior al día en que se ocultó.* **Para el estado del árbol, la lectura autoritativa es la del SDK.** *No se midió cuánto retrasa ni qué lo refresca.*
+
+**Y hay dos lecturas del SDK, no una.** `getDocumentationStructure` **no devuelve `configuration`**: `isHidden` llega `undefined` siempre y `groupBehavior` no viene, así que con ella no se distingue un grupo de pestañas de un grupo normal ni se verifica lo que se acaba de escribir. **La que sirve es `getFullDocumentationLegacyRepresentation`.**
 
 > **Y la regla que gobierna todo esto: `validateMarkdown` responde "¿es sintaxis válida?", no "¿se ve bien?".** Un documento puede validar al 100% y ser ilegible. **Después de publicar, hay que mirar la página.**
 
