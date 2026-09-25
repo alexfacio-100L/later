@@ -46,6 +46,8 @@ frame.explicitVariableModes
 
 *`.Motion` no tiene contenedor de preview: produce una línea de tiempo, no una muestra.*
 
+> 🔴 **Y eso ya no cierra el tema, desde el 25 sep 2026.** *Decisión del Lead: **«el sexto preview aparece solo si se trabaja o se comunica que un componente expresa motion»**.* **Cinco son la base; el sexto es condicional.** *Si el componente tiene movimiento escrito, hay que **crear el frame a mano**: la plantilla no lo trae.* **Criterio completo en `contexto/17-done-de-componente.md`, bajo D5.**
+
 🔴 **Aun así, las skills NO buscan por cadena exacta.** *Las seis usan un matcher por forma:*
 
 ```js
