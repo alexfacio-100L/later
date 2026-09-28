@@ -53,7 +53,8 @@
     "docs:erratas": "node experimento-canario/corregir-erratas.mjs",
     "docs:publicado": "node experimento-canario/estado-publicacion.mjs",
     "tokens:lint": "node tokens-lint.mjs",
-    "tokens:lint:cache": "node tokens-lint.mjs --cache"
+    "tokens:lint:cache": "node tokens-lint.mjs --cache",
+    "tokens:consumo": "node consumo-token.mjs"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",
