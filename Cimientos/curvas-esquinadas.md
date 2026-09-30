@@ -74,6 +74,54 @@ El 50% no era alternativa. DTCG admite en `dimension` solo px y rem, así que el
 
 <SNTokens coleccion="border" grupo="radius" titulo="Radios de esquina" />
 
+## Qué número teclear en cada herramienta
+
+La escala vive en píxeles porque su fuente es Figma. Fuera de Figma el número cambia, y en una de las tres herramientas deja de existir.
+
+`Unidades y medios` guarda la regla general: la constante de conversión, por qué un redondeo no se traduce y qué pasa en impreso. Se escribe una sola vez y sirve a los seis fundamentos.
+
+#### Figma
+
+Los siete valores tal cual, en píxeles. Es la fuente de verdad de la escala y no hay conversión que hacer.
+
+| Token | Radio |
+| --- | --- |
+| `radius/zero` | 0 px |
+| `radius/xs` | 4 px |
+| `radius/s` | 8 px |
+| `radius/m` | 12 px |
+| `radius/l` | 16 px |
+| `radius/xl` | 24 px |
+| `radius/full` | 999 px |
+
+#### Illustrator
+
+Configura el documento en píxeles y teclea el mismo número.
+
+Si el entregable exige puntos, la constante es multiplicar por 0,75. Sale del estándar y no de una costumbre: CSS Values 4 fija 1 in en 96 px, y 1 pt en un setentaidosavo de pulgada.
+
+| Token | px | pt |
+| --- | --- | --- |
+| `radius/xs` | 4 | 3 |
+| `radius/s` | 8 | 6 |
+| `radius/m` | 12 | 9 |
+| `radius/l` | 16 | 12 |
+| `radius/xl` | 24 | 18 |
+
+`radius/full` no se traduce. Es un centinela y no una medida: redondea del todo a cualquier tamaño. En Illustrator eso es la mitad del lado corto, calculada sobre la forma que tengas delante.
+
+<SNCallout type="Warning">
+**Hueco declarado.** Adobe no publica en qué unidad lee el campo Corner Radius. Las tres páginas de ayuda consultadas devolvieron 403 el 30 sep 2026. La conversión está verificada contra el W3C, la interfaz no. Comprueba la unidad del documento antes de teclear.
+</SNCallout>
+
+#### Google Slides
+
+**No se puede.** Y hay que decirlo en vez de dar un número. El redondeo de una forma en Slides no es una longitud: es una razón del lado corto. La misma tarjeta a dos tamaños sale con dos redondeces distintas. Ninguna columna de puntos lo arregla, porque el problema no es de conversión sino de modelo.
+
+Está verificado sobre la referencia REST de Google, el 30 sep 2026. `ShapeProperties` no expone ningún campo de radio, ajuste ni geometría. El tipo de forma `ROUND_RECTANGLE` se declara equivalente al `roundRect` de ECMA-376, que define el redondeo como razón.
+
+**El grosor sí se puede.** Está en `Bordes`, en esa misma pestaña.
+
 ## Accesibilidad de la escala
 
 WCAG no fija ningún criterio sobre el radio de una esquina. Un radio no cambia el contraste ni la estructura semántica.
@@ -96,9 +144,13 @@ Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de
 
 **Y una condición que sí falta.** No hay decidido quién aprueba un peldaño nuevo ni dónde se registra la petición. Queda declarado como hueco, no rellenado.
 
-## Versión y cambios
+## Changelog
 
-| Fecha | Qué cambió | Por qué |
-| --- | --- | --- |
-| 23 sep 2026 | `~radius/circle` y `~radius/pill` se sustituyen por `radius/full` | Eran dos tokens para un solo mecanismo. Medido sobre 8 design systems: 8 de 8 usan un token único y 6 de 8 lo llaman `full` |
-| 23 sep 2026 | `radius/xl` deja de estar declarado sin uso | Se midieron los 5 componentes del Chip. La declaración anterior salía de una muestra del Playground y era falsa |
+- **23 sep 2026.** `radius/xl` deja de estar declarado sin uso. Se midieron los 5 componentes del Chip. La declaración anterior salía de una muestra del Playground y era falsa.
+- **23 sep 2026.** `~radius/circle` y `~radius/pill` se sustituyen por `radius/full`. Eran dos tokens para un solo mecanismo. Medido sobre 8 design systems: 8 de 8 usan un token único y 6 de 8 lo llaman `full`.
+
+## Deprecación y migración
+
+**Dos tokens retirados, un solo sustituto.** `~radius/circle` y `~radius/pill` se migraron a `radius/full` el 23 sep 2026. Los tres valían 999, así que la migración no movió un píxel.
+
+Si encuentras `~radius/circle` o `~radius/pill` citados en un archivo o en código, apuntan a un token que ya no existe. El sustituto es `radius/full` en los dos casos, y no hay que elegir: redondear del todo es un solo mecanismo.

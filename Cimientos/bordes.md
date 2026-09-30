@@ -88,6 +88,49 @@ Los trece colores se agrupan en cuatro familias por la decisión que resuelven.
 **Un token queda fuera a propósito.** Su nombre lleva la palabra `border`. `graphs/basicConfig/borderColor` pertenece a la configuración de gráficas, junto a otros once tokens. Un listado plano lo hace parecer un catorceavo color de borde.
 </SNCallout>
 
+## Qué número teclear en cada herramienta
+
+La escala vive en píxeles porque su fuente es Figma. Fuera de Figma el número cambia, y no cambia igual en todas partes.
+
+`Unidades y medios` guarda la regla general: la constante de conversión, por qué un redondeo no se traduce y qué pasa en impreso. Se escribe una sola vez y sirve a los seis fundamentos.
+
+#### Figma
+
+Los seis valores tal cual, en píxeles. Es la fuente de verdad de la escala y no hay conversión que hacer.
+
+| Token | Grosor |
+| --- | --- |
+| `width/zero` | 0 px |
+| `width/xs` | 1 px |
+| `width/s` | 1.5 px |
+| `width/m` | 2 px |
+| `width/l` | 4 px |
+| `width/xl` | 8 px |
+
+#### Illustrator
+
+Configura el documento en píxeles y teclea el mismo número.
+
+Si el entregable exige puntos, la constante es multiplicar por 0,75. Sale del estándar y no de una costumbre: CSS Values 4 fija 1 in en 96 px, y 1 pt en un setentaidosavo de pulgada.
+
+| Token | px | pt |
+| --- | --- | --- |
+| `width/xs` | 1 | 0,75 |
+| `width/s` | 1.5 | 1,125 |
+| `width/m` | 2 | 1,5 |
+| `width/l` | 4 | 3 |
+| `width/xl` | 8 | 6 |
+
+<SNCallout type="Warning">
+**Hueco declarado.** Adobe no publica en qué unidad lee el campo de grosor de trazo. Las tres páginas de ayuda consultadas devolvieron 403 el 30 sep 2026. La conversión está verificada contra el W3C, la interfaz no. Comprueba la unidad del documento antes de teclear.
+</SNCallout>
+
+#### Google Slides
+
+**El grosor sí se puede.** La API de Slides expresa el contorno de una forma como `Outline.weight`. Es una `Dimension`, o sea una magnitud con su unidad, así que un grosor es un número de verdad.
+
+Teclea el valor en puntos. Lo que no se puede es el radio, y `Curvas esquinadas` responde distinto en esa misma pestaña. Verificado sobre la referencia REST de Google el 30 sep 2026.
+
 ## Accesibilidad de la escala
 
 Un borde que comunica algo es un elemento no textual, y WCAG 1.4.11 le pide 3:1 contra lo que tiene al lado. El mínimo de un borde informativo es 3:1, no 4.5:1.
@@ -108,16 +151,20 @@ Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de
 
 **Alias antes que valor.** Un grosor nuevo sale de la colección `unit`. Solo se escribe directo cuando la rejilla no puede expresarlo, y entonces el token declara el motivo en su descripción.
 
-**El nombre dice la función.** `radius/full` se llama así porque redondea del todo, no porque produzca una píldora. Es la sección 0 de la convención de nombres.
+**El nombre dice la función.** `width/xs` se llama así porque es el peldaño más fino de la escala. No se llama por dónde se usa, que son el campo de formulario y el Button `secondary`. Es la sección 0 de la convención de nombres.
 
 **Nunca dupliques.** Dos tokens con el mismo par de valores son un alias mal hecho. La regla vive en la sección 2d de la convención.
 
 **Y una condición que sí falta.** No hay decidido quién aprueba un peldaño nuevo ni dónde se registra la petición. Queda declarado como hueco, no rellenado.
 
-## Versión y cambios
+## Changelog
 
-| Fecha | Qué cambió | Por qué |
-| --- | --- | --- |
-| 4 sep 2026 | `~border/secondary` pasa a llamarse `border/inverseStatic` | El nombre mentía. Valía `#FFFFFF` en los dos modes, y sobre `background/secondary` en Light daba 1.00:1 |
-| 4 sep 2026 | `border/primary` en Dark sube de `neutral/700` a `neutral/600` | Valía `#404040`, que ese mismo día pasó a ser `background/subtle`. El borde desaparecía sobre una de las tres superficies |
-| 23 sep 2026 | `width/l` y `width/xl` dejan de estar declarados sin uso | Se midieron 27 y 5 bindings. La declaración anterior salía de una muestra del Playground y era falsa |
+- **23 sep 2026.** `width/l` y `width/xl` dejan de estar declarados sin uso. Se midieron 27 y 5 bindings. La declaración anterior salía de una muestra del Playground y era falsa.
+- **4 sep 2026.** `border/primary` en Dark sube de `neutral/700` a `neutral/600`. Valía `#404040`, que ese mismo día pasó a ser `background/subtle`. El borde desaparecía sobre una de las tres superficies.
+- **4 sep 2026.** `~border/secondary` pasa a llamarse `border/inverseStatic`. El nombre mentía: valía `#FFFFFF` en los dos modes. Sobre `background/secondary` en Light daba 1.00:1.
+
+## Deprecación y migración
+
+**Un solo token retirado.** `~border/secondary` se llama hoy `border/inverseStatic`. Fue un renombrado y no un cambio de valor, así que nada de lo que lo consumía cambió de aspecto.
+
+Ningún grosor está deprecado. Los seis siguen vivos y los seis tienen uso medido.

@@ -62,10 +62,18 @@
 
 [Qué condiciones cumple un peldaño para entrar, qué nombre recibe, y quién lo aprueba. Si alguna de las tres no está decidida, declárala como hueco en vez de inventarla.]
 
-## Versión y cambios
+## Changelog
 
-[Los cambios de la escala con su fecha y su motivo. Un token retirado se nombra junto al que lo sustituye.]
+[Los cambios de la escala, uno por viñeta, **del más reciente al más antiguo**. Misma forma que el molde de componente: `- **<fecha>** — qué cambió. Por qué.`]
+
+[No uses una tabla. El molde de componente lleva viñetas y es el asentado; dos formas para el mismo contenido obligan a leer dos veces. El *por qué* va en la misma frase, no en una columna aparte.]
 
 [Un cambio sin fecha no es un hecho, es un recuerdo.]
 
 [Un token retirado se cita con una tilde dentro de los backticks, así: `~grupo/nombre`. La puerta comprueba que de verdad ya no existe, y el publicador borra la tilde antes de escribir.]
+
+## Deprecación y migración
+
+[Qué hacer con los tokens retirados de esta escala: cuál los sustituye, si el valor cambió, y qué tiene que revisar quien los consuma. Módulo opcional: bórralo si la escala no ha retirado nada.]
+
+[Si el valor no cambió, dilo — es la diferencia entre un renombrado y una migración con riesgo visual.]

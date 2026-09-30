@@ -43,6 +43,7 @@
 import sdkPkg from "@supernovaio/sdk"
 import { apiKey } from "./entorno.mjs"
 import { convertir } from "./conversor.mjs"
+import { aplicarPestanas, GRUPOS_FUNDAMENTO, HERRAMIENTAS } from "../plantilla-componente/pestanas-plataforma.mjs"
 import { readFileSync, existsSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -352,6 +353,46 @@ for (const t of trozos) {
   console.log(`  ${ok ? "✓" : "🔴"} «${t.nombre}» — ${bloques.length} bloques en la página releída (emitidos ${t.bloques})`)
 }
 console.log(`\ncobertura de escritura: ${escritas} de ${PESTANAS.length} escritas · ${verificadas} de ${PESTANAS.length} con contenido al releer`)
+
+/* ── Las pestañas por HERRAMIENTA dentro de `Especificaciones` ─────────────────
+ *
+ * 🔴 NO se puede emitir desde Markdown, y conviene saber por qué antes de
+ * buscarle sintaxis. Una pestaña de DENTRO de una página no es un bloque: es una
+ * `Section` que envuelve bloques, y `writeMarkdownToPage` solo emite bloques.
+ * Lo confirma la plataforma viva, no un recuerdo: el 30 sep 2026 el barrido de
+ * las 158 páginas encontró 9 Sections de tipo `Tabs`, las 9 en la
+ * `Especificaciones` del Button, ninguna nacida de un `.md`.
+ *
+ * ⚠️ Y hay algo peor: `writeMarkdownToPage` REEMPLAZA la página entera, así que
+ * la escritura de arriba BORRA las pestañas de la corrida anterior. Por eso esto
+ * es código y va después, no una instrucción para el Lead: se rehacen siempre.
+ *
+ * El mecanismo es el mismo que el del Button —`elementAction` con
+ * `documentItems`—, con su propia lista de grupos: lo que parte a un fundamento
+ * es la HERRAMIENTA, no la variante. */
+if (!MOLDE) {
+  console.log(`\n── pestañas por herramienta ──`)
+  const espec = hojas2.find(h => h.title === "Especificaciones") ?? hojaPorNombre.get("Especificaciones")
+  const esperadas = HERRAMIENTAS.filter(t => trozos.some(x => x.md.includes(`#### ${t}`)))
+  if (!esperadas.length) {
+    console.log(`   el .md no declara ninguna pestaña de herramienta — nada que agrupar`)
+  } else {
+    const { secciones } = await aplicarPestanas(sdk, from, espec.id, true, GRUPOS_FUNDAMENTO)
+    const hechas = secciones.flat()
+    console.log(`   secciones creadas: ${secciones.length} — ${secciones.map(s => s.join(" · ")).join(" | ")}`)
+    console.log(`\ncobertura de pestañas: ${hechas.length} de ${esperadas.length} herramientas agrupadas`)
+    /* 🔴 Falla ruidosamente. Una pestaña que no se agrupa se publica como un
+     * título suelto seguido de su tabla: sale bien formada, sin error y sin
+     * hueco visible. Es la forma «falso completo» de la regla 16. */
+    if (hechas.length !== esperadas.length) {
+      console.error(`🔴 el .md declara ${esperadas.join(" · ")} y se agruparon ${hechas.length}.`)
+      process.exitCode = 1
+    }
+    /* ⚠️ Los títulos se CONSUMEN al rotular la pestaña, así que el árbol de
+     * bloques pierde tres `rich-text`. Vuelve a guardar el respaldo después. */
+    console.log(`   ⚠️ vuelve a guardar el respaldo: los ${hechas.length} títulos se consumieron al rotular.`)
+  }
+}
 
 /* ── El molde se OCULTA, y se verifica con la lectura autoritativa ─────────── */
 if (MOLDE) {

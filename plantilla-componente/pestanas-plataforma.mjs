@@ -112,17 +112,51 @@ export const GRUPOS = [
   { nivel: 4, titulos: ["product", "marketing"], conservarTitulo: false },
 ]
 
+/**
+ * LAS PESTAÑAS DE UN FUNDAMENTO: una por HERRAMIENTA, dentro de `Especificaciones`.
+ *
+ * ── Por qué es otra lista y no una entrada más en `GRUPOS` ────────────────────
+ * `GRUPOS` describe los ejes de un COMPONENTE —plataforma, variante, superficie—.
+ * Una escala no tiene variantes: lo que la parte es **dónde se teclea el número**.
+ * Mezclarlas haría que una pestaña «Figma» de un componente se agrupara sin que
+ * nadie lo hubiera decidido. Se pasa explícita a `aplicarPestanas`.
+ *
+ * ── El criterio de partir es el mismo, y aquí V no lo justifica ───────────────
+ * `button.mjs` parte por V > 10 filas. Aquí V es 6 o 7. **Se parte igual, y por
+ * otro motivo: D = 100 %.** Ninguna fila se repite entre pestañas —lo que dice
+ * Figma no se parece a lo que dice Slides—, así que no hay duplicación que pagar
+ * y el lado a lado no sirve: nadie compara «lo que teclea en Illustrator» contra
+ * «lo que teclea en Figma». Elige una y se queda ahí.
+ *
+ * ⚠️ `Google Slides` NO responde lo mismo en las dos escalas, y es un hecho
+ * medido, no una plantilla: la API de Slides expresa el GROSOR de un contorno
+ * como `Outline.weight`, que es una `Dimension` con unidad, y **no expone ningún
+ * campo de radio, ajuste ni geometría**. El grosor se puede teclear; el radio no.
+ * Verificado el 30 sep 2026 contra la referencia REST de Google.
+ *
+ * `conservarTitulo: false`: el `#### Figma` se CONSUME para rotular la pestaña.
+ * ⚠️ Consecuencia para `docs:respaldo`, MEDIDA el 30 sep 2026 y no supuesta: los
+ * tres títulos desaparecen del árbol de bloques y el diff lo reporta como un
+ * CAMBIO DE CUENTA de `rich-text`, no como pérdida. Aun así hay que volver a
+ * guardar el respaldo tras agrupar, o el siguiente diff arrastra la diferencia.
+ */
+export const HERRAMIENTAS = ["Figma", "Illustrator", "Google Slides"]
+
+export const GRUPOS_FUNDAMENTO = [
+  { nivel: 4, titulos: HERRAMIENTAS, conservarTitulo: false },
+]
+
 const NIVEL = {
   "io.supernova.block.title1": 1, "io.supernova.block.title2": 2,
   "io.supernova.block.title3": 3, "io.supernova.block.title4": 4,
 }
 
 /** El grupo al que pertenece un título, o null si no agrupa. */
-const grupoDe = (item) => {
+const grupoDe = (item, grupos = GRUPOS) => {
   const n = NIVEL[paqueteDe(item)]
   if (!n) return null
   const t = textoDe(item)
-  return GRUPOS.find(g => g.nivel === n && g.titulos.includes(t)) ?? null
+  return grupos.find(g => g.nivel === n && g.titulos.includes(t)) ?? null
 }
 
 const TITULOS = new Set([
@@ -149,19 +183,19 @@ const esTituloDePlataforma = (item) => grupoDe(item) !== null
  * @returns {{ items: any[], secciones: string[][] }} el árbol nuevo y los
  *   rótulos de cada Section creada, para poder informar de lo que se hizo.
  */
-export const agruparEnPestanas = (items) => {
+export const agruparEnPestanas = (items, grupos = GRUPOS) => {
   const salida = []
   const secciones = []
 
   for (let i = 0; i < items.length;) {
-    const grupo = grupoDe(items[i])
+    const grupo = grupoDe(items[i], grupos)
     if (!grupo) { salida.push(items[i++]); continue }
 
     /* Una tirada: títulos DEL MISMO GRUPO, cada uno con lo que cuelga de él hasta
      * el siguiente título de nivel igual o superior. */
     const pestanas = []
     let j = i
-    while (j < items.length && grupoDe(items[j]) === grupo) {
+    while (j < items.length && grupoDe(items[j], grupos) === grupo) {
       const titulo = textoDe(items[j])
       const bloques = grupo.conservarTitulo ? [items[j]] : []
       j++
@@ -256,7 +290,7 @@ const esperarPublicacion = async (sn, ref, idPagina, intentos = 15, pausa = 4000
  * @param recienPublicada  si la página se acaba de escribir con
  *   `writeMarkdownToPage`, hay que esperar a que la lectura lo refleje.
  */
-export const aplicarPestanas = async (sn, ref, idPagina, recienPublicada = true) => {
+export const aplicarPestanas = async (sn, ref, idPagina, recienPublicada = true, grupos = GRUPOS) => {
   const original = recienPublicada
     ? await esperarPublicacion(sn, ref, idPagina)
     : await leerItems(sn, ref, idPagina)
@@ -267,7 +301,7 @@ export const aplicarPestanas = async (sn, ref, idPagina, recienPublicada = true)
       `anterior. No se agrupa: escribirlo revertiría la publicación.`)
   }
 
-  const { items, secciones } = agruparEnPestanas(original)
+  const { items, secciones } = agruparEnPestanas(original, grupos)
   if (!secciones.length) return { secciones: [] }
 
   await sn.documentation.elementAction(ref, {
