@@ -52,6 +52,8 @@ npm run docs:conexion
 | `npm run docs:tokens` | Regenera el mapa de tokens que usan los bloques vivos |
 | `npm run uspec:verificar` | Compara la instalación de uSpec con lo publicado. **Antes de actualizar** |
 | `npm run tokens:lint` | Cinco checks de integridad de tokens. **L1 mide bindings, así que es ciego a los valores crudos — ésos los ve L2** |
+| `npm run docs:cimientos -- --pagina=<slug>` | Convierte un `.md` de **fundamento** y lo valida; con `--escribir` lo reparte entre sus 4 pestañas. **Un `.md`, cuatro pestañas: los `# ` son los cortes** |
+| `npm run doc:done:fundamento -- --pagina=<slug>` | La puerta de un **fundamento**, hermana de `doc:done`. Cinco condiciones mecánicas, tres que firma una persona |
 | `npm run rebindeo:verificar` | Tras un rebindeo: ¿quedó cada nodo en el token que decía el plan? **Emite `n de N` y sale con código 1 si no es total.** Lee Figma fresco; con `--cache` avisa de que puede medir el pasado |
 
 ---
@@ -68,6 +70,8 @@ Later2.0/                              ← modelo IPO, la gestión del proyecto
 ├── 3. Entregables/                    output no editable
 └── later-brand-system/               ← ESTA CARPETA · el sistema, con git
     ├── Componentes/                   las especificaciones producidas
+    ├── Cimientos/                      el molde de fundamento y las páginas escritas
+    ├── Aplicaciones/                   el molde de aplicación y su landing
     ├── .claude/skills/                las 13 skills de uSpec
     ├── references/                    plantillas de uSpec
     ├── experimento-canario/           el conversor y el publicador
@@ -173,6 +177,39 @@ npm run docs:estado
 **3 · Publicar** — `npm run docs:validar` primero, `npm run docs:publicar` después.
 
 **4 · Los previews** — las imágenes de Figma se suben aparte. Ver `experimento-canario/PREVIEWS-DE-FIGMA.md`.
+
+### El flujo de un FUNDAMENTO, que no es el de un componente
+
+**Un fundamento no sale de uSpec.** uSpec extrae componentes y no sabe leer una escala. No hay `_base.json`, no hay `comp:auditar`, no hay `component-health`. El insumo se escribe a mano contra un molde.
+
+| | Qué | Dónde |
+| --- | --- | --- |
+| **1** | Duplicar el molde | `Cimientos/plantilla-fundamento.md` → `Cimientos/<slug>.md` |
+| **2** | Escribir el contenido contra lo medido | las descripciones de los tokens, la doctrina registrada |
+| **3** | Darle pestañas a la hoja | `npm run docs:pestanas -- --buscar="<Título>" --aplicar` |
+| **4** | Convertir y validar | `npm run docs:cimientos -- --pagina=<slug>` |
+| **5** | Escribir en Preview | `npm run docs:cimientos -- --pagina=<slug> --escribir` |
+| **6** | Pasar la puerta | `npm run doc:done:fundamento -- --pagina=<slug>` |
+
+**Las ocho secciones del molde se reparten en cuatro pestañas**, con la misma regla que el componente: cada pestaña hace una pregunta, y una sección va a la que responde.
+
+| Pestaña | Pregunta | Secciones |
+| --- | --- | --- |
+| **Resumen general** | ¿Qué es esto? | Qué es y qué resuelve · Cómo se eligió la escala · Fundamentos relacionados |
+| **Usos** | ¿Cuál elijo? | Qué valor para qué tamaño · Cuándo no usarla |
+| **Especificaciones** | ¿Qué medida exacta? | La escala completa, en bloques vivos · Accesibilidad de la escala |
+| **Estatus y cambios** | ¿Puedo confiar? | Cómo se añade un peldaño · Versión y cambios |
+
+> 🔴 **Los ids de token NUNCA se escriben en el `.md`.** El marcador es `<SNTokens coleccion="border" grupo="width" titulo="…" />` y el publicador lo resuelve contra el sistema vivo, declarando cuántos tokens encontró. *Un id escrito a mano es un hecho que caduca sin avisar, y la página lo publica sin error y sin hueco visible.*
+>
+> **Para una familia de color, añade `modes="light,dark"`** y el bloque sale con los swatches de los dos modes. Los temas se resuelven por nombre contra Supernova, no por id cableado.
+
+> ⚠️ **`design-tokens` no acepta la propiedad `title`.** Responde `UnknownPropertyKey` al validar. El título del bloque es el encabezado de markdown que lo precede.
+
+> 🔴 **Un token retirado se cita con tilde: `` `~border/secondary` ``.** La puerta comprueba las dos mitades —un token sin tilde tiene que estar vivo, y uno con tilde tiene que estar ausente— y el publicador borra la tilde antes de escribir. *Sin la segunda mitad, la tilde sería un interruptor para apagar la comprobación.*
+
+> 🟡 **No hay `docs:crear-cimientos`, y es deliberado.** `docs:pestanas` ya crea la estructura, es idempotente y está probado. Dos guiones que crean lo mismo se desincronizan.
+
 
 ### Qué hace el conversor
 
