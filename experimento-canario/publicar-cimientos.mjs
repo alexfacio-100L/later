@@ -53,11 +53,31 @@ const ESCRIBIR = process.argv.includes("--escribir")
 const ARG = (n) => process.argv.find(a => a.startsWith(`--${n}=`))?.split("=").slice(1).join("=")
 const SLUG = ARG("pagina") ?? "bordes"
 
+/**
+ * 🔴 MODO MOLDE. El molde es otro género que una página publicada: lleva
+ * marcadores entre corchetes e instrucciones a quien lo duplica, y su
+ * `<SNTokens/>` no apunta a ninguna colección real. Resolverlo daría cero
+ * tokens y el publicador abortaría, con razón.
+ *
+ * Con `--molde` el marcador se sustituye por un callout que explica la
+ * notación, y al terminar el grupo y sus pestañas se OCULTAN. La plantilla
+ * existe en el editor para duplicarla; no se publica al sitio.
+ *
+ * Es el patrón de `_Application Documentation Template` y de
+ * `_Component Documentation Template`. ⚠️ El `_` del título lo añade la API a
+ * lo oculto: es marcador, no parte del nombre.
+ */
+const MOLDE = process.argv.includes("--molde")
+const TITULO_MOLDE = "Foundation Documentation Template"
+/* Dentro de `Cimientos`, a primer nivel, igual que el de aplicación cuelga de
+ * `Aplicaciones`. NO junto a `Bordes`: un molde no es un fundamento. */
+const PADRE_MOLDE = "8374f4ae-075f-4b18-adb5-c24971f1f803"
+
 /** Las cuatro pestañas canónicas, las mismas que `crear-pestanas.mjs`. */
 const PESTANAS = ["Resumen general", "Usos", "Especificaciones", "Estatus y cambios"]
 
 /* ── El `.md` ──────────────────────────────────────────────────────────────── */
-const MD = path.join(AQUI, "../Cimientos", `${SLUG}.md`)
+const MD = path.join(AQUI, "../Cimientos", MOLDE ? "plantilla-fundamento.md" : `${SLUG}.md`)
 if (!existsSync(MD)) {
   console.error(`🔴 No existe ${MD}. Sin insumo no hay nada que publicar.`)
   process.exit(1)
@@ -140,7 +160,23 @@ const MARCADOR = /<SNTokens\s+([^>]*?)\/>/g
 const atributos = (s) => Object.fromEntries(
   [...s.matchAll(/(\w+)="([^"]*)"/g)].map(m => [m[1], m[2]]))
 
+const CALLOUT_MARCADOR = [
+  `<SNCallout type="Info">`,
+  `**Aquí va el bloque vivo de tokens.** Sustituye el marcador por`,
+  `\`<SNTokens coleccion="border" grupo="width" titulo="Grosores de borde" />\`, con la colección y el`,
+  `grupo del fundamento. El publicador lo resuelve contra el sistema y emite el bloque \`design-tokens\``,
+  `con los ids reales. Para una familia de color añade \`modes="light,dark"\`.`,
+  `</SNCallout>`,
+].join("\n")
+
 const resolverTokens = (mdx, dondeDice) => {
+  /* 🔴 En modo molde el marcador NO se resuelve: se explica. Un marcador de
+   * plantilla no apunta a ninguna colección real. */
+  if (MOLDE) {
+    const n = (mdx.match(MARCADOR) ?? []).length
+    console.log(`      marcador de tokens · ${n} explicado(s), 0 resuelto(s): es una plantilla`)
+    return { mdx: mdx.replace(MARCADOR, CALLOUT_MARCADOR), marcadores: n, tokens: 0 }
+  }
   const informe = []
   const salida = mdx.replace(MARCADOR, (_, attrs) => {
     const a = atributos(attrs)
@@ -197,8 +233,27 @@ const get = (id) => porPid.get(id) ?? porId.get(String(id))
 const esGrupo = new Set(full.allGroups.map(x => x.persistentId))
 
 /** El título que busca en el árbol. Por defecto, el slug con la primera en alta. */
-const TITULO = ARG("titulo") ?? (SLUG.charAt(0).toUpperCase() + SLUG.slice(1))
-const candidatos = todos.filter(x => String(x.title).toLowerCase() === TITULO.toLowerCase())
+const TITULO = MOLDE ? TITULO_MOLDE : (ARG("titulo") ?? (SLUG.charAt(0).toUpperCase() + SLUG.slice(1)))
+/* ⚠️ El `_` delante del título lo añade la API a lo oculto. Se compara sin él. */
+const limpio = (t) => String(t).replace(/^_/, "").toLowerCase()
+const candidatos = todos.filter(x => limpio(x.title) === limpio(TITULO))
+if (!candidatos.length && MOLDE) {
+  if (!ESCRIBIR) {
+    console.error(`\n🔴 No existe «${TITULO_MOLDE}». Se creará con --escribir, y después hay que darle pestañas:`)
+    console.error(`     npm run docs:cimientos -- --molde --escribir`)
+    console.error(`     npm run docs:pestanas -- --buscar="${TITULO_MOLDE}" --aplicar`)
+    console.error(`     npm run docs:cimientos -- --molde --escribir\n`)
+    process.exit(1)
+  }
+  const nuevo = await sdk.documentation.createDocumentationPage(from, {
+    parentPersistentId: PADRE_MOLDE, title: TITULO_MOLDE,
+  })
+  console.error(`\n  + creada la hoja «${TITULO_MOLDE}» (${nuevo}) dentro de «Cimientos».`)
+  console.error(`\n🔴 Ahora dale sus cuatro pestañas y vuelve a correr esto:`)
+  console.error(`     npm run docs:pestanas -- --buscar="${TITULO_MOLDE}" --aplicar`)
+  console.error(`     npm run docs:cimientos -- --molde --escribir\n`)
+  process.exit(1)
+}
 if (!candidatos.length) {
   console.error(`🔴 No hay ningún ítem titulado «${TITULO}» en el árbol. NO se crea: la navegación no se toca.`)
   process.exit(1)
@@ -297,6 +352,44 @@ for (const t of trozos) {
   console.log(`  ${ok ? "✓" : "🔴"} «${t.nombre}» — ${bloques.length} bloques en la página releída (emitidos ${t.bloques})`)
 }
 console.log(`\ncobertura de escritura: ${escritas} de ${PESTANAS.length} escritas · ${verificadas} de ${PESTANAS.length} con contenido al releer`)
+
+/* ── El molde se OCULTA, y se verifica con la lectura autoritativa ─────────── */
+if (MOLDE) {
+  /* 🔴 `getDocumentationStructure` NO devuelve `configuration`: `isHidden` llega
+   * `undefined` SIEMPRE y se lee exactamente igual que `false`. Con esa lectura
+   * este paso informaría verde con la escritura sin hacer. Se relee con
+   * `getFullDocumentationLegacyRepresentation`, que sí lo trae. */
+  const oculto = (x) => x?.isHidden ?? x?.configuration?.isHidden
+  console.log(`\n── ocultar la plantilla ──`)
+  console.log(`   Sigue existiendo en el editor para duplicarla. Lo que no debe es publicarse.`)
+
+  await sdk.documentation.updateDocumentationGroup(from, {
+    id: destino.persistentId, configuration: { isHidden: true },
+  })
+  for (const t of trozos) {
+    const hoja = hojaPorNombre.get(t.nombre)
+    await sdk.documentation.updateDocumentationPageOrTab(from, {
+      id: String(hoja.persistentId), configuration: { isHidden: true },
+    })
+  }
+
+  const full3 = await sdk.documentation.getFullDocumentationLegacyRepresentation(from)
+  const todos3 = [...full3.allGroups, ...full3.allPages]
+  const g3 = todos3.find(x => x.persistentId === destino.persistentId)
+  const h3 = (g3?.childrenIds ?? [])
+    .map(id => todos3.find(x => x.persistentId === id || String(x.id) === String(id)))
+    .filter(Boolean)
+  const entidades = [g3, ...h3]
+  const ocultas = entidades.filter(oculto)
+  for (const e of entidades) console.log(`   ${oculto(e) ? "✓" : "🔴"} «${e.title}» isHidden=${oculto(e)}`)
+  console.log(`\ncobertura de ocultamiento: ${ocultas.length} de ${entidades.length} entidades ocultas`)
+  /* ⚠️ El `_` que aparece delante del título lo añade la API a lo oculto. Es
+   * marcador, no parte del nombre. */
+  if (ocultas.length < entidades.length) {
+    console.error(`🔴 ${entidades.length - ocultas.length} entidad(es) siguen visibles. La plantilla se publicaría.`)
+    process.exitCode = 1
+  }
+}
 
 if (verificadas < PESTANAS.length) {
   console.error(`🔴 ${PESTANAS.length - verificadas} pestaña(s) siguen vacías después de escribir.`)

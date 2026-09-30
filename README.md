@@ -53,6 +53,7 @@ npm run docs:conexion
 | `npm run uspec:verificar` | Compara la instalación de uSpec con lo publicado. **Antes de actualizar** |
 | `npm run tokens:lint` | Cinco checks de integridad de tokens. **L1 mide bindings, así que es ciego a los valores crudos — ésos los ve L2** |
 | `npm run docs:cimientos -- --pagina=<slug>` | Convierte un `.md` de **fundamento** y lo valida; con `--escribir` lo reparte entre sus 4 pestañas. **Un `.md`, cuatro pestañas: los `# ` son los cortes** |
+| `npm run docs:cimientos -- --molde --escribir` | Escribe el molde en Supernova como `Foundation Documentation Template` y **lo oculta**, verificando `n de N` con la lectura autoritativa |
 | `npm run doc:done:fundamento -- --pagina=<slug>` | La puerta de un **fundamento**, hermana de `doc:done`. Cinco condiciones mecánicas, tres que firma una persona |
 | `npm run rebindeo:verificar` | Tras un rebindeo: ¿quedó cada nodo en el token que decía el plan? **Emite `n de N` y sale con código 1 si no es total.** Lee Figma fresco; con `--cache` avisa de que puede medir el pasado |
 
@@ -207,6 +208,10 @@ npm run docs:estado
 > ⚠️ **`design-tokens` no acepta la propiedad `title`.** Responde `UnknownPropertyKey` al validar. El título del bloque es el encabezado de markdown que lo precede.
 
 > 🔴 **Un token retirado se cita con tilde: `` `~border/secondary` ``.** La puerta comprueba las dos mitades —un token sin tilde tiene que estar vivo, y uno con tilde tiene que estar ausente— y el publicador borra la tilde antes de escribir. *Sin la segunda mitad, la tilde sería un interruptor para apagar la comprobación.*
+
+> 🟢 **El molde vive en los dos sitios, y es decisión del Lead del 30 sep 2026.** *En el repo como `.md`, y en Supernova como `_Foundation Documentation Template` dentro de `Cimientos`, **oculto** —grupo de 4 pestañas, 5 de 5 entidades verificadas con `getFullDocumentationLegacyRepresentation`—.* **El equipo de marca trabaja dentro de Supernova: ahí es donde se duplica.**
+>
+> ⚠️ **El `_` delante del título lo añade la API a lo oculto.** *Es marcador, no parte del nombre.* Y en modo molde el marcador `<SNTokens/>` **no se resuelve**: se sustituye por un callout que explica la notación. *Un marcador de plantilla no apunta a ninguna colección real, y resolverlo daría cero tokens.*
 
 > 🟡 **No hay `docs:crear-cimientos`, y es deliberado.** `docs:pestanas` ya crea la estructura, es idempotente y está probado. Dos guiones que crean lo mismo se desincronizan.
 

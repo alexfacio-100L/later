@@ -40,9 +40,9 @@
 
 ## La escala completa
 
-[Un bloque vivo por familia. Nunca una tabla escrita a mano: los valores caducan y nadie lo nota.]
+[Un bloque vivo por familia. Nunca una tabla escrita a mano: los valores caducan y nadie lo nota. Sustituye los tres valores en mayúsculas del marcador de abajo.]
 
-<SNTokens coleccion="<colección>" grupo="<grupo>" titulo="<título del bloque>" />
+<SNTokens coleccion="COLECCION" grupo="GRUPO" titulo="TITULO DEL BLOQUE" />
 
 [Un fundamento con más de una familia emite un bloque por cada una, con su encabezado. El grosor y el color de un borde son dos familias, y viven en colecciones distintas.]
 
