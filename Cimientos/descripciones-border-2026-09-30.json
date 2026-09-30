@@ -1,0 +1,100 @@
+{
+  "medido": "2026-09-30",
+  "designSystem": "825551",
+  "version": "867385",
+  "coleccion": "border",
+  "n": 13,
+  "tokens": [
+    {
+      "nombre": "radius/full",
+      "id": "5817cbb9-f604-417c-af8d-8452772939fe",
+      "origen": "VariableID:3481:3693",
+      "chars": 892,
+      "descripcion": "Redondeo TOTAL. Valor centinela 999, deliberadamente mayor que la mitad de cualquier lado: redondea del todo a cualquier tamano. UN SOLO token para los dos casos - pildora (rectangulo con los lados redondos) y circulo. No hay ni habra un radius/circle: son el mismo mecanismo y separarlos no tiene precedente. Medido el 23 sep 2026 sobre 8 design systems: 6 de 8 lo llaman `full` (Material 3, Polaris, Atlassian, Primer, Spectrum, Tailwind) y 8 de 8 usan un solo token para ambos casos. Primer lo documenta dentro del suyo: 'Shape token for fully rounded or pill-shaped elements', usage avatar, pill-badge y circular-button. El nombre dice la FUNCION (redondear del todo), no el destino (que forma sale), que es la seccion 0 de la convencion de la casa. Y el 50% NO es alternativa: DTCG admite en `dimension` solo px y rem, asi que el centinela no es un apano - es lo que permite el estandar."
+    },
+    {
+      "nombre": "radius/l",
+      "id": "f896e61e-6c61-4de7-a29e-7bb210e5b521",
+      "origen": "VariableID:3481:3692",
+      "chars": 205,
+      "descripcion": "Radio de CONTENEDOR DE PRIMER NIVEL sobre la superficie de pantalla. MEDIDO en C: 15 de 15 tarjetas raiz del Playground, y las 60 variantes del Button. Es la regla mas solida de la escala. Alias a unit/16."
+    },
+    {
+      "nombre": "radius/m",
+      "id": "f6b93d56-a334-41e2-a197-eb57c030becb",
+      "origen": "VariableID:3481:3694",
+      "chars": 197,
+      "descripcion": "Radio intermedio. MEDIDO: el labelBox de Button y de Link. OJO: en el Button ese labelBox no tiene relleno, asi que su radio no se ve - es geometria sobrante registrada como deuda. Alias a unit/12."
+    },
+    {
+      "nombre": "radius/s",
+      "id": "4ce86fce-7aa5-4299-9aa0-763bd3c8d9d8",
+      "origen": "VariableID:3481:3695",
+      "chars": 176,
+      "descripcion": "Radio de contenedor ANIDADO y de campo de formulario. MEDIDO: card-graph dentro de una tarjeta, Content de inputText/inputNumber/inputDate, Alerts, Button Card. Alias a unit/8."
+    },
+    {
+      "nombre": "radius/xl",
+      "id": "6d873c43-ae18-49f0-b1b8-e0a2c83affa4",
+      "origen": "VariableID:9146:96",
+      "chars": 148,
+      "descripcion": "Radio grande. MEDIDO en C: los 5 componentes del Chip. Se habia declarado 'cero usos' desde una muestra del Playground y era falso. Alias a unit/24."
+    },
+    {
+      "nombre": "radius/xs",
+      "id": "c51a4c1c-c3ff-476b-8e97-2d627edefe07",
+      "origen": "VariableID:3481:3696",
+      "chars": 114,
+      "descripcion": "Radio de elemento pequeno. MEDIDO en C (22 sep): Tags, miniaturas de propiedad y pistas de slider. Alias a unit/4."
+    },
+    {
+      "nombre": "radius/zero",
+      "id": "e7b4f50d-48c1-491e-820e-c2f67be2781e",
+      "origen": "VariableID:3481:3697",
+      "chars": 114,
+      "descripcion": "Radio cero explicito. Existe para APAGAR un radio heredado en codigo, no para 'no poner radio'. Alias a unit/zero."
+    },
+    {
+      "nombre": "width/l",
+      "id": "45d3933a-2c3c-494c-8e9b-e48d2a35e53e",
+      "origen": "VariableID:3481:3700",
+      "chars": 180,
+      "descripcion": "4 px. MEDIDO el 23 sep: 27 bindings como individualStrokeWeights en Alerts (tallas S y M) y en Select. Es la barra de acento, y ESCALA CON EL TAMANO del componente. Alias a unit/4."
+    },
+    {
+      "nombre": "width/m",
+      "id": "5584a553-a0b7-4710-bcbf-9691b548a4c0",
+      "origen": "VariableID:3481:3701",
+      "chars": 149,
+      "descripcion": "2 px. MEDIDO: el anillo de foco del Button en la talla l. El foco es el unico estado que cambia una medida, y lo hace segun la talla. Alias a unit/2."
+    },
+    {
+      "nombre": "width/s",
+      "id": "2fff49da-d3ed-40af-8e2c-6476335f72f1",
+      "origen": "VariableID:3481:3702",
+      "chars": 140,
+      "descripcion": "1.5 px. VALOR DIRECTO por el mismo motivo que width/xs: `unit` no contiene 1.5. MEDIDO: es el anillo de foco del Button en las tallas s y m."
+    },
+    {
+      "nombre": "width/xl",
+      "id": "b04db83c-1c32-41b3-9ba0-fa117056d4a2",
+      "origen": "VariableID:3481:3699",
+      "chars": 168,
+      "descripcion": "8 px. MEDIDO el 23 sep: 5 bindings en Alerts de talla L. Es el extremo grueso de la escala y hace trabajo real - se habia declarado sin uso y era falso. Alias a unit/8."
+    },
+    {
+      "nombre": "width/xs",
+      "id": "a6d68a52-1306-44b7-8160-91c867858ed1",
+      "origen": "VariableID:3481:3703",
+      "chars": 286,
+      "descripcion": "Hairline: el borde por defecto del sistema. VALOR DIRECTO a proposito, no alias - la rejilla `unit` empieza en 2 y no puede expresar 1. No es incumplimiento: un hairline no cabe en una rejilla de 4. MEDIDO: es el grosor del borde de secondary en el Button y de los campos de formulario."
+    },
+    {
+      "nombre": "width/zero",
+      "id": "8e028273-cb74-4e6f-8d8f-d9715ccbb895",
+      "origen": "VariableID:3481:3704",
+      "chars": 100,
+      "descripcion": "Grosor cero explicito. Existe para APAGAR un borde heredado, no para 'sin borde'. Alias a unit/zero."
+    }
+  ]
+}
