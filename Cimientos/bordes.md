@@ -133,27 +133,25 @@ Si el entregable exige puntos, la constante es multiplicar por 0,75. Sale del es
 
 #### Google Slides
 
-**El grosor sí tiene número.** La API expresa el contorno de una forma como `Outline.weight`, y es una `Dimension`. Apps Script lo dice sin rodeos: el grosor es *«the thickness of the border in points»*. La unidad del modelo son **puntos**, y la constante es la de siempre: multiplicar los píxeles por 0,75.
+**El grosor sale de un menú.** No es un campo libre. Es una lista cerrada, y sus valores vienen en píxeles. Medido en Slides el 30 sep 2026.
 
-**Usa el grosor del menú.** El control de Slides es *Grosor del borde*, en la barra de herramientas. La tabla da las dos unidades a propósito. La etiqueta del menú depende de la unidad que tenga puesta tu presentación.
+La lista es 1, 2, 3, 4, 8, 12, 16 y 24 píxeles.
 
-| Token | px | pt |
+**No hay conversión que hacer.** El valor del token se elige tal cual, sin pasar por puntos. Es la única de las tres herramientas donde la escala entra sin traducir.
+
+| Token | px | En el menú |
 | --- | --- | --- |
-| `width/zero` | 0 | 0 |
-| `width/xs` | 1 | 0,75 |
-| `width/s` | 1.5 | 1,125 |
-| `width/m` | 2 | 1,5 |
-| `width/l` | 4 | 3 |
-| `width/xl` | 8 | 6 |
+| `width/zero` | 0 | Se apaga el borde |
+| `width/xs` | 1 | 1 |
+| `width/s` | 1.5 | No existe |
+| `width/m` | 2 | 2 |
+| `width/l` | 4 | 4 |
+| `width/xl` | 8 | 8 |
 
-**`width/s` es el que falla.** Es el único de los seis que no cae en un entero, ni en píxeles ni en puntos. Si tu menú solo ofrece enteros, no tiene equivalente exacto y hay que elegir el de al lado. **Sube, nunca bajes.** Con 1,125 pt vas a `width/m`, no a `width/xs`. El sistema ya declara que entre 1,5 px y 2 px no hay peldaño, así que subir no inventa nada.
-
-<SNCallout type="Warning">
-**Hueco declarado.** El menú de grosor ofrece valores preestablecidos, y Google no publica cuáles son. Las fuentes que los enumeran se contradicen entre sí: unas dan 1, 2 y 4 px, otra da 8, 12, 16 y 24 px. Por eso aquí no hay lista. Abre el menú, mira qué valores te ofrece y crúzalos con la tabla.
-</SNCallout>
+**Cinco de los seis entran exactos.** El que falta es `width/s`, y no es casualidad. Es el único peldaño de la escala que no es entero. **Sube, nunca bajes.** Con 1,5 px vas a `width/m`, no a `width/xs`. El sistema ya declara que entre 1,5 px y 2 px no hay peldaño, así que subir no inventa nada.
 
 <SNCallout type="Info">
-**La API no es la interfaz.** Quien arma la slide usa la interfaz. `Outline.weight` acepta cualquier valor y ningún límite documentado, así que por API los seis grosores entran exactos. El menú de la barra de herramientas es una lista, y una lista puede no tener el valor que buscas. Cobertura de la fuente: las preguntas eran tres, la unidad, si el control es una lista cerrada, y qué valores tiene. Fuente primaria de Google contesta 1 de 3, la unidad. Lo hace en Apps Script `Class Border` y en la referencia REST. Las otras 2 no las publica. Verificado el 30 sep 2026.
+**La API no es el menú.** `Outline.weight` es una `Dimension` y acepta cualquier valor, así que por API los seis grosores entran exactos, `width/s` incluido. Apps Script lo dice en puntos: el grosor es «the thickness of the border in points». El menú de la barra no tiene esa libertad, y quien arma la slide usa el menú. La restricción que manda es la del menú. La unidad y el modelo están verificados sobre Apps Script `Class Border` y la referencia REST el 30 sep 2026. La lista de valores es medición del equipo en Slides el mismo día, porque Google no la publica.
 </SNCallout>
 
 El radio es otra cosa y vive en `Curvas esquinadas`, en esta misma pestaña.

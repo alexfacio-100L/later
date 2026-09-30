@@ -122,43 +122,31 @@ Si el entregable exige puntos, la constante es multiplicar por 0,75. Sale del es
 
 #### Google Slides
 
-**No se puede automatizar.** Sí se puede aplicar a mano, y son dos cosas distintas. Decir solo la primera deja sin salida a quien arma la slide. No hay forma de pedirle el radio a la API. Sí hay una cuenta que da el número al que llegar.
+**Aquí el radio no es reproducible.** Es la conclusión, y va primero porque cambia lo que hay que hacer. La API no expone el radio. La interfaz tiene un tirador que se arrastra y no muestra ningún número. Sin número que leer, nadie puede comprobar que llegó al valor que quería.
 
-El redondeo de una forma en Slides no es una longitud. Es una razón del lado corto. La misma tarjeta a dos tamaños sale con dos redondeces distintas, así que ninguna columna de puntos lo arregla. El problema no es de conversión sino de modelo.
-
-**El número no es un radio.** Es un porcentaje, y depende de la forma que tengas delante.
-
-`porcentaje = radio en px ÷ lado corto de la forma en px × 100`, con tope en 50.
-
-El lado corto en píxeles sale de las pulgadas que da el panel *Tamaño y rotación*, por 96. Es la misma constante del W3C que usa la pestaña de Illustrator.
-
-**Slides solo acepta porcentajes enteros.** No hay decimales. Medido en Slides el 30 sep 2026. Eso no impide usar la escala, pero decide el tamaño de la tarjeta antes que el radio.
-
-**Elige el lado corto.** Es la salida buena, y convierte la limitación en una regla de composición. Pon la unidad de la presentación en píxeles y dimensiona la tarjeta con uno de estos lados. El radio sale exacto y no hay que redondear nada.
-
-| Lado corto | `radius/xs` 4 px | `radius/s` 8 px | `radius/m` 12 px | `radius/l` 16 px | `radius/xl` 24 px |
-| --- | --- | --- | --- | --- | --- |
-| 400 px | 1 % | 2 % | 3 % | 4 % | 6 % |
-| 200 px | 2 % | 4 % | 6 % | 8 % | 12 % |
-| 100 px | 4 % | 8 % | 12 % | 16 % | 24 % |
-| 80 px | 5 % | 10 % | 15 % | 20 % | 30 % |
-| 50 px | 8 % | 16 % | 24 % | 32 % | 48 % |
-
-**La regla general.** Si tu medida no está en la tabla, cualquier lado corto que divida a 400 da los cinco radios enteros. Los siguientes son 25 px, 20 px y 16 px. Por debajo de 50 px, `radius/xl` se pasa del tope del 50 % y deja de existir.
-
-**Si la tarjeta ya existe.** El radio se desvía, y conviene saber cuánto. Un punto porcentual vale el lado corto entre 100. El error de redondeo nunca pasa de la mitad de eso. Con lado corto 192 px, `radius/m` pide 6,25 % y solo hay 6 % o 7 %. El 6 % da 11,5 px y el 7 % da 13,4 px. Ninguno da 12. **Elige el más cercano.** Con 192 px eso es 6 %, medio píxel por debajo.
-
-**Dos posiciones son exactas siempre.** El tirador del todo hacia fuera es 0 %, y es `radius/zero`. El tirador del todo hacia dentro es el 50 % del lado corto, que es exactamente `radius/full`. La píldora sale bien a cualquier tamaño y no hay nada que medir. `radius/full` es el único radio que no depende del tamaño de la tarjeta.
+**Dos personas sacan dos redondeces.** Con la misma instrucción y la misma tarjeta. La misma persona dos veces, también.
 
 <SNCallout type="Warning">
-**Hueco declarado.** La escala vive en píxeles y el control de Slides en porcentajes enteros. Las dos solo coinciden cuando el lado corto lo permite. Si la tarjeta ya está dimensionada y el radio tiene que ser exacto al píxel, pega la forma como imagen desde Figma.
+**Dato con fecha, y conviene revisarlo.** El indicador existió y hoy no está. Medido en Slides el 30 sep 2026. Una interfaz que quitó un número puede volver a ponerlo. Si ves un valor al arrastrar el tirador, avisa: la instrucción cambia entera.
 </SNCallout>
+
+El redondeo de una forma en Slides no es una longitud. Es una razón del lado corto. La misma tarjeta a dos tamaños sale con dos redondeces distintas. El problema no es de conversión sino de modelo.
+
+**Dos posiciones sí son exactas.** El tirador del todo hacia fuera deja la esquina en ángulo recto, y es `radius/zero`. El tirador del todo hacia dentro da la mitad del lado corto, y es exactamente `radius/full`. Las dos se garantizan a cualquier tamaño. Son las únicas dos que se garantizan.
+
+**Ajusta una vez y duplica.** Para el resto, es lo único que aguanta. Ajusta una sola forma mirándola contra la referencia de Figma, y saca todas las tarjetas duplicando esa. El duplicado conserva el ajuste, así que el arrastre se hace una vez en toda la presentación.
+
+**Ganas consistencia, pierdes exactitud.** La consistencia dentro del mazo es lo que se nota cuando falla. La fidelidad al token se pierde, y no hay forma de saber cuánta. Si el radio tiene que ser exacto al píxel, pega la forma como imagen desde Figma.
+
+**Una salida que no aguanta.** Dimensionar la tarjeta para que el radio caiga en una posición exacta solo funciona en formas pequeñas. El extremo de dentro da la mitad del lado corto. Para un radio de 12 px, la tarjeta tendría que medir 24 px de alto. Eso no es una tarjeta: es un chip. Ahí sí sirve, y en una tarjeta de contenido no.
+
+**La cuenta sirve para una cosa.** `radio en px ÷ lado corto en px × 100` dice cuánto redondeo estás pidiendo. Si el resultado se acerca al 50 %, la forma es una píldora y te conviene `radius/full`, que sí es exacto. Para llegar a un valor intermedio no sirve, porque no hay dónde leerlo.
 
 <SNCallout type="Info">
-**De dónde salen rango y unidad.** Google documenta que el tipo `ROUND_RECTANGLE` corresponde al `roundRect` de ECMA-376. Documenta también que `ShapeProperties` no expone radio, ajuste ni geometría. Verificado sobre la referencia REST el 30 sep 2026. El rango y la unidad no los publica Google. Los publica ECMA-376, al que su propia referencia remite. El ajuste se recorta con `pin 0 adj 50000`, y el radio se calcula `ss × adj ÷ 100000`, donde `ss` es el lado corto. De ahí salen el tope del 50 % y la unidad, que es una fracción y no una longitud. Cobertura de la fuente: las preguntas eran tres, y fuente primaria de Google contesta 1 de 3. Las otras 2 las contesta ECMA-376. La ayuda de Slides no documenta ninguna, y solo describe el tirador de ajuste. Y una cuarta cosa no la documenta nadie: que el control solo acepte enteros. ECMA-376 permite pasos de milésima de punto porcentual, así que el redondeo a entero lo impone la interfaz y no el modelo. Ese dato sale de una medición del equipo en Slides el 30 sep 2026, no de una fuente publicada.
+**De dónde salen rango y unidad.** Google documenta que el tipo `ROUND_RECTANGLE` corresponde al `roundRect` de ECMA-376. Documenta también que `ShapeProperties` no expone radio, ajuste ni geometría. Verificado sobre la referencia REST el 30 sep 2026. El rango y la unidad no los publica Google. Los publica ECMA-376, al que su propia referencia remite. El ajuste se recorta con `pin 0 adj 50000`, y el radio se calcula `ss × adj ÷ 100000`, donde `ss` es el lado corto. De ahí sale el tope del 50 %, que es la posición de `radius/full`. Cobertura de la fuente: las preguntas eran tres, y fuente primaria de Google contesta 1 de 3. Las otras 2 las contesta ECMA-376. Que la interfaz no muestre ningún número no lo documenta nadie, y sale de una medición del equipo.
 </SNCallout>
 
-**El grosor va aparte.** Está en `Bordes`, en esta misma pestaña.
+**El grosor va aparte.** Está en `Bordes`, en esta misma pestaña. Ahí el menú sí tiene valores, y la escala entra sin traducir.
 
 ## Accesibilidad de la escala
 
