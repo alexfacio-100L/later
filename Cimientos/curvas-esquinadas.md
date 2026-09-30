@@ -122,31 +122,9 @@ Si el entregable exige puntos, la constante es multiplicar por 0,75. Sale del es
 
 #### Google Slides
 
-**Aquí el radio no es reproducible.** Es la conclusión, y va primero porque cambia lo que hay que hacer. La API no expone el radio. La interfaz tiene un tirador que se arrastra y no muestra ningún número. Sin número que leer, nadie puede comprobar que llegó al valor que quería.
+**El radio no es reproducible.** No hay campo donde teclearlo y el tirador no muestra ningún número, así que se ajusta a ojo. Lo único exacto son los dos extremos: todo hacia fuera es `radius/zero`, todo hacia dentro es `radius/full`.
 
-**Dos personas sacan dos redondeces.** Con la misma instrucción y la misma tarjeta. La misma persona dos veces, también.
-
-<SNCallout type="Warning">
-**Dato con fecha, y conviene revisarlo.** El indicador existió y hoy no está. Medido en Slides el 30 sep 2026. Una interfaz que quitó un número puede volver a ponerlo. Si ves un valor al arrastrar el tirador, avisa: la instrucción cambia entera.
-</SNCallout>
-
-El redondeo de una forma en Slides no es una longitud. Es una razón del lado corto. La misma tarjeta a dos tamaños sale con dos redondeces distintas. El problema no es de conversión sino de modelo.
-
-**Dos posiciones sí son exactas.** El tirador del todo hacia fuera deja la esquina en ángulo recto, y es `radius/zero`. El tirador del todo hacia dentro da la mitad del lado corto, y es exactamente `radius/full`. Las dos se garantizan a cualquier tamaño. Son las únicas dos que se garantizan.
-
-**Ajusta una vez y duplica.** Para el resto, es lo único que aguanta. Ajusta una sola forma mirándola contra la referencia de Figma, y saca todas las tarjetas duplicando esa. El duplicado conserva el ajuste, así que el arrastre se hace una vez en toda la presentación.
-
-**Ganas consistencia, pierdes exactitud.** La consistencia dentro del mazo es lo que se nota cuando falla. La fidelidad al token se pierde, y no hay forma de saber cuánta. Si el radio tiene que ser exacto al píxel, pega la forma como imagen desde Figma.
-
-**Una salida que no aguanta.** Dimensionar la tarjeta para que el radio caiga en una posición exacta solo funciona en formas pequeñas. El extremo de dentro da la mitad del lado corto. Para un radio de 12 px, la tarjeta tendría que medir 24 px de alto. Eso no es una tarjeta: es un chip. Ahí sí sirve, y en una tarjeta de contenido no.
-
-**La cuenta sirve para una cosa.** `radio en px ÷ lado corto en px × 100` dice cuánto redondeo estás pidiendo. Si el resultado se acerca al 50 %, la forma es una píldora y te conviene `radius/full`, que sí es exacto. Para llegar a un valor intermedio no sirve, porque no hay dónde leerlo.
-
-<SNCallout type="Info">
-**De dónde salen rango y unidad.** Google documenta que el tipo `ROUND_RECTANGLE` corresponde al `roundRect` de ECMA-376. Documenta también que `ShapeProperties` no expone radio, ajuste ni geometría. Verificado sobre la referencia REST el 30 sep 2026. El rango y la unidad no los publica Google. Los publica ECMA-376, al que su propia referencia remite. El ajuste se recorta con `pin 0 adj 50000`, y el radio se calcula `ss × adj ÷ 100000`, donde `ss` es el lado corto. De ahí sale el tope del 50 %, que es la posición de `radius/full`. Cobertura de la fuente: las preguntas eran tres, y fuente primaria de Google contesta 1 de 3. Las otras 2 las contesta ECMA-376. Que la interfaz no muestre ningún número no lo documenta nadie, y sale de una medición del equipo.
-</SNCallout>
-
-**El grosor va aparte.** Está en `Bordes`, en esta misma pestaña. Ahí el menú sí tiene valores, y la escala entra sin traducir.
+**Ajusta una forma y duplícala.** Es lo que hace consistente un mazo: el duplicado conserva el ajuste, así que el arrastre se hace una vez y no en cada tarjeta.
 
 ## Accesibilidad de la escala
 
