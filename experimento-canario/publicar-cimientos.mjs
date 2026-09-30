@@ -275,9 +275,19 @@ if (!esGrupo.has(destino.persistentId) || destino.groupBehavior !== "Tabs") {
   process.exit(1)
 }
 
+/* 🔴 El `_` que la API antepone a lo OCULTO rompe el emparejamiento por nombre,
+ * y solo sale al reescribir un molde que ya se ocultó una vez. La primera
+ * corrida lo crea como «Resumen general»; la segunda lo lee como
+ * «_Resumen general» y declara 4 de 4 pestañas ausentes sobre un grupo que las
+ * tiene las cuatro. Es marcador de estado, no parte del nombre, así que se
+ * normaliza. Medido el 30 sep 2026 al llevar la tabla del changelog al molde. */
+const sinMarca = (t) => String(t ?? "").replace(/^_/, "")
 const hojas = (destino.childrenIds ?? []).map(get).filter(Boolean)
-const hojaPorNombre = new Map(hojas.map(h => [h.title, h]))
+const hojaPorNombre = new Map(hojas.map(h => [sinMarca(h.title), h]))
 console.log(`\ndestino: grupo «${destino.title}» (${destino.persistentId}) · ${hojas.length} pestaña(s): ${hojas.map(h => h.title).join(" · ")}`)
+if (hojas.some(h => h.title !== sinMarca(h.title))) {
+  console.log(`   ⚠️ el «_» de los títulos lo añade la API a lo oculto: es marcador, no nombre. Se normaliza para emparejar.`)
+}
 
 const sinDestino = PESTANAS.filter(p => !hojaPorNombre.has(p))
 if (sinDestino.length) {
@@ -342,7 +352,7 @@ const hojas2 = (destino2?.childrenIds ?? [])
 console.log(`\n── relectura ──`)
 let verificadas = 0, tablasVivas = 0, tokensVivos = 0
 for (const t of trozos) {
-  const hoja = hojas2.find(h => h.title === t.nombre)
+  const hoja = hojas2.find(h => sinMarca(h.title) === t.nombre)
   const bloques = hoja?.blocks ?? []
   const tablas = bloques.filter(b => /table/i.test(b.packageId ?? b.type ?? "")).length
   const tokens = bloques.filter(b => /design-tokens/i.test(b.packageId ?? "")).length
@@ -372,7 +382,7 @@ console.log(`\ncobertura de escritura: ${escritas} de ${PESTANAS.length} escrita
  * es la HERRAMIENTA, no la variante. */
 if (!MOLDE) {
   console.log(`\n── pestañas por herramienta ──`)
-  const espec = hojas2.find(h => h.title === "Especificaciones") ?? hojaPorNombre.get("Especificaciones")
+  const espec = hojas2.find(h => sinMarca(h.title) === "Especificaciones") ?? hojaPorNombre.get("Especificaciones")
   const esperadas = HERRAMIENTAS.filter(t => trozos.some(x => x.md.includes(`#### ${t}`)))
   if (!esperadas.length) {
     console.log(`   el .md no declara ninguna pestaña de herramienta — nada que agrupar`)

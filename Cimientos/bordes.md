@@ -159,9 +159,11 @@ Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de
 
 ## Changelog
 
-- **23 sep 2026.** `width/l` y `width/xl` dejan de estar declarados sin uso. Se midieron 27 y 5 bindings. La declaración anterior salía de una muestra del Playground y era falsa.
-- **4 sep 2026.** `border/primary` en Dark sube de `neutral/700` a `neutral/600`. Valía `#404040`, que ese mismo día pasó a ser `background/subtle`. El borde desaparecía sobre una de las tres superficies.
-- **4 sep 2026.** `~border/secondary` pasa a llamarse `border/inverseStatic`. El nombre mentía: valía `#FFFFFF` en los dos modes. Sobre `background/secondary` en Light daba 1.00:1.
+| Fecha | Qué cambió | Por qué |
+| --- | --- | --- |
+| 23 sep 2026 | `width/l` y `width/xl` dejan de estar declarados sin uso | Se midieron 27 y 5 bindings. La declaración anterior salía de una muestra del Playground y era falsa |
+| 4 sep 2026 | `border/primary` en Dark sube de `neutral/700` a `neutral/600` | Valía `#404040`, que ese mismo día pasó a ser `background/subtle`. El borde desaparecía sobre una de las tres superficies |
+| 4 sep 2026 | `~border/secondary` pasa a llamarse `border/inverseStatic` | El nombre mentía. Valía `#FFFFFF` en los dos modes, y sobre `background/secondary` en Light daba 1.00:1 |
 
 ## Deprecación y migración
 

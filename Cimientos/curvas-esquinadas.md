@@ -146,8 +146,10 @@ Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de
 
 ## Changelog
 
-- **23 sep 2026.** `radius/xl` deja de estar declarado sin uso. Se midieron los 5 componentes del Chip. La declaración anterior salía de una muestra del Playground y era falsa.
-- **23 sep 2026.** `~radius/circle` y `~radius/pill` se sustituyen por `radius/full`. Eran dos tokens para un solo mecanismo. Medido sobre 8 design systems: 8 de 8 usan un token único y 6 de 8 lo llaman `full`.
+| Fecha | Qué cambió | Por qué |
+| --- | --- | --- |
+| 23 sep 2026 | `radius/xl` deja de estar declarado sin uso | Se midieron los 5 componentes del Chip. La declaración anterior salía de una muestra del Playground y era falsa |
+| 23 sep 2026 | `~radius/circle` y `~radius/pill` se sustituyen por `radius/full` | Eran dos tokens para un solo mecanismo. Medido sobre 8 design systems: 8 de 8 usan un token único y 6 de 8 lo llaman `full` |
 
 ## Deprecación y migración
 

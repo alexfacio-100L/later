@@ -219,11 +219,42 @@ Tres condiciones no las comprueba ningún comando. Las firma una persona:
 
 ## Changelog
 
-[Agregar historial real de cambios cuando exista]
+[Una TABLA de tres columnas, del cambio más reciente al más antiguo. Sustituye la fila de ejemplo; bórrala entera si el componente no ha cambiado nunca.]
 
-## Deprecation y migration
+<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={120}>
+      Fecha
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={340}>
+      Qué cambió
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={300}>
+      Por qué
+    </SNTableCell>
+  </SNTableRow>
+  <SNTableRow>
+    <SNTableCell alignment="Left" columnWidth={120}>
+      9 sep 2026
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={340}>
+      Qué cambió, en una línea
+    </SNTableCell>
+    <SNTableCell alignment="Left" columnWidth={300}>
+      Qué lo motivó, con su dato si lo tiene
+    </SNTableCell>
+  </SNTableRow>
+</SNTable>
 
-[Utilizar únicamente cuando el componente esté deprecado o tenga un proceso de migración]
+<SNCallout variant="Info">
+**Tabla y no viñetas, y el motivo no es de gusto.** En una tabla la fecha es una columna. En una viñeta hay que separarla con algo, y la raya está prohibida por V2 del registro editorial. Es la misma forma que usa un fundamento.
+</SNCallout>
+
+Un cambio sin fecha no es un hecho, es un recuerdo.
+
+## Deprecación y migración
+
+[Utilizar únicamente cuando el componente esté deprecado o tenga un proceso de migración. Si el valor no cambió, dilo: es la diferencia entre un renombrado y una migración con riesgo visual.]
 
 ${OPCIONAL}`,
 }

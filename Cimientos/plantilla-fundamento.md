@@ -64,9 +64,9 @@
 
 ## Changelog
 
-[Los cambios de la escala, uno por viñeta, **del más reciente al más antiguo**. Misma forma que el molde de componente: `- **<fecha>** — qué cambió. Por qué.`]
+[Una TABLA de tres columnas: `Fecha | Qué cambió | Por qué`, del cambio más reciente al más antiguo. Misma forma que el molde de componente.]
 
-[No uses una tabla. El molde de componente lleva viñetas y es el asentado; dos formas para el mismo contenido obligan a leer dos veces. El *por qué* va en la misma frase, no en una columna aparte.]
+[Tabla y no viñetas, y hay un motivo que no es de gusto: en una tabla la fecha es una columna. En una viñeta hay que separarla con algo, y la raya está prohibida por V2 del registro editorial. La tabla resuelve el conflicto sin tocar la regla.]
 
 [Un cambio sin fecha no es un hecho, es un recuerdo.]
 
