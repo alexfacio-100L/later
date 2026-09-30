@@ -84,6 +84,31 @@ const PAGINA  = arg("pagina")
 const BUSCAR  = arg("buscar")
 const NOMBRES = (arg("pestanas")?.split(",").map(s => s.trim()).filter(Boolean)) ?? PESTANAS_COMPONENTE
 
+/**
+ * 🔴 RENOMBRAR pestañas que ya existen, antes de crear las que falten.
+ *
+ * POR QUÉ EXISTE, y nace de un caso real del 30 sep 2026
+ * ------------------------------------------------------
+ * Este guion se escribió para una HOJA SUELTA: la convierte en grupo y le crea
+ * las cuatro. `Curvas esquinadas` no era eso. Ya era un grupo `Tabs` **a medio
+ * hacer**, con `Uso` y `Especificación` — alguien había corrido a mano el mismo
+ * mecanismo y había parado en dos.
+ *
+ * ⚠️ Correrlo tal cual habría creado las cuatro canónicas ENCIMA de esas dos.
+ * El grupo habría quedado con SEIS pestañas, y las dos viejas colgando vacías
+ * en el árbol público. *No da error: da un resultado con la forma correcta.*
+ *
+ * Con `--renombrar` las existentes se reconducen primero, así que el cálculo de
+ * «cuáles faltan» las cuenta ya con su nombre nuevo y solo crea el resto.
+ *
+ *   --renombrar="Uso=Resumen general,Especificación=Usos"
+ *
+ * ⚠️ Renombrar cambia el `slug` de la página. Compruébalo antes si algo enlaza.
+ */
+const RENOMBRAR = new Map((arg("renombrar")?.split(",") ?? [])
+  .map(par => par.split("=").map(s => s.trim()))
+  .filter(([a, b]) => a && b))
+
 if (!PAGINA && !BUSCAR) {
   console.error(`
 Falta el destino.
@@ -93,6 +118,7 @@ Falta el destino.
 
 Opcionales:
   --pestanas="A,B,C"   nombres a medida (por defecto, las cuatro de componente)
+  --renombrar="a=b,c=d"  reconduce pestañas que YA existen, antes de crear las que falten
   --aplicar            escribe; sin esto solo informa
 `)
   process.exit(1)
@@ -209,7 +235,56 @@ if (yaEsTabs) {
   console.log(`  ⚠️ La primera llamada RENOMBRA esta página a «${NOMBRES[0]}» y crea el grupo «${destino.title}» encima.`)
 }
 
-const yaHay = new Set(existentes.map(e => limpio(e.title)))
+/* ── Renombrar lo que ya existe, ANTES de calcular qué falta ────────────── */
+let renombradas = 0
+if (RENOMBRAR.size) {
+  const plan = [...RENOMBRAR].map(([de, a]) => ({ de, a, hoja: existentes.find(e => limpio(e.title) === de) }))
+  console.log(`\nPor renombrar (${plan.filter(x => x.hoja).length} de ${plan.length}):`)
+  for (const x of plan) console.log(`  ${x.hoja ? "↻" : "🔴"} «${x.de}» → «${x.a}»${x.hoja ? ` (id=${x.hoja.id})` : "  NO EXISTE en este grupo"}`)
+  const ausentes = plan.filter(x => !x.hoja)
+  if (ausentes.length) {
+    console.error(`\n🔴 ${ausentes.length} de ${plan.length} pestañas a renombrar no existen. No se sigue:`)
+    console.error(`   renombrar la que no está y crear la que sí produciría duplicados silenciosos.`)
+    process.exit(1)
+  }
+  if (APLICAR) {
+    for (const x of plan) {
+      /* 🔴 Guarda: no se renombra una pestaña CON contenido a un nombre que
+       * significa otra cosa. Si aquí aparece contenido donde la medición dijo
+       * cero, el problema es el método, no la página. */
+      const raw = await sdk.documentation.getDocumentationContentRaw(ref, x.hoja.id)
+      const bloques = (raw?.data?.items ?? []).length
+      const conTexto = JSON.stringify(raw?.data?.items ?? []).match(/"text":"[^"]+"/g)?.length ?? 0
+      if (conTexto > 0) {
+        console.error(`\n🔴 «${x.de}» tiene ${bloques} bloque(s) y ${conTexto} con texto. NO se renombra.`)
+        console.error(`   Se midió vacía antes de empezar. Si ahora tiene contenido, la medición no lo vio.`)
+        process.exit(1)
+      }
+      await sdk.documentation.updateDocumentationPageOrTab(ref, { id: String(x.hoja.persistentId), title: x.a })
+      renombradas++
+      console.log(`  ✓ «${x.de}» → «${x.a}»  (${bloques} bloque(s), 0 con texto)`)
+    }
+    /* Relectura obligatoria: un renombrado sin error no prueba que persistiera. */
+    ;({ porPid, esGrupo, padreDe, todo } = await leer())
+    destino = porPid.get(destino.persistentId)
+    existentes.length = 0
+    for (const id of destino.childrenIds ?? []) { const h = porPid.get(id); if (h) existentes.push(h) }
+    const ok = [...RENOMBRAR.values()].filter(n => existentes.some(e => limpio(e.title) === n))
+    console.log(`\ncobertura de renombrado: ${renombradas} de ${RENOMBRAR.size} escritas · ${ok.length} de ${RENOMBRAR.size} verificadas al releer`)
+    if (ok.length !== RENOMBRAR.size) {
+      console.error(`🔴 El renombrado no persistió en ${RENOMBRAR.size - ok.length} pestaña(s).`)
+      process.exit(1)
+    }
+  } else {
+    console.log(`\n(en seco: no se renombra nada sin --aplicar)`)
+  }
+}
+
+/* 🔴 En seco, el plan se calcula SOBRE los renombrados que se harían. Si no,
+ * la corrida en seco anuncia «por crear 4 de 4» y la de verdad crea 2: el
+ * ensayo no describiría la función. */
+const tituloFinal = (e) => RENOMBRAR.get(limpio(e.title)) ?? limpio(e.title)
+const yaHay = new Set(existentes.map(tituloFinal))
 const faltan = NOMBRES.filter(n => !yaHay.has(n))
 
 if (faltan.length === 0) {
@@ -263,6 +338,15 @@ console.log(`  grupo «${grupoFinal?.title}» · groupBehavior=${grupoFinal?.gro
 for (const f of finales) console.log(`     - ${f.title}  (id=${f.id})`)
 
 console.log(`\n✓ ${verificadas.length} de ${NOMBRES.length} pestañas verificadas en el árbol`)
+if (RENOMBRAR.size) console.log(`  · ${renombradas} de ${RENOMBRAR.size} renombradas`)
+/* 🔴 SOBRANTES. El riesgo concreto de un grupo a medio hacer es acabar con más
+ * pestañas de las pedidas. Se cuenta, no se supone. */
+const sobrantes = finales.filter(f => !NOMBRES.includes(limpio(f.title)))
+console.log(`  · ${finales.length} pestañas en el grupo (pedidas ${NOMBRES.length}) · ${sobrantes.length} sobrante(s)${sobrantes.length ? ": " + sobrantes.map(x => `«${x.title}»`).join(" · ") : ""}`)
+if (sobrantes.length) {
+  console.error(`\n🔴 El grupo tiene pestañas que nadie pidió. No se borran: lo decide el Lead.`)
+  process.exitCode = 1
+}
 if (fallos.length) console.log(`  🔴 fallaron: ${fallos.join(" · ")}`)
 
 if (verificadas.length !== NOMBRES.length) {

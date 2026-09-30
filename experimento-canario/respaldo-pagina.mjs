@@ -20,6 +20,16 @@
  *
  * ⚠️ El respaldo NO se restaura solo. Sirve para SABER qué se perdió — que es la
  * diferencia entre un ajuste recuperable y uno que nadie nota que faltaba.
+ *
+ * 🔴 LÍMITE DECLARADO, medido el 30 sep 2026: el censo se indexa por TÍTULO de
+ * pestaña, así que un RENOMBRADO se lee como pérdida. Al renombrar
+ * `Especificación` → `Usos` en `Curvas esquinadas`, el diff dio «1 instancia
+ * perdida»: el bloque seguía en la misma página —id 40910523, 1 rich-text antes
+ * y 1 después— y lo único que cambió fue la clave.
+ * *No es un falso negativo: es un falso POSITIVO, y se lee igual de bien.*
+ * **Tras renombrar pestañas hay que volver a guardar el respaldo**, o el
+ * siguiente diff arrastra la alarma. Indexar por `id` en vez de por título lo
+ * arreglaría; no se hizo aquí porque invalidaría los respaldos existentes.
  */
 import sdkPkg from "@supernovaio/sdk"
 import { apiKey } from "./entorno.mjs"
