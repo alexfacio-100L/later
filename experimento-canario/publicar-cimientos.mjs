@@ -170,6 +170,47 @@ const CALLOUT_MARCADOR = [
   `</SNCallout>`,
 ].join("\n")
 
+/* 🔴 EL ORDEN DEL BLOQUE LO CONTROLAMOS NOSOTROS. Medido el 30 sep 2026: el
+ * bloque `design-tokens` respeta el orden de la lista de `entityId` que se le
+ * pasa, verificado releyendo la página publicada y no el log.
+ *
+ * Antes se ordenaba por nombre con `localeCompare`, y una escala salía
+ * `full · l · m · s · xl · xs · zero`. **Alfabético es exacto y no significa
+ * nada**: `xl` (24 px) caía entre `s` (8) y `xs` (4), en medio de la escala.
+ *
+ * Ahora se ordena por VALOR ascendente, que resuelve radios y grosores sin
+ * lógica especial. `radius/full` (999) queda último por su propio centinela,
+ * que es además donde corresponde: es el más redondeado de todos.
+ *
+ * ⚠️ La condición se COMPRUEBA, no se supone. Ordenar por un valor que no
+ * existe coloca los tokens donde caigan, sin error y sin hueco visible. Hace
+ * falta que TODO el grupo tenga `measure` numérico finito y una sola unidad.
+ * Un grupo de color no tiene `measure`, así que cae a nombre —que ahí sí
+ * significa algo— y la línea de cobertura dice cuál de los dos se usó. */
+const medidaDe = (t) => {
+  const m = t?.value?.measure
+  return typeof m === "number" && Number.isFinite(m) ? m : null
+}
+const ordenarTokens = (tokens) => {
+  const porNombre = (x, y) => String(x.name).localeCompare(String(y.name))
+  const medidas = tokens.map(medidaDe)
+  const unidades = new Set(tokens.map(t => t?.value?.unit).filter(Boolean))
+  const sinMedida = medidas.filter(m => m === null).length
+  if (sinMedida === 0 && unidades.size <= 1) {
+    return {
+      orden: [...tokens].sort((x, y) => medidaDe(x) - medidaDe(y) || porNombre(x, y)),
+      criterio: "valor",
+    }
+  }
+  return {
+    orden: [...tokens].sort(porNombre),
+    criterio: "nombre",
+    motivo: sinMedida
+      ? `${sinMedida} de ${tokens.length} sin medida numérica`
+      : `${unidades.size} unidades distintas (${[...unidades].join(", ")})`,
+  }
+}
+
 const resolverTokens = (mdx, dondeDice) => {
   /* 🔴 En modo molde el marcador NO se resuelve: se explica. Un marcador de
    * plantilla no apunta a ninguna colección real. */
@@ -181,10 +222,11 @@ const resolverTokens = (mdx, dondeDice) => {
   const informe = []
   const salida = mdx.replace(MARCADOR, (_, attrs) => {
     const a = atributos(attrs)
-    const elegidos = todosTokens
+    const candidatos = todosTokens
       .filter(t => coleccionDe(t) === a.coleccion && rutaDe(t) === a.grupo)
-      .sort((x, y) => String(x.name).localeCompare(String(y.name)))
-    informe.push({ ...a, n: elegidos.length })
+    const { orden: elegidos, criterio, motivo } = ordenarTokens(candidatos)
+    informe.push({ ...a, n: elegidos.length, criterio, motivo,
+      secuencia: elegidos.map(t => t.name).join(" · ") })
     if (!elegidos.length) return `<!-- SNTokens sin resolver -->`
     const valor = JSON.stringify(elegidos.map(t => ({ entityId: t.id, entityType: "Token" })))
     /* Los swatches solo se emiten si la sección declara modes: una columna de
@@ -221,6 +263,7 @@ const resolverTokens = (mdx, dondeDice) => {
       process.exit(1)
     }
     console.log(`      tokens vivos · ${etiqueta}: ${i.n} resueltos${i.modes ? ` · modes ${i.modes}` : ""}`)
+    console.log(`        orden por ${i.criterio}${i.motivo ? ` (${i.motivo})` : ""}: ${i.secuencia}`)
   }
   return { mdx: salida, marcadores: informe.length, tokens: informe.reduce((a, b) => a + b.n, 0) }
 }
