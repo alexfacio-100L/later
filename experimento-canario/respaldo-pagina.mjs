@@ -46,8 +46,20 @@ const DIFF = process.argv.includes("--diff")
 const ARG = (n) => process.argv.find(a => a.startsWith(`--${n}=`))?.split("=").slice(1).join("=")
 const COMPONENTE = ARG("componente") ?? "button"
 const GRUPO_EXPLICITO = ARG("grupo")
-const GRUPO = GRUPO_EXPLICITO ?? "836f5e48-77f0-4499-b344-51779236a6d6"   // Button, por defecto
 const DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "respaldos")
+
+/* 🔴 TRAMPA CORREGIDA EL 30 SEP 2026, y era de la peor familia: resultado
+ * completo, sin error y sin hueco visible. El id del Button era el DEFAULT del
+ * grupo, así que `--componente=bordes` SIN `--grupo` comparaba el árbol vivo del
+ * BUTTON contra `respaldos/bordes.json`. Salía un diff largo y creíble —«41
+ * instancias perdidas, 35 párrafos perdidos»— sobre dos páginas que no tienen
+ * nada que ver. La ruta buena (`doc-done-fundamento.mjs`) siempre pasa `--grupo`
+ * y nunca lo pisó; quien corriera el comando a mano, sí.
+ * Ahora: con `--grupo` manda el id; sin él manda el NOMBRE y, si no aparece,
+ * **aborta en vez de caer al Button**. Sin argumentos sigue dando el Button,
+ * porque el grupo se llama «Button». */
+const normalizar = (s) => (s ?? "").toLowerCase().normalize("NFD")
+  .replace(/[̀-ͯ]/g, "").replace(/[-_\s]+/g, " ").trim()
 
 const sdk = new Supernova(apiKey)
 const me = await sdk.me.me()
@@ -58,9 +70,20 @@ const from = { designSystemId: ds.id, versionId: v.id, workspaceId: ws[0].id }
 
 const st = await sdk.documentation.getDocumentationStructure(from)
 /* Por id si se dio, y si no por nombre: un slug es más fácil de pasar que un uuid. */
-const grupo = st.find(e => e.persistentId === GRUPO)
-  ?? (GRUPO_EXPLICITO ? null : st.find(e => (e.title ?? e.name ?? "").toLowerCase() === COMPONENTE.toLowerCase()))
-if (!grupo) { console.error(`🔴 No se encontró el grupo ${GRUPO}`); process.exit(1) }
+let grupo
+if (GRUPO_EXPLICITO) {
+  grupo = st.find(e => e.persistentId === GRUPO_EXPLICITO)
+  if (!grupo) { console.error(`🔴 No se encontró el grupo ${GRUPO_EXPLICITO}`); process.exit(1) }
+} else {
+  grupo = st.find(e => normalizar(e.title ?? e.name) === normalizar(COMPONENTE))
+  if (!grupo) {
+    console.error(`🔴 Ningún grupo de la documentación se llama «${COMPONENTE}», y no se pasó --grupo.`)
+    console.error(`   NO se compara contra otra página: un diff contra el árbol equivocado se lee igual de bien que uno bueno.`)
+    console.error(`   Pasa el id: node experimento-canario/respaldo-pagina.mjs --diff --componente=${COMPONENTE} --grupo=<persistentId>`)
+    process.exit(1)
+  }
+}
+console.log(`grupo: «${grupo.title ?? grupo.name}» (${grupo.persistentId}) · respaldo: ${COMPONENTE}.json`)
 
 const actual = {}
 for (const cid of grupo.childrenIds) {

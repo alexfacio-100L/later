@@ -94,6 +94,12 @@ La escala vive en píxeles porque su fuente es Figma. Fuera de Figma el número 
 
 `Unidades y medios` guarda la regla general: la constante de conversión, por qué un redondeo no se traduce y qué pasa en impreso. Se escribe una sola vez y sirve a los seis fundamentos.
 
+**Hay una cuarta herramienta.** El equipo también produce diseño en código, con Claude. Ahí no hay número que teclear. El token se consume literal: se escribe `width/xs`, no `1`.
+
+**Es el caso de referencia.** Figma, Illustrator y Slides no saben leer un token, y por eso obligan a resolverlo a un número. El código no lo resuelve nunca. Es el único sitio donde cambiar la escala llega solo.
+
+**El código no va ahí.** Las tres pestañas responden «¿qué número tecleo?». Para el código la respuesta no es otro número. Es que la pregunta no aplica. Ponerlo junto a las otras tres lo volvería un cuarto destino de conversión.
+
 #### Figma
 
 Los seis valores tal cual, en píxeles. Es la fuente de verdad de la escala y no hay conversión que hacer.
@@ -129,7 +135,9 @@ Si el entregable exige puntos, la constante es multiplicar por 0,75. Sale del es
 
 **El grosor sí se puede.** La API de Slides expresa el contorno de una forma como `Outline.weight`. Es una `Dimension`, o sea una magnitud con su unidad, así que un grosor es un número de verdad.
 
-Teclea el valor en puntos. Lo que no se puede es el radio, y `Curvas esquinadas` responde distinto en esa misma pestaña. Verificado sobre la referencia REST de Google el 30 sep 2026.
+Teclea el valor en puntos. Verificado sobre la referencia REST de Google el 30 sep 2026.
+
+**El radio no es un «no se puede».** No se teclea, porque Slides no tiene entrada numérica de radio. Pero sí tiene número. El redondeo es una razón del lado corto, así que quien arma la slide calcula el porcentaje y arrastra hasta ahí. La cuenta y sus dos posiciones exactas están en `Curvas esquinadas`, en esta misma pestaña.
 
 ## Accesibilidad de la escala
 

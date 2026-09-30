@@ -76,9 +76,15 @@ El 50% no era alternativa. DTCG admite en `dimension` solo px y rem, así que el
 
 ## Qué número teclear en cada herramienta
 
-La escala vive en píxeles porque su fuente es Figma. Fuera de Figma el número cambia, y en una de las tres herramientas deja de existir.
+La escala vive en píxeles porque su fuente es Figma. Fuera de Figma el número cambia, y en una de las tres herramientas deja de ser una longitud.
 
 `Unidades y medios` guarda la regla general: la constante de conversión, por qué un redondeo no se traduce y qué pasa en impreso. Se escribe una sola vez y sirve a los seis fundamentos.
+
+**Hay una cuarta herramienta.** El equipo también produce diseño en código, con Claude. Ahí no hay número que teclear. El token se consume literal: se escribe `radius/m`, no `12`.
+
+**Es el caso de referencia.** Figma, Illustrator y Slides no saben leer un token, y por eso obligan a resolverlo a un número. El código no lo resuelve nunca. Es el único sitio donde cambiar la escala llega solo.
+
+**El código no va ahí.** Las tres pestañas responden «¿qué número tecleo?». Para el código la respuesta no es otro número. Es que la pregunta no aplica. Ponerlo junto a las otras tres lo volvería un cuarto destino de conversión.
 
 #### Figma
 
@@ -116,11 +122,38 @@ Si el entregable exige puntos, la constante es multiplicar por 0,75. Sale del es
 
 #### Google Slides
 
-**No se puede.** Y hay que decirlo en vez de dar un número. El redondeo de una forma en Slides no es una longitud: es una razón del lado corto. La misma tarjeta a dos tamaños sale con dos redondeces distintas. Ninguna columna de puntos lo arregla, porque el problema no es de conversión sino de modelo.
+**No se puede automatizar.** Sí se puede aplicar a mano, y son dos cosas distintas. Decir solo la primera deja sin salida a quien arma la slide. No hay forma de pedirle el radio a la API. Sí hay una cuenta que da el número al que llegar.
 
-Está verificado sobre la referencia REST de Google, el 30 sep 2026. `ShapeProperties` no expone ningún campo de radio, ajuste ni geometría. El tipo de forma `ROUND_RECTANGLE` se declara equivalente al `roundRect` de ECMA-376, que define el redondeo como razón.
+El redondeo de una forma en Slides no es una longitud. Es una razón del lado corto. La misma tarjeta a dos tamaños sale con dos redondeces distintas, así que ninguna columna de puntos lo arregla. El problema no es de conversión sino de modelo.
 
-**El grosor sí se puede.** Está en `Bordes`, en esa misma pestaña.
+**El número no es un radio.** Es un porcentaje, y depende de la forma que tengas delante.
+
+`porcentaje = radio en px ÷ lado corto de la forma en px × 100`, con tope en 50.
+
+El lado corto en píxeles sale de las pulgadas que da el panel *Tamaño y rotación*, por 96. Es la misma constante del W3C que usa la pestaña de Illustrator.
+
+**Ejemplo con lado corto 192 px**, que son 2 pulgadas. Los porcentajes solo valen para esa medida. Con otra tarjeta se recalculan.
+
+| Token | Radio | % del lado corto |
+| --- | --- | --- |
+| `radius/xs` | 4 px | 2,1 % |
+| `radius/s` | 8 px | 4,2 % |
+| `radius/m` | 12 px | 6,3 % |
+| `radius/l` | 16 px | 8,3 % |
+| `radius/xl` | 24 px | 12,5 % |
+| `radius/full` | — | 50 % |
+
+**Dos posiciones son exactas.** El tirador del todo hacia fuera es 0 %, y es `radius/zero`. El tirador del todo hacia dentro es el 50 % del lado corto, que es exactamente `radius/full`. La píldora sale bien a cualquier tamaño y no hay nada que medir. `radius/full` es el único radio que en Slides se aplica sin error.
+
+<SNCallout type="Warning">
+**Hueco declarado.** Entre esos dos extremos se va a ojo. Slides no tiene entrada numérica de radio. Tampoco muestra ningún valor mientras arrastras el tirador. El porcentaje de la tabla es el destino, no un campo donde escribirlo. Si un radio intermedio tiene que ser exacto, pega la forma como imagen desde Figma.
+</SNCallout>
+
+<SNCallout type="Info">
+**De dónde salen rango y unidad.** Google documenta que el tipo `ROUND_RECTANGLE` corresponde al `roundRect` de ECMA-376. Documenta también que `ShapeProperties` no expone radio, ajuste ni geometría. Verificado sobre la referencia REST el 30 sep 2026. El rango y la unidad no los publica Google. Los publica ECMA-376, al que su propia referencia remite. El ajuste se recorta con `pin 0 adj 50000`, y el radio se calcula `ss × adj ÷ 100000`, donde `ss` es el lado corto. De ahí salen el tope del 50 % y la unidad, que es una fracción y no una longitud. Cobertura de la fuente: las preguntas eran tres, y fuente primaria de Google contesta 1 de 3. Las otras 2 las contesta ECMA-376. La ayuda de Slides no documenta ninguna, y solo describe el tirador de ajuste.
+</SNCallout>
+
+**El grosor sí se teclea.** Está en `Bordes`, en esta misma pestaña.
 
 ## Accesibilidad de la escala
 
