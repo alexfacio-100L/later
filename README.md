@@ -56,6 +56,7 @@ npm run docs:conexion
 | `npm run docs:cimientos -- --molde --escribir` | Escribe el molde en Supernova como `Foundation Documentation Template` y **lo oculta**, verificando `n de N` con la lectura autoritativa |
 | `npm run doc:done:fundamento -- --pagina=<slug>` | La puerta de un **fundamento**, hermana de `doc:done`. Cinco condiciones mecánicas, tres que firma una persona |
 | `npm run rebindeo:verificar` | Tras un rebindeo: ¿quedó cada nodo en el token que decía el plan? **Emite `n de N` y sale con código 1 si no es total.** Lee Figma fresco; con `--cache` avisa de que puede medir el pasado |
+| `npm run docs:espacios` | La medición de `Grillas y espacios`: escala, consumo real, estilos de grilla y procedencia de los bindings. **Separa espaciado de gutter de grilla, y canta los cruces de categoría solo.** Aborta si el control de método falla |
 
 ---
 
@@ -300,6 +301,10 @@ later-brand-system/
 **Y hay dos lecturas del SDK, no una.** `getDocumentationStructure` **no devuelve `configuration`**: `isHidden` llega `undefined` siempre y `groupBehavior` no viene, así que con ella no se distingue un grupo de pestañas de un grupo normal ni se verifica lo que se acaba de escribir. **La que sirve es `getFullDocumentationLegacyRepresentation`.**
 
 > **Y la regla que gobierna todo esto: `validateMarkdown` responde "¿es sintaxis válida?", no "¿se ve bien?".** Un documento puede validar al 100% y ser ilegible. **Después de publicar, hay que mirar la página.**
+
+🔴 **Un estilo de Figma es un NODO, y hay que pedirle el interior aparte.** *Medido el 1 oct 2026 sobre los 10 estilos de grid:* `/v1/files/:key/styles` da nombre y `node_id` **pero ningún valor**; el interior sale de `/v1/files/:key/nodes?ids=<node_id>`, y ahí el `boundVariables.layoutGrids` del propio estilo dice **si el token vive en el estilo o lo bindeó alguien nodo a nodo**. *Las dos situaciones se leen IGUAL barriendo el árbol —el nodo enseña el binding en ambos casos— y significan lo contrario: en el estilo se propaga solo; en el nodo, la rejilla siguiente nace sin token.* **Salieron 10 de 10 en el estilo, y los 12 bindings apuntan a `space`, ninguno a `unit`.**
+
+🔴 **El 15,1% de los bindings del archivo NO son de nuestro sistema.** *Medido el 1 oct 2026: de 147.158 bindings, **124.984 empalman por `origin.id` con los 858 tokens del DS y 22.174 no** — llevan delante una clave de variable suscrita de librería.* **Un binding de librería se lee en el árbol exactamente igual que uno nuestro**, así que contar «bindings» sin separar los dos infla la adopción en un sexto. *Este método no puede decir de cuántas librerías vienen ni a qué valor resuelven: para eso hay que leer esos archivos.*
 
 ---
 

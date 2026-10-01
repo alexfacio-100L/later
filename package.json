@@ -56,7 +56,8 @@
     "docs:publicado": "node experimento-canario/estado-publicacion.mjs",
     "tokens:lint": "node tokens-lint.mjs",
     "tokens:lint:cache": "node tokens-lint.mjs --cache",
-    "tokens:consumo": "node consumo-token.mjs"
+    "tokens:consumo": "node consumo-token.mjs",
+    "docs:espacios": "node medir-espacios.mjs"
   },
   "devDependencies": {
     "@supernovaio/sdk": "^2.5.0",
