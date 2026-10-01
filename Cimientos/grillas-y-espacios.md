@@ -105,10 +105,10 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 
 ## Los umbrales de ventana
 
-<SNTokens coleccion="layout" grupo="Breakpoint" titulo="Los cuatro umbrales" />
+<SNTokens coleccion="layout" grupo="Breakpoint" titulo="Los umbrales de ventana" />
 
 <SNCallout type="Warning">
-**Un umbral nombra la frontera.** No conmuta el valor. Los tokens de tipografía conmutan por mode Desktop y Mobile. Solo `Breakpoint/XL` tiene consumidor hoy.
+**Un umbral nombra la frontera.** No conmuta el valor. Los tokens de tipografía conmutan por mode Desktop y Mobile. El semántico `Break Points` aliasa `Breakpoint/S` y `Breakpoint/XL`.
 </SNCallout>
 
 ## La rejilla por modelo y medida
@@ -125,6 +125,16 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 | `Website` | 1920 px | 12 | 24 px, `space/xl` | 240 px |
 
 Esta tabla recoge el archivo de auditoría. Comprueba la rejilla de tu producto antes de darla por buena, porque puede diferir.
+
+## La rejilla de línea base
+
+Existe una rejilla de filas de 4 px, bindeada a `space/xs` y a `space/zero`. Es la unidad base hecha visible.
+
+Úsala para comprobar que una vista cae en la rejilla vertical. No se aplica al entregar: es una ayuda de revisión.
+
+<SNCallout type="Info">
+**La rejilla mide 4 px.** Ese es el valor de la unidad base. Si cambiara la unidad, esta rejilla cambia con ella.
+</SNCallout>
 
 ## Accesibilidad de la escala
 
@@ -164,9 +174,10 @@ Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se public
 | --- | --- | --- |
 | Peldaños sin uso | 9 de 18, de 40 px a 120 px | Quien elige uno crea trabajo de migración |
 | Salto roto en el tramo alto | De 104 px se pasa a 120 px | La serie promete 112 px y no existe |
-| Un estilo sobre contenedores incompatibles | `12 Cols - 1920 Content`, margen fijo de 262 px | Se aplica a un `Content` de 1602 px y a otro de 1920 px |
-| Nombres que prometen una medida | `12 Cols - 1440` aplicado a 1314, 1024 y 1602 px | El nombre deja de ser una guía fiable |
-| Rejillas sin gobierno | 11 de 41 | Cinco sin estilo y seis con estilo local sin publicar |
+| Márgenes de `Web App` medidos desde la ventana | Las tallas `M` y `L`, margen 166 px y 262 px | Dejan el área de contenido en 1078 px con barra lateral y en 1396 px sin ella |
+| Falta el umbral de 1728 | 1 de 6 medidas sin token | Cae entre `Breakpoint/XL` y `Breakpoint/2XL`, y meterlo obliga a renombrar la serie |
+| Rejillas sueltas | 5 de 41 | Sus valores no existen en la escala: canal de 20 px y de 30 px |
+| Rejillas que consumen producción | 6 de 41 | Apuntan a estilos de otra librería, con los nombres viejos |
 
 <SNCallout type="Warning">
 **Los previews no son fuente.** Muestran peldaños de 20 px, 28 px, 36 px y 128 px que no existen como token. Les faltan siete de los que sí existen.
@@ -179,3 +190,5 @@ Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se public
 | 1 oct 2026 | `space/5xl` deja de usarse como altura del `Top Bar`, que pasa a `size/control/m` | Era un cruce de categoría, y el valor no cambió |
 | 1 oct 2026 | Se declara la unidad base real, que es 4 con sub-peldaño de 2 | La medición contradijo la base de 8 que se suponía |
 | 1 oct 2026 | Se separan `Website` y `Web App` como dos modelos | Sus márgenes responden a anclajes distintos |
+| 1 oct 2026 | Entra el umbral de 360 px | La rejilla de móvil ya existía y su umbral no |
+| 1 oct 2026 | Los estilos de rejilla pasan de nombrarse por medida a nombrarse por rol | Un nombre con medida se aplicó cuatro veces a otra medida |
