@@ -11,7 +11,7 @@ La rejilla de layout decide dónde empieza y termina el contenido en la pantalla
 La frontera entre las dos es la pregunta que llega sola. Solo los contenedores de primer nivel se alinean a la rejilla. Todo lo que vive dentro de un contenedor se separa con tokens de la escala.
 
 <SNCallout type="Info">
-**El canal sale de la escala.** Los diez estilos de rejilla toman su canal y su margen de tokens `space`. Ninguno escribe un número suelto. Son dos sistemas, con una sola fuente de valores.
+**El canal sale de la escala.** Los diez estilos de rejilla bindean su canal a un token `space`. El margen no siempre: cinco lo escriben en crudo, y la lista está en `Estatus y cambios`.
 </SNCallout>
 
 ## Cómo se eligió la escala
@@ -111,7 +111,7 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 
 **No elijas por la pantalla.** La fluida y la contenida se eligen por el contenido. Un dashboard contenido desperdicia la mitad del ancho.
 
-**No uses un peldaño muerto.** Los nueve de 40 px en adelante están pendientes de retirada. Elegir uno hoy crea trabajo de migración mañana.
+**No uses un peldaño muerto.** Los diez de 40 px en adelante están pendientes de retirada. Elegir uno hoy crea trabajo de migración mañana.
 
 **No uses `space/5xl` de altura.** Es un token de separación. Para la altura de un control va `size/control/m`.
 
@@ -123,7 +123,7 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 
 ## Los umbrales de ventana
 
-<SNTokens coleccion="layout" grupo="Breakpoint" titulo="Los umbrales de ventana" />
+<SNTokens coleccion="layout" grupo="breakpoint" titulo="Los umbrales de ventana" />
 
 <SNCallout type="Warning">
 **Un umbral nombra la frontera.** No conmuta el valor. Los tokens de tipografía conmutan por mode Desktop y Mobile. El semántico de puntos de ruptura aliasa el umbral de 640 px en móvil y el de 1440 px en escritorio.
@@ -136,11 +136,11 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 | `Mobile` | Fluida | 360 px | 4 | 16 px, `space/l` | 16 px, `space/l` |
 | `Tablet` | Fluida | 1024 px | 8 | 16 px, `space/l` | 32 px, `space/2xl` |
 | `Web App` | **Fluida** | Cualquiera | 12 | 24 px, `space/xl` | 24 px, `space/xl` |
-| `Web App` | **Contenida** | 1728 px | 12 | 24 px, `space/xl` | 166 px |
-| `Web App` | **Contenida** | 1920 px | 12 | 24 px, `space/xl` | 262 px |
-| `Website` | Contenida | 1440 px | 12 | 24 px, `space/xl` | 150 px |
-| `Website` | Contenida | 1728 px | 12 | 24 px, `space/xl` | 294 px |
-| `Website` | Contenida | 1920 px | 12 | 24 px, `space/xl` | 240 px |
+| `Web App` | **Contenida** | 1728 px | 12 | 24 px, `space/xl` | 166 px, en crudo |
+| `Web App` | **Contenida** | 1920 px | 12 | 24 px, `space/xl` | 262 px, en crudo |
+| `Website` | Contenida | 1440 px | 12 | 24 px, `space/xl` | 150 px, en crudo |
+| `Website` | Contenida | 1728 px | 12 | 24 px, `space/xl` | 294 px, en crudo |
+| `Website` | Contenida | 1920 px | 12 | 24 px, `space/xl` | 240 px, en crudo |
 
 Las dos filas contenidas de `Web App` dan el mismo ancho de contenido, 1.078 px. El margen difiere porque el contenedor difiere.
 
@@ -172,7 +172,7 @@ Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de
 
 **Alias antes que valor.** El peldaño tiene que existir en la rejilla `unit`. Si no existe, entra primero en `unit` y después en `spacing`.
 
-**Uso antes que nombre.** Un peldaño entra cuando hay al menos un consumidor real que lo pide. Nueve de los dieciocho actuales nacieron sin consumidor y siguen a cero.
+**Uso antes que nombre.** Un peldaño entra cuando hay al menos un consumidor real que lo pide. Diez de los dieciocho actuales están hoy a cero.
 
 **Nombre por posición.** El sufijo sigue la serie que ya existe. Un valor entre dos peldaños obliga a renombrar la serie, así que se evita.
 
@@ -194,32 +194,55 @@ El estilo lleva el binding dentro, nunca en el nodo. Un estilo con números suel
 
 Y la medida necesita umbral. Si el ancho no existe en la escala de umbrales, entra ahí primero.
 
-## Deuda declarada
+## Lo que se arregló
 
-Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se publican para que nadie construya encima sin saberlo.
+Dos defectos publicados como deuda ya no lo son. Se quedan a la vista porque alguien pudo construir encima mientras lo eran.
+
+| Qué decía | Qué pasó |
+| --- | --- |
+| Faltaba el umbral de 1728 px | Entró en la escala el 1 oct 2026, y el de 1920 px pasó a `3xl` |
+| Los márgenes de 166 px y 262 px eran un defecto | No lo eran. Son el tipo contenido, y fijan el contenido en 1.078 px |
+
+El segundo no se arregló: se entendió. El valor no cambió y la lectura sí, que es la corrección más barata de las dos.
+
+## Deuda viva
+
+Medida el 1 oct 2026 sobre los 10 estilos publicados y las 41 rejillas aplicadas en `[Auditoria]`.
 
 | Qué | Tamaño | Consecuencia |
 | --- | --- | --- |
-| Peldaños sin uso | 9 de 18, de 40 px a 120 px | Quien elige uno crea trabajo de migración |
+| Peldaños sin uso | 10 de 18, de 40 px a 120 px | Quien elige uno crea trabajo de migración |
 | Salto roto en el tramo alto | De 104 px se pasa a 120 px | La serie promete 112 px y no existe |
+| El margen escrito en crudo | 5 de 10 estilos | 150, 166, 240, 262 y 294 px. Ningún token vale eso |
+| Columnas y ancho de columna sin token | 10 de 10 y 9 de 10 | No existe categoría de token que los cubra |
 | Un estilo hace de fluida y de contenida | La familia `Web App`, 3 estilos para 2 tipos | El tipo se elige por parecido, no por nombre |
+| Los estilos se nombran por medida y no por rol | 7 de 10 llevan medida en el nombre | El nombre dice un ancho y se aplica a otro |
 | Rejillas sueltas | 5 de 41 | Sus valores no existen en la escala: canal de 20 px y de 30 px |
-| Rejillas que consumen producción | 6 de 41 | Apuntan a estilos de otra librería, con los nombres viejos |
+
+**Un peldaño muerto nació hoy.** `space/5xl` tenía un consumidor, la altura del `Top Bar`, y era un cruce de categoría. Al pasar esa altura a `size/control/m` quedó a cero, y la lista subió de nueve a diez.
+
+**La contenida con `CENTER` retira dos márgenes crudos de los cinco.** El ancho de columna fijo no deja margen que escribir. `Web App` deja de llevar 166 px y 262 px. A cambio escribe 67,83 px de ancho de columna, que tampoco es token. Quedan los tres de `Website`.
 
 <SNCallout type="Warning">
 **Los previews no son fuente.** Muestran peldaños de 20 px, 28 px, 36 px y 128 px que no existen como token. Les faltan siete de los que sí existen.
 </SNCallout>
+
+## Lo que no gobernamos
+
+Seis de las 41 rejillas aplicadas apuntan a estilos de otra librería. Cuatro viven en `Playground` y dos en el componente `Navbar`.
+
+Su estilo no está en esta librería, así que renombrar o rebindear aquí no las alcanza. Se resuelven en el archivo de producción, no en el de auditoría.
 
 ## Changelog
 
 | Fecha | Qué cambió | Por qué |
 | --- | --- | --- |
 | 1 oct 2026 | `space/5xl` deja de usarse como altura del `Top Bar`, que pasa a `size/control/m` | Era un cruce de categoría, y el valor no cambió |
+| 1 oct 2026 | `space/5xl` queda a cero y los peldaños muertos pasan de nueve a diez | Ese uso era el único que tenía |
 | 1 oct 2026 | Se declara la unidad base real, que es 4 con sub-peldaño de 2 | La medición contradijo la base de 8 que se suponía |
 | 1 oct 2026 | Se separan `Website` y `Web App` como dos modelos | Sus márgenes responden a anclajes distintos |
 | 1 oct 2026 | Entra el umbral de 360 px | La rejilla de móvil ya existía y su umbral no |
 | 1 oct 2026 | Entra el umbral de 1728 px, y el de 1920 cambia de sufijo | El ancho ya tenía rejilla en los dos modelos, y el renombrado no tenía consumidores |
 | 1 oct 2026 | La familia de umbrales pasa a minúscula, y el semántico pierde el espacio | La convención pide `camelCase` para toda variable, sin excepciones |
-| 1 oct 2026 | Los estilos de rejilla pasan de nombrarse por medida a nombrarse por rol | Un nombre con medida se aplicó cuatro veces a otra medida |
 | 1 oct 2026 | `Web App Single` se declara tercer modelo y usa la rejilla de `Website` | Comparte chrome con ella, no con `Web App` |
 | 1 oct 2026 | Los márgenes 166 px y 262 px dejan de ser deuda y pasan a ser el tipo contenido | Son deliberados: fijan el contenido en 1.078 px |
