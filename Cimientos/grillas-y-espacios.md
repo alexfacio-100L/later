@@ -1,0 +1,181 @@
+# Resumen general
+
+La separación entre cajas y la rejilla que las alinea son dos sistemas distintos. Comparten unidad base y resuelven problemas diferentes.
+
+## Qué es y qué resuelve
+
+La escala de separación decide cuánto aire va entre dos elementos. Alimenta gap, padding y margin, y no se ata a una sola de las tres.
+
+La rejilla de layout decide dónde empieza y termina el contenido en la pantalla. Fija columnas, canales y márgenes por tamaño de ventana.
+
+La frontera entre las dos es la pregunta que llega sola. Solo los contenedores de primer nivel se alinean a la rejilla. Todo lo que vive dentro de un contenedor se separa con tokens de la escala.
+
+<SNCallout type="Info">
+**El canal sale de la escala.** Los diez estilos de rejilla toman su canal y su margen de tokens `space`. Ninguno escribe un número suelto. Son dos sistemas, con una sola fuente de valores.
+</SNCallout>
+
+## Cómo se eligió la escala
+
+La unidad base es 4, no 8. La escala sube de 2 en 2 hasta 4, de 4 en 4 hasta 16, y de 8 en 8 a partir de ahí.
+
+El consumo real lo confirma. El 36,9 por ciento de las separaciones medidas no es múltiplo de 8. Los dos peldaños por debajo de 8 suman más de cinco mil usos.
+
+Diecisiete de los dieciocho peldaños son alias de la rejilla `unit`. Ninguno es valor directo, porque la rejilla los contiene a todos.
+
+La progresión no es geométrica, aunque el nombre lo sugiera. De `2xl` en adelante cada peldaño suma 8. La razón cae de 2,0 a 1,08.
+
+## Los dos modelos de rejilla
+
+Later tiene dos rejillas, no una rejilla con cuatro tamaños. La diferencia no es el ancho: es dónde se ancla el contenido.
+
+| Modelo | Comportamiento | Dónde se aplica |
+| --- | --- | --- |
+| `Website` | El ancho máximo se mantiene y la rejilla se centra en la ventana | Al artboard completo, en las tres medidas de escritorio |
+| `Web App` | El ancho máximo se mantiene y la rejilla se alinea dentro del contenedor | Al `Content`, ya descontada la barra lateral |
+
+Esa diferencia explica los márgenes. A 1440 px el modelo `Website` deja 150 px de margen y el modelo `Web App` deja 24 px. No son dos valores del mismo sistema.
+
+El margen significa cosas distintas en cada modelo. En `Website` es el aire entre el contenido y el borde de la ventana. En `Web App` es el aire dentro de un área que ya viene recortada por la navegación.
+
+## Fundamentos relacionados
+
+`Dimensiones` decide el tamaño del elemento que se separa. `Bordes` y `Curvas esquinadas` deciden la caja. `Color` decide el fondo sobre el que se lee la separación.
+
+<SNCallout type="Warning">
+**`Dimensiones` está vacía.** Por eso va nombrada y no enlazada. Un enlace a una página vacía cuesta más que un nombre en negrita.
+</SNCallout>
+
+# Usos
+
+## Qué se alinea a la rejilla y qué se separa con tokens
+
+Alinea a la rejilla los contenedores de primer nivel. Son las columnas de una vista, las zonas de una página y los bloques que ocupan ancho completo.
+
+Separa con tokens todo lo demás. Un botón, un icono o una fila de tabla se resuelven con `space`. El interior de una tarjeta, también.
+
+La prueba es sencilla. Si el elemento puede cambiar de ancho sin romper la página, va con tokens.
+
+## Qué peldaño para qué caso
+
+La escala tiene dieciocho peldaños y ocho sostienen el trabajo real.
+
+| Token | Valor | Para qué | Uso medido |
+| --- | --- | --- | --- |
+| `space/zero` | 0 | Apagar un gap heredado | 244 usos, casi todos en `itemSpacing` |
+| `space/2xs` | 2 px | Separar elementos pegados dentro de un control | 1.405 usos, sobre todo gap |
+| `space/xs` | 4 px | Separación corta entre piezas de un mismo grupo | 3.582 usos, gap y padding a partes parecidas |
+| `space/s` | 8 px | El relleno por defecto del sistema | 7.192 usos, el más usado con diferencia |
+| `space/m` | 12 px | Relleno horizontal de controles medianos | 244 usos |
+| `space/l` | 16 px | Relleno de contenedor, y canal de rejilla en móvil y tablet | 1.366 usos de separación, más 15 de rejilla |
+| `space/xl` | 24 px | Canal y margen de la rejilla de escritorio | 74 usos de separación, más 15 de rejilla |
+| `space/2xl` | 32 px | Margen de la rejilla de tablet | 60 usos de separación, más 1 de rejilla |
+| `space/3xl` a `space/12xl` | 40 px a 120 px | Sin uso medido | Pendientes de retirada, ver `Estatus y cambios` |
+
+**Dos peldaños hacen doble papel.** `space/l` y `space/xl` sirven de separación y de canal de rejilla. Son los únicos que cruzan los dos sistemas.
+
+## Cómo se activa la rejilla al diseñar
+
+La rejilla vive como Layout Grid Style en la librería de auditoría. Aplícala desde el panel de propiedades, en la sección de Layout grid.
+
+Elige el estilo por modelo y por medida, no por parecido visual. El nombre del estilo dice el modelo primero y la medida después.
+
+Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
+
+<SNCallout type="Info">
+**Aplicar el estilo arrastra el token.** El canal y el margen van bindeados dentro del propio estilo, en los diez. No hace falta bindear nada a mano en el nodo.
+</SNCallout>
+
+## Cuándo no usarla
+
+**No escribas un valor intermedio.** Entre 8 px y 12 px no hay peldaño porque no hace falta ninguno. Un número suelto rompe el consumo del token en código.
+
+**No alinees un componente.** La rejilla es para contenedores. Un botón alineado a columna se descoloca en cuanto cambia el ancho.
+
+**No mezcles los modelos.** En una misma vista, el margen de `Website` y el de `Web App` responden a anclajes distintos. Mezclarlos produce contenido que no cuadra con nada.
+
+**No uses un peldaño muerto.** Los nueve de 40 px en adelante están pendientes de retirada. Elegir uno hoy crea trabajo de migración mañana.
+
+**No uses `space/5xl` de altura.** Es un token de separación. Para la altura de un control va `size/control/m`.
+
+# Especificaciones
+
+## La escala de separación
+
+<SNTokens coleccion="spacing" grupo="space" titulo="Los dieciocho peldaños de separación" />
+
+## Los umbrales de ventana
+
+<SNTokens coleccion="layout" grupo="Breakpoint" titulo="Los cuatro umbrales" />
+
+<SNCallout type="Warning">
+**Un umbral nombra la frontera.** No conmuta el valor. Los tokens de tipografía conmutan por mode Desktop y Mobile. Solo `Breakpoint/XL` tiene consumidor hoy.
+</SNCallout>
+
+## La rejilla por modelo y medida
+
+| Modelo | Medida | Columnas | Canal | Margen |
+| --- | --- | --- | --- | --- |
+| `Mobile` | 360 px | 4 | 16 px, `space/l` | 16 px, `space/l` |
+| `Tablet` | 1024 px | 8 | 16 px, `space/l` | 32 px, `space/2xl` |
+| `Web App` | 1440 px | 12 | 24 px, `space/xl` | 24 px |
+| `Web App` | 1728 px | 12 | 24 px, `space/xl` | 166 px |
+| `Web App` | 1920 px | 12 | 24 px, `space/xl` | 262 px |
+| `Website` | 1440 px | 12 | 24 px, `space/xl` | 150 px |
+| `Website` | 1728 px | 12 | 24 px, `space/xl` | 294 px |
+| `Website` | 1920 px | 12 | 24 px, `space/xl` | 240 px |
+
+Esta tabla recoge el archivo de auditoría. Comprueba la rejilla de tu producto antes de darla por buena, porque puede diferir.
+
+## Accesibilidad de la escala
+
+El área táctil mínima la fija `size/control/s`, que vale 48 px. WCAG 2.2 pide 24 por 24 CSS px en el criterio 2.5.8, y el sistema va por encima.
+
+La separación entre destinos táctiles se resuelve con `space/s` o mayor. Dos controles a 4 px incumplen el espíritu del criterio. Cada uno mide lo suyo, y aun así quedan pegados.
+
+La escala no decide contraste. Esa decisión vive en `Color`.
+
+# Estatus y cambios
+
+## Cómo se añade un peldaño
+
+Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de la casa.
+
+**Alias antes que valor.** El peldaño tiene que existir en la rejilla `unit`. Si no existe, entra primero en `unit` y después en `spacing`.
+
+**Uso antes que nombre.** Un peldaño entra cuando hay al menos un consumidor real que lo pide. Nueve de los dieciocho actuales nacieron sin consumidor y siguen a cero.
+
+**Nombre por posición.** El sufijo sigue la serie que ya existe. Un valor entre dos peldaños obliga a renombrar la serie entera, así que se evita.
+
+Aprueba el Lead de Product Design. Sin su visto bueno el peldaño no entra.
+
+## Cómo se añade una medida de rejilla
+
+Una medida nueva necesita modelo declarado, no solo un ancho. Di si es `Website` o `Web App` antes de fijar el margen.
+
+El canal sale de la escala de separación. Un canal que no sea un token `space` no entra.
+
+El estilo lleva el binding dentro, nunca en el nodo. Un estilo con números sueltos deja sin token a todo lo que lo aplique después.
+
+## Deuda declarada
+
+Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se publican para que nadie construya encima sin saberlo.
+
+| Qué | Tamaño | Consecuencia |
+| --- | --- | --- |
+| Peldaños sin uso | 9 de 18, de 40 px a 120 px | Quien elige uno crea trabajo de migración |
+| Salto roto en el tramo alto | De 104 px se pasa a 120 px | La serie promete 112 px y no existe |
+| Un estilo sobre contenedores incompatibles | `12 Cols - 1920 Content`, margen fijo de 262 px | Se aplica a un `Content` de 1602 px y a otro de 1920 px |
+| Nombres que prometen una medida | `12 Cols - 1440` aplicado a 1314, 1024 y 1602 px | El nombre deja de ser una guía fiable |
+| Rejillas sin gobierno | 11 de 41 | Cinco sin estilo y seis con estilo local sin publicar |
+
+<SNCallout type="Warning">
+**Los previews no son fuente.** Muestran peldaños de 20 px, 28 px, 36 px y 128 px que no existen como token. Les faltan siete de los que sí existen.
+</SNCallout>
+
+## Changelog
+
+| Fecha | Qué cambió | Por qué |
+| --- | --- | --- |
+| 1 oct 2026 | `space/5xl` deja de usarse como altura del `Top Bar`, que pasa a `size/control/m` | Era un cruce de categoría, y el valor no cambió |
+| 1 oct 2026 | Se declara la unidad base real, que es 4 con sub-peldaño de 2 | La medición contradijo la base de 8 que se suponía |
+| 1 oct 2026 | Se separan `Website` y `Web App` como dos modelos | Sus márgenes responden a anclajes distintos |
