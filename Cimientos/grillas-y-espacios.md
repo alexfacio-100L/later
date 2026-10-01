@@ -11,7 +11,7 @@ La rejilla de layout decide dónde empieza y termina el contenido en la pantalla
 La frontera entre las dos es la pregunta que llega sola. Solo los contenedores de primer nivel se alinean a la rejilla. Todo lo que vive dentro de un contenedor se separa con tokens de la escala.
 
 <SNCallout type="Info">
-**El canal sale de la escala.** Los diez estilos de rejilla bindean su canal a un token `space`. El margen no siempre: cinco lo escriben en crudo, y la lista está en `Estatus y cambios`.
+**El canal sale de la escala.** Los once estilos de rejilla bindean su canal a un token `space`. El margen no siempre: tres lo escriben en crudo, y la lista está en `Estatus y cambios`.
 </SNCallout>
 
 ## Cómo se eligió la escala
@@ -48,7 +48,7 @@ Dentro de `Web App` conviven dos tipos, y la elección depende del contenido, no
 La contenida existe para que la vista no obligue a recorrer la pantalla entera con los ojos. **Es legibilidad**, no una medida sobrante.
 
 <SNCallout type="Info">
-**La contenida es un ancho máximo.** No es un margen. Medido el 1 oct 2026: deja el contenido en 1.078 px tanto en un contenedor de 1.410 px como en uno de 1.602 px. El margen cambia para que el ancho no cambie.
+**La contenida es un ancho máximo.** No es un margen. Medido el 1 oct 2026: deja el contenido en 1.078 px tanto en un contenedor de 1.410 px como en uno de 1.602 px. `CENTER` calcula el margen para que el ancho no cambie.
 </SNCallout>
 
 Esa es la misma distinción que Atlassian llama `fixed` y `fluid`, y que Carbon resuelve con sus modos de canal. **El tipo es otro eje.** Un modelo dice qué chrome rodea al contenido; un tipo dice cuánto se extiende dentro de él.
@@ -93,7 +93,7 @@ La escala tiene dieciocho peldaños y ocho sostienen el trabajo real.
 
 La rejilla vive como Layout Grid Style en la librería de auditoría. Aplícala desde el panel de propiedades, en la sección de Layout grid.
 
-Elige el estilo por modelo y por medida, no por parecido visual. El nombre del estilo dice el modelo primero y la medida después.
+Elige el estilo por modelo y por rol, no por parecido visual. El nombre del estilo dice el modelo primero y el rol después.
 
 Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 
@@ -136,13 +136,12 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 | `Mobile` | Fluida | 360 px | 4 | 16 px, `space/l` | 16 px, `space/l` |
 | `Tablet` | Fluida | 1024 px | 8 | 16 px, `space/l` | 32 px, `space/2xl` |
 | `Web App` | **Fluida** | Cualquiera | 12 | 24 px, `space/xl` | 24 px, `space/xl` |
-| `Web App` | **Contenida** | 1728 px | 12 | 24 px, `space/xl` | 166 px, en crudo |
-| `Web App` | **Contenida** | 1920 px | 12 | 24 px, `space/xl` | 262 px, en crudo |
+| `Web App` | **Contenida** | Cualquiera | 12 | 24 px, `space/xl` | Lo calcula `CENTER` |
 | `Website` | Contenida | 1440 px | 12 | 24 px, `space/xl` | 150 px, en crudo |
 | `Website` | Contenida | 1728 px | 12 | 24 px, `space/xl` | 294 px, en crudo |
 | `Website` | Contenida | 1920 px | 12 | 24 px, `space/xl` | 240 px, en crudo |
 
-Las dos filas contenidas de `Web App` dan el mismo ancho de contenido, 1.078 px. El margen difiere porque el contenedor difiere.
+La contenida de `Web App` ya no depende de la medida. Fija 12 columnas de 67,83 px y deja que `CENTER` reparta lo que sobre.
 
 Esta tabla recoge el archivo de auditoría. Comprueba la rejilla de tu producto antes de darla por buena, porque puede diferir.
 
@@ -202,8 +201,19 @@ Dos defectos publicados como deuda ya no lo son. Se quedan a la vista porque alg
 | --- | --- |
 | Faltaba el umbral de 1728 px | Entró en la escala el 1 oct 2026, y el de 1920 px pasó a `3xl` |
 | Los márgenes de 166 px y 262 px eran un defecto | No lo eran. Son el tipo contenido, y fijan el contenido en 1.078 px |
+| Los estilos se nombraban por medida | Seis pasaron a nombrarse por rol el 1 oct 2026 |
+| `Web App` tenía 3 estilos para 2 tipos | Ahora tiene 2, `fluid` y `contained` |
 
 El segundo no se arregló: se entendió. El valor no cambió y la lectura sí, que es la corrección más barata de las dos.
+
+**El cambio es la corrección.** Las vistas de `Web App Single` usaban márgenes calculados para un contenedor ya recortado por la barra lateral. Single no tiene barra lateral, así que ese cálculo nunca le correspondió.
+
+| Vista | Contenido antes | Contenido ahora |
+| --- | --- | --- |
+| `Web App Single` a 1728 px | 1.396 px | **1.140 px** |
+| `Web App Single` a 1920 px | 1.396 px | **1.440 px** |
+
+Las dos vistas de `Web App` con barra lateral no se movieron ni un píxel. Siguen en 1.078 px.
 
 ## Deuda viva
 
@@ -213,15 +223,15 @@ Medida el 1 oct 2026 sobre los 10 estilos publicados y las 41 rejillas aplicadas
 | --- | --- | --- |
 | Peldaños sin uso | 10 de 18, de 40 px a 120 px | Quien elige uno crea trabajo de migración |
 | Salto roto en el tramo alto | De 104 px se pasa a 120 px | La serie promete 112 px y no existe |
-| El margen escrito en crudo | 5 de 10 estilos | 150, 166, 240, 262 y 294 px. Ningún token vale eso |
-| Columnas y ancho de columna sin token | 10 de 10 y 9 de 10 | No existe categoría de token que los cubra |
-| Un estilo hace de fluida y de contenida | La familia `Web App`, 3 estilos para 2 tipos | El tipo se elige por parecido, no por nombre |
-| Los estilos se nombran por medida y no por rol | 7 de 10 llevan medida en el nombre | El nombre dice un ancho y se aplica a otro |
+| El margen escrito en crudo | 3 de 9 estilos vigentes | 150, 240 y 294 px, los tres de `Website`. Ningún token vale eso |
+| Columnas y ancho de columna sin token | 11 de 11 y 10 de 11 | No existe categoría de token que los cubra |
+| Dos estilos vivos solo como camino de vuelta | `Web App/legacy`, 2 | Se retiran cuando el render esté visto |
+| Un estilo con medida literal en el nombre | `Tablet/8 Cols - 1024`, sin uso | Duplica a `Tablet/8 Cols` con otros valores |
 | Rejillas sueltas | 5 de 41 | Sus valores no existen en la escala: canal de 20 px y de 30 px |
 
 **Un peldaño muerto nació hoy.** `space/5xl` tenía un consumidor, la altura del `Top Bar`, y era un cruce de categoría. Al pasar esa altura a `size/control/m` quedó a cero, y la lista subió de nueve a diez.
 
-**La contenida con `CENTER` retira dos márgenes crudos de los cinco.** El ancho de columna fijo no deja margen que escribir. `Web App` deja de llevar 166 px y 262 px. A cambio escribe 67,83 px de ancho de columna, que tampoco es token. Quedan los tres de `Website`.
+**Dos márgenes crudos menos.** El ancho de columna fijo no deja margen que escribir. `Web App` dejó de llevar 166 px y 262 px. A cambio escribe 67,83 px de ancho de columna, que tampoco es token. Quedan los tres de `Website`.
 
 <SNCallout type="Warning">
 **Los previews no son fuente.** Muestran peldaños de 20 px, 28 px, 36 px y 128 px que no existen como token. Les faltan siete de los que sí existen.
@@ -245,4 +255,7 @@ Su estilo no está en esta librería, así que renombrar o rebindear aquí no la
 | 1 oct 2026 | Entra el umbral de 1728 px, y el de 1920 cambia de sufijo | El ancho ya tenía rejilla en los dos modelos, y el renombrado no tenía consumidores |
 | 1 oct 2026 | La familia de umbrales pasa a minúscula, y el semántico pierde el espacio | La convención pide `camelCase` para toda variable, sin excepciones |
 | 1 oct 2026 | `Web App Single` se declara tercer modelo y usa la rejilla de `Website` | Comparte chrome con ella, no con `Web App` |
+| 1 oct 2026 | Seis estilos de rejilla pasan a nombrarse por rol | Un nombre con medida se aplicó a otra medida |
+| 1 oct 2026 | La contenida de `Web App` pasa a `CENTER` con ancho de columna fijo | El margen a mano era un valor crudo por cada medida |
+| 1 oct 2026 | Las dos vistas de `Web App Single` pasan a la rejilla de `Website` | Su margen se calculaba para un contenedor con barra lateral que no tienen |
 | 1 oct 2026 | Los márgenes 166 px y 262 px dejan de ser deuda y pasan a ser el tipo contenido | Son deliberados: fijan el contenido en 1.078 px |
