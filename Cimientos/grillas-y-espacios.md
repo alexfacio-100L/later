@@ -174,7 +174,13 @@ Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de
 
 **Uso antes que nombre.** Un peldaño entra cuando hay al menos un consumidor real que lo pide. Nueve de los dieciocho actuales nacieron sin consumidor y siguen a cero.
 
-**Nombre por posición.** El sufijo sigue la serie que ya existe. Un valor entre dos peldaños obliga a renombrar la serie entera, así que se evita.
+**Nombre por posición.** El sufijo sigue la serie que ya existe. Un valor entre dos peldaños obliga a renombrar la serie, así que se evita.
+
+Esa regla tiene una excepción, y se declara en lugar de improvisarse. Un valor intermedio entra si el peldaño a renombrar **no tiene consumidores**.
+
+<SNCallout type="Info">
+**La excepción se usó una vez.** El umbral de 1728 entró entre 1440 y 1920, y obligó a cambiar el sufijo del umbral de 1920. Se midió antes: 0 bindings y 0 alias.
+</SNCallout>
 
 Aprueba el Lead de Product Design. Sin su visto bueno el peldaño no entra.
 
@@ -186,6 +192,8 @@ El canal sale de la escala de separación. Un canal que no sea un token `space` 
 
 El estilo lleva el binding dentro, nunca en el nodo. Un estilo con números sueltos deja sin token a todo lo que lo aplique después.
 
+Y la medida necesita umbral. Si el ancho no existe en la escala de umbrales, entra ahí primero.
+
 ## Deuda declarada
 
 Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se publican para que nadie construya encima sin saberlo.
@@ -195,7 +203,6 @@ Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se public
 | Peldaños sin uso | 9 de 18, de 40 px a 120 px | Quien elige uno crea trabajo de migración |
 | Salto roto en el tramo alto | De 104 px se pasa a 120 px | La serie promete 112 px y no existe |
 | Un estilo hace de fluida y de contenida | La familia `Web App`, 3 estilos para 2 tipos | El tipo se elige por parecido, no por nombre |
-| Falta el umbral de 1728 | 1 de 6 medidas sin token | Cae entre `Breakpoint/XL` y `Breakpoint/2XL`, y meterlo obliga a renombrar la serie |
 | Rejillas sueltas | 5 de 41 | Sus valores no existen en la escala: canal de 20 px y de 30 px |
 | Rejillas que consumen producción | 6 de 41 | Apuntan a estilos de otra librería, con los nombres viejos |
 
@@ -211,6 +218,7 @@ Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se public
 | 1 oct 2026 | Se declara la unidad base real, que es 4 con sub-peldaño de 2 | La medición contradijo la base de 8 que se suponía |
 | 1 oct 2026 | Se separan `Website` y `Web App` como dos modelos | Sus márgenes responden a anclajes distintos |
 | 1 oct 2026 | Entra el umbral de 360 px | La rejilla de móvil ya existía y su umbral no |
+| 1 oct 2026 | Entra el umbral de 1728 px, y el de 1920 cambia de sufijo | El ancho ya tenía rejilla en los dos modelos, y el renombrado no tenía consumidores |
 | 1 oct 2026 | Los estilos de rejilla pasan de nombrarse por medida a nombrarse por rol | Un nombre con medida se aplicó cuatro veces a otra medida |
 | 1 oct 2026 | `Web App Single` se declara tercer modelo y usa la rejilla de `Website` | Comparte chrome con ella, no con `Web App` |
 | 1 oct 2026 | Los márgenes 166 px y 262 px dejan de ser deuda y pasan a ser el tipo contenido | Son deliberados: fijan el contenido en 1.078 px |
