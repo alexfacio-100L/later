@@ -126,7 +126,7 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 <SNTokens coleccion="layout" grupo="Breakpoint" titulo="Los umbrales de ventana" />
 
 <SNCallout type="Warning">
-**Un umbral nombra la frontera.** No conmuta el valor. Los tokens de tipografía conmutan por mode Desktop y Mobile. El semántico `Break Points` aliasa `Breakpoint/S` y `Breakpoint/XL`.
+**Un umbral nombra la frontera.** No conmuta el valor. Los tokens de tipografía conmutan por mode Desktop y Mobile. El semántico de puntos de ruptura aliasa el umbral de 640 px en móvil y el de 1440 px en escritorio.
 </SNCallout>
 
 ## La rejilla por modelo y medida
@@ -219,6 +219,7 @@ Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se public
 | 1 oct 2026 | Se separan `Website` y `Web App` como dos modelos | Sus márgenes responden a anclajes distintos |
 | 1 oct 2026 | Entra el umbral de 360 px | La rejilla de móvil ya existía y su umbral no |
 | 1 oct 2026 | Entra el umbral de 1728 px, y el de 1920 cambia de sufijo | El ancho ya tenía rejilla en los dos modelos, y el renombrado no tenía consumidores |
+| 1 oct 2026 | La familia de umbrales pasa a minúscula, y el semántico pierde el espacio | La convención pide `camelCase` para toda variable, sin excepciones |
 | 1 oct 2026 | Los estilos de rejilla pasan de nombrarse por medida a nombrarse por rol | Un nombre con medida se aplicó cuatro veces a otra medida |
 | 1 oct 2026 | `Web App Single` se declara tercer modelo y usa la rejilla de `Website` | Comparte chrome con ella, no con `Web App` |
 | 1 oct 2026 | Los márgenes 166 px y 262 px dejan de ser deuda y pasan a ser el tipo contenido | Son deliberados: fijan el contenido en 1.078 px |
