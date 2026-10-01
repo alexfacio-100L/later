@@ -24,18 +24,34 @@ Diecisiete de los dieciocho peldaños son alias de la rejilla `unit`. Ninguno es
 
 La progresión no es geométrica, aunque el nombre lo sugiera. De `2xl` en adelante cada peldaño suma 8. La razón cae de 2,0 a 1,08.
 
-## Los dos modelos de rejilla
+## Los tres modelos de rejilla
 
-Later tiene dos rejillas, no una rejilla con cuatro tamaños. La diferencia no es el ancho: es dónde se ancla el contenido.
+Later tiene tres rejillas, no una rejilla con varios tamaños. **El modelo lo decide el chrome**: qué navegación rodea al contenido.
 
-| Modelo | Comportamiento | Dónde se aplica |
+| Modelo | Chrome | Comportamiento |
 | --- | --- | --- |
-| `Website` | El ancho máximo se mantiene y la rejilla se centra en la ventana | Al artboard completo, en las tres medidas de escritorio |
-| `Web App` | El ancho máximo se mantiene y la rejilla se alinea dentro del contenedor | Al `Content`, ya descontada la barra lateral |
-
-Esa diferencia explica los márgenes. A 1440 px el modelo `Website` deja 150 px de margen y el modelo `Web App` deja 24 px. No son dos valores del mismo sistema.
+| `Website` | Navegación arriba y pie abajo | El ancho máximo se mantiene y la rejilla se centra en la ventana |
+| `Web App` | Barra lateral y barra superior | La rejilla vive dentro del `Content`, ya descontada la barra lateral |
+| `Web App Single` | Solo barra superior, con volver y ayuda | Una tarea enfocada con URL propia. Usa la rejilla de `Website` |
 
 El margen significa cosas distintas en cada modelo. En `Website` es el aire entre el contenido y el borde de la ventana. En `Web App` es el aire dentro de un área que ya viene recortada por la navegación.
+
+## Los dos tipos de rejilla
+
+Dentro de `Web App` conviven dos tipos, y la elección depende del contenido, no de la pantalla.
+
+| Tipo | Cuándo | Cómo se comporta |
+| --- | --- | --- |
+| **Fluida** | Dashboards, tablas, cualquier vista que reparte datos | Ocupa todo el `Content`, con 24 px de margen |
+| **Contenida** | Lectura, formularios, contenido corto | Fija el contenido en 1.078 px y lo centra |
+
+La contenida existe para que la vista no obligue a recorrer la pantalla entera con los ojos. **Es legibilidad**, no una medida sobrante.
+
+<SNCallout type="Info">
+**La contenida es un ancho máximo.** No es un margen. Medido el 1 oct 2026: deja el contenido en 1.078 px tanto en un contenedor de 1.410 px como en uno de 1.602 px. El margen cambia para que el ancho no cambie.
+</SNCallout>
+
+Esa es la misma distinción que Atlassian llama `fixed` y `fluid`, y que Carbon resuelve con sus modos de canal. **El tipo es otro eje.** Un modelo dice qué chrome rodea al contenido; un tipo dice cuánto se extiende dentro de él.
 
 ## Fundamentos relacionados
 
@@ -93,6 +109,8 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 
 **No mezcles los modelos.** En una misma vista, el margen de `Website` y el de `Web App` responden a anclajes distintos. Mezclarlos produce contenido que no cuadra con nada.
 
+**No elijas por la pantalla.** La fluida y la contenida se eligen por el contenido. Un dashboard contenido desperdicia la mitad del ancho.
+
 **No uses un peldaño muerto.** Los nueve de 40 px en adelante están pendientes de retirada. Elegir uno hoy crea trabajo de migración mañana.
 
 **No uses `space/5xl` de altura.** Es un token de separación. Para la altura de un control va `size/control/m`.
@@ -113,16 +131,18 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 
 ## La rejilla por modelo y medida
 
-| Modelo | Medida | Columnas | Canal | Margen |
-| --- | --- | --- | --- | --- |
-| `Mobile` | 360 px | 4 | 16 px, `space/l` | 16 px, `space/l` |
-| `Tablet` | 1024 px | 8 | 16 px, `space/l` | 32 px, `space/2xl` |
-| `Web App` | 1440 px | 12 | 24 px, `space/xl` | 24 px |
-| `Web App` | 1728 px | 12 | 24 px, `space/xl` | 166 px |
-| `Web App` | 1920 px | 12 | 24 px, `space/xl` | 262 px |
-| `Website` | 1440 px | 12 | 24 px, `space/xl` | 150 px |
-| `Website` | 1728 px | 12 | 24 px, `space/xl` | 294 px |
-| `Website` | 1920 px | 12 | 24 px, `space/xl` | 240 px |
+| Modelo | Tipo | Medida | Columnas | Canal | Margen |
+| --- | --- | --- | --- | --- | --- |
+| `Mobile` | Fluida | 360 px | 4 | 16 px, `space/l` | 16 px, `space/l` |
+| `Tablet` | Fluida | 1024 px | 8 | 16 px, `space/l` | 32 px, `space/2xl` |
+| `Web App` | **Fluida** | Cualquiera | 12 | 24 px, `space/xl` | 24 px, `space/xl` |
+| `Web App` | **Contenida** | 1728 px | 12 | 24 px, `space/xl` | 166 px |
+| `Web App` | **Contenida** | 1920 px | 12 | 24 px, `space/xl` | 262 px |
+| `Website` | Contenida | 1440 px | 12 | 24 px, `space/xl` | 150 px |
+| `Website` | Contenida | 1728 px | 12 | 24 px, `space/xl` | 294 px |
+| `Website` | Contenida | 1920 px | 12 | 24 px, `space/xl` | 240 px |
+
+Las dos filas contenidas de `Web App` dan el mismo ancho de contenido, 1.078 px. El margen difiere porque el contenedor difiere.
 
 Esta tabla recoge el archivo de auditoría. Comprueba la rejilla de tu producto antes de darla por buena, porque puede diferir.
 
@@ -174,7 +194,7 @@ Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se public
 | --- | --- | --- |
 | Peldaños sin uso | 9 de 18, de 40 px a 120 px | Quien elige uno crea trabajo de migración |
 | Salto roto en el tramo alto | De 104 px se pasa a 120 px | La serie promete 112 px y no existe |
-| Márgenes de `Web App` medidos desde la ventana | Las tallas `M` y `L`, margen 166 px y 262 px | Dejan el área de contenido en 1078 px con barra lateral y en 1396 px sin ella |
+| Un estilo hace de fluida y de contenida | La familia `Web App`, 3 estilos para 2 tipos | El tipo se elige por parecido, no por nombre |
 | Falta el umbral de 1728 | 1 de 6 medidas sin token | Cae entre `Breakpoint/XL` y `Breakpoint/2XL`, y meterlo obliga a renombrar la serie |
 | Rejillas sueltas | 5 de 41 | Sus valores no existen en la escala: canal de 20 px y de 30 px |
 | Rejillas que consumen producción | 6 de 41 | Apuntan a estilos de otra librería, con los nombres viejos |
@@ -192,3 +212,5 @@ Esta escala y esta rejilla tienen defectos conocidos. Están medidos y se public
 | 1 oct 2026 | Se separan `Website` y `Web App` como dos modelos | Sus márgenes responden a anclajes distintos |
 | 1 oct 2026 | Entra el umbral de 360 px | La rejilla de móvil ya existía y su umbral no |
 | 1 oct 2026 | Los estilos de rejilla pasan de nombrarse por medida a nombrarse por rol | Un nombre con medida se aplicó cuatro veces a otra medida |
+| 1 oct 2026 | `Web App Single` se declara tercer modelo y usa la rejilla de `Website` | Comparte chrome con ella, no con `Web App` |
+| 1 oct 2026 | Los márgenes 166 px y 262 px dejan de ser deuda y pasan a ser el tipo contenido | Son deliberados: fijan el contenido en 1.078 px |
