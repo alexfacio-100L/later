@@ -42,7 +42,8 @@
  */
 import sdkPkg from "@supernovaio/sdk"
 import { apiKey } from "./entorno.mjs"
-import { convertir } from "./conversor.mjs"
+import { convertir, REGISTRO_ANCHOS, vaciarRegistroDeAnchos } from "./conversor.mjs"
+import { informeDeAnchos } from "../anchos-de-tabla.mjs"
 import { aplicarPestanas, GRUPOS_FUNDAMENTO, HERRAMIENTAS } from "../plantilla-componente/pestanas-plataforma.mjs"
 import { readFileSync, existsSync } from "node:fs"
 import path from "node:path"
@@ -341,6 +342,9 @@ if (sinDestino.length) {
 
 /* ── Convertir y validar ───────────────────────────────────────────────────── */
 console.log(`\n── conversión y validación ──`)
+/* 🔴 Un ajuste manual del Lead es una DECISIÓN; el cálculo es un DEFAULT. Se
+ * vacía antes de convertir para que el informe hable solo de esta corrida. */
+vaciarRegistroDeAnchos()
 let totalBloques = 0, totalTablas = 0, totalMarcadores = 0, totalTokens = 0
 for (const t of trozos) {
   const { mdx: crudo, informe } = convertir(t.md)
@@ -366,6 +370,7 @@ for (const t of trozos) {
   totalBloques += val.blockCount
   console.log(`  ✓ «${t.nombre}» — ${val.blockCount} bloques · ${informe.tablas} tabla(s) · ${informe.callouts} callout(s)`)
 }
+if (REGISTRO_ANCHOS.length) informeDeAnchos(REGISTRO_ANCHOS)
 console.log(`\ncobertura de conversión: ${trozos.length} de ${PESTANAS.length} pestañas · ${totalBloques} bloques · ${totalTablas} tablas · ${totalMarcadores} bloque(s) de tokens con ${totalTokens} tokens vivos`)
 
 if (!ESCRIBIR) {

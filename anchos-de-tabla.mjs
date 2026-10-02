@@ -125,6 +125,12 @@ export const ANCHOS_DEL_LEAD = {
   "# | área | criterio @ b1 #9giw2 ~8":                                    [60,94,600],
   "# | área | criterio @ c1 #1p6n8 ~15":                                   [60,94,600],
   "qué | a quién afecta | estado @ background/disabled apen #1e1n5 ~4":    [348,319,88],
+  "token | valor | qué papel hace | uso medido @ width/zero #1hdyo ~6":    [118,81,224,332],
+  "familia | tokens | cuándo @ estructura #k2350 ~3":                      [106,407,242],
+  "token | grosor @ width/zero #1hdyo ~6":                                 [378,378],
+  "token | px | pt @ width/xs #13yaj ~5":                                  [252,252,252],
+  "token | px | en el menú @ width/zero #1hdyo ~6":                        [252,252,252],
+  "fecha | qué cambió | por qué @ 1 oct 2026 #16vx5 ~6":                   [112,277,366],
 }
 
 /**

@@ -41,6 +41,7 @@ const { Supernova } = sdkPkg
 const DIFF = process.argv.includes("--diff")
 /* Prueba la vigilancia de callouts sobre el árbol vivo, sin escribir ni publicar. */
 const PROBAR = process.argv.includes("--probar-callout")
+const PROBAR_TABLA = process.argv.includes("--probar-tabla")
 /* Parametrizado el 14 sep 2026 para que `doc:done` sirva al primer lote y no solo
  * al canario. Sin argumento se comporta como siempre: el Button.
  *   node respaldo-pagina.mjs [--diff] [--componente=<slug>] [--grupo=<persistentId>]
@@ -156,12 +157,52 @@ const VIGILADOS = new Set([
   "io.supernova.block.callout",
 ])
 
+/**
+ * 🔴 `table` ENTRÓ EL 1 OCT 2026, y se trata aparte por una razón de ruido.
+ *
+ * Una tabla cambia de forma a menudo: se añade una fila, se reordena. Si se
+ * recogiera su texto como UN solo bloque, cualquiera de esas dos cosas marcaría
+ * la tabla entera como perdida, en cada publicación. **Un diff que grita siempre
+ * deja de leerse, y entonces no vigila nada.**
+ *
+ * Se emite UNA ENTRADA POR FILA. Con esa granularidad:
+ *   · añadir una fila      → 0 perdidos, las viejas siguen ahí
+ *   · reordenar filas      → 0 perdidos, la comparación es por conjunto
+ *   · cambiar una celda    → 1 fila marcada, con su contexto al lado
+ *   · borrar una fila      → 1 fila marcada
+ *
+ * ⚠️ LÍMITE DECLARADO: dos filas IDÉNTICAS cuentan como una. Borrar una de las
+ * dos no se detecta. No se ha visto ocurrir, y el precio de arreglarlo es perder
+ * la inmunidad al reordenado.
+ */
+const ES_TABLA = "io.supernova.block.table"
+
 /** La prosa de la página, en orden. Lo que NUNCA debe desaparecer sin querer. */
 const prosa = (arbol) => {
   const o = []
   ;(function w(x) {
     if (!x || typeof x !== "object") return
     if (Array.isArray(x)) return x.forEach(w)
+    if (x.packageId === ES_TABLA) {
+      for (const item of x.items ?? []) {
+        const filas = item?.props?.table?.value
+        if (!Array.isArray(filas)) continue
+        for (const fila of filas) {
+          const celdas = (fila?.cells ?? []).map(c => {
+            const s = []
+            ;(function t(y) {
+              if (!y || typeof y !== "object") return
+              if (typeof y.text === "string") s.push(y.text)
+              for (const q of Object.values(y)) t(q)
+            })(c)
+            return s.join("").replace(/\s+/g, " ").trim()
+          })
+          const txt = celdas.join(" | ").trim()
+          if (txt.replace(/\|/g, "").trim()) o.push(txt)
+        }
+      }
+      return
+    }
     if (VIGILADOS.has(x.packageId)) {
       const s = []
       ;(function t(y) {
@@ -185,6 +226,61 @@ const RUTA = path.join(DIR, `${COMPONENTE}.json`)
 /* 🔴 Una ampliación que no se ha visto fallar no se sabe si funciona. Esto toma
  * el árbol VIVO, le cambia el texto de UN callout en memoria, y comprueba que la
  * comparación lo marca. Si no lo marca, sale con código 1. */
+/* 🔴 La prueba de la tabla, y lleva los dos escenarios de RUIDO dentro, porque
+ * son el riesgo real: una tabla cambia de forma a menudo. Un diff que marca algo
+ * al añadir una fila o al reordenarla se acaba ignorando. */
+if (PROBAR_TABLA) {
+  const perdidos = (arbolMutado) => {
+    const mut = Object.fromEntries(Object.entries(arbolMutado).map(([k, a]) => [k, prosa(a)]))
+    let n = 0
+    for (const pag of Object.keys(prosaActual)) {
+      const ahora = new Set(mut[pag] ?? [])
+      n += (prosaActual[pag] ?? []).filter(t => !ahora.has(t)).length
+    }
+    return n
+  }
+  const conPrimeraTabla = (fn) => {
+    const c = JSON.parse(JSON.stringify(actual))
+    let hecho = false
+    ;(function w(x) {
+      if (hecho || !x || typeof x !== "object") return
+      if (Array.isArray(x)) return x.forEach(w)
+      if (x.packageId === "io.supernova.block.table") {
+        for (const item of x.items ?? []) {
+          const filas = item?.props?.table?.value
+          if (Array.isArray(filas) && filas.length > 2 && !hecho) { fn(filas); hecho = true }
+        }
+        return
+      }
+      for (const q of Object.values(x)) w(q)
+    })(c)
+    return hecho ? c : null
+  }
+
+  const casos = [
+    ["una celda cambiada", 1, (filas) => {
+      ;(function t(y) { if (!y || typeof y !== "object") return
+        if (typeof y.text === "string" && y.text.trim()) { y.text = "CELDA CAMBIADA"; return true }
+        for (const q of Object.values(y)) if (t(q)) return true })(filas[1])
+    }],
+    ["una fila añadida", 0, (filas) => { filas.push(JSON.parse(JSON.stringify(filas[1]))) }],
+    ["las filas reordenadas", 0, (filas) => { const d = filas.splice(1); filas.push(...d.reverse()) }],
+  ]
+  console.log(`── prueba de que el texto de una tabla se vigila ──`)
+  let malos = 0
+  for (const [nombre, esperado, fn] of casos) {
+    const c = conPrimeraTabla(fn)
+    if (!c) { console.error("🔴 No se encontró ninguna tabla con filas. La prueba no es concluyente."); process.exit(1) }
+    const n = perdidos(c)
+    const ok = esperado === 0 ? n === 0 : n >= 1
+    console.log(`   ${ok ? "✓" : "🔴"} ${nombre.padEnd(24)} marca ${n} · esperado ${esperado === 0 ? "0" : "al menos 1"}`)
+    if (!ok) malos++
+  }
+  if (malos) { console.error(`\n🔴 ${malos} de ${casos.length} escenarios no se comportan. La ampliación NO es buena.`); process.exit(1) }
+  console.log(`🟢 ${casos.length} de ${casos.length} escenarios correctos: marca el cambio y calla ante la forma.`)
+  process.exit(0)
+}
+
 if (PROBAR) {
   const copia = JSON.parse(JSON.stringify(actual))
   let tocado = null

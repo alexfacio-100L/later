@@ -32,7 +32,12 @@ import { writeFileSync, readFileSync } from "node:fs"
 
 const { Supernova } = sdkPkg
 const ESCRIBIR = process.argv.includes("--escribir")
-const GRUPO = "836f5e48-77f0-4499-b344-51779236a6d6"   // Button
+/* 🔴 PARAMETRIZADO EL 1 OCT 2026. Estaba cableado al Button, que era el único
+ * género que preservaba anchos. Al conectarlo a los fundamentos hacía falta poder
+ * capturar los suyos, o el registro no tiene sus firmas y todo se recalcula.
+ *   npm run docs:anchos -- --grupo=<persistentId> --escribir           */
+const ARG = (n) => process.argv.find(a => a.startsWith(`--${n}=`))?.split("=").slice(1).join("=")
+const GRUPO = ARG("grupo") ?? "836f5e48-77f0-4499-b344-51779236a6d6"   // Button por defecto
 const DESTINO = new URL("../anchos-de-tabla.mjs", import.meta.url)
 
 const sdk = new Supernova(apiKey)
@@ -168,8 +173,17 @@ if (firmas < conAnchos) {
   process.exitCode = 1
 }
 
+/* 🔴 SE FUSIONA, NO SE REEMPLAZA, y esto no es una comodidad: antes el bloque se
+ * reescribía entero, así que capturar un fundamento habría BORRADO las 24 firmas
+ * del Button. Habría salido sin error y el Button habría perdido los anchos que
+ * el Lead rehízo el 8 sep 2026. */
+const { ANCHOS_DEL_LEAD: previos } = await import("../anchos-de-tabla.mjs")
+const fusionado = { ...previos, ...capturado }
+const conservadas = Object.keys(previos).filter(k => !(k in capturado)).length
+const pisadas = Object.keys(capturado).filter(k => k in previos).length
+
 const bloque = "export const ANCHOS_DEL_LEAD = {\n" +
-  Object.entries(capturado)
+  Object.entries(fusionado)
     .map(([f, a]) => `  ${(JSON.stringify(f) + ":").padEnd(72)} ${JSON.stringify(a)},`)
     .join("\n") + "\n}\n"
 
@@ -181,5 +195,6 @@ if (!ESCRIBIR) {
   const re = /export const ANCHOS_DEL_LEAD = \{[\s\S]*?\n\}\n/
   if (!re.test(src)) { console.error("🔴 No encontré ANCHOS_DEL_LEAD en anchos-de-tabla.mjs"); process.exit(1) }
   writeFileSync(DESTINO, src.replace(re, bloque))
-  console.log(`\n✓ anchos-de-tabla.mjs actualizado con ${firmas} firmas.`)
+  console.log(`\n✓ anchos-de-tabla.mjs actualizado · ${Object.keys(fusionado).length} firmas en total`)
+  console.log(`   ${firmas} capturadas ahora · ${pisadas} actualizadas · ${conservadas} conservadas de otros grupos`)
 }

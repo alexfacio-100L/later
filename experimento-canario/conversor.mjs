@@ -14,6 +14,7 @@
 // ─────────────────────────────────────────────────────────────
 
 import { reagruparCitas } from "./citas.mjs"
+import { anchosDe, firmaDeTabla } from "../anchos-de-tabla.mjs"
 
 export const CONFIG = {
   componenteId: "d4f71d86-4a9b-4535-949d-0b3aadd0818f",
@@ -116,6 +117,11 @@ const ANCHO_MINIMO = 72
  * tabla cruce el techo, y que la columna descriptiva sea la que absorbe.
  * El ajuste fino por tabla sigue siendo suyo.
  */
+/* El registro de la corrida: qué tablas conservaron el ancho del Lead y cuáles se
+ * calcularon. Lo vacía y lo lee el publicador, que es quien informa. */
+export const REGISTRO_ANCHOS = []
+export const vaciarRegistroDeAnchos = () => { REGISTRO_ANCHOS.length = 0 }
+
 export function anchosDeColumna(filas, columnas) {
   const UMBRAL_PROSA = 28          // celda más larga a partir de la cual es prosa
   const PADDING = 44               // margen de celda observado en las medidas
@@ -219,7 +225,24 @@ function tablaSN(filas, iconos = null, jerarquia = false) {
   if (filas.length) filas = [filas[0].map(traducirCabecera), ...filas.slice(1)]
   filas = marcarJerarquia(filas)
   const columnas = Math.max(...filas.map(f => f.length))
-  const anchos = anchosDeColumna(filas, columnas)
+  /* 🔴 CONECTADO EL 1 OCT 2026, y es el arreglo del 8 sep llegando a un género que
+   * se quedó fuera. `anchos-de-tabla.mjs` existe desde entonces para que un ajuste
+   * manual del Lead no lo pise el cálculo, y hasta hoy lo consultaba SOLO
+   * `button.mjs`. Un ancho ajustado a mano en una página de fundamento se perdía
+   * en la siguiente publicación, sin error y sin hueco visible.
+   *
+   * Se midió ocurriendo: 3 anchos nuevos aparecieron en el changelog de `Bordes`
+   * entre las 22:22 y las 22:31 del 1 oct 2026, sin publicación de por medio.
+   *
+   * ⚠️ El cálculo sigue siendo el DEFAULT. Una tabla sin ancho registrado nace
+   * con la forma que el reparto le da; una con ancho suyo lo conserva. */
+  const cabecera = filas[0] ?? []
+  const col0 = filas.slice(1).map(f => String(f?.[0] ?? ""))
+  const calculados = anchosDeColumna(filas, columnas)
+  const { anchos: delLead, origen } = anchosDe(cabecera, null, col0)
+  const usaLead = Array.isArray(delLead) && delLead.length === columnas
+  const anchos = usaLead ? delLead : calculados
+  REGISTRO_ANCHOS.push({ firma: firmaDeTabla(cabecera, col0), origen: usaLead ? origen : "calculado" })
   const out = ["<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>"]
   for (const fila of filas) {
     out.push("  <SNTableRow>")
