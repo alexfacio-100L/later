@@ -48,6 +48,7 @@
     "doc:done": "node doc-done.mjs",
     "doc:done:fundamento": "node doc-done-fundamento.mjs",
     "doc:orden": "node verificar-orden-fundamento.mjs",
+    "anchos:probar": "node verificar-anchos.mjs --probar",
     "doc:registro": "node doc-registro.mjs",
     "molde:actualizar": "node plantilla-componente/maestra.mjs --actualizar",
     "rebindeo:verificar": "node verificar-rebindeo.mjs",

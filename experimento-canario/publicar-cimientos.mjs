@@ -43,7 +43,8 @@
 import sdkPkg from "@supernovaio/sdk"
 import { apiKey } from "./entorno.mjs"
 import { convertir, REGISTRO_ANCHOS, vaciarRegistroDeAnchos } from "./conversor.mjs"
-import { informeDeAnchos } from "../anchos-de-tabla.mjs"
+import { informeDeAnchos, firmaDeTabla, ANCHOS_DEL_LEAD } from "../anchos-de-tabla.mjs"
+import { compararAnchos, informarYDecidir, tablasVivas as tablasVivasDe } from "../verificar-anchos.mjs"
 import { aplicarPestanas, GRUPOS_FUNDAMENTO, HERRAMIENTAS } from "../plantilla-componente/pestanas-plataforma.mjs"
 import { readFileSync, existsSync } from "node:fs"
 import path from "node:path"
@@ -371,6 +372,33 @@ for (const t of trozos) {
   console.log(`  ✓ «${t.nombre}» — ${val.blockCount} bloques · ${informe.tablas} tabla(s) · ${informe.callouts} callout(s)`)
 }
 if (REGISTRO_ANCHOS.length) informeDeAnchos(REGISTRO_ANCHOS)
+
+/* ── ¿Alguien ajustó un ancho y no lo capturó? ─────────────────────────────── */
+/* 🔴 Va ANTES de escribir, porque `writeMarkdownToPage` reemplaza la página
+ * entera y después ya no hay nada que proteger. */
+if (!MOLDE && REGISTRO_ANCHOS.length) {
+  const textoCelda = (c) => {
+    const o = []
+    ;(function t(y) {
+      if (!y || typeof y !== "object") return
+      if (typeof y.text === "string") o.push(y.text)
+      for (const q of Object.values(y)) t(q)
+    })(c)
+    return o.join("").replace(/\s+/g, " ").trim()
+  }
+  const vivos = {}
+  for (const h of hojas) {
+    const raw = await sdk.documentation.getDocumentationContentRaw(from, h.id)
+    Object.assign(vivos, tablasVivasDe(typeof raw === "string" ? JSON.parse(raw) : raw, firmaDeTabla, textoCelda))
+  }
+  const cmp = compararAnchos(REGISTRO_ANCHOS, vivos, ANCHOS_DEL_LEAD)
+  const seguir = informarYDecidir(cmp, {
+    escribir: ESCRIBIR, grupo: destino.persistentId,
+    forzar: process.argv.includes("--forzar-anchos"),
+  })
+  if (!seguir) process.exit(1)
+}
+
 console.log(`\ncobertura de conversión: ${trozos.length} de ${PESTANAS.length} pestañas · ${totalBloques} bloques · ${totalTablas} tablas · ${totalMarcadores} bloque(s) de tokens con ${totalTokens} tokens vivos`)
 
 if (!ESCRIBIR) {

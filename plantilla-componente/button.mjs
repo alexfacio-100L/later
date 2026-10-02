@@ -692,11 +692,14 @@ export const tabla = (cabecera, filas, anchos) => {
    * solo por encabezados preservaba 17 y recalculaba 7 sin decir nada. */
   const col0 = filas.map(f => String(f?.[0] ?? ""))
   const { anchos: delRegistro, origen } = anchosDe(cabecera, null, col0)
-  REGISTRO_ANCHOS.push({ firma: firmaDeTabla(cabecera, col0), origen })
   /* El default para una tabla sin ancho suyo NO es reparto igual: es su misma
    * regla —la columna de dato se comprime, la descriptiva absorbe—, para que una
    * tabla nueva nazca ya con la forma que él le daría. */
   const calculados = anchosDeColumna([cabecera, ...filas], cabecera.length)
+  /* ⚠️ El push bajó aquí el 1 oct 2026, y es lo ÚNICO que se tocó de este archivo.
+   * `calculados` tiene que estar hecho: el verificador de anchos vivos lo necesita
+   * para distinguir un ancho puesto a mano de uno que la fórmula produjo. */
+  REGISTRO_ANCHOS.push({ firma: firmaDeTabla(cabecera, col0), origen, calculados })
   const anchoDe = (c) => delRegistro?.[c] ?? anchos?.[c] ?? Math.floor(calculados[c] ?? 756 / cabecera.length)
 
   /**

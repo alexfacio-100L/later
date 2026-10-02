@@ -242,7 +242,7 @@ function tablaSN(filas, iconos = null, jerarquia = false) {
   const { anchos: delLead, origen } = anchosDe(cabecera, null, col0)
   const usaLead = Array.isArray(delLead) && delLead.length === columnas
   const anchos = usaLead ? delLead : calculados
-  REGISTRO_ANCHOS.push({ firma: firmaDeTabla(cabecera, col0), origen: usaLead ? origen : "calculado" })
+  REGISTRO_ANCHOS.push({ firma: firmaDeTabla(cabecera, col0), origen: usaLead ? origen : "calculado", calculados })
   const out = ["<SNTable showBorder highlightHeaderRow highlightHeaderColumn={false}>"]
   for (const fila of filas) {
     out.push("  <SNTableRow>")
