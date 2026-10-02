@@ -22,6 +22,10 @@ Un hairline de 1 px no cabe en la rejilla y sigue siendo el borde correcto por d
 
 Los colores de borde no son una escala. Son trece intenciones, y cada una alias de un primitivo distinto por mode.
 
+<SNCallout type="Warning">
+**La evidencia cubre un destino.** Las cifras de uso salen del archivo de producto digital. La escala rige los tres destinos, y su uso medido todavía no los cubre.
+</SNCallout>
+
 ## Fundamentos relacionados
 
 `Curvas esquinadas` decide el radio de la misma caja. `Color` decide de qué primitivo sale cada color de borde. `Dimensiones` decide el tamaño del elemento que lleva el borde.
@@ -32,22 +36,22 @@ Los colores de borde no son una escala. Son trece intenciones, y cada una alias 
 
 # Usos
 
-## Qué grosor para qué tamaño
+## Qué grosor para qué papel
 
 El grosor no se elige por gusto. Se elige por el papel que hace el borde y por la talla del componente.
 
-| Token | Valor | Para qué | Uso medido |
+| Token | Valor | Qué papel hace | Uso medido |
 | --- | --- | --- | --- |
-| `width/zero` | 0 | Apagar un borde heredado en código | No es «sin borde»: es un apagado explícito |
-| `width/xs` | 1 px | El borde por defecto del sistema | Button `secondary` y campos de formulario |
-| `width/s` | 1.5 px | Anillo de foco en tallas s y m | Button, medido |
-| `width/m` | 2 px | Anillo de foco en talla l | Button, medido |
-| `width/l` | 4 px | Barra de acento | 27 bindings en Alerts tallas S y M, y en Select |
-| `width/xl` | 8 px | Barra de acento en talla L | 5 bindings en Alerts, medido el 23 sep 2026 |
+| `width/zero` | 0 | Apagar un borde heredado | No es «sin borde»: es un apagado explícito |
+| `width/xs` | 1 px | El borde por defecto del sistema | Producto digital: Button `secondary` y campos de formulario |
+| `width/s` | 1.5 px | Marcar un elemento señalado, en tallas s y m | Producto digital: el anillo de foco del Button |
+| `width/m` | 2 px | Marcar un elemento señalado, en talla l | Producto digital: el anillo de foco del Button |
+| `width/l` | 4 px | Barra de acento | Producto digital: 27 bindings en Alerts tallas S y M, y en Select |
+| `width/xl` | 8 px | Barra de acento en talla L | Producto digital: 5 bindings en Alerts, medido el 23 sep 2026 |
 
-**Dos grosores escalan con la talla.** El anillo de foco pasa de 1.5 px a 2 px en la talla l. La barra de acento pasa de 4 px a 8 px en la talla L.
+**Dos grosores escalan con la talla.** El peldaño que marca un elemento señalado pasa de 1.5 px a 2 px en la talla l. La barra de acento pasa de 4 px a 8 px en la talla L.
 
-El foco es el único estado que cambia una medida en el sistema, y la cambia según la talla.
+**Dos peldaños, un solo destino.** `width/s` y `width/m` existen hoy por el anillo de foco, que es de producto digital. El peldaño es de la escala; su único consumidor medido, no.
 
 ## Qué color de borde para qué intención
 
@@ -56,23 +60,30 @@ Los trece colores se agrupan en cuatro familias por la decisión que resuelven.
 | Familia | Tokens | Cuándo |
 | --- | --- | --- |
 | Estructura | `border/primary` · `border/subtle` · `border/inverse` · `border/inverseStatic` | Separar cajas sin decir nada más |
-| Interacción | `border/focus` · `border/selected` · `border/disabled` | El control responde al teclado, está elegido, o no se puede usar |
 | Estado | `border/info` · `border/warning` · `border/negative` · `border/positive` · `border/positiveHighlight` | El contenedor comunica un resultado |
 | Marca | `border/brand` | El borde representa a Later |
 
-`border/primary` es el borde estructural por defecto. `border/subtle` y `border/inverse` son estáticos a propósito: valen `#DADADA` en los dos modes.
+Faltan tres de los trece, y es a propósito. `border/focus`, `border/selected` y `border/disabled` son de interacción, y una interacción no existe fuera de una pantalla.
+
+`border/primary` es el borde estructural por defecto. `border/subtle` y `border/inverse` no cambian de valor: valen `#DADADA` siempre.
 
 ## Cuándo no usarla
+
+**No escribas un grosor intermedio.** Entre 1.5 px y 2 px no hay peldaño porque no hace falta ninguno. Un valor suelto rompe el consumo del token más adelante.
+
+**El color no basta.** `border/negative` acompaña siempre a un mensaje con `text/negative`. Si algo solo advierte y no ha fallado, va `border/warning`.
+
+**No uses `width/zero` para decir «sin borde».** Existe para apagar un borde heredado, y lo mismo vale para `radius/zero`.
+
+## El borde en producto digital
+
+**Tres colores son de interacción.** `border/focus` dice que el control responde al teclado, `border/selected` que está elegido y `border/disabled` que no se puede usar.
+
+**El foco cambia una medida.** Es el único estado que lo hace: el anillo pasa de 1.5 px a 2 px en la talla l. Ninguna otra medida del sistema se mueve por estado.
 
 **Invertir obliga a invertir.** `border/positive` cambia de valor entre Light y Dark. Sobre un relleno de marca el par pasa en Light por coincidencia y se rompe en Dark. Ahí va `border/subtle` o `border/inverse`.
 
 **No uses `border/info` ni `border/selected` en un control interactivo.** Los tres comparten el valor `#1C64EB` con `border/focus`. El usuario leerá foco donde no lo hay.
-
-**No escribas un grosor intermedio.** Entre 1.5 px y 2 px no hay peldaño porque no hace falta ninguno. Un valor suelto rompe el consumo del token en código.
-
-**El color no basta.** `border/negative` acompaña siempre a un mensaje con `text/negative`. Si el campo solo advierte y no ha fallado, va `border/warning`.
-
-**No uses `width/zero` para decir «sin borde».** Existe para apagar un borde heredado, y lo mismo vale para `radius/zero`.
 
 # Especificaciones
 
@@ -87,6 +98,12 @@ Los trece colores se agrupan en cuatro familias por la decisión que resuelven.
 <SNCallout type="Info">
 **Un token queda fuera a propósito.** Su nombre lleva la palabra `border`. `graphs/basicConfig/borderColor` pertenece a la configuración de gráficas, junto a otros once tokens. Un listado plano lo hace parecer un catorceavo color de borde.
 </SNCallout>
+
+## Accesibilidad de la escala
+
+Un borde que comunica algo es un elemento no textual, y WCAG 1.4.11 le pide 3:1 contra lo que tiene al lado. El mínimo de un borde informativo es 3:1, no 4.5:1.
+
+El sistema no tiene criterio medido de grosor mínimo visible. El hairline de 1 px es el suelo de la escala. Nadie ha comprobado si se sostiene en una pantalla de baja densidad ni al imprimir. Queda declarado como hueco.
 
 ## Qué número teclear en cada herramienta
 
@@ -156,17 +173,13 @@ La lista es 1, 2, 3, 4, 8, 12, 16 y 24 píxeles.
 
 El radio es otra cosa y vive en `Curvas esquinadas`, en esta misma pestaña.
 
-## Accesibilidad de la escala
-
-Un borde que comunica algo es un elemento no textual, y WCAG 1.4.11 le pide 3:1 contra lo que tiene al lado. El mínimo de un borde informativo es 3:1, no 4.5:1.
+## El contraste en producto digital
 
 `border/focus` no es decorativo. Es requisito y debe verse en todo control interactivo.
 
 <SNCallout type="Warning">
 **Un par no llega al umbral.** En Dark, `border/primary` da 3.66:1 sobre `background/primary`. Sobre `background/secondary` da 2.84:1. Sobre `background/subtle` da solo 1.81:1. Medido el 4 sep 2026.
 </SNCallout>
-
-El sistema no tiene criterio medido de grosor mínimo visible. El hairline de 1 px es el suelo de la escala, y nadie ha comprobado si se sostiene en pantallas de baja densidad. Queda declarado como hueco.
 
 # Estatus y cambios
 
@@ -186,6 +199,8 @@ Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de
 
 | Fecha | Qué cambió | Por qué |
 | --- | --- | --- |
+| 1 oct 2026 | Lo que solo sirve a producto digital pasa a secciones que lo nombran en su título | El sistema alimenta producto, marketing e impresos, y dos de los tres no se veían reflejados |
+| 1 oct 2026 | Se declara que las cifras de uso salen del archivo de producto digital | Un uso medido sin destino declarado se lee como si cubriera los tres |
 | 23 sep 2026 | `width/l` y `width/xl` dejan de estar declarados sin uso | Se midieron 27 y 5 bindings. La declaración anterior salía de una muestra del Playground y era falsa |
 | 4 sep 2026 | `border/primary` en Dark sube de `neutral/700` a `neutral/600` | Valía `#404040`, que ese mismo día pasó a ser `background/subtle`. El borde desaparecía sobre una de las tres superficies |
 | 4 sep 2026 | `~border/secondary` pasa a llamarse `border/inverseStatic` | El nombre mentía. Valía `#FFFFFF` en los dos modes, y sobre `background/secondary` en Light daba 1.00:1 |

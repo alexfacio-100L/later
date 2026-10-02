@@ -44,6 +44,10 @@ Lo que cambia de un medio a otro es quién fija el ancho total. Un formato impre
 
 Doce columnas se reparten en mitades, tercios, cuartos y sextos. Esa divisibilidad permite repetir la misma rejilla en composiciones muy distintas.
 
+<SNCallout type="Info">
+**Later publica el repertorio.** El canal y el margen salen de la escala, y cada destino arma su rejilla con esos peldaños. Solo producto digital tiene rejillas definidas como estilo. Lo decidió el Lead de Product Design el 1 oct 2026, y no es un límite de ninguna herramienta.
+</SNCallout>
+
 ## Fundamentos relacionados
 
 `Dimensiones` decide el tamaño del elemento que se separa. `Bordes` y `Curvas esquinadas` deciden la caja. `Color` decide el fondo sobre el que se lee la separación.
@@ -156,8 +160,10 @@ Fuera de una herramienta con auto-layout no hay campo de relleno ni de hueco. Na
 `Unidades y medios` guarda la regla general de conversión: la constante, por qué un redondeo no se traduce y qué pasa en impreso.
 
 <SNCallout type="Warning">
-**Hueco declarado.** Qué puede hacer marketing con la escala y la rejilla en Illustrator y en Google Slides no está medido. Hasta medirlo contra la referencia de cada herramienta no se escribe aquí.
+**Hueco declarado.** Dónde se expresa la separación en Illustrator y en Google Slides no está medido. Hasta medirlo en cada herramienta no se escribe aquí.
 </SNCallout>
+
+La rejilla no tiene ese hueco. Marketing e impresos la arman con el repertorio de canal y margen, y no esperan a que exista un estilo.
 
 ### Cómo se aplica en Figma
 
@@ -292,6 +298,7 @@ Su estilo no está en esta librería, así que renombrar o rebindear aquí no la
 
 | Fecha | Qué cambió | Por qué |
 | --- | --- | --- |
+| 1 oct 2026 | Later publica el repertorio de canal y margen, y no define rejillas de marketing ni de impresos | Cada destino arma la suya con los mismos peldaños. Es una decisión, no un límite de herramienta |
 | 1 oct 2026 | Lo que solo sirve a producto digital pasa a secciones que lo nombran en su título | El sistema alimenta producto, marketing e impresos, y dos de los tres no se veían reflejados |
 | 1 oct 2026 | Se declara que en separación no hay número que teclear fuera de una herramienta con auto-layout | En grosor y radio se traduce un número. Aquí lo que se traduce es el repertorio de peldaños |
 | 1 oct 2026 | `space/5xl` deja de usarse como altura del `Top Bar`, que pasa a `size/control/m` | Era un cruce de categoría, y el valor no cambió |
