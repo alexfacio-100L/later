@@ -15,6 +15,7 @@
  *   F3  ningún token citado en la prosa está retirado del sistema
  *   F4  escribir no perdió ningún ajuste de forma
  *   F5  el registro editorial V1–V7 está en umbral
+ *   F6  el cuerpo va antes que el apartado en cada pestaña
  *
  * Y las tres que ningún comando puede comprobar van al final, siempre.
  *
@@ -170,17 +171,30 @@ if (r5.code !== 0) falla("F5", "El registro editorial V1–V7 está en umbral",
   r5.out.split("\n").filter(l => /🔴/.test(l)).join("\n"))
 ok("F5", "El registro editorial V1–V7 está en umbral", linea(r5.out, /\d+ de 4 reglas contables[^\n]*/))
 
+/* ── F6 · El cuerpo va antes que el apartado ───────────────────────────────── */
+/* 🔴 Nació de un defecto REAL que esta misma puerta dejó pasar: el 1 oct 2026
+ * «Bordes» se publicó con «El contraste en producto digital» delante de
+ * «Accesibilidad de la escala», y salió 5 de 5. El diff de respaldo no lo vio
+ * porque compara el CENSO por pestaña, y mover una sección no cambia conteos.
+ * Lo cazó una persona leyendo encabezados. Esto lo vuelve mecánico, y lee el
+ * ÁRBOL PUBLICADO, que es donde apareció. */
+const r6 = correr("node", ["verificar-orden-fundamento.mjs", `--titulo=${TITULO}`])
+if (r6.code !== 0) falla("F6", "El cuerpo va antes que el apartado en cada pestaña",
+  r6.out.split("\n").filter(l => /esperado:|encontrado:|🔴/.test(l)).join("\n"))
+ok("F6", "El cuerpo va antes que el apartado en cada pestaña",
+  linea(r6.out, /cobertura de orden:[^\n]*/))
+
 /* ── Cierre ────────────────────────────────────────────────────────────────── */
-const N = 5
+const N = 6
 console.log(`\n── cobertura de la puerta ──`)
 console.log(`   ${corridas} de ${N} condiciones mecánicas comprobadas`)
 
 console.log(`\n🔴 LAS TRES QUE ESTE COMANDO NO PUEDE COMPROBAR — las firma una persona, o no están hechas:`)
-console.log(`   F6  Se verificó en PREVIEW, no en el editor`)
+console.log(`   F7  Se verificó en PREVIEW, no en el editor`)
 console.log(`        el editor no es fiel al resultado publicado (hallazgo del Lead, 8 sep 2026)`)
-console.log(`   F7  Se miró el RENDER, no solo el árbol`)
+console.log(`   F8  Se miró el RENDER, no solo el árbol`)
 console.log(`        el árbol de tokens decía #F9F9F9 y la página pintaba negro`)
-console.log(`   F8  Cada bloque vivo está configurado, no solo colocado`)
+console.log(`   F9  Cada bloque vivo está configurado, no solo colocado`)
 console.log(`        un valor por defecto se publica igual que uno decidido: sin error y sin hueco visible`)
 
 console.log(`\n⚠️ Lo que esta puerta NO cubre, declarado:`)

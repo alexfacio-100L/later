@@ -4,7 +4,17 @@
 
 [El test, y es decidible sin juicio: si una sección solo la puede usar una de las tres audiencias, no es cuerpo, es apartado. Las tres son producto, marketing e impresos. Atlassian y Carbon no son agnósticos y hacen bien, porque su sistema ES web; Later alimenta tres destinos.]
 
-[Se comprueba leyendo encabezados. Una regla que exige criterio para ejecutarse no se ejecuta.]
+[Se comprueba leyendo encabezados, y la comprueba un comando. Una regla que exige criterio para ejecutarse no se ejecuta.]
+
+[🔴 LO QUE BAJA AL APARTADO ES EL USO, NO EL PELDAÑO. Un peldaño de la escala se queda en el cuerpo aunque su único consumidor medido sea de un destino. Su fila declara de qué destino sale ese uso.]
+
+[El caso que lo fijó: `width/s` vale 1.5 px y hoy solo lo usa el anillo de foco, que es de producto digital. Bajarlo habría recortado la escala publicada de seis grosores a cuatro.]
+
+[Un peldaño no deja de ser del sistema porque hoy solo lo use un destino. Lo contrario publica una escala mutilada.]
+
+[🔴 UN APARTADO CON VARIAS PARTES SE AGRUPA, NO SE REPARTE EN SECCIONES SUELTAS. Un título de nivel 2 nombra el destino, y sus partes cuelgan en nivel 3. Así el destino se nombra una vez y no hay que repetirlo en cada subtítulo.]
+
+[Y el orden dentro de una pestaña es siempre el mismo: primero todo el cuerpo, después los apartados. Una vez que aparece un apartado no vuelve a aparecer cuerpo. Changelog y Deprecación son la excepción, y van al final por prescripción de abajo.]
 
 [Una o dos frases. Qué es el fundamento y qué problema resuelve. Sin metáforas y sin abrir con el nombre del fundamento: la página ya lo lleva de título.]
 

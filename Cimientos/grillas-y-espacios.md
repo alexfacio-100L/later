@@ -179,7 +179,9 @@ Pulsa `Control + G` para mostrar u ocultar la rejilla mientras diseñas.
 
 La separación sí tiene campo en Figma. Va en los controles de auto-layout, y el valor sale del token en lugar de escribirse a mano.
 
-## Los umbrales de ventana
+## Las medidas en producto digital
+
+### Los umbrales de ventana
 
 <SNTokens coleccion="layout" grupo="breakpoint" titulo="Los umbrales de ventana" />
 
@@ -187,7 +189,7 @@ La separación sí tiene campo en Figma. Va en los controles de auto-layout, y e
 **Un umbral nombra la frontera.** No conmuta el valor. Los tokens de tipografía conmutan por mode Desktop y Mobile. El semántico de puntos de ruptura aliasa el umbral de 640 px en móvil y el de 1440 px en escritorio.
 </SNCallout>
 
-## La rejilla por modelo y medida
+### La rejilla por modelo y medida
 
 | Modelo | Tipo | Medida | Columnas | Canal | Margen |
 | --- | --- | --- | --- | --- | --- |
@@ -203,7 +205,7 @@ La contenida de `Web App` ya no depende de la medida. Fija 12 columnas de 67,83 
 
 Esta tabla recoge el archivo de auditoría. Comprueba la rejilla de tu producto antes de darla por buena, porque puede diferir.
 
-## El área táctil en producto digital
+### El área táctil
 
 El área táctil mínima la fija `size/control/s`, que vale 48 px. WCAG 2.2 pide 24 por 24 CSS px en el criterio 2.5.8, y el sistema va por encima.
 
@@ -242,7 +244,9 @@ Aprueba el Lead de Product Design. Sin su visto bueno el peldaño no entra.
 **Los previews no son fuente.** Muestran peldaños de 20 px, 28 px, 36 px y 128 px que no existen como token. Les faltan siete de los que sí existen.
 </SNCallout>
 
-## Cómo se añade una medida de rejilla en producto digital
+## La rejilla en producto digital
+
+### Cómo se añade una medida
 
 Una medida nueva necesita modelo declarado, no solo un ancho. Di si es `Website` o `Web App` antes de fijar el margen.
 
@@ -252,7 +256,7 @@ El estilo lleva el binding dentro, nunca en el nodo. Un estilo con números suel
 
 Y la medida necesita umbral. Si el ancho no existe en la escala de umbrales, entra ahí primero.
 
-## Deuda viva de los estilos de rejilla
+### Deuda viva de los estilos
 
 Medida el 1 oct 2026 sobre los 10 estilos publicados y las 41 rejillas aplicadas en `[Auditoria]`.
 
@@ -265,7 +269,7 @@ Medida el 1 oct 2026 sobre los 10 estilos publicados y las 41 rejillas aplicadas
 
 **Dos márgenes crudos menos.** El ancho de columna fijo no deja margen que escribir. `Web App` dejó de llevar 166 px y 262 px. A cambio escribe 67,83 px de ancho de columna, que tampoco es token.
 
-## Lo que se arregló
+### Lo que se arregló
 
 Dos defectos publicados como deuda ya no lo son. Se quedan a la vista porque alguien pudo construir encima mientras lo eran.
 
@@ -288,7 +292,7 @@ El segundo no se arregló: se entendió. El valor no cambió y la lectura sí, q
 
 Las dos vistas de `Web App` con barra lateral no se movieron ni un píxel. Siguen en 1.078 px.
 
-## Lo que no gobernamos
+### Lo que no gobernamos
 
 Seis de las 41 rejillas aplicadas apuntan a estilos de otra librería. Cuatro viven en `Playground` y dos en el componente `Navbar`.
 

@@ -24,12 +24,16 @@ Un solo token para los dos casos, y eso está medido. Sobre 8 design systems, **
 
 El 50% no era alternativa. DTCG admite en `dimension` solo px y rem, así que el centinela no es un apaño: es lo que permite el estándar.
 
+<SNCallout type="Warning">
+**La evidencia cubre un destino.** Las cifras de uso salen del archivo de producto digital. La escala rige los tres destinos, y su uso medido todavía no los cubre.
+</SNCallout>
+
 ## Fundamentos relacionados
 
 `Bordes` decide el grosor y el color de la misma caja. `Dimensiones` decide el tamaño del elemento que la lleva. `Grillas y espacios` decide la separación entre cajas.
 
 <SNCallout type="Warning">
-**Las tres páginas están vacías.** Por eso van nombradas y no enlazadas. Un enlace a una página vacía cuesta más que un nombre en negrita.
+**Solo una sigue vacía.** `Dimensiones` no tiene contenido, así que va nombrada y no enlazada. `Bordes` y `Grillas y espacios` se publicaron el 1 oct 2026.
 </SNCallout>
 
 # Usos
@@ -38,15 +42,15 @@ El 50% no era alternativa. DTCG admite en `dimension` solo px y rem, así que el
 
 **El radio se elige por tamaño**, no por gusto. Lo pide el componente al que se aplica. Es la doctrina de Base, medida aquí sobre el sistema propio.
 
-| Token | Valor | Para qué | Uso medido |
+| Token | Valor | Qué papel hace | Uso medido |
 | --- | --- | --- | --- |
-| `radius/zero` | 0 | Apagar un radio heredado en código | No es «sin radio»: es un apagado explícito |
-| `radius/xs` | 4 px | Elemento pequeño | Tags, miniaturas de propiedad y pistas de slider, medido el 22 sep 2026 |
-| `radius/s` | 8 px | Contenedor anidado y campo de formulario | `card-graph` dentro de una tarjeta, el Content de `inputText`, `inputNumber` e `inputDate`, Alerts y Button Card |
-| `radius/m` | 12 px | Contenedor intermedio | El `labelBox` de Button y de Link |
-| `radius/l` | 16 px | Contenedor de primer nivel sobre la superficie de pantalla | 15 de 15 tarjetas raíz del Playground y las 60 variantes del Button |
-| `radius/xl` | 24 px | Contenedor grande | Los 5 componentes del Chip |
-| `radius/full` | 999 px | Píldora y círculo | Avatares, badges de píldora y botones circulares |
+| `radius/zero` | 0 | Apagar un radio heredado | No es «sin radio»: es un apagado explícito |
+| `radius/xs` | 4 px | Elemento pequeño | Producto digital: Tags, miniaturas de propiedad y pistas de slider, medido el 22 sep 2026 |
+| `radius/s` | 8 px | Contenedor anidado | Producto digital: `card-graph` dentro de una tarjeta, el Content de `inputText`, `inputNumber` e `inputDate`, Alerts y Button Card |
+| `radius/m` | 12 px | Contenedor intermedio | Producto digital: el `labelBox` de Button y de Link |
+| `radius/l` | 16 px | Contenedor de primer nivel | Producto digital: 15 de 15 tarjetas raíz del Playground y las 60 variantes del Button |
+| `radius/xl` | 24 px | Contenedor grande | Producto digital: los 5 componentes del Chip |
+| `radius/full` | 999 px | Píldora y círculo | Producto digital: avatares, badges de píldora y botones circulares |
 
 **La regla más sólida de la escala es `radius/l`.** 15 de 15 tarjetas raíz del Playground lo usan, sin una excepción.
 
@@ -58,9 +62,9 @@ El 50% no era alternativa. DTCG admite en `dimension` solo px y rem, así que el
 
 ## Cuándo no usarla
 
-**Un grosor no es un radio.** `width/l` vale 4 px igual que `radius/xs`, así que usarlo como radio no se ve. Ni en el render, ni en una revisión humana, ni en un chequeo de valores crudos. Pasó dentro del Button, y lo caza `npm run tokens:lint`.
+**Un grosor no es un radio.** `width/l` vale 4 px igual que `radius/xs`, así que usarlo como radio no se ve. Ni en el render, ni en una revisión humana, ni en un chequeo de valores crudos. Lo caza el chequeo de integridad de tokens.
 
-**No escribas un radio intermedio.** Entre 12 px y 16 px no hay peldaño porque no hace falta ninguno. Un valor suelto rompe el consumo del token en código.
+**No escribas un radio intermedio.** Entre 12 px y 16 px no hay peldaño porque no hace falta ninguno. Un valor suelto rompe el consumo del token más adelante.
 
 **No uses `radius/zero` para decir «sin radio».** Existe para apagar un radio heredado, y lo mismo vale para `width/zero`.
 
@@ -73,6 +77,12 @@ El 50% no era alternativa. DTCG admite en `dimension` solo px y rem, así que el
 ## Los siete radios
 
 <SNTokens coleccion="border" grupo="radius" titulo="Radios de esquina" />
+
+## Accesibilidad de la escala
+
+WCAG no fija ningún criterio sobre el radio de una esquina. Un radio no cambia el contraste ni la estructura semántica.
+
+El radio tampoco decide si algo se distingue de lo que tiene al lado. Esa decisión vive en `Bordes` y en `Color`.
 
 ## Qué número teclear en cada herramienta
 
@@ -126,9 +136,7 @@ Si el entregable exige puntos, la constante es multiplicar por 0,75. Sale del es
 
 **Ajusta una forma y duplícala.** Es lo que hace consistente un mazo: el duplicado conserva el ajuste, así que el arrastre se hace una vez y no en cada tarjeta.
 
-## Accesibilidad de la escala
-
-WCAG no fija ningún criterio sobre el radio de una esquina. Un radio no cambia el contraste ni la estructura semántica.
+## El área táctil en producto digital
 
 <SNCallout type="Warning">
 **Hueco declarado.** La interacción entre radio y área táctil no está medida. Un radio grande recorta las esquinas del rectángulo que el dedo alcanza. Nadie ha comprobado si algún control con `radius/full` queda por debajo del mínimo de 2.5.8.
@@ -152,6 +160,9 @@ Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de
 
 | Fecha | Qué cambió | Por qué |
 | --- | --- | --- |
+| 1 oct 2026 | El área táctil pasa a una sección que nombra su destino, y `Accesibilidad` se queda con lo que vale en cualquier medio | Un criterio que exige una pantalla táctil no vale en papel |
+| 1 oct 2026 | Se declara que las cifras de uso salen del archivo de producto digital | Un uso medido sin destino declarado se lee como si cubriera los tres |
+| 1 oct 2026 | `Bordes` y `Grillas y espacios` dejan de estar declaradas vacías | Se publicaron ese mismo día, y la declaración anterior ya era falsa |
 | 23 sep 2026 | `radius/xl` deja de estar declarado sin uso | Se midieron los 5 componentes del Chip. La declaración anterior salía de una muestra del Playground y era falsa |
 | 23 sep 2026 | `~radius/circle` y `~radius/pill` se sustituyen por `radius/full` | Eran dos tokens para un solo mecanismo. Medido sobre 8 design systems: 8 de 8 usan un token único y 6 de 8 lo llaman `full` |
 

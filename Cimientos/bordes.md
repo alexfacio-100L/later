@@ -31,7 +31,7 @@ Los colores de borde no son una escala. Son trece intenciones, y cada una alias 
 `Curvas esquinadas` decide el radio de la misma caja. `Color` decide de qué primitivo sale cada color de borde. `Dimensiones` decide el tamaño del elemento que lleva el borde.
 
 <SNCallout type="Warning">
-**Las tres páginas están vacías.** Por eso van nombradas y no enlazadas. Un enlace a una página vacía cuesta más que un nombre en negrita.
+**Solo dos siguen vacías.** `Color` y `Dimensiones` no tienen contenido, así que van nombradas y no enlazadas. `Curvas esquinadas` se publicó el 23 sep 2026.
 </SNCallout>
 
 # Usos
@@ -199,6 +199,7 @@ Tres condiciones para que entre un peldaño nuevo, y las tres ya son doctrina de
 
 | Fecha | Qué cambió | Por qué |
 | --- | --- | --- |
+| 1 oct 2026 | `Curvas esquinadas` deja de estar declarada vacía | Está publicada desde el 23 sep 2026, y la declaración ya era falsa |
 | 1 oct 2026 | Lo que solo sirve a producto digital pasa a secciones que lo nombran en su título | El sistema alimenta producto, marketing e impresos, y dos de los tres no se veían reflejados |
 | 1 oct 2026 | Se declara que las cifras de uso salen del archivo de producto digital | Un uso medido sin destino declarado se lee como si cubriera los tres |
 | 23 sep 2026 | `width/l` y `width/xl` dejan de estar declarados sin uso | Se midieron 27 y 5 bindings. La declaración anterior salía de una muestra del Playground y era falsa |
