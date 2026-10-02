@@ -39,6 +39,8 @@ import path from "node:path"
 
 const { Supernova } = sdkPkg
 const DIFF = process.argv.includes("--diff")
+/* Prueba la vigilancia de callouts sobre el árbol vivo, sin escribir ni publicar. */
+const PROBAR = process.argv.includes("--probar-callout")
 /* Parametrizado el 14 sep 2026 para que `doc:done` sirva al primer lote y no solo
  * al canario. Sin argumento se comporta como siempre: el Button.
  *   node respaldo-pagina.mjs [--diff] [--componente=<slug>] [--grupo=<persistentId>]
@@ -123,13 +125,44 @@ const censo = (arbol) => {
   return c
 }
 
+/**
+ * Los bloques cuyo texto se vigila. Va declarado como lista para que el hueco
+ * sea visible: lo que no esté aquí puede cambiar o desaparecer sin que el diff
+ * diga nada.
+ *
+ * 🔴 `callout` ENTRÓ EL 1 OCT 2026, y por un caso medido. Hasta ese día solo se
+ * vigilaba `rich-text`: se cambió el texto de un callout en «Bordes» y el diff
+ * dio VERDE. En los callouts viven los huecos declarados, los ratios de
+ * contraste con su fecha y la procedencia de la evidencia. Es contenido caro y
+ * estaba sin vigilar.
+ *
+ * ⚠️ Ampliar esto NO invalida ningún respaldo: `prev.prosa` se DERIVA del árbol
+ * guardado, así que los dos lados se recalculan con la regla nueva.
+ *
+ * 🔴 LO QUE SIGUE SIN VIGILARSE, declarado con su tamaño en los 6 respaldos de
+ * hoy, porque un hueco callado se lee como que no existe:
+ *     table                 49 bloques   el texto de las CELDAS, que es donde
+ *                                        viven los peldaños y los changelogs
+ *     title1-4             129 bloques   un encabezado borrado no se ve
+ *     unordered-list         8 bloques
+ *     do-dont-guidelines     6 bloques
+ *     blockquote             2 bloques
+ * `rich-text` y `callout` suman 278 de los ~472 bloques con texto. **La prosa
+ * vigilada es poco más de la mitad.** Ampliar a tablas y títulos es la siguiente
+ * decisión, y no se tomó aquí.
+ */
+const VIGILADOS = new Set([
+  "io.supernova.block.rich-text",
+  "io.supernova.block.callout",
+])
+
 /** La prosa de la página, en orden. Lo que NUNCA debe desaparecer sin querer. */
 const prosa = (arbol) => {
   const o = []
   ;(function w(x) {
     if (!x || typeof x !== "object") return
     if (Array.isArray(x)) return x.forEach(w)
-    if (x.packageId === "io.supernova.block.rich-text") {
+    if (VIGILADOS.has(x.packageId)) {
       const s = []
       ;(function t(y) {
         if (!y || typeof y !== "object") return
@@ -147,6 +180,43 @@ const prosa = (arbol) => {
 const censoActual = Object.fromEntries(Object.entries(actual).map(([k, a]) => [k, censo(a)]))
 const prosaActual = Object.fromEntries(Object.entries(actual).map(([k, a]) => [k, prosa(a)]))
 const RUTA = path.join(DIR, `${COMPONENTE}.json`)
+
+/* ── La prueba de que vigila, y no publica nada ────────────────────────────── */
+/* 🔴 Una ampliación que no se ha visto fallar no se sabe si funciona. Esto toma
+ * el árbol VIVO, le cambia el texto de UN callout en memoria, y comprueba que la
+ * comparación lo marca. Si no lo marca, sale con código 1. */
+if (PROBAR) {
+  const copia = JSON.parse(JSON.stringify(actual))
+  let tocado = null
+  ;(function w(x) {
+    if (tocado || !x || typeof x !== "object") return
+    if (Array.isArray(x)) return x.forEach(w)
+    if (x.packageId === "io.supernova.block.callout") {
+      ;(function t(y) {
+        if (tocado || !y || typeof y !== "object") return
+        if (typeof y.text === "string" && y.text.trim()) { tocado = y.text; y.text = "TEXTO CAMBIADO EN MEMORIA" ; return }
+        for (const q of Object.values(y)) t(q)
+      })(x)
+      return
+    }
+    for (const q of Object.values(x)) w(q)
+  })(copia)
+
+  if (!tocado) { console.error("🔴 No se encontró ningún callout con texto. La prueba no es concluyente."); process.exit(1) }
+
+  const mutada = Object.fromEntries(Object.entries(copia).map(([k, a]) => [k, prosa(a)]))
+  let marcados = 0
+  for (const pag of Object.keys(prosaActual)) {
+    const ahora = new Set(mutada[pag] ?? [])
+    marcados += (prosaActual[pag] ?? []).filter(t => !ahora.has(t)).length
+  }
+  console.log(`── prueba de que el texto de un callout se vigila ──`)
+  console.log(`   se cambió en memoria: «${tocado.slice(0, 70)}…»`)
+  console.log(`   la comparación marca: ${marcados} fragmento(s)`)
+  if (!marcados) { console.error("🔴 NO lo marcó. El callout sigue siendo zona ciega."); process.exit(1) }
+  console.log(`🟢 Lo marca. El defecto del 1 oct 2026 ya no pasaría en verde.`)
+  process.exit(0)
+}
 
 if (!DIFF) {
   mkdirSync(DIR, { recursive: true })
