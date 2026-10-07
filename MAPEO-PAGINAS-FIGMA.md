@@ -2,7 +2,7 @@
 
 **Plan `enumerated-bouncing-glacier`.**
 🟢 **Fase 1 (mapeo) y fase 2 (los 16 renombrados) EJECUTADAS el 7 oct 2026.** Registro en §4-bis.
-⬜ **Fase 3 (crear las 31 páginas que faltan) NO empezada.** *No se ha creado ninguna página.*
+🔸 **Fase 3 EN CURSO.** Paso 1 hecho: **1 separador creado y verificado** (`Acciones ↴`, índice 9). **El resto está detenido a propósito**, esperando dos decisiones del Lead — ver §4-ter.
 
 **Medido el 7 oct 2026, en vivo.**
 Fuente Figma: `GET /v1/files/UGwIBzERV4vB7mk0mejZ0y?depth=2` y `GET /v1/files/.../components`.
@@ -245,6 +245,47 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 ### 📌 Anotado, para otro encargo — **en Supernova, no en Figma**
 
 🟢 **El Lead aprobó `Button navigation` → `Bottom navigation`.** *Base lo llama así y un bottom nav no es un button nav.* **No ejecutado aquí.** Mismo origen: `Navigator header` → `Navigation header` en Base — **ésa no está aprobada**, solo detectada.
+
+---
+
+## 4-ter · 🔸 Fase 3 · paso 1 hecho, el resto detenido
+
+### Lo ejecutado y verificado · 7 oct 2026
+
+**Se creó un único separador, `Acciones ↴`, en el índice 9** —justo detrás de `Components ↴`— con guarda previa del vecindario.
+
+| | `n de N` | |
+| --- | --- | --- |
+| Páginas nuevas | **1** · `13180:1611` | 🟢 |
+| En el índice pedido | **9 de 9** | 🟢 |
+| Orden relativo de las 43 viejas | **intacto** | 🟢 |
+| Páginas que conservan sus frames | **43 de 43** | 🟢 |
+| Componentes publicados | **19 094 → 19 094** | 🟢 |
+
+**Verificado releyendo `?depth=2` en vivo**, fuente independiente del script que escribió. 🔴 **No se usó `/components` para el orden** — mide una instantánea publicada con nombres caducados (§4-bis).
+
+### La superficie, medida
+
+`figma.root` expone **`insertChild(index, page)`** y `figma.createPage()`, y `editorType` es `"figma"`. **Insertar en posición funciona**: la página nueva cayó en el 9 exacto y no desplazó el orden relativo de ninguna otra.
+
+### 🔴 Las dos decisiones que faltan
+
+**1 · ¿Mover es más arriesgado que crear? → No.** *Es la misma llamada*, `root.insertChild(index, page)`, con una página que ya existe en vez de una recién creada. **No toca ids, ni hijos, ni contenido: solo el índice.** Y es reversible — la línea base guarda el orden completo.
+
+⚠️ **Declarado con su límite:** verifiqué `insertChild` **con una página nueva, no con una existente**. Es el mismo método, pero **ese caso concreto no está medido**. *Por eso el paso 2 debe mover **una** primero y verificar, igual que la fase 2.*
+
+**2 · Las huérfanas.** Propuesta, **no ejecutada**:
+
+| | Propuesta | Porqué |
+| --- | --- | --- |
+| `Thumbnails` (6) · `Widgets` (2) · `App Icon` (2) | **Separador propio `Sin catalogar ↴` al final**, antes de `---` | Tienen contenido y **no son componentes del sistema**. Fuera del espejo pero visibles |
+| `Filter` · `Biometrics` · `Login & SL` (vacías) | 🎯 **Reutilizarlas como 3 de las 31 páginas que faltan** | **Están vacías: renombrarlas sale gratis y evita decidir si se borran.** Además las tres son *patrones*, no componentes — Base las trataría en `Patterns` |
+
+🎯 **La reutilización cambia la cuenta: no hay que crear 31 páginas sino 28.**
+
+### El tamaño final, para que no sorprenda
+
+**43 → 79 páginas.** Hoy 44. Faltan **6 separadores de categoría + 1 de huérfanas + 28 páginas** = **35 nuevas**. *El panel queda con más páginas vacías que llenas — estaba previsto en el plan, pero conviene verlo escrito antes de ejecutarlo.*
 
 ---
 
