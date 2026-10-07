@@ -1,1 +1,323 @@
-{"fecha":"2026-10-07","n_paginas":79,"n_con_contenido":31,"paginas":[{"id":"84:2","nombre":"Cover"},{"id":"12376:8434","nombre":"Playground"},{"id":"80:5","nombre":"Foundation ↴"},{"id":"80:11","nombre":"       ↳ Icons"},{"id":"80:12","nombre":"       ↳ Ilustraciones"},{"id":"80:8","nombre":"       ↳ Logos"},{"id":"80:9","nombre":"       ↳ Responsive"},{"id":"527:1726","nombre":"       ↳ Shadows"},{"id":"80:14","nombre":"Componentes ↴"},{"id":"13180:1611","nombre":"Acciones ↴"},{"id":"80:19","nombre":"       ↳ Button"},{"id":"13184:1611","nombre":"       ↳ Button Dock"},{"id":"13184:1612","nombre":"       ↳ Button group"},{"id":"13184:1613","nombre":"       ↳ Link"},{"id":"13184:1614","nombre":"       ↳ Tile"},{"id":"13184:1615","nombre":"       ↳ Timed button"},{"id":"13184:1616","nombre":"Entradas y controles ↴"},{"id":"80:21","nombre":"       ↳ Check"},{"id":"80:23","nombre":"       ↳ Date picker"},{"id":"82:27","nombre":"       ↳ Text field"},{"id":"80:20","nombre":"       ↳ Select"},{"id":"4005:6076","nombre":"       ↳ PIN Code"},{"id":"82:41","nombre":"       ↳ File upload"},{"id":"82:42","nombre":"       ↳ Menu"},{"id":"80:22","nombre":"       ↳ Radio"},{"id":"13184:1617","nombre":"       ↳ Segment control"},{"id":"13184:1618","nombre":"       ↳ Slider"},{"id":"13184:1619","nombre":"       ↳ Star rating"},{"id":"13184:1620","nombre":"       ↳ Stepper"},{"id":"82:26","nombre":"       ↳ Switch"},{"id":"13184:1621","nombre":"       ↳ Time picker"},{"id":"13184:1622","nombre":"Mostrar datos ↴"},{"id":"13184:1623","nombre":"       ↳ Badge"},{"id":"80:17","nombre":"       ↳ Accordion"},{"id":"80:15","nombre":"       ↳ Avatar"},{"id":"80:24","nombre":"       ↳ Divider"},{"id":"13184:1624","nombre":"       ↳ Draggable list"},{"id":"13184:1625","nombre":"       ↳ Drawer"},{"id":"82:40","nombre":"       ↳ Empty state"},{"id":"13184:1626","nombre":"       ↳ List item"},{"id":"13184:1627","nombre":"       ↳ Message card"},{"id":"82:25","nombre":"       ↳ Placeholder"},{"id":"13184:1628","nombre":"       ↳ Popover"},{"id":"82:29","nombre":"       ↳ Progress bar"},{"id":"13184:1629","nombre":"       ↳ Progress circle"},{"id":"82:45","nombre":"       ↳ Progress steps"},{"id":"13184:1630","nombre":"       ↳ Section heading"},{"id":"82:31","nombre":"       ↳ Tag"},{"id":"82:33","nombre":"       ↳ Tooltip"},{"id":"13184:1631","nombre":"Estados y retroalimentación ↴"},{"id":"82:36","nombre":"       ↳ Banner"},{"id":"13184:1632","nombre":"       ↳ Dialog"},{"id":"80:16","nombre":"       ↳ Snackbar"},{"id":"13184:1633","nombre":"       ↳ System banner"},{"id":"82:28","nombre":"       ↳ Toast"},{"id":"13184:1634","nombre":"Superficies ↴"},{"id":"173:592","nombre":"       ↳ Card"},{"id":"4004:1761","nombre":"       ↳ Modal full screen"},{"id":"82:39","nombre":"       ↳ Sheet"},{"id":"13184:1635","nombre":"Navegación ↴"},{"id":"13184:1636","nombre":"       ↳ Button navigation"},{"id":"13184:1637","nombre":"       ↳ Breadcrumbs"},{"id":"13184:1638","nombre":"       ↳ Navigator header"},{"id":"13184:1639","nombre":"       ↳ Page controls"},{"id":"13184:1640","nombre":"       ↳ Pagination"},{"id":"13184:1641","nombre":"       ↳ Side navigation"},{"id":"82:32","nombre":"       ↳ Tabs"},{"id":"82:43","nombre":"       ↳ Top navigation"},{"id":"13184:1642","nombre":"       ↳ Tree view"},{"id":"13184:1643","nombre":"Datos y tablas ↴"},{"id":"5618:849","nombre":"       ↳ Charts"},{"id":"13184:1644","nombre":"       ↳ Data table"},{"id":"82:30","nombre":"       ↳ Table"},{"id":"13184:1645","nombre":"Sin catalogar ↴"},{"id":"82:48","nombre":"       ↳ Thumbnails"},{"id":"82:46","nombre":"       ↳ Widgets"},{"id":"3602:3487","nombre":"       ↳ App Icon"},{"id":"82:47","nombre":"---"},{"id":"12108:13428","nombre":"_Local Componentes"}]}
+{
+ "fecha": "2026-10-07",
+ "n_paginas": 79,
+ "n_con_contenido": 31,
+ "paginas": [
+  {
+   "id": "84:2",
+   "nombre": "Cover"
+  },
+  {
+   "id": "12376:8434",
+   "nombre": "Playground"
+  },
+  {
+   "id": "80:5",
+   "nombre": "Foundation ↴"
+  },
+  {
+   "id": "80:11",
+   "nombre": "       ↳ Icons"
+  },
+  {
+   "id": "80:12",
+   "nombre": "       ↳ Ilustraciones"
+  },
+  {
+   "id": "80:8",
+   "nombre": "       ↳ Logos"
+  },
+  {
+   "id": "80:9",
+   "nombre": "       ↳ Responsive"
+  },
+  {
+   "id": "527:1726",
+   "nombre": "       ↳ Shadows"
+  },
+  {
+   "id": "80:14",
+   "nombre": "Componentes ↴"
+  },
+  {
+   "id": "13180:1611",
+   "nombre": "Acciones ↴"
+  },
+  {
+   "id": "80:19",
+   "nombre": "       ↳ Button"
+  },
+  {
+   "id": "13184:1611",
+   "nombre": "       ↳ Button Dock"
+  },
+  {
+   "id": "13184:1612",
+   "nombre": "       ↳ Button group"
+  },
+  {
+   "id": "13184:1613",
+   "nombre": "       ↳ Link"
+  },
+  {
+   "id": "13184:1614",
+   "nombre": "       ↳ Tile"
+  },
+  {
+   "id": "13184:1615",
+   "nombre": "       ↳ Timed button"
+  },
+  {
+   "id": "13184:1616",
+   "nombre": "Entradas y controles ↴"
+  },
+  {
+   "id": "80:21",
+   "nombre": "       ↳ Check"
+  },
+  {
+   "id": "80:23",
+   "nombre": "       ↳ Date picker"
+  },
+  {
+   "id": "82:27",
+   "nombre": "       ↳ Text field"
+  },
+  {
+   "id": "80:20",
+   "nombre": "       ↳ Select"
+  },
+  {
+   "id": "4005:6076",
+   "nombre": "       ↳ PIN Code"
+  },
+  {
+   "id": "82:41",
+   "nombre": "       ↳ File upload"
+  },
+  {
+   "id": "82:42",
+   "nombre": "       ↳ Menu"
+  },
+  {
+   "id": "80:22",
+   "nombre": "       ↳ Radio"
+  },
+  {
+   "id": "13184:1617",
+   "nombre": "       ↳ Segment control"
+  },
+  {
+   "id": "13184:1618",
+   "nombre": "       ↳ Slider"
+  },
+  {
+   "id": "13184:1619",
+   "nombre": "       ↳ Star rating"
+  },
+  {
+   "id": "13184:1620",
+   "nombre": "       ↳ Stepper"
+  },
+  {
+   "id": "82:26",
+   "nombre": "       ↳ Switch"
+  },
+  {
+   "id": "13184:1621",
+   "nombre": "       ↳ Time picker"
+  },
+  {
+   "id": "13184:1622",
+   "nombre": "Mostrar datos ↴"
+  },
+  {
+   "id": "13184:1623",
+   "nombre": "       ↳ Badge"
+  },
+  {
+   "id": "80:17",
+   "nombre": "       ↳ Accordion"
+  },
+  {
+   "id": "80:15",
+   "nombre": "       ↳ Avatar"
+  },
+  {
+   "id": "80:24",
+   "nombre": "       ↳ Divider"
+  },
+  {
+   "id": "13184:1624",
+   "nombre": "       ↳ Draggable list"
+  },
+  {
+   "id": "13184:1625",
+   "nombre": "       ↳ Drawer"
+  },
+  {
+   "id": "82:40",
+   "nombre": "       ↳ Empty state"
+  },
+  {
+   "id": "13184:1626",
+   "nombre": "       ↳ List item"
+  },
+  {
+   "id": "13184:1627",
+   "nombre": "       ↳ Message card"
+  },
+  {
+   "id": "82:25",
+   "nombre": "       ↳ Placeholder"
+  },
+  {
+   "id": "13184:1628",
+   "nombre": "       ↳ Popover"
+  },
+  {
+   "id": "82:29",
+   "nombre": "       ↳ Progress bar"
+  },
+  {
+   "id": "13184:1629",
+   "nombre": "       ↳ Progress circle"
+  },
+  {
+   "id": "82:45",
+   "nombre": "       ↳ Progress steps"
+  },
+  {
+   "id": "13184:1630",
+   "nombre": "       ↳ Section heading"
+  },
+  {
+   "id": "82:31",
+   "nombre": "       ↳ Tag"
+  },
+  {
+   "id": "82:33",
+   "nombre": "       ↳ Tooltip"
+  },
+  {
+   "id": "13184:1631",
+   "nombre": "Estados y retroalimentación ↴"
+  },
+  {
+   "id": "82:36",
+   "nombre": "       ↳ Banner"
+  },
+  {
+   "id": "13184:1632",
+   "nombre": "       ↳ Dialog"
+  },
+  {
+   "id": "80:16",
+   "nombre": "       ↳ Snackbar"
+  },
+  {
+   "id": "13184:1633",
+   "nombre": "       ↳ System banner"
+  },
+  {
+   "id": "82:28",
+   "nombre": "       ↳ Toast"
+  },
+  {
+   "id": "13184:1634",
+   "nombre": "Superficies ↴"
+  },
+  {
+   "id": "173:592",
+   "nombre": "       ↳ Card"
+  },
+  {
+   "id": "4004:1761",
+   "nombre": "       ↳ Modal full screen"
+  },
+  {
+   "id": "82:39",
+   "nombre": "       ↳ Sheet"
+  },
+  {
+   "id": "13184:1635",
+   "nombre": "Navegación ↴"
+  },
+  {
+   "id": "13184:1636",
+   "nombre": "       ↳ Bottom navigation"
+  },
+  {
+   "id": "13184:1637",
+   "nombre": "       ↳ Breadcrumbs"
+  },
+  {
+   "id": "13184:1638",
+   "nombre": "       ↳ Navigation header"
+  },
+  {
+   "id": "13184:1639",
+   "nombre": "       ↳ Page controls"
+  },
+  {
+   "id": "13184:1640",
+   "nombre": "       ↳ Pagination"
+  },
+  {
+   "id": "13184:1641",
+   "nombre": "       ↳ Side navigation"
+  },
+  {
+   "id": "82:32",
+   "nombre": "       ↳ Tabs"
+  },
+  {
+   "id": "82:43",
+   "nombre": "       ↳ Top navigation"
+  },
+  {
+   "id": "13184:1642",
+   "nombre": "       ↳ Tree view"
+  },
+  {
+   "id": "13184:1643",
+   "nombre": "Datos y tablas ↴"
+  },
+  {
+   "id": "5618:849",
+   "nombre": "       ↳ Charts"
+  },
+  {
+   "id": "13184:1644",
+   "nombre": "       ↳ Data table"
+  },
+  {
+   "id": "82:30",
+   "nombre": "       ↳ Table"
+  },
+  {
+   "id": "13184:1645",
+   "nombre": "Sin catalogar ↴"
+  },
+  {
+   "id": "82:48",
+   "nombre": "       ↳ Thumbnails"
+  },
+  {
+   "id": "82:46",
+   "nombre": "       ↳ Widgets"
+  },
+  {
+   "id": "3602:3487",
+   "nombre": "       ↳ App Icon"
+  },
+  {
+   "id": "82:47",
+   "nombre": "---"
+  },
+  {
+   "id": "12108:13428",
+   "nombre": "_Local Componentes"
+  }
+ ]
+}

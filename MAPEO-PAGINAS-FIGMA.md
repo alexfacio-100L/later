@@ -2,7 +2,8 @@
 
 **Plan `enumerated-bouncing-glacier`.**
 🟢 **Fase 1 (mapeo) y fase 2 (los 16 renombrados) EJECUTADAS el 7 oct 2026.** Registro en §4-bis.
-🟢 **Fase 3 EJECUTADA.** El panel pasa de **43 a 79 páginas** y los **57 de 57** componentes de Supernova tienen página. Registro en §4-ter.
+🟢 **Fases 1–3 EJECUTADAS**, más los dos renombrados de Base (§4-quinquies).
+🟢 **Fase 3:** El panel pasa de **43 a 79 páginas** y los **57 de 57** componentes de Supernova tienen página. Registro en §4-ter.
 
 **Medido el 7 oct 2026, en vivo.**
 Fuente Figma: `GET /v1/files/UGwIBzERV4vB7mk0mejZ0y?depth=2` y `GET /v1/files/.../components`.
@@ -95,7 +96,7 @@ Fuente Supernova: `sn_get_documentation_page_list`.
 | --- | --- | --- |
 | `Slider` | `Progress bar` *(ex `Progress & Slides`)* | `Slider-point` |
 | `Segment control` | `Tabs` | `Control Segment`, `.Segments` |
-| `Side navigation` · `Navigator header` · `Button navigation` · `Breadcrumbs` · `Page controls` · `Pagination` · `Tree view` | `Top navigation` *(ex `Navigation`)* | `Sidebar Left/Right`, `.Title Bar`, `.Top Second Nav`, `.Arrows`… |
+| `Side navigation` · `Navigation header` · `Bottom navigation` · `Breadcrumbs` · `Page controls` · `Pagination` · `Tree view` | `Top navigation` *(ex `Navigation`)* | `Sidebar Left/Right`, `.Title Bar`, `.Top Second Nav`, `.Arrows`… |
 | `Link` | `Button` | `Link` |
 
 ⚠️ **`Data table`** queda en el mismo caso respecto a `Table`, y **`Modal full screen`** respecto a nada — ver §6.
@@ -131,7 +132,7 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 | **Mostrar datos** (17) | ⬜Badge · ✅Accordion · ✅Avatar · ✅Divider · ⬜Draggable list · ⬜Drawer · ✅Empty state · ⬜List item · ⬜Message card · ✅Placeholder · ⬜Popover · ✅Progress bar · ⬜Progress circle · ✅Progress steps · ⬜Section heading · ✅Tag · ✅Tooltip | 9 | **8** |
 | **Estados y retroalimentación** (5) | ✅Banner · ⬜Dialog · ✅Snackbar · ⬜System banner · ✅Toast | 3 | **2** |
 | **Superficies** (3) | ✅Card · ⬜Modal full screen · ✅Sheet | 2 | **1** |
-| **Navegación** (9) | ⬜Button navigation · ⬜Breadcrumbs · ⬜Navigator header · ⬜Page controls · ⬜Pagination · ⬜Side navigation · ✅Tabs · ✅Top navigation · ⬜Tree view | 2 | **7** |
+| **Navegación** (9) | ⬜Bottom navigation · ⬜Breadcrumbs · ⬜Navigation header · ⬜Page controls · ⬜Pagination · ⬜Side navigation · ✅Tabs · ✅Top navigation · ⬜Tree view | 2 | **7** |
 | **Datos y tablas** (3) | ✅Charts · ⬜Data table · ✅Table | 2 | **1** |
 | | | **26** | **31** |
 
@@ -244,7 +245,7 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 
 ### 📌 Anotado, para otro encargo — **en Supernova, no en Figma**
 
-🟢 **El Lead aprobó `Button navigation` → `Bottom navigation`.** *Base lo llama así y un bottom nav no es un button nav.* **No ejecutado aquí.** Mismo origen: `Navigator header` → `Navigation header` en Base — **ésa no está aprobada**, solo detectada.
+🟢 **Los dos renombrados que salieron de contrastar con Base — `Button navigation` → `Bottom navigation` y `Navigator header` → `Navigation header` — están EJECUTADOS** en Supernova y en Figma. **Registro en §4-quinquies.**
 
 ---
 
@@ -377,9 +378,9 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 57         ↳ Modal full screen
 58         ↳ Sheet   · 1 frames
 59  Navegación ↴
-60         ↳ Button navigation
+60         ↳ Bottom navigation
 61         ↳ Breadcrumbs
-62         ↳ Navigator header
+62         ↳ Navigation header
 63         ↳ Page controls
 64         ↳ Pagination
 65         ↳ Side navigation
@@ -419,11 +420,80 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 
 - **Ni un frame movido.** `Button` sigue guardando `Link`, `Chip` y `Button Card`; `Tabs` sigue guardando `Control Segment`; `Top navigation` sigue guardando `.Arrows`. **Capa 2, pendiente.**
 - **No se tocó `Foundation ↴`**, ni `BS-01`, ni la App, ni Supernova.
-- 📌 **`Button navigation` → `Bottom navigation` sigue siendo otro encargo**, en Supernova.
+- 🟢 **`Button navigation` → `Bottom navigation` ya está hecho**, en Supernova y en Figma — ver §4-quinquies.
 
 ### 🔸 Lo que queda vivo después de esto
 
 **Las 65 páginas de componente existen, pero 35 están vacías** y **cuatro familias guardan contenido que pertenece a otra página** (§1.b, deuda declarada). *El espejo de nombres está; el de contenido no.*
+
+---
+
+## 4-quinquies · 🟢 Los dos renombrados de Base · 7 oct 2026 · **2 de 2, en los dos sitios**
+
+**Salieron de contrastar la taxonomía con Base (§5.b) y eran erratas de transcripción.**
+
+| Hoy era | Pasa a ser | Porqué |
+| --- | --- | --- |
+| `Button navigation` | **`Bottom navigation`** | *Base lo llama así, y un bottom nav no es un button nav* |
+| `Navigator header` | **`Navigation header`** | Mismo origen |
+
+🔴 **Cambiados en los DOS sitios.** *Tocar solo uno habría roto el espejo recién construido.* **Orden: Supernova primero**, que es la fuente de verdad de los nombres, y después Figma.
+
+### 1 · Antes de escribir: ¿algo enlaza a esas páginas?
+
+**Barrido por `id` y `persistentId`, no por la palabra** — el barrido por texto ya dio 5 falsos positivos el 24 sep.
+
+🔴 **El primer método no servía, y el control lo cazó.** `getDocumentationDependencies` devuelve una fila por página, con un campo `documentationPagePersistentIds` **que está vacío en las 162**. *El grafo no registra ni un solo enlace página→página en todo el design system,* así que **«0 entrantes» ahí no era evidencia de nada.**
+
+⚠️ **Y antes de eso cometí el error que la regla 16 describe, en su forma de falso contraste:** clasifiqué las filas por un campo que no existe —`pageId` en vez de `documentationPageId`— y el script **reportó «2 enlaces ENTRANTES» en rojo**. *Eran las filas propias de cada página.* **El número salió, la historia encajaba, y era falso.**
+
+**El método que sí sirve:** leer el contenido **crudo** de las 162 páginas y buscar las claves ahí.
+
+| | |
+| --- | --- |
+| Cobertura | **162 de 162** páginas leídas en crudo, 0 fallidas |
+| **Control de método** | 🟢 **8 páginas con 36 enlaces detectados** — *el método VE presencia, así que su ausencia sí es evidencia* |
+| Referencias a las dos dianas desde otra página | **0** |
+
+⚠️ **No verificable, y se declara:** **enlaces externos, marcadores del navegador y referencias desde Notion.** *Renombrar cambia el slug, y nada de eso se puede comprobar desde aquí.*
+
+### 2 · Supernova
+
+**Vía: el SDK** (`updateDocumentationPageOrTab`, payload `{id, title}`). *El Editor MCP no está disponible para este workspace; el Consumer MCP que tengo es de solo lectura — **nombrado cuál**, regla 15.*
+
+**Verificado releyendo `getFullDocumentationLegacyRepresentation`**, no el MCP Consumer, que sirve una foto anterior:
+
+| | |
+| --- | --- |
+| Renombradas | **2 de 2** 🟢 |
+| `persistentId` | **conservado en las dos** 🟢 |
+| Páginas totales | 162 → 162 🟢 |
+| Grupo `Navegación` | **9 de 9 hijos resueltos**, con los nombres nuevos 🟢 |
+
+### 3 · Figma
+
+**2 de 2**, con guarda de todo-o-nada. Leído en vivo con `?depth=2` — **no `/components`**, que devuelve nombres caducados (§4-bis).
+
+| | |
+| --- | --- |
+| Renombradas | **2 de 2** 🟢 |
+| Orden de las 79 | **intacto** 🟢 |
+| Nombres viejos que sobreviven en Figma | **0** 🟢 |
+| 🎯 **El espejo, contra los nombres NUEVOS** | **57 de 57** 🟢 |
+| Páginas del baseline que conservan frames | 43 de 43 🟢 |
+| Componentes publicados | 19 094 → 19 094 🟢 |
+
+### 4 · Referencias en el repo
+
+| | `n de N` |
+| --- | --- |
+| Ocurrencias encontradas al barrer | **15** — 13 en `MAPEO-PAGINAS-FIGMA.md`, 2 en `censo-paginas.json` |
+| Ocurrencias que afirmaban el nombre viejo **como vigente** | **6** → **0** 🟢 |
+| Conservadas **a propósito**, como registro del cambio | **9** |
+
+⚠️ **La cifra honesta no es «15 de 15 corregidas».** *Nueve ocurrencias siguen en el documento, y deben seguir:* son las que dicen `Button navigation` → `Bottom navigation` y las que explican que fue una errata al copiar de Base. **Borrarlas habría dejado el repo correcto y sin memoria de por qué.**
+
+*Por eso no se hizo un `sed` global: las nueve líneas del `.md` se trataron una a una.* `censo-paginas.json` **se regeneró desde el árbol en vivo**, no se editó a mano.
 
 ---
 
@@ -453,7 +523,7 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 | `Data display` → Badge · Accordion · Avatar · Divider · Draggable list · Drawer · Empty state · List item · Message card · Placeholder · Popover · Progress bar · Progress circle · Progress steps · Section heading · Tag · Tooltip | `Mostrar datos` → **los 17, idénticos** |
 | `Feedback & status` → Banner · **Dialog** · Snackbar · System banner · Toast | `Estados y retroalimentación` → **los cinco** |
 | `Surfaces` → Card · **Modal full screen** · **Sheet** | `Superficies` → **los tres** |
-| `Navigation` → Breadcrumbs · **Bottom navigation** · **Navigation header** · Page controls · Pagination · Side navigation · Tabs · Top navigation · Tree view | `Navegación` → los nueve, con **`Button navigation`** y **`Navigator header`** |
+| `Navigation` → Breadcrumbs · **Bottom navigation** · **Navigation header** · Page controls · Pagination · Side navigation · Tabs · Top navigation · Tree view | `Navegación` → **los nueve, ya alineados** · *`Button navigation` y `Navigator header` eran erratas y se corrigieron el 7 oct* |
 | `Data & tables` → Charts · Data table · Table | `Datos y tablas` → **los tres** |
 | `Patterns` → Feedback · States · **Modality** · Inputting data · Selection | `Comportamientos` → Patrones · Retroalimentación · Estados · **Ventanas emergentes** · Insertando datos |
 | `Content` → Global writing · Product tone · Product voice · Writing for components · Abbreviations · Acronyms · App permissions · Capitalization · Change log · Dates · Legal communication · Map annotations · Messages · Money · Numbers · Punctuation · Time · Emojis | `Cimientos/Lenguaje` y `Cimientos/Contenido` → **los mismos, traducidos** |
@@ -463,8 +533,8 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 🎯 **Implicación operativa: la pregunta ya estaba contestada antes de hacerla.** `Sheet`, `Modal full screen` y `Dialog` están donde están en Supernova **porque están ahí en Base**. No hace falta inventar criterio: hace falta **leer el de Base**.
 
 ⚠️ **Y dos deslices de transcripción que conviene mirar aparte:**
-- Base dice **`Bottom navigation`**; Later dice **`Button navigation`**. *Un bottom nav no es un button nav.* **Probable errata al copiar.**
-- Base dice **`Navigation header`**; Later dice **`Navigator header`**.
+- 🟢 **Base decía `Bottom navigation` y Later decía `Button navigation`.** *Un bottom nav no es un button nav.* **Era errata al copiar, y está corregida.**
+- 🟢 **Base decía `Navigation header` y Later decía `Navigator header`.** **Corregida.**
 
 *No los corrijo aquí — Supernova es la fuente de verdad de los nombres y cambiarlos es otra decisión.*
 
