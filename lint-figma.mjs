@@ -26,26 +26,103 @@
 import { readFileSync, existsSync, mkdirSync, writeFileSync, readdirSync } from "node:fs"
 import path from "node:path"
 
-/* Las 32 páginas con contenido, en cuatro lotes para no reventar la petición. */
-export const LOTES = [
-  "84:2,0:1,12376:8434,80:7,80:11,80:12,80:8,80:9",
-  "527:1726,80:15,80:16,80:19,173:592,80:21,5618:849,80:23",
-  "82:27,82:29,80:20,80:22,82:26,82:30,82:31,82:32",
-  "82:48,82:33,82:36,82:39,82:43,82:45,82:46,12108:13428"
-]
+/**
+ * 🔴 LAS PÁGINAS SE DESCUBREN, NO SE ESCRIBEN A MANO.
+ *
+ * Hasta el 7 oct 2026 esto era una constante `LOTES` con 32 ids fijos. El día
+ * que el panel pasó de 43 a 79 páginas, esa lista habría seguido devolviendo
+ * verde **sin ver 36 páginas**, y sin decirlo. Es la forma «falso completo» de
+ * la regla 16: un método que resuelve una fracción y entrega el resultado con
+ * la forma correcta, sin error y sin hueco visible.
+ *
+ * Ahora se descubren en vivo y se contrastan contra un CENSO VERSIONADO. Si
+ * aparecen MENOS páginas que la última vez, esto FALLA RUIDOSAMENTE en vez de
+ * medir menos y callar — porque una regla que exige criterio para ejecutarse no
+ * se ejecuta (E3 del FODA).
+ *
+ * El censo vive en `censo-paginas.json`, versionado en git A PROPÓSITO: en
+ * `.cache-figma/` estaría gitignorado, y un archivo que git no ve está a un
+ * `rm` de no existir — que es justo el fallo del que esto protege.
+ *
+ * Para aceptar una bajada legítima (alguien borró una página a conciencia):
+ *     node tokens-lint.mjs --actualizar-censo
+ */
 export const FILE_KEY = "UGwIBzERV4vB7mk0mejZ0y"
 const CACHE = ".cache-figma"
+export const CENSO = "censo-paginas.json"
+const POR_LOTE = 8
 
-/** Descarga el árbol, o reutiliza la caché con `--cache`. */
-export async function traerArbol({ usarCache = false } = {}) {
+/** Descubre las páginas en vivo. Devuelve solo las que tienen contenido. */
+export async function descubrirPaginas() {
+  const key = process.env.FIGMA_API_KEY
+  if (!key) throw new Error("FIGMA_API_KEY no está en el entorno. Sin credencial no hay medición, y 'cero hallazgos' se leería como 'todo bien'.")
+  const r = await fetch(`https://api.figma.com/v1/files/${FILE_KEY}?depth=2`, { headers: { "X-Figma-Token": key } })
+  if (!r.ok) throw new Error(`Figma respondió ${r.status} al descubrir páginas. ${r.status === 403 ? "Falta scope o la credencial caducó." : ""}`)
+  const doc = (await r.json()).document.children
+  return {
+    todas: doc.map(p => ({ id: p.id, nombre: p.name, frames: (p.children || []).length })),
+    conContenido: doc.filter(p => (p.children || []).length > 0).map(p => ({ id: p.id, nombre: p.name, frames: p.children.length }))
+  }
+}
+
+/**
+ * El guardián. Compara lo descubierto contra el censo y SALE CON CÓDIGO 1
+ * si hay menos páginas que antes. Devuelve un resumen de cobertura.
+ */
+export function vigilarCenso(descubierto, { actualizar = false } = {}) {
+  const previo = existsSync(CENSO) ? JSON.parse(readFileSync(CENSO, "utf8")) : null
+  const ahora = {
+    fecha: new Date().toISOString().slice(0, 10),
+    n_paginas: descubierto.todas.length,
+    n_con_contenido: descubierto.conContenido.length,
+    paginas: descubierto.todas.map(p => ({ id: p.id, nombre: p.nombre }))
+  }
+  if (!previo) {
+    writeFileSync(CENSO, JSON.stringify(ahora, null, 1) + "\n")
+    return { cobertura: `${ahora.n_con_contenido} de ${ahora.n_paginas}`, nota: "censo creado por primera vez" }
+  }
+  const idsAhora = new Set(descubierto.todas.map(p => p.id))
+  const perdidas = previo.paginas.filter(p => !idsAhora.has(p.id))
+  if (perdidas.length && !actualizar) {
+    throw new Error(
+      `🔴 CENSO: faltan ${perdidas.length} de ${previo.paginas.length} páginas que SÍ estaban el ${previo.fecha}.\n` +
+      perdidas.map(p => `   · ${p.id} ${JSON.stringify(p.nombre)}`).join("\n") +
+      `\n\nNo mido con menos páginas de las que había sin que alguien lo decida.\n` +
+      `Si la bajada es legítima, vuelve a correr con --actualizar-censo.`
+    )
+  }
+  if (actualizar || descubierto.todas.length !== previo.n_paginas) {
+    writeFileSync(CENSO, JSON.stringify(ahora, null, 1) + "\n")
+  }
+  return {
+    cobertura: `${ahora.n_con_contenido} de ${ahora.n_paginas}`,
+    delta: ahora.n_paginas - previo.n_paginas,
+    perdidas: perdidas.length
+  }
+}
+
+/** Descarga el árbol de las páginas con contenido, o reutiliza la caché con `--cache`. */
+export async function traerArbol({ usarCache = false, actualizarCenso = false } = {}) {
   const key = process.env.FIGMA_API_KEY
   if (!key) throw new Error("FIGMA_API_KEY no está en el entorno. Sin credencial no hay medición, y 'cero hallazgos' se leería como 'todo bien'.")
   if (!existsSync(CACHE)) mkdirSync(CACHE)
+
+  // El flag se lee también de argv para que funcione desde cualquier consumidor
+  // sin tener que tocar los cuatro que importan esto.
+  const actualizar = actualizarCenso || process.argv.includes("--actualizar-censo")
+  const descubierto = await descubrirPaginas()
+  const resumen = vigilarCenso(descubierto, { actualizar })
+  console.error(`  páginas con contenido medidas: ${resumen.cobertura}${resumen.delta ? ` (${resumen.delta > 0 ? "+" : ""}${resumen.delta} desde el censo)` : ""}`)
+
+  const ids = descubierto.conContenido.map(p => p.id)
+  const lotes = []
+  for (let i = 0; i < ids.length; i += POR_LOTE) lotes.push(ids.slice(i, i + POR_LOTE).join(","))
+
   const ficheros = []
-  for (let i = 0; i < LOTES.length; i++) {
+  for (let i = 0; i < lotes.length; i++) {
     const f = path.join(CACHE, `lote${i}.json`)
     if (usarCache && existsSync(f)) { ficheros.push(f); continue }
-    const r = await fetch(`https://api.figma.com/v1/files/${FILE_KEY}/nodes?ids=${LOTES[i]}`, { headers: { "X-Figma-Token": key } })
+    const r = await fetch(`https://api.figma.com/v1/files/${FILE_KEY}/nodes?ids=${lotes[i]}`, { headers: { "X-Figma-Token": key } })
     if (!r.ok) throw new Error(`Figma respondió ${r.status} en el lote ${i}. ${r.status === 403 ? "Falta scope o la credencial caducó." : ""}`)
     writeFileSync(f, await r.text())
     ficheros.push(f)

@@ -2,7 +2,7 @@
 
 **Plan `enumerated-bouncing-glacier`.**
 🟢 **Fase 1 (mapeo) y fase 2 (los 16 renombrados) EJECUTADAS el 7 oct 2026.** Registro en §4-bis.
-🔸 **Fase 3 EN CURSO.** Paso 1 hecho: **1 separador creado y verificado** (`Acciones ↴`, índice 9). **El resto está detenido a propósito**, esperando dos decisiones del Lead — ver §4-ter.
+🟢 **Fase 3 EJECUTADA.** El panel pasa de **43 a 79 páginas** y los **57 de 57** componentes de Supernova tienen página. Registro en §4-ter.
 
 **Medido el 7 oct 2026, en vivo.**
 Fuente Figma: `GET /v1/files/UGwIBzERV4vB7mk0mejZ0y?depth=2` y `GET /v1/files/.../components`.
@@ -248,7 +248,7 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 
 ---
 
-## 4-ter · 🔸 Fase 3 · paso 1 hecho, el resto detenido
+## 4-ter · 🟢 Fase 3 ejecutada · 7 oct 2026 · **57 de 57**
 
 ### Lo ejecutado y verificado · 7 oct 2026
 
@@ -268,7 +268,7 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 
 `figma.root` expone **`insertChild(index, page)`** y `figma.createPage()`, y `editorType` es `"figma"`. **Insertar en posición funciona**: la página nueva cayó en el 9 exacto y no desplazó el orden relativo de ninguna otra.
 
-### 🔴 Las dos decisiones que faltan
+### Las dos decisiones, aprobadas por el Lead y ejecutadas
 
 **1 · ¿Mover es más arriesgado que crear? → No.** *Es la misma llamada*, `root.insertChild(index, page)`, con una página que ya existe en vez de una recién creada. **No toca ids, ni hijos, ni contenido: solo el índice.** Y es reversible — la línea base guarda el orden completo.
 
@@ -286,6 +286,144 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 ### El tamaño final, para que no sorprenda
 
 **43 → 79 páginas.** Hoy 44. Faltan **6 separadores de categoría + 1 de huérfanas + 28 páginas** = **35 nuevas**. *El panel queda con más páginas vacías que llenas — estaba previsto en el plan, pero conviene verlo escrito antes de ejecutarlo.*
+
+---
+
+## 4-quater · 🟢 El paso 2, y el panel final
+
+### Lo ejecutado · 7 oct 2026
+
+| Paso | | Resultado |
+| --- | --- | --- |
+| **1 · Mover una** | `↳ Button` (11 frames, 120 publicados) del índice 13 al 10 | 🟢 id, nombre, frames y publicación intactos; resto del orden sin mover |
+| **2 · El lote** | 4 renombradas + **35 creadas** + las 79 reordenadas, con guarda de todo-o-nada | 🟢 **79 de 79 en posición** |
+
+**Renombradas:** `Components ↴` → `Componentes ↴` · y las tres vacías reutilizadas — `Biometrics` → `PIN Code`, `Filter` → `Menu`, `Login & SL` → `Modal full screen`.
+
+### Verificación · releída en vivo con `?depth=2`
+
+🔴 **No se usó `/components` para el orden ni los nombres** — sirve una instantánea publicada con nombres caducados (§4-bis).
+
+| | `n de N` | |
+| --- | --- | --- |
+| Páginas del baseline que siguen vivas | **43 de 43** | 🟢 |
+| Páginas que conservan su conteo de frames | **43 de 43** | 🟢 |
+| Páginas totales | **43 → 79** | 🟢 |
+| Separadores de categoría | **7 de 7** | 🟢 |
+| 🎯 **Componentes de Supernova con página** | **57 de 57** | 🟢 |
+| Páginas que respetan la convención de 7 espacios + `↳` | **65 de 65** | 🟢 |
+| Componentes publicados | **19 094 → 19 094** | 🟢 |
+
+### El panel, tal como queda
+
+```text
+ 0  Cover   · 1 frames
+ 1  Playground   · 5 frames
+ 2  Foundation ↴
+ 3         ↳ Icons   · 2 frames
+ 4         ↳ Ilustraciones   · 2 frames
+ 5         ↳ Logos   · 13 frames
+ 6         ↳ Responsive   · 2 frames
+ 7         ↳ Shadows   · 3 frames
+ 8  Componentes ↴
+ 9  Acciones ↴
+10         ↳ Button   · 11 frames
+11         ↳ Button Dock
+12         ↳ Button group
+13         ↳ Link
+14         ↳ Tile
+15         ↳ Timed button
+16  Entradas y controles ↴
+17         ↳ Check   · 2 frames
+18         ↳ Date picker   · 2 frames
+19         ↳ Text field   · 14 frames
+20         ↳ Select   · 29 frames
+21         ↳ PIN Code
+22         ↳ File upload
+23         ↳ Menu
+24         ↳ Radio   · 2 frames
+25         ↳ Segment control
+26         ↳ Slider
+27         ↳ Star rating
+28         ↳ Stepper
+29         ↳ Switch   · 2 frames
+30         ↳ Time picker
+31  Mostrar datos ↴
+32         ↳ Badge
+33         ↳ Accordion
+34         ↳ Avatar   · 1 frames
+35         ↳ Divider
+36         ↳ Draggable list
+37         ↳ Drawer
+38         ↳ Empty state
+39         ↳ List item
+40         ↳ Message card
+41         ↳ Placeholder
+42         ↳ Popover
+43         ↳ Progress bar   · 2 frames
+44         ↳ Progress circle
+45         ↳ Progress steps   · 5 frames
+46         ↳ Section heading
+47         ↳ Tag   · 6 frames
+48         ↳ Tooltip   · 3 frames
+49  Estados y retroalimentación ↴
+50         ↳ Banner   · 2 frames
+51         ↳ Dialog
+52         ↳ Snackbar   · 4 frames
+53         ↳ System banner
+54         ↳ Toast
+55  Superficies ↴
+56         ↳ Card   · 7 frames
+57         ↳ Modal full screen
+58         ↳ Sheet   · 1 frames
+59  Navegación ↴
+60         ↳ Button navigation
+61         ↳ Breadcrumbs
+62         ↳ Navigator header
+63         ↳ Page controls
+64         ↳ Pagination
+65         ↳ Side navigation
+66         ↳ Tabs   · 8 frames
+67         ↳ Top navigation   · 17 frames
+68         ↳ Tree view
+69  Datos y tablas ↴
+70         ↳ Charts   · 1 frames
+71         ↳ Data table
+72         ↳ Table   · 34 frames
+73  Sin catalogar ↴
+74         ↳ Thumbnails   · 6 frames
+75         ↳ Widgets   · 2 frames
+76         ↳ App Icon   · 2 frames
+77  ---
+78  _Local Componentes   · 7 frames
+```
+
+### `lint-figma.mjs` · ahora descubre, y vigila
+
+**Se le quitó la constante `LOTES` con 32 ids fijos.** *El día que el panel pasó de 43 a 79, esa lista habría seguido dando verde **sin ver 36 páginas, y sin decirlo**.*
+
+**Lo que hace ahora:** descubre las páginas en vivo con `?depth=2`, mide solo las que tienen contenido, y **contrasta contra un censo**. **Si aparecen menos páginas que la última vez, lanza y no mide.** La cobertura se imprime sola en cada corrida — `páginas con contenido medidas: 31 de 79` — en vez de depender de que alguien se acuerde de actualizar una constante.
+
+📌 **El censo vive en `censo-paginas.json`, versionado en git a propósito.** *En `.cache-figma/` estaría gitignorado, y un archivo que git no ve está a un `rm` de no existir — que es justo el fallo del que esto protege.* Una bajada legítima se acepta con `--actualizar-censo`.
+
+⚠️ **Probado en las dos direcciones, porque un guardián que nunca ha saltado no se sabe si funciona:**
+
+| Prueba | Esperado | |
+| --- | --- | --- |
+| Todas las páginas presentes | **callar** | 🟢 pasó sin lanzar, cobertura `31 de 79` |
+| Censo con una página que ya no está | **fallar ruidosamente** | 🟢 lanzó, nombrando la página que falta |
+
+**Y los cuatro consumidores siguen funcionando** —`tokens-lint`, `consumo-token`, `medir-espacios`, `verificar-rebindeo`—: la firma de `traerArbol` no cambió, solo cómo decide qué pedir. Corrida completa de `tokens:lint` verificada de punta a punta.
+
+### Lo que esta fase NO hizo
+
+- **Ni un frame movido.** `Button` sigue guardando `Link`, `Chip` y `Button Card`; `Tabs` sigue guardando `Control Segment`; `Top navigation` sigue guardando `.Arrows`. **Capa 2, pendiente.**
+- **No se tocó `Foundation ↴`**, ni `BS-01`, ni la App, ni Supernova.
+- 📌 **`Button navigation` → `Bottom navigation` sigue siendo otro encargo**, en Supernova.
+
+### 🔸 Lo que queda vivo después de esto
+
+**Las 65 páginas de componente existen, pero 35 están vacías** y **cuatro familias guardan contenido que pertenece a otra página** (§1.b, deuda declarada). *El espejo de nombres está; el de contenido no.*
 
 ---
 
