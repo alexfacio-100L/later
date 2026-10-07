@@ -1,7 +1,8 @@
 # Mapeo · páginas de Figma ↔ componentes de Supernova
 
-**Fase 1 del plan `enumerated-bouncing-glacier`. Esta pasada NO escribe en Figma.**
-El Lead aprueba este mapeo y después se ejecuta.
+**Plan `enumerated-bouncing-glacier`.**
+🟢 **Fase 1 (mapeo) y fase 2 (los 16 renombrados) EJECUTADAS el 7 oct 2026.** Registro en §4-bis.
+⬜ **Fase 3 (crear las 31 páginas que faltan) NO empezada.** *No se ha creado ninguna página.*
 
 **Medido el 7 oct 2026, en vivo.**
 Fuente Figma: `GET /v1/files/UGwIBzERV4vB7mk0mejZ0y?depth=2` y `GET /v1/files/.../components`.
@@ -20,7 +21,7 @@ Fuente Supernova: `sn_get_documentation_page_list`.
 | **Con destino de componente** | **26 de 32** — 19 claras + 7 decididas por el Lead |
 | **Sin correspondencia en Supernova** | **3 de 32** — vacías, se reutilizan |
 | **Huérfanas con contenido, se quedan** | **3 de 32** |
-| **→ Se renombran en fase 2** | **16 de 32** · las otras 16 conservan nombre |
+| **→ Renombradas en fase 2** | 🟢 **16 de 16 ejecutadas** · las otras 16 conservan nombre |
 | | |
 | Componentes de Supernova | **57 en 7 categorías** |
 | **Con página** | **26 de 57** |
@@ -34,6 +35,8 @@ Fuente Supernova: `sn_get_documentation_page_list`.
 ---
 
 ## 1 · Las 32 páginas, una por fila
+
+🟢 **Los renombrados de estas tablas YA SE EJECUTARON** — registro y verificación en §4-bis.
 
 **Columna «qué hay dentro»: los nombres de los nodos, no el de la página.** Es lo que decide el mapeo.
 
@@ -155,7 +158,10 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 
 ## 4 · ¿Renombrar una página rompe la publicación?
 
-**Lo verificado, en lectura, el 7 oct 2026:**
+🟢 **Contestada por medición el 7 oct 2026 — ya no es inferencia. Ver §4-bis.**
+*Se conserva lo que se razonó antes de escribir, porque acertó y conviene saber que acertó.*
+
+**Lo verificado, en lectura, antes de escribir:**
 
 - **19 094 componentes publicados** en el archivo, repartidos en **24 páginas**.
 - Cada componente publicado se identifica por **`key`** (estable a nivel de archivo) y **`node_id`**. **Ninguno de los dos depende del nombre de la página.**
@@ -187,6 +193,58 @@ Las tres están **vacías**, así que son material de reutilización sin coste.
 **Las dos más pequeñas que sí publican empatan a 4**: `Tooltips` y `Dialog Box`. *Recomiendo `Tooltips`, porque su renombrado es trivial y mantiene la prueba técnica independiente de la decisión semántica de §5.*
 
 ⚠️ **El icono de las capturas no es censo fiable.** La lista del Lead incluye `Responsive` y `Shadows`, que tienen **0 componentes publicados**; y omite `Table`, `Navigation`, `Steps`, `Dialog Box`, `Banners`, `Widgets`, `Thumbnails` y `Data Visualization`, que **sí los tienen**. El archivo publica además **145 estilos**, y el endpoint `/styles` **no devuelve página**, así que no se puede atribuir. **Manda `/components`, no el icono.**
+
+---
+
+## 4-bis · 🟢 Fase 2 ejecutada · 7 oct 2026 · **16 de 16**
+
+**Superficie usada: `use_figma`** (Figma Plugin API), no Scripter. *El plan recomendaba Scripter por precedente; `use_figma` funcionó y no necesitó pegado manual del Lead.* **Renombrar no requiere `setCurrentPageAsync`** —se resuelve con `getNodeByIdAsync(id).name = …`—, así que la trampa del reset de `currentPage` no aplicó y los 15 restantes cupieron en una sola llamada.
+
+**El protocolo fue: sonda primero, lote después.**
+
+| Paso | | Resultado |
+| --- | --- | --- |
+| **1 · Sonda** | `↳ Tooltips` → `↳ Tooltip`, sola. La página publicada más pequeña: **4 componentes** | 🟢 **4 de 4 siguen publicados** |
+| **2 · Lote** | Las 15 restantes, con guarda de *todo-o-nada*: comprueba los 15 nombres **antes de tocar ninguno** y aborta entero si uno no cuadra | 🟢 **15 de 15** |
+
+### Verificación, releída en vivo contra la línea base
+
+| Qué se comprobó | `n de N` | |
+| --- | --- | --- |
+| Páginas con el nombre nuevo correcto | **16 de 16** | 🟢 |
+| Cambios de nombre **no** previstos | **0** | 🟢 |
+| Páginas que **conservan su conteo de frames** | **43 de 43** | 🟢 |
+| Páginas totales — *no se creó ninguna* | **43 → 43** | 🟢 |
+| Componentes publicados en el archivo | **19 094 → 19 094** | 🟢 |
+
+🔴 **Verificado por el campo que cambia —el nombre— y no por los ids, que un renombrado no toca.** *Un renombrado que no entra produce un reporte de ids idéntico al de uno que sí: regla 16, falso contraste.* La comparación se hizo **con los dos lados sacados de la misma fuente**, `GET /v1/files/…?depth=2`, nada reconstruido a mano.
+
+### 🔴 La respuesta a lo que no se sabía: **`pageName` NO se actualiza**
+
+**Era la única pregunta que no se podía contestar sin escribir. Ya está contestada, y el resultado importa para la fase 3.**
+
+| | |
+| --- | --- |
+| ¿Se despublica algo al renombrar? | 🟢 **No.** 19 094 → 19 094, y los 4 `key` de la sonda intactos |
+| ¿Cambia `updated_at` de los componentes? | 🟢 **No.** Sin cambio |
+| ¿Se actualiza `containing_frame.pageName` en el índice? | 🔴 **NO.** **13 de 13** páginas renombradas que publican **siguen devolviendo su nombre VIEJO** |
+
+**Qué significa:** `GET /v1/files/…/components` **no sirve la estructura viva: sirve la última instantánea publicada de la librería.** Hoy devuelve `"       ↳ Tooltips"`, `"       ↳ Navigation"`, `"       ↳ Alerts"` — nombres que ya no existen en el archivo. *Presumiblemente se pondrá al día al republicar la librería, pero **eso no está medido** y no lo afirmo.*
+
+⚠️ **Y la trampa que esto arma, que es exactamente la que esta semana ya costó cara:** quien verifique un renombrado leyendo `pageName` de `/components` **concluirá que no se hizo**. El árbol de `?depth=2` es la fuente viva; `/components` es un caché publicado. **No son intercambiables, aunque los dos vengan de la API de Figma y los dos parezcan «en vivo».**
+
+🎯 **Consecuencia operativa para la fase 3:** el censo de §4 —«qué páginas publican»— se construyó con `pageName`, así que **a partir de hoy ese censo habla con los nombres viejos.** Para repetirlo hay que cruzar por **`containing_frame.pageId`**, que sí es estable.
+
+### Lo que esta fase NO hizo, deliberadamente
+
+- **No se creó ninguna página.** La fase 3 es aparte.
+- **No se movió ni un frame.** `Button` sigue guardando `Link`, `Chip` y `Button Card`; `Tabs` sigue guardando `Control Segment`; `Top navigation` sigue guardando `.Arrows` y los demás átomos. **Es capa 2 y el Lead la cuestiona después.**
+- **No se tocó `Foundation ↴`**, ni `BS-01`, ni la App.
+- **No se renombró nada en Supernova.** *Queda anotado abajo.*
+
+### 📌 Anotado, para otro encargo — **en Supernova, no en Figma**
+
+🟢 **El Lead aprobó `Button navigation` → `Bottom navigation`.** *Base lo llama así y un bottom nav no es un button nav.* **No ejecutado aquí.** Mismo origen: `Navigator header` → `Navigation header` en Base — **ésa no está aprobada**, solo detectada.
 
 ---
 
